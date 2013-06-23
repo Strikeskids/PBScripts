@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * Time: 17:38
  */
 public class Tree {
-	private final Queue<Node> nodes = new ConcurrentLinkedQueue();
-	private final AtomicReference<Node> current_node = new AtomicReference();
+	private final Queue<Node> nodes = new ConcurrentLinkedQueue<>();
+	private final AtomicReference<Node> current_node = new AtomicReference<>();
 
 	public Tree(Node[] paramArrayOfNode) {
 		this.nodes.addAll(Arrays.asList(paramArrayOfNode));
@@ -24,9 +24,7 @@ public class Tree {
 		Node node = current_node.get();
 		if ((node != null) && (node.isAlive()))
 			return null;
-		Iterator<Node> iterator = this.nodes.iterator();
-		while (iterator.hasNext()) {
-			Node next = iterator.next();
+		for (Node next : this.nodes) {
 			if ((next != null) && (next.activate()))
 				return next;
 		}

@@ -19,7 +19,7 @@ public abstract class Task extends Job {
 	private volatile boolean interrupted = false;
 	private final Object init_lock = new Object();
 
-	public Task(MethodContext ctx) {
+	protected Task(MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -34,7 +34,7 @@ public abstract class Task extends Job {
 		this.thread = Thread.currentThread();
 		try {
 			execute();
-		} catch (ThreadDeath localThreadDeath) {
+		} catch (ThreadDeath ignored) {
 		} catch (Throwable localThrowable) {
 			localThrowable.printStackTrace();
 		}
@@ -48,7 +48,7 @@ public abstract class Task extends Job {
 			return true;
 		try {
 			this.future.get();
-		} catch (Throwable localThrowable) {
+		} catch (Throwable ignored) {
 		}
 		return this.future.isDone();
 	}
@@ -63,7 +63,7 @@ public abstract class Task extends Job {
 			try {
 				if (!this.thread.isInterrupted())
 					this.thread.interrupt();
-			} catch (Throwable localThrowable) {
+			} catch (Throwable ignored) {
 			}
 	}
 

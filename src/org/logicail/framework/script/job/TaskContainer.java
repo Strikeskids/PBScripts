@@ -1,7 +1,6 @@
 package org.logicail.framework.script.job;
 
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,12 +12,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Time: 17:21
  */
 public class TaskContainer implements Container {
-	private final CopyOnWriteArrayList<JobListener> listeners = new CopyOnWriteArrayList();
-	private final List<Container> children = new CopyOnWriteArrayList();
+	private final CopyOnWriteArrayList<JobListener> listeners = new CopyOnWriteArrayList<>();
+	private final List<Container> children = new CopyOnWriteArrayList<>();
 	private Container[] childrenCache = new Container[0];
 	private final ThreadGroup group;
 	private final ExecutorService executor;
-	private Deque<Job> jobs = new ConcurrentLinkedDeque();
+	private final Deque<Job> jobs = new ConcurrentLinkedDeque<>();
 	private volatile boolean paused = false;
 	private volatile boolean shutdown = false;
 	private volatile boolean interrupted = false;
@@ -33,17 +32,18 @@ public class TaskContainer implements Container {
 	}
 
 	private TaskContainer(ThreadGroup paramThreadGroup, TaskContainer paramTaskContainer) {
-		this.group = new ThreadGroup(paramThreadGroup, getClass().getName() + "_" + hashCode());
+		this.group = new ThreadGroup(paramThreadGroup, getClass().getName() + "_" + Integer.toHexString(hashCode()));
 		this.executor = Executors.newCachedThreadPool(new ThreadPool(this.group));
 		this.parent_container = paramTaskContainer;
 	}
 
 	public final void submit(Job job) {
-		if (isShutdown())
+		if (isShutdown()) {
 			return;
+		}
 		job.setContainer(this);
 		Future localFuture = this.executor.submit(createWorker(job));
-		if ((localFuture != null) && ((job instanceof Task))) {
+		if (job instanceof Task) {
 			((Task) job).future = localFuture;
 		}
 	}
@@ -51,8 +51,9 @@ public class TaskContainer implements Container {
 	public final void setPaused(boolean paused) {
 		if (isShutdown())
 			return;
-		if (this.paused != paused)
+		if (this.paused != paused) {
 			this.paused = paused;
+		}
 		for (Container localContainer : getChildren()) {
 			localContainer.setPaused(paused);
 		}
@@ -107,9 +108,7 @@ public class TaskContainer implements Container {
 		for (Container container : getChildren()) {
 			container.interrupt();
 		}
-		Iterator<Job> iterator = this.jobs.iterator();
-		while (iterator.hasNext()) {
-			Job localJob = iterator.next();
+		for (Job localJob : this.jobs) {
 			localJob.interrupt();
 		}
 	}
@@ -125,7 +124,7 @@ public class TaskContainer implements Container {
 				TaskContainer.this.notifyListeners(paramJob, true);
 				try {
 					paramJob.work();
-				} catch (Exception localException) {
+				} catch (Exception ignored) {
 				} catch (Throwable localThrowable) {
 					localThrowable.printStackTrace();
 				}
@@ -145,7 +144,7 @@ public class TaskContainer implements Container {
 					localJobListener.jobStarted(paramJob);
 				else
 					localJobListener.jobStopped(paramJob);
-			} catch (Throwable localThrowable) {
+			} catch (Throwable ignored) {
 			}
 		if (this.parent_container != null)
 			this.parent_container.notifyListeners(paramJob, paramBoolean);
