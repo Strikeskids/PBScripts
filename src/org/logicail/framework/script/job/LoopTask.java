@@ -16,8 +16,9 @@ public abstract class LoopTask extends Task {
 	}
 
 	public final void execute() {
-		while (!getContainer().isShutdown()) {
-			if (getContainer().isPaused()) {
+		Container container = getContainer();
+		while (!container.isShutdown()) {
+			if (container.isPaused()) {
 				this.paused = true;
 				sleep(1000);
 			} else {
@@ -25,8 +26,8 @@ public abstract class LoopTask extends Task {
 				int i;
 				try {
 					i = loop();
-				} catch (Throwable localThrowable) {
-					localThrowable.printStackTrace();
+				} catch (Throwable throwable) {
+					throwable.printStackTrace();
 					i = -1;
 				}
 				if (i >= 0) {

@@ -11,43 +11,56 @@ import org.powerbot.script.PollingScript;
  * Time: 17:31
  */
 public abstract class ActiveScript extends PollingScript {
+	protected ActiveScript() {
+		getExecQueue(State.SUSPEND).add(new Runnable() {
+			@Override
+			public void run() {
+				setPaused(true);
+			}
+		});
+		getExecQueue(State.RESUME).add(new Runnable() {
+			@Override
+			public void run() {
+				setPaused(false);
+			}
+		});
+		getExecQueue(State.STOP).add(new Runnable() {
+			@Override
+			public void run() {
+				shutdown();
+			}
+		});
+	}
+
 	private final Container container = new TaskContainer();
 
-	public final boolean isActive()
-	{
-		return !this.container.isTerminated();
+	public final boolean isActive() {
+		return !container.isTerminated();
 	}
 
-	public final void setPaused(boolean paramBoolean)
-	{
-		this.container.setPaused(paramBoolean);
+	public final void setPaused(boolean paramBoolean) {
+		container.setPaused(paramBoolean);
 	}
 
-	public final boolean isPaused()
-	{
-		return this.container.isPaused();
+	public final boolean isPaused() {
+		return container.isPaused();
 	}
 
-	public final void shutdown()
-	{
-		if (!isShutdown())
-		{
-			this.container.shutdown();
+	public final void shutdown() {
+		if (!isShutdown()) {
+			container.shutdown();
 		}
 	}
 
-	public final boolean isShutdown()
-	{
-		return this.container.isShutdown();
+	public final boolean isShutdown() {
+		return container.isShutdown();
 	}
 
-	public final void stop()
-	{
-		this.container.interrupt();
+	public final void stop() {
+		container.interrupt();
 	}
 
-	public final Container getContainer()
-	{
-		return this.container;
+	public final Container getContainer() {
+		return container;
 	}
 }

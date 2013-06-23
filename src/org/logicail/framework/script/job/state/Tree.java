@@ -31,8 +31,8 @@ public class Tree {
 		return null;
 	}
 
-	public final void set(Node paramNode) {
-		current_node.set(paramNode);
+	public final void set(Node node) {
+		current_node.set(node);
 	}
 
 	public final Node get() {
