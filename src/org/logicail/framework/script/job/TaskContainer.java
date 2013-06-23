@@ -33,7 +33,7 @@ public class TaskContainer implements Container {
 
 	private TaskContainer(ThreadGroup paramThreadGroup, TaskContainer paramTaskContainer) {
 		this.group = new ThreadGroup(paramThreadGroup, getClass().getName() + "_" + Integer.toHexString(hashCode()));
-		this.executor = Executors.newCachedThreadPool(new ThreadPool(this.group));
+		this.executor = Executors.newCachedThreadPool(new ThreadPool(group));
 		this.parent_container = paramTaskContainer;
 	}
 
@@ -42,15 +42,16 @@ public class TaskContainer implements Container {
 			return;
 		}
 		job.setContainer(this);
-		Future localFuture = this.executor.submit(createWorker(job));
+		Future localFuture = executor.submit(createWorker(job));
 		if (job instanceof Task) {
 			((Task) job).future = localFuture;
 		}
 	}
 
 	public final void setPaused(boolean paused) {
-		if (isShutdown())
+		if (isShutdown()) {
 			return;
+		}
 		if (this.paused != paused) {
 			this.paused = paused;
 		}
@@ -64,32 +65,33 @@ public class TaskContainer implements Container {
 	}
 
 	public Job[] enumerate() {
-		return this.jobs.toArray(new Job[this.jobs.size()]);
+		return jobs.toArray(new Job[jobs.size()]);
 	}
 
 	public final int getActiveCount() {
-		return this.jobs.size();
+		return jobs.size();
 	}
 
 	public final Container branch() {
-		TaskContainer localTaskContainer = new TaskContainer(this.group, this);
-		this.children.add(localTaskContainer);
+		TaskContainer localTaskContainer = new TaskContainer(group, this);
+		children.add(localTaskContainer);
 		return localTaskContainer;
 	}
 
 	public final Container[] getChildren() {
-		int i;
-		if ((i = this.children.size()) > 0) {
-			if (i == this.childrenCache.length)
-				return this.childrenCache;
-			return this.childrenCache = this.children.toArray(new Container[i]);
+		int i = children.size();
+		if (i > 0) {
+			if (i == childrenCache.length) {
+				return childrenCache;
+			}
+			return childrenCache = children.toArray(new Container[i]);
 		}
 		return new Container[0];
 	}
 
 	public final void shutdown() {
 		if (!isShutdown()) {
-			this.shutdown = true;
+			shutdown = true;
 		}
 		for (Container localContainer : getChildren()) {
 			localContainer.shutdown();
@@ -97,57 +99,59 @@ public class TaskContainer implements Container {
 	}
 
 	public final boolean isShutdown() {
-		return this.shutdown;
+		return shutdown;
 	}
 
 	public final void interrupt() {
 		shutdown();
-		if (!this.interrupted) {
-			this.interrupted = true;
+		if (!interrupted) {
+			interrupted = true;
 		}
 		for (Container container : getChildren()) {
 			container.interrupt();
 		}
-		for (Job localJob : this.jobs) {
+		for (Job localJob : jobs) {
 			localJob.interrupt();
 		}
 	}
 
 	public final boolean isTerminated() {
-		return ((this.shutdown) || (this.interrupted)) && (getActiveCount() == 0);
+		return ((shutdown) || (interrupted)) && (getActiveCount() == 0);
 	}
 
-	private Runnable createWorker(final Job paramJob) {
+	private Runnable createWorker(final Job job) {
 		return new Runnable() {
 			public void run() {
-				TaskContainer.this.jobs.add(paramJob);
-				TaskContainer.this.notifyListeners(paramJob, true);
+				jobs.add(job);
+				notifyListeners(job, true);
 				try {
-					paramJob.work();
+					job.work();
 				} catch (Exception ignored) {
-				} catch (Throwable localThrowable) {
-					localThrowable.printStackTrace();
+				} catch (Throwable throwable) {
+					throwable.printStackTrace();
 				}
-				TaskContainer.this.jobs.remove(paramJob);
-				TaskContainer.this.notifyListeners(paramJob, false);
-				paramJob.setContainer(null);
+				jobs.remove(job);
+				notifyListeners(job, false);
+				job.setContainer(null);
 			}
 		};
 	}
 
-	private void notifyListeners(Job paramJob, boolean paramBoolean) {
-		JobListener[] arrayOfJobListener1 = new JobListener[this.listeners.size()];
-		this.listeners.toArray(arrayOfJobListener1);
+	private void notifyListeners(Job job, boolean started) {
+		JobListener[] arrayOfJobListener1 = new JobListener[listeners.size()];
+		listeners.toArray(arrayOfJobListener1);
 		for (JobListener localJobListener : arrayOfJobListener1)
 			try {
-				if (paramBoolean)
-					localJobListener.jobStarted(paramJob);
-				else
-					localJobListener.jobStopped(paramJob);
+				if (started) {
+					localJobListener.jobStarted(job);
+				} else {
+					localJobListener.jobStopped(job);
+				}
 			} catch (Throwable ignored) {
 			}
-		if (this.parent_container != null)
-			this.parent_container.notifyListeners(paramJob, paramBoolean);
+		if (parent_container != null) {
+			parent_container.notifyListeners(job, started);
+		}
 	}
 
 	private final class ThreadPool implements ThreadFactory {
@@ -160,7 +164,7 @@ public class TaskContainer implements Container {
 		}
 
 		public Thread newThread(Runnable paramRunnable) {
-			Thread localThread = new Thread(this.group, paramRunnable, this.group.getName() + "_" + this.worker.getAndIncrement());
+			Thread localThread = new Thread(group, paramRunnable, group.getName() + "_" + worker.getAndIncrement());
 			if (!localThread.isDaemon()) {
 				localThread.setDaemon(false);
 			}

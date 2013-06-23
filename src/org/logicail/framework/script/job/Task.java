@@ -1,7 +1,6 @@
 package org.logicail.framework.script.job;
 
 import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.util.Random;
 
 import java.util.concurrent.Future;
 
@@ -24,51 +23,53 @@ public abstract class Task extends Job {
 	}
 
 	public final void work() {
-		synchronized (this.init_lock) {
-			if (this.alive) {
+		synchronized (init_lock) {
+			if (alive) {
 				throw new RuntimeException("Task RuntimeException");
 			}
-			this.alive = true;
+			alive = true;
 		}
-		this.interrupted = false;
-		this.thread = Thread.currentThread();
+		interrupted = false;
+		thread = Thread.currentThread();
 		try {
 			execute();
 		} catch (ThreadDeath ignored) {
 		} catch (Throwable localThrowable) {
 			localThrowable.printStackTrace();
 		}
-		this.alive = false;
+		alive = false;
 	}
 
 	public abstract void execute();
 
 	public final boolean join() {
-		if ((this.future == null) || (this.future.isDone()))
+		if ((future == null) || (future.isDone()))
 			return true;
 		try {
-			this.future.get();
+			future.get();
 		} catch (Throwable ignored) {
 		}
-		return this.future.isDone();
+		return future.isDone();
 	}
 
 	public final boolean isAlive() {
-		return this.alive;
+		return alive;
 	}
 
 	public final void interrupt() {
-		this.interrupted = true;
-		if (this.thread != null)
+		interrupted = true;
+		if (thread != null) {
 			try {
-				if (!this.thread.isInterrupted())
-					this.thread.interrupt();
+				if (!thread.isInterrupted()) {
+					thread.interrupt();
+				}
 			} catch (Throwable ignored) {
 			}
+		}
 	}
 
 	public final boolean isInterrupted() {
-		return this.interrupted;
+		return interrupted;
 	}
 
 	public void setContainer(Container container) {
@@ -76,6 +77,6 @@ public abstract class Task extends Job {
 	}
 
 	public Container getContainer() {
-		return this.container;
+		return container;
 	}
 }

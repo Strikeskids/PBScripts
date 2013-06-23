@@ -25,6 +25,6 @@ public class MouseMover extends Node {
 	public void execute() {
 		Dimension dimensions = ctx.game.getDimensions();
 		ctx.mouse.move(org.powerbot.script.util.Random.nextInt(0, dimensions.width), org.powerbot.script.util.Random.nextInt(0, dimensions.height));
-		sleep(500,1000);
+		sleep(500, 1000);
 	}
 }

@@ -6,8 +6,7 @@ package org.logicail.framework.script.job;
  * Date: 23/06/13
  * Time: 17:16
  */
-public abstract interface Container
-{
+public abstract interface Container {
 	public abstract void submit(Job job);
 
 	public abstract void setPaused(boolean paused);

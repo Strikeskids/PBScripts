@@ -9,8 +9,7 @@ import org.powerbot.script.methods.MethodContext;
  * Date: 23/06/13
  * Time: 17:31
  */
-public abstract class Node extends Task
-{
+public abstract class Node extends Task {
 	public Node(MethodContext ctx) {
 		super(ctx);
 	}

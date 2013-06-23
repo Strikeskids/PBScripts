@@ -19,20 +19,20 @@ public abstract class LoopTask extends Task {
 		Container container = getContainer();
 		while (!container.isShutdown()) {
 			if (container.isPaused()) {
-				this.paused = true;
+				paused = true;
 				sleep(1000);
 			} else {
-				this.paused = false;
-				int i;
+				paused = false;
+				int delay;
 				try {
-					i = loop();
+					delay = loop();
 				} catch (Throwable throwable) {
 					throwable.printStackTrace();
-					i = -1;
+					delay = -1;
 				}
-				if (i >= 0) {
-					sleep(i);
-				} else if (i == -1) {
+				if (delay >= 0) {
+					sleep(delay);
+				} else if (delay == -1) {
 					break;
 				}
 			}
