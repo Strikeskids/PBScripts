@@ -8,7 +8,7 @@ package org.logicail.framework.banking;
  */
 public class RequiredItem extends AbstractRequiredItem {
 	/**
-	 * Require 1 * 1
+	 * Require x * y
 	 *
 	 * @param ids
 	 * @param quantity

@@ -29,7 +29,7 @@ public class LogArtisanArmourer extends ActiveScript {
 	@Override
 	public void start() {
 		super.start();
-		Application.launch(ArtisanArmourerInterface.class, (String[]) null);
+		Application.launch(ArtisanArmourerInterface.class);
 	}
 
 	@Override
