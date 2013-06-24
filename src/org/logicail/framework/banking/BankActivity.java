@@ -12,9 +12,9 @@ import org.powerbot.script.wrappers.Item;
  */
 // TODO: Check inventory has space
 public class BankActivity extends Node {
-	private final RequiredItem[] requiredItems;
+	private final AbstractRequiredItem[] requiredItems;
 
-	public BankActivity(MethodContext ctx, RequiredItem... requiredItems) {
+	public BankActivity(MethodContext ctx, AbstractRequiredItem... requiredItems) {
 		super(ctx);
 		this.requiredItems = requiredItems;
 	}
@@ -25,7 +25,7 @@ public class BankActivity extends Node {
 			return false;
 		}
 
-		for (RequiredItem requiredItem : requiredItems) {
+		for (AbstractRequiredItem requiredItem : requiredItems) {
 			if (requiredItem instanceof RequiredEquipment) { // 1,1
 				if (!ctx.equipment.contains(requiredItem.getIds())) {
 					return true;
@@ -34,7 +34,7 @@ public class BankActivity extends Node {
 				if (ctx.inventory.select().id(requiredItem.getIds()).isEmpty()) {
 					return true;
 				}
-			} else if (requiredItem instanceof SingleRequiredItem) { // 1,x
+			} else if (requiredItem instanceof RequiredItem) { // 1,x
 				if (ctx.inventory.select().id(requiredItem.getIds()).count(true) < requiredItem.getQuantity()) {
 					return true;
 				}
@@ -45,7 +45,7 @@ public class BankActivity extends Node {
 
 	@Override
 	public void execute() {
-		for (RequiredItem requiredItem : requiredItems) {
+		for (AbstractRequiredItem requiredItem : requiredItems) {
 			if (requiredItem instanceof RequiredEquipment) {
 				if ((!ctx.equipment.contains(requiredItem.getIds()))) {
 					if (!ctx.inventory.select().id(requiredItem.getIds()).isEmpty()) {
@@ -62,7 +62,7 @@ public class BankActivity extends Node {
 						}
 					}
 				}
-			} else if (requiredItem instanceof SingleRequiredItem) {
+			} else if (requiredItem instanceof RequiredItem) {
 				if (ctx.inventory.select().id(requiredItem.getIds()).count(true) < requiredItem.getQuantity()) {
 					int quantityRequired = requiredItem.getQuantity() - ctx.inventory.count(true);
 					for (int id : requiredItem.getIds()) {
