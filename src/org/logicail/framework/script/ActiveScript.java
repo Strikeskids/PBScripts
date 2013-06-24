@@ -1,6 +1,7 @@
 package org.logicail.framework.script;
 
 import org.logicail.framework.script.job.Container;
+import org.logicail.framework.script.job.Job;
 import org.logicail.framework.script.job.TaskContainer;
 import org.powerbot.script.PollingScript;
 
@@ -62,5 +63,9 @@ public abstract class ActiveScript extends PollingScript {
 
 	public final Container getContainer() {
 		return container;
+	}
+
+	public final void submit(Job job) {
+		container.submit(job);
 	}
 }

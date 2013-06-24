@@ -3,6 +3,7 @@ package org.logicail.framework.script.job;
 import org.powerbot.script.methods.MethodContext;
 
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +18,8 @@ public abstract class Task extends Job {
 	private volatile boolean alive = false;
 	private volatile boolean interrupted = false;
 	private final Object init_lock = new Object();
+
+	protected Logger log = Logger.getLogger(getClass().getName());
 
 	protected Task(MethodContext ctx) {
 		super(ctx);

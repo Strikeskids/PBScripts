@@ -1,5 +1,6 @@
 package org.logicail.scripts.logartisanarmourer;
 
+import javafx.application.Application;
 import org.logicail.framework.script.ActiveScript;
 import org.logicail.framework.script.job.state.Node;
 import org.logicail.framework.script.job.state.Tree;
@@ -26,10 +27,16 @@ public class LogArtisanArmourer extends ActiveScript {
 	// TODO: Hook paused etc to disable container
 
 	@Override
+	public void start() {
+		super.start();
+		Application.launch(ArtisanArmourerInterface.class, (String[]) null);
+	}
+
+	@Override
 	public int poll() {
 		Node state = tree.state();
 		if (state != null) {
-			getContainer().submit(state);
+			submit(state);
 			state.join();
 		}
 		return Random.nextInt(200, 500);

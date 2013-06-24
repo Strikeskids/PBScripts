@@ -61,7 +61,7 @@ public class TaskContainer implements Container {
 	}
 
 	public final boolean isPaused() {
-		return this.paused;
+		return paused;
 	}
 
 	public Job[] enumerate() {
@@ -73,18 +73,18 @@ public class TaskContainer implements Container {
 	}
 
 	public final Container branch() {
-		TaskContainer localTaskContainer = new TaskContainer(group, this);
-		children.add(localTaskContainer);
-		return localTaskContainer;
+		TaskContainer taskContainer = new TaskContainer(group, this);
+		children.add(taskContainer);
+		return taskContainer;
 	}
 
 	public final Container[] getChildren() {
-		int i = children.size();
-		if (i > 0) {
-			if (i == childrenCache.length) {
+		int size = children.size();
+		if (size > 0) {
+			if (size == childrenCache.length) {
 				return childrenCache;
 			}
-			return childrenCache = children.toArray(new Container[i]);
+			return childrenCache = children.toArray(new Container[size]);
 		}
 		return new Container[0];
 	}
@@ -110,8 +110,8 @@ public class TaskContainer implements Container {
 		for (Container container : getChildren()) {
 			container.interrupt();
 		}
-		for (Job localJob : jobs) {
-			localJob.interrupt();
+		for (Job job : jobs) {
+			job.interrupt();
 		}
 	}
 
@@ -138,14 +138,14 @@ public class TaskContainer implements Container {
 	}
 
 	private void notifyListeners(Job job, boolean started) {
-		JobListener[] arrayOfJobListener1 = new JobListener[listeners.size()];
-		listeners.toArray(arrayOfJobListener1);
-		for (JobListener localJobListener : arrayOfJobListener1)
+		JobListener[] jobListeners = new JobListener[listeners.size()];
+		listeners.toArray(jobListeners);
+		for (JobListener jobListener : jobListeners)
 			try {
 				if (started) {
-					localJobListener.jobStarted(job);
+					jobListener.jobStarted(job);
 				} else {
-					localJobListener.jobStopped(job);
+					jobListener.jobStopped(job);
 				}
 			} catch (Throwable ignored) {
 			}
@@ -164,14 +164,14 @@ public class TaskContainer implements Container {
 		}
 
 		public Thread newThread(Runnable paramRunnable) {
-			Thread localThread = new Thread(group, paramRunnable, group.getName() + "_" + worker.getAndIncrement());
-			if (!localThread.isDaemon()) {
-				localThread.setDaemon(false);
+			Thread thread = new Thread(group, paramRunnable, group.getName() + "_" + worker.getAndIncrement());
+			if (!thread.isDaemon()) {
+				thread.setDaemon(false);
 			}
-			if (localThread.getPriority() != 5) {
-				localThread.setPriority(5);
+			if (thread.getPriority() != 5) {
+				thread.setPriority(5);
 			}
-			return localThread;
+			return thread;
 		}
 	}
 }
