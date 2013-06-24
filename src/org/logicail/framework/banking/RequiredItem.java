@@ -10,10 +10,10 @@ public class RequiredItem extends AbstractRequiredItem {
 	/**
 	 * Require 1 * 1
 	 *
-	 * @param id
+	 * @param ids
 	 * @param quantity
 	 */
-	public RequiredItem(int id, int quantity) {
-		super(new int[]{id}, quantity);
+	public RequiredItem(int[] ids, int quantity) {
+		super(ids, quantity);
 	}
 }

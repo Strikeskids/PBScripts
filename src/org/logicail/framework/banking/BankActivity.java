@@ -68,6 +68,10 @@ public class BankActivity extends Node {
 					for (int id : requiredItem.getIds()) {
 						int count = ctx.bank.select().id(id).count(true);
 
+						if (count <= 0) {
+							continue;
+						}
+
 						int withdraw = quantityRequired;
 
 						if (count < withdraw) {
