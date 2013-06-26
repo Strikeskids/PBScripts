@@ -12,23 +12,25 @@ import org.powerbot.script.PollingScript;
  * Time: 17:31
  */
 public abstract class ActiveScript extends PollingScript {
-
-	@Override
-	public void suspend() {
-		super.suspend();
-		setPaused(true);
-	}
-
-	@Override
-	public void resume() {
-		super.resume();
-		setPaused(false);
-	}
-
-	@Override
-	public void start() {
-		super.start();
-		shutdown();
+	protected ActiveScript() {
+		getExecQueue(State.SUSPEND).add(new Runnable() {
+			@Override
+			public void run() {
+				setPaused(true);
+			}
+		});
+		getExecQueue(State.RESUME).add(new Runnable() {
+			@Override
+			public void run() {
+				setPaused(false);
+			}
+		});
+		getExecQueue(State.STOP).add(new Runnable() {
+			@Override
+			public void run() {
+				shutdown();
+			}
+		});
 	}
 
 	private final Container container = new TaskContainer();

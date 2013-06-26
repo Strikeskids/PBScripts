@@ -1,9 +1,12 @@
 package org.logicail.scripts.logartisanarmourer;
 
-import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.stage.Stage;
 import org.logicail.framework.script.ActiveScript;
 import org.logicail.framework.script.job.state.Node;
 import org.logicail.framework.script.job.state.Tree;
+import org.logicail.scripts.logartisanarmourer.gui.ArtisanArmourerInterface;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.util.Random;
 
@@ -29,7 +32,22 @@ public class LogArtisanArmourer extends ActiveScript {
 	@Override
 	public void start() {
 		super.start();
-		Application.launch(ArtisanArmourerInterface.class);
+		try {
+			new JFXPanel();
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					new ArtisanArmourerInterface().start(new Stage());
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void suspend() {
+		super.suspend();
 	}
 
 	@Override
