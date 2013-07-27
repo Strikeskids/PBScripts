@@ -1,4 +1,4 @@
-package org.logicail.framework.script.job;
+package org.logicail.framework.script;
 
 /**
  * Created with IntelliJ IDEA.
@@ -7,7 +7,7 @@ package org.logicail.framework.script.job;
  * Time: 17:16
  */
 public abstract interface Container {
-	public abstract void submit(Job job);
+	public abstract void submit(LoopTask job);
 
 	public abstract void setPaused(boolean paused);
 

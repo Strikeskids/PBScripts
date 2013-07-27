@@ -1,4 +1,4 @@
-package org.logicail.framework.script.job;
+package org.logicail.framework.script;
 
 import org.logicail.api.methods.MyMethodContext;
 
@@ -8,20 +8,21 @@ import java.util.logging.Logger;
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
- * Date: 23/06/13
- * Time: 17:17
+ * Date: 27/07/13
+ * Time: 16:43
  */
-public abstract class Task extends Job {
+public abstract class LoopTask extends Job {
 	private final Object init_lock = new Object();
 	public MyMethodContext ctx;
 	protected Logger log = Logger.getLogger(getClass().getName());
 	Future<?> future;
+	private boolean paused;
 	private Thread thread;
 	private Container container = null;
 	private volatile boolean alive = false;
 	private volatile boolean interrupted = false;
 
-	protected Task(MyMethodContext ctx) {
+	public LoopTask(MyMethodContext ctx) {
 		super(ctx);
 		this.ctx = ctx;
 	}
@@ -43,8 +44,6 @@ public abstract class Task extends Job {
 		}
 		alive = false;
 	}
-
-	public abstract void execute();
 
 	public final boolean join() {
 		if (future == null || future.isDone()) {
@@ -83,5 +82,37 @@ public abstract class Task extends Job {
 
 	public void setContainer(Container container) {
 		this.container = container;
+	}
+
+	public final void execute() {
+		Container container = getContainer();
+		while (!container.isShutdown()) {
+			if (container.isPaused()) {
+				paused = true;
+				sleep(1000);
+			} else {
+				paused = false;
+
+				int delay;
+				try {
+					delay = loop();
+				} catch (Throwable throwable) {
+					throwable.printStackTrace();
+					delay = -1;
+				}
+
+				if (delay >= 0) {
+					sleep(delay);
+				} else if (delay == -1) {
+					break;
+				}
+			}
+		}
+	}
+
+	public abstract int loop();
+
+	public boolean isPaused() {
+		return paused;
 	}
 }

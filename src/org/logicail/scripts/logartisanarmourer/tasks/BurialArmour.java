@@ -1,6 +1,6 @@
 package org.logicail.scripts.logartisanarmourer.tasks;
 
-import org.logicail.framework.script.job.state.Delegation;
+import org.logicail.framework.script.state.BranchOnce;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.tasks.burial.DepositArmour;
 import org.logicail.scripts.logartisanarmourer.tasks.burial.SmithAnvil;
@@ -13,7 +13,7 @@ import org.logicail.scripts.logartisanarmourer.tasks.respect.KillAncestors;
  * Date: 25/07/13
  * Time: 16:07
  */
-public class BurialArmour extends Delegation {
+public class BurialArmour extends BranchOnce {
 	public BurialArmour(LogArtisanArmourer script) {
 		super(script.ctx);
 

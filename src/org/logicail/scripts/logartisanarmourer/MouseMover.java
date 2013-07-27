@@ -1,9 +1,8 @@
 package org.logicail.scripts.logartisanarmourer;
 
 import org.logicail.api.methods.MyMethodContext;
-import org.logicail.framework.script.job.state.Node;
-
-import java.awt.*;
+import org.logicail.framework.script.state.Node;
+import org.powerbot.script.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,13 +17,15 @@ public class MouseMover extends Node {
 
 	@Override
 	public boolean activate() {
-		return true;
+		System.out.println("activate: " + Thread.currentThread().getId());
+		return Random.nextBoolean();
 	}
 
 	@Override
 	public void execute() {
-		Dimension dimensions = ctx.game.getDimensions();
-		ctx.mouse.move(org.powerbot.script.util.Random.nextInt(0, dimensions.width), org.powerbot.script.util.Random.nextInt(0, dimensions.height));
+		System.out.println("execute: " + Thread.currentThread().getId());
+		//Dimension dimensions = ctx.game.getDimensions();
+		//ctx.mouse.move(org.powerbot.scriptold.util.Random.nextInt(0, dimensions.width), org.powerbot.scriptold.util.Random.nextInt(0, dimensions.height));
 		sleep(1000, 2000);
 	}
 }

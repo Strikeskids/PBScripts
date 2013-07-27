@@ -1,4 +1,4 @@
-package org.logicail.framework.script.job;
+package org.logicail.framework.script;
 
 import org.logicail.api.methods.MyMethodContext;
 import org.logicail.api.methods.MyMethodProvider;

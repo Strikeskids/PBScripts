@@ -1,7 +1,7 @@
 package org.logicail.scripts.logartisanarmourer.tasks.respect;
 
 import org.logicail.api.methods.MyMethodContext;
-import org.logicail.framework.script.job.state.Node;
+import org.logicail.framework.script.state.Node;
 
 /**
  * Created with IntelliJ IDEA.

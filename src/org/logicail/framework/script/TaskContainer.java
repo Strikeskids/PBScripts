@@ -1,4 +1,4 @@
-package org.logicail.framework.script.job;
+package org.logicail.framework.script;
 
 import java.util.Deque;
 import java.util.List;
@@ -14,14 +14,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TaskContainer implements Container {
 	private final CopyOnWriteArrayList<JobListener> listeners = new CopyOnWriteArrayList<>();
 	private final List<Container> children = new CopyOnWriteArrayList<>();
-	private Container[] childrenCache = new Container[0];
 	private final ThreadGroup group;
 	private final ExecutorService executor;
 	private final Deque<Job> jobs = new ConcurrentLinkedDeque<>();
+	private final TaskContainer parent_container;
+	private Container[] childrenCache = new Container[0];
 	private volatile boolean paused = false;
 	private volatile boolean shutdown = false;
 	private volatile boolean interrupted = false;
-	private final TaskContainer parent_container;
 
 	public TaskContainer() {
 		this(Thread.currentThread().getThreadGroup());
@@ -37,15 +37,17 @@ public class TaskContainer implements Container {
 		this.parent_container = container;
 	}
 
-	public final void submit(Job job) {
+	public final void submit(LoopTask job) {
 		if (isShutdown()) {
 			return;
 		}
 		job.setContainer(this);
 		Future localFuture = executor.submit(createWorker(job));
-		if (job instanceof Task) {
-			((Task) job).future = localFuture;
-		}
+		((LoopTask) job).future = localFuture;
+	}
+
+	public final boolean isPaused() {
+		return paused;
 	}
 
 	public final void setPaused(boolean paused) {
@@ -56,10 +58,6 @@ public class TaskContainer implements Container {
 		for (Container localContainer : getChildren()) {
 			localContainer.setPaused(paused);
 		}
-	}
-
-	public final boolean isPaused() {
-		return paused;
 	}
 
 	public Job[] enumerate() {

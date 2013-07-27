@@ -2,7 +2,7 @@ package org.logicail.api;
 
 import org.logicail.api.methods.IOUtil;
 import org.logicail.framework.script.ActiveScript;
-import org.logicail.framework.script.job.state.Node;
+import org.logicail.framework.script.state.Node;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Timer;
 

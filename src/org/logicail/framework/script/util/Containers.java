@@ -1,8 +1,8 @@
-package org.logicail.framework.script.job.util;
+package org.logicail.framework.script.util;
 
-import org.logicail.framework.script.job.Container;
-import org.logicail.framework.script.job.Job;
-import org.logicail.framework.script.job.JobListener;
+import org.logicail.framework.script.Container;
+import org.logicail.framework.script.Job;
+import org.logicail.framework.script.JobListener;
 
 /**
  * Created with IntelliJ IDEA.

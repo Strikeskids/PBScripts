@@ -1,4 +1,4 @@
-package org.logicail.framework.script.job;
+package org.logicail.framework.script;
 
 /**
  * Created with IntelliJ IDEA.

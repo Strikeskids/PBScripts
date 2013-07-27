@@ -1,7 +1,7 @@
 package org.logicail.scripts.logartisanarmourer.tasks;
 
 import org.logicail.api.methods.MyMethodContext;
-import org.logicail.framework.script.job.LoopTask;
+import org.logicail.framework.script.LoopTask;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;

@@ -1,7 +1,7 @@
 package org.logicail.scripts.tasks;
 
 import org.logicail.api.methods.MyMethodContext;
-import org.logicail.framework.script.job.LoopTask;
+import org.logicail.framework.script.LoopTask;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

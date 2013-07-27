@@ -3,14 +3,13 @@ package org.logicail.scripts.logartisanarmourer;
 import org.logicail.api.TimeUtilities;
 import org.logicail.api.methods.SimplePaint;
 import org.logicail.framework.script.ActiveScript;
-import org.logicail.framework.script.job.state.Node;
+import org.logicail.framework.script.state.Node;
+import org.logicail.framework.script.state.Tree;
 import org.logicail.scripts.logartisanarmourer.tasks.AntiBan;
 import org.logicail.scripts.tasks.AnimationHistory;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.Manifest;
-import org.powerbot.script.methods.Game;
 import org.powerbot.script.methods.Skills;
-import org.powerbot.script.wrappers.Item;
 
 import java.awt.*;
 import java.util.Map;
@@ -82,8 +81,7 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 		submit(new AnimationHistory(ctx));
 		submit(new AntiBan(ctx));
 
-		Item nil = ctx.skillingInterface.getNil();
-		System.out.println(nil);
+		tree = new Tree(ctx, new Node[]{new MouseMover(ctx), new MouseMover(ctx)});
 	}
 
 	/*
@@ -118,11 +116,10 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 	@Override
 	public int poll() {
 		try {
-			if (tree != null && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+			if (tree != null /*&& ctx.game.getClientState() == Game.INDEX_MAP_LOADED*/) {
 				Node state = tree.state();
 				if (state != null) {
-					submit(state);
-					state.join();
+					state.execute();
 				}
 			}
 		} catch (Exception e) {

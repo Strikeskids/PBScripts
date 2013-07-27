@@ -1,4 +1,4 @@
-package org.logicail.framework.script.job.state;
+package org.logicail.framework.script.state;
 
 import org.logicail.api.methods.MyMethodContext;
 
@@ -40,6 +40,7 @@ public abstract class Branch extends Node {
 			while (iterator.hasNext()) {
 				Node node = iterator.next();
 				if (node != null && node.activate()) {
+					current_node.set(node);
 					return true;
 				}
 			}
@@ -49,18 +50,11 @@ public abstract class Branch extends Node {
 
 	@Override
 	public void execute() {
-		Node current = current_node.get();
-		if (current != null && current.isAlive()) {
-			return;
-		}
-
 		Iterator<Node> iterator = nodes.iterator();
 		while (iterator.hasNext()) {
-			Node next = iterator.next();
-			if (next != null && next.activate()) {
-				current_node.set(next);
-				getContainer().submit(next);
-				next.join();
+			Node node = iterator.next();
+			if (node != null && node.activate()) {
+				node.execute();
 			}
 		}
 	}

@@ -1,7 +1,7 @@
-package org.logicail.framework.script.job.state;
+package org.logicail.framework.script.state;
 
 import org.logicail.api.methods.MyMethodContext;
-import org.logicail.framework.script.job.Task;
+import org.logicail.api.methods.MyMethodProvider;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,10 +9,15 @@ import org.logicail.framework.script.job.Task;
  * Date: 23/06/13
  * Time: 17:31
  */
-public abstract class Node extends Task {
+public abstract class Node extends MyMethodProvider {
+	public MyMethodContext ctx;
+
 	public Node(MyMethodContext ctx) {
 		super(ctx);
+		this.ctx = ctx;
 	}
 
 	public abstract boolean activate();
+
+	public abstract void execute();
 }

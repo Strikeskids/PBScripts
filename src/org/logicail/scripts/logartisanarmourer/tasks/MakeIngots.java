@@ -3,7 +3,7 @@ package org.logicail.scripts.logartisanarmourer.tasks;
 import org.logicail.api.methods.MyMethodContext;
 import org.logicail.api.methods.Shutdown;
 import org.logicail.api.providers.Condition;
-import org.logicail.framework.script.job.state.Node;
+import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.Options;
 import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
