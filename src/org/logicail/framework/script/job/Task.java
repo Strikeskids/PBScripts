@@ -1,28 +1,29 @@
 package org.logicail.framework.script.job;
 
-import org.powerbot.script.methods.MethodContext;
+import org.logicail.api.methods.MyMethodContext;
 
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Michael
+ * User: Logicail
  * Date: 23/06/13
  * Time: 17:17
  */
 public abstract class Task extends Job {
-	private Thread thread;
+	private final Object init_lock = new Object();
+	public MyMethodContext ctx;
+	protected Logger log = Logger.getLogger(getClass().getName());
 	Future<?> future;
+	private Thread thread;
 	private Container container = null;
 	private volatile boolean alive = false;
 	private volatile boolean interrupted = false;
-	private final Object init_lock = new Object();
 
-	protected Logger log = Logger.getLogger(getClass().getName());
-
-	protected Task(MethodContext ctx) {
+	protected Task(MyMethodContext ctx) {
 		super(ctx);
+		this.ctx = ctx;
 	}
 
 	public final void work() {
@@ -37,8 +38,8 @@ public abstract class Task extends Job {
 		try {
 			execute();
 		} catch (ThreadDeath ignored) {
-		} catch (Throwable localThrowable) {
-			localThrowable.printStackTrace();
+		} catch (Throwable throwable) {
+			throwable.printStackTrace();
 		}
 		alive = false;
 	}
@@ -46,8 +47,9 @@ public abstract class Task extends Job {
 	public abstract void execute();
 
 	public final boolean join() {
-		if ((future == null) || (future.isDone()))
+		if (future == null || future.isDone()) {
 			return true;
+		}
 		try {
 			future.get();
 		} catch (Throwable ignored) {
@@ -75,11 +77,11 @@ public abstract class Task extends Job {
 		return interrupted;
 	}
 
-	public void setContainer(Container container) {
-		this.container = container;
-	}
-
 	public Container getContainer() {
 		return container;
+	}
+
+	public void setContainer(Container container) {
+		this.container = container;
 	}
 }

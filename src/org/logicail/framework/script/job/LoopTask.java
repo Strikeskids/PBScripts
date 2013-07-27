@@ -1,17 +1,17 @@
 package org.logicail.framework.script.job;
 
-import org.powerbot.script.methods.MethodContext;
+import org.logicail.api.methods.MyMethodContext;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Michael
+ * User: Logicail
  * Date: 23/06/13
  * Time: 17:20
  */
 public abstract class LoopTask extends Task {
 	private boolean paused;
 
-	public LoopTask(MethodContext ctx) {
+	public LoopTask(MyMethodContext ctx) {
 		super(ctx);
 	}
 
@@ -23,6 +23,7 @@ public abstract class LoopTask extends Task {
 				sleep(1000);
 			} else {
 				paused = false;
+
 				int delay;
 				try {
 					delay = loop();
@@ -30,6 +31,7 @@ public abstract class LoopTask extends Task {
 					throwable.printStackTrace();
 					delay = -1;
 				}
+
 				if (delay >= 0) {
 					sleep(delay);
 				} else if (delay == -1) {
@@ -42,6 +44,6 @@ public abstract class LoopTask extends Task {
 	public abstract int loop();
 
 	public boolean isPaused() {
-		return this.paused;
+		return paused;
 	}
 }

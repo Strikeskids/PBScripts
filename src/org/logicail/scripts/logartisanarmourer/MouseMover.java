@@ -1,7 +1,7 @@
 package org.logicail.scripts.logartisanarmourer;
 
+import org.logicail.api.methods.MyMethodContext;
 import org.logicail.framework.script.job.state.Node;
-import org.powerbot.script.methods.MethodContext;
 
 import java.awt.*;
 
@@ -12,7 +12,7 @@ import java.awt.*;
  * Time: 17:40
  */
 public class MouseMover extends Node {
-	public MouseMover(MethodContext ctx) {
+	public MouseMover(MyMethodContext ctx) {
 		super(ctx);
 	}
 

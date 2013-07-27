@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Michael
+ * User: Logicail
  * Date: 23/06/13
  * Time: 17:21
  */
@@ -27,14 +27,14 @@ public class TaskContainer implements Container {
 		this(Thread.currentThread().getThreadGroup());
 	}
 
-	public TaskContainer(ThreadGroup paramThreadGroup) {
-		this(paramThreadGroup, null);
+	public TaskContainer(ThreadGroup threadGroup) {
+		this(threadGroup, null);
 	}
 
-	private TaskContainer(ThreadGroup paramThreadGroup, TaskContainer paramTaskContainer) {
-		this.group = new ThreadGroup(paramThreadGroup, getClass().getName() + "_" + Integer.toHexString(hashCode()));
-		this.executor = Executors.newCachedThreadPool(new ThreadPool(group));
-		this.parent_container = paramTaskContainer;
+	private TaskContainer(ThreadGroup group, TaskContainer container) {
+		this.group = new ThreadGroup(group, getClass().getName() + "_" + Integer.toHexString(hashCode()));
+		this.executor = Executors.newCachedThreadPool(new ThreadPool(this.group));
+		this.parent_container = container;
 	}
 
 	public final void submit(Job job) {
@@ -52,9 +52,7 @@ public class TaskContainer implements Container {
 		if (isShutdown()) {
 			return;
 		}
-		if (this.paused != paused) {
-			this.paused = paused;
-		}
+		this.paused = paused;
 		for (Container localContainer : getChildren()) {
 			localContainer.setPaused(paused);
 		}
@@ -104,9 +102,7 @@ public class TaskContainer implements Container {
 
 	public final void interrupt() {
 		shutdown();
-		if (!interrupted) {
-			interrupted = true;
-		}
+		interrupted = true;
 		for (Container container : getChildren()) {
 			container.interrupt();
 		}
@@ -117,6 +113,14 @@ public class TaskContainer implements Container {
 
 	public final boolean isTerminated() {
 		return ((shutdown) || (interrupted)) && (getActiveCount() == 0);
+	}
+
+	public final void addListener(JobListener listener) {
+		listeners.addIfAbsent(listener);
+	}
+
+	public final void removeListener(JobListener listener) {
+		listeners.remove(listener);
 	}
 
 	private Runnable createWorker(final Job job) {
@@ -138,9 +142,8 @@ public class TaskContainer implements Container {
 	}
 
 	private void notifyListeners(Job job, boolean started) {
-		JobListener[] jobListeners = new JobListener[listeners.size()];
-		listeners.toArray(jobListeners);
-		for (JobListener jobListener : jobListeners)
+		JobListener[] jobListeners = listeners.toArray(new JobListener[listeners.size()]);
+		for (JobListener jobListener : jobListeners) {
 			try {
 				if (started) {
 					jobListener.jobStarted(job);
@@ -149,6 +152,7 @@ public class TaskContainer implements Container {
 				}
 			} catch (Throwable ignored) {
 			}
+		}
 		if (parent_container != null) {
 			parent_container.notifyListeners(job, started);
 		}
@@ -156,15 +160,14 @@ public class TaskContainer implements Container {
 
 	private final class ThreadPool implements ThreadFactory {
 		private final ThreadGroup group;
-		private final AtomicInteger worker;
+		private final AtomicInteger worker = new AtomicInteger(1);
 
 		private ThreadPool(ThreadGroup group) {
 			this.group = group;
-			this.worker = new AtomicInteger(1);
 		}
 
-		public Thread newThread(Runnable paramRunnable) {
-			Thread thread = new Thread(group, paramRunnable, group.getName() + "_" + worker.getAndIncrement());
+		public Thread newThread(Runnable runnable) {
+			Thread thread = new Thread(group, runnable, group.getName() + "_" + worker.getAndIncrement());
 			if (!thread.isDaemon()) {
 				thread.setDaemon(false);
 			}

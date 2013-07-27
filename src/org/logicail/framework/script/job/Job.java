@@ -1,16 +1,16 @@
 package org.logicail.framework.script.job;
 
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.methods.MethodProvider;
+import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.MyMethodProvider;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Michael
+ * User: Logicail
  * Date: 23/06/13
  * Time: 17:15
  */
-public abstract class Job extends MethodProvider {
-	public Job(MethodContext ctx) {
+public abstract class Job extends MyMethodProvider {
+	public Job(MyMethodContext ctx) {
 		super(ctx);
 	}
 

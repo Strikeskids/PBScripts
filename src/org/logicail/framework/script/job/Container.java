@@ -2,7 +2,7 @@ package org.logicail.framework.script.job;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Michael
+ * User: Logicail
  * Date: 23/06/13
  * Time: 17:16
  */
@@ -29,4 +29,7 @@ public abstract interface Container {
 
 	public abstract boolean isTerminated();
 
+	public abstract void addListener(JobListener jobListener);
+
+	public abstract void removeListener(JobListener jobListener);
 }

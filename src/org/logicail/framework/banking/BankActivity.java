@@ -1,7 +1,7 @@
 package org.logicail.framework.banking;
 
+import org.logicail.api.methods.MyMethodContext;
 import org.logicail.framework.script.job.state.Node;
-import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.wrappers.Item;
 
 /**
@@ -14,7 +14,7 @@ import org.powerbot.script.wrappers.Item;
 public class BankActivity extends Node {
 	private final AbstractRequiredItem[] requiredItems;
 
-	public BankActivity(MethodContext ctx, AbstractRequiredItem... requiredItems) {
+	public BankActivity(MyMethodContext ctx, AbstractRequiredItem... requiredItems) {
 		super(ctx);
 		this.requiredItems = requiredItems;
 	}
@@ -27,15 +27,15 @@ public class BankActivity extends Node {
 
 		for (AbstractRequiredItem requiredItem : requiredItems) {
 			if (requiredItem instanceof RequiredEquipment) { // 1,1
-				if (!ctx.equipment.contains(requiredItem.getIds())) {
+				if (!ctx.equipment.select().id(requiredItem.getIds()).isEmpty()) {
 					return true;
 				}
 			} else if (requiredItem instanceof RequireOneItem) { // (1 of x),1
-				if (ctx.inventory.select().id(requiredItem.getIds()).isEmpty()) {
+				if (ctx.backpack.select().id(requiredItem.getIds()).isEmpty()) {
 					return true;
 				}
 			} else if (requiredItem instanceof RequiredItem) { // 1,x
-				if (ctx.inventory.select().id(requiredItem.getIds()).count(true) < requiredItem.getQuantity()) {
+				if (ctx.backpack.select().id(requiredItem.getIds()).count(true) < requiredItem.getQuantity()) {
 					return true;
 				}
 			}
@@ -47,15 +47,15 @@ public class BankActivity extends Node {
 	public void execute() {
 		for (AbstractRequiredItem requiredItem : requiredItems) {
 			if (requiredItem instanceof RequiredEquipment) {
-				if ((!ctx.equipment.contains(requiredItem.getIds()))) {
-					if (!ctx.inventory.select().id(requiredItem.getIds()).isEmpty()) {
+				if (!ctx.equipment.select().id(requiredItem.getIds()).isEmpty()) {
+					if (!ctx.backpack.select().id(requiredItem.getIds()).isEmpty()) {
 						// Wield/Wear etc.
 					} else {
 						ctx.bank.withdraw(requiredItem.getIds()[0], requiredItem.getQuantity());
 					}
 				}
 			} else if (requiredItem instanceof RequireOneItem) { // Require 1 of many // fix for (1 of i and 2 of j)
-				if (ctx.inventory.select().id(requiredItem.getIds()).isEmpty()) {
+				if (ctx.backpack.select().id(requiredItem.getIds()).isEmpty()) {
 					for (Item item : ctx.bank.select().id(requiredItem.getIds())) {
 						if (ctx.bank.withdraw(item.getId(), 1)) {
 							break;
@@ -63,8 +63,8 @@ public class BankActivity extends Node {
 					}
 				}
 			} else if (requiredItem instanceof RequiredItem) {
-				if (ctx.inventory.select().id(requiredItem.getIds()).count(true) < requiredItem.getQuantity()) {
-					int quantityRequired = requiredItem.getQuantity() - ctx.inventory.count(true);
+				if (ctx.backpack.select().id(requiredItem.getIds()).count(true) < requiredItem.getQuantity()) {
+					int quantityRequired = requiredItem.getQuantity() - ctx.backpack.count(true);
 					for (int id : requiredItem.getIds()) {
 						int count = ctx.bank.select().id(id).count(true);
 
