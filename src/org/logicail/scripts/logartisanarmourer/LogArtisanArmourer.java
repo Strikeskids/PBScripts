@@ -3,12 +3,11 @@ package org.logicail.scripts.logartisanarmourer;
 import org.logicail.api.TimeUtilities;
 import org.logicail.api.methods.SimplePaint;
 import org.logicail.framework.script.ActiveScript;
-import org.logicail.framework.script.state.Node;
-import org.logicail.framework.script.state.Tree;
 import org.logicail.scripts.logartisanarmourer.tasks.AntiBan;
 import org.logicail.scripts.tasks.AnimationHistory;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.Manifest;
+import org.powerbot.script.methods.Game;
 import org.powerbot.script.methods.Skills;
 
 import java.awt.*;
@@ -81,7 +80,7 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 		submit(new AnimationHistory(ctx));
 		submit(new AntiBan(ctx));
 
-		tree = new Tree(ctx, new Node[]{new MouseMover(ctx), new MouseMover(ctx)});
+		//tree = new Tree(ctx, new Node[]{new MouseMover(ctx), new MouseMover(ctx)});
 	}
 
 	/*
@@ -116,10 +115,9 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 	@Override
 	public int poll() {
 		try {
-			if (tree != null /*&& ctx.game.getClientState() == Game.INDEX_MAP_LOADED*/) {
-				Node state = tree.state();
-				if (state != null) {
-					state.execute();
+			if (tree != null && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+				if (tree.activate()) {
+					tree.execute();
 				}
 			}
 		} catch (Exception e) {
