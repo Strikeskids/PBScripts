@@ -67,53 +67,57 @@ public class Paint extends SimplePaint implements MessageListener {
 
 	@Override
 	public void messaged(MessageEvent e) {
-		int before = ctx.skills.getExperience(Skills.SMITHING);
-		switch (e.getId()) {
-			case 0:
-				switch (e.getMessage()) {
-					case "You need plans to make a sword.":
-						options.gotPlan = false;
-						break;
-					case "This sword is too cool to work. Ask Egil or Abel to rate it.":
-					case "This sword has cooled and you can no longer work it.":
-						options.finishedSword = true;
-						options.gotPlan = false;
-						break;
-					case "You broke the sword! You'll need to get another set of plans from Egil.":
-						synchronized (this) {
-							brokenSwords++;
-						}
-						options.finishedSword = true;
-						options.gotPlan = false;
-						break;
-					case "This sword is now perfect and requires no more work.":
-					case "This sword is perfect. Ask Egil or Abel to rate it.":
-						options.finishedSword = true;
-						options.gotPlan = false;
-						break;
-					case "For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!":
-						synchronized (this) {
-							perfectSwords++;
-							swordsSmithed++;
-						}
-						break;
-					default:
-						if (e.getMessage().startsWith("Your sword is awarded")) {
-							swordsSmithed++;
+		if (ctx.game.isLoggedIn()) {
+			int before = ctx.skills.getExperience(Skills.SMITHING);
+			switch (e.getId()) {
+				case 0:
+					switch (e.getMessage()) {
+						case "You need plans to make a sword.":
+							options.gotPlan = false;
+							break;
+						case "This sword is too cool to work. Ask Egil or Abel to rate it.":
+						case "This sword has cooled and you can no longer work it.":
 							options.finishedSword = true;
 							options.gotPlan = false;
-						}
-						break;
-				}
-				break;
-			case 109:
-				if (e.getMessage().contains("You make a")) {
-					synchronized (this) {
-						ingots++;
+							break;
+						case "You broke the sword! You'll need to get another set of plans from Egil.":
+							synchronized (this) {
+								brokenSwords++;
+							}
+							options.finishedSword = true;
+							options.gotPlan = false;
+							break;
+						case "This sword is now perfect and requires no more work.":
+						case "This sword is perfect. Ask Egil or Abel to rate it.":
+							options.finishedSword = true;
+							options.gotPlan = false;
+							break;
+						case "For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!":
+							synchronized (this) {
+								perfectSwords++;
+								swordsSmithed++;
+							}
+							break;
+						default:
+							if (e.getMessage().startsWith("Your sword is awarded")) {
+								synchronized (this) {
+									swordsSmithed++;
+								}
+								options.finishedSword = true;
+								options.gotPlan = false;
+							}
+							break;
 					}
-				}
-				break;
+					break;
+				case 109:
+					if (e.getMessage().contains("You make a")) {
+						synchronized (this) {
+							ingots++;
+						}
+					}
+					break;
+			}
+			xpGained += ctx.skills.getExperience(Skills.SMITHING) - before;
 		}
-		xpGained = ctx.skills.getExperience(Skills.SMITHING) - before;
 	}
 }
