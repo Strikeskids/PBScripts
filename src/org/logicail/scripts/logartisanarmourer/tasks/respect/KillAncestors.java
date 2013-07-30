@@ -27,15 +27,11 @@ public class KillAncestors extends RespectNode {
 
 	@Override
 	public boolean activate() {
-		if (super.activate()
-				&& getAncestor()) {
-			return !updateAbilities().isEmpty();
-		}
-		return false;
+		return super.activate() && getAncestor() && !updateAbilities().isEmpty();
 	}
 
 	private boolean getAncestor() {
-		return !ctx.npcs.select(new CombatFilter<Npc>(ctx, ANCESTOR_IDS)).nearest().first().isEmpty();
+		return !ctx.npcs.select().id(ANCESTOR_IDS).select(new CombatFilter<Npc>(ctx)).nearest().first().isEmpty();
 	}
 
 	@Override

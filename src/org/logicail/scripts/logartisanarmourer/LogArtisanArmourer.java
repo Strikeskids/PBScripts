@@ -9,15 +9,10 @@ import org.logicail.scripts.logartisanarmourer.tasks.BurialArmour;
 import org.logicail.scripts.tasks.IdleLogout;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
-import org.powerbot.event.PaintListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +28,7 @@ import java.util.ArrayList;
 		authors = {"Logicail"},
 		instances = 99,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
-public class LogArtisanArmourer extends ActiveScript implements PaintListener, MessageListener, MouseListener, MouseMotionListener {
+public class LogArtisanArmourer extends ActiveScript implements MessageListener {
 	public static final int ID_SMELTER = 29395;
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ARMOUR_ID_LIST = {20572, 20573, 20574, 20575,
@@ -46,64 +41,18 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener, M
 			20630, 20631};
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
-	private Paint paint;
 
 	public LogArtisanArmourer() {
 		super();
 
-		paint = new Paint(ctx);
-	}
-
-	@Override
-	public void start() {
-		/*super.start();
-		try {
-			removeOldStats();
-		} catch (Exception ignored) {
-		}*/
-
-		/*SwingUtilities.invokeLater(new Runnable() {
+		getExecQueue(State.START).add(new Runnable() {
 			@Override
 			public void run() {
-				handler = new WindowHandler();
-				log.addHandler(handler);
+				submit(new AntiBan(ctx));
+				submit(paint = new Paint(ctx));
 			}
-		});*/
-
-		//tree = new Tree(ctx, new Node[]{new MouseMover(ctx), new MouseMover(ctx)});
-		submit(new AntiBan(ctx));
-		submit(paint);
+		});
 	}
-
-	/*
-		@Override
-		public void stop() {
-			// Gotta stop executor
-			super.stop();
-
-			removeOldStats();
-		}
-	*/
-	/*
-	private void removeOldStats() {
-		for (Window window : Window.getWindows()) {
-			for (WindowListener windowListener : window.getWindowListeners()) {
-				if (windowListener instanceof LogWindow) {
-					window.removeWindowListener(windowListener);
-				}
-			}
-			for (ComponentListener windowListener : window.getComponentListeners()) {
-				if (windowListener instanceof LogWindow) {
-					window.removeComponentListener(windowListener);
-				}
-			}
-			if (window instanceof LogWindow) {
-				log.info(window.getName() + " disposed");
-				window.dispose();
-			}
-		}
-	}
-*/
 
 	/**
 	 * Create the job tree
@@ -141,49 +90,9 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener, M
 	}
 
 	@Override
-	public void repaint(Graphics g) {
-		paint.draw(g);
-	}
-
-	@Override
 	public void messaged(MessageEvent messageEvent) {
-		if (tree != null) {
-			paint.messaged(messageEvent);
+		if (tree != null & paint instanceof MessageListener) {
+			((MessageListener) paint).messaged(messageEvent);
 		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		paint.mouseClicked(e);
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		paint.mousePressed(e);
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		paint.mouseReleased(e);
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		paint.mouseEntered(e);
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		paint.mouseExited(e);
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		paint.mouseDragged(e);
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		paint.mouseMoved(e);
 	}
 }

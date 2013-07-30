@@ -3,11 +3,8 @@ package org.logicail.api.methods;
 import org.logicail.framework.script.LoopTask;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,7 +14,7 @@ import java.util.Map;
  * Date: 26/07/13
  * Time: 10:37
  */
-public abstract class SimplePaint extends LoopTask implements MouseListener, MouseMotionListener {
+public abstract class SimplePaint extends LoopTask implements MouseListener, MouseMotionListener, MouseWheelListener {
 
 	private static final int MIN_PADDING = 8;
 	public final Map<String, String> contents = Collections.synchronizedMap(new LinkedHashMap<String, String>());
@@ -30,8 +27,9 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	private int width = 1;
 	private Font fontTitle = new Font("Dialog", Font.BOLD, 16);
 	private Font fontNormal = new Font("Dialog", Font.BOLD, 12);
-	private Color border = new Color(255, 255, 255, 196);
-	private Color background = new Color(0, 0, 0, 196);
+	private int alpha = 196;
+	private Color border = new Color(255, 255, 255, alpha);
+	private Color background = new Color(0, 0, 0, alpha);
 	private boolean moving;
 
 	public SimplePaint(LogicailMethodContext ctx) {
@@ -42,6 +40,15 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 		contents.put("NAME", ctx.script.getName());
 		contents.put("VERSION", String.valueOf(ctx.script.getVersion()));
 		contents.put("LINE_1", "");
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if (rectangle.contains(e.getPoint())) {
+			alpha = Math.max(64, Math.min(alpha - e.getWheelRotation() * 8, Byte.MAX_VALUE));
+			border = new Color(255, 255, 255, alpha);
+			background = new Color(0, 0, 0, alpha);
+		}
 	}
 
 	public void draw(Graphics g) {
@@ -59,9 +66,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 		int y = PAINT_Y + PAINT_LINE_SPACE + 8;
 
 		synchronized (contents) {
-			Iterator<Map.Entry<String, String>> iterator = contents.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<String, String> next = iterator.next();
+			for (Map.Entry<String, String> next : contents.entrySet()) {
 				String value = next.getValue();
 				String key = next.getKey();
 				if (key.equals("NAME") || key.equals("VERSION")) {
@@ -117,26 +122,6 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	@Override
 	public void mouseExited(MouseEvent e) {
 	}
-
-	/*
-		double right = Canvas.GetRight(mapInfoBox) - e.HorizontalChange;
-
-		if (right < mapCanvas.Margin.Right) {
-			right = mapCanvas.Margin.Right;
-		} else if (right >= mapCanvas.ActualWidth - mapInfoBox.ActualWidth - mapCanvas.Margin.Right) {
-			right = mapCanvas.ActualWidth - mapInfoBox.ActualWidth - mapCanvas.Margin.Right;
-		}
-		Canvas.SetRight(mapInfoBox, right);
-
-		double top = Canvas.GetTop(mapInfoBox) + e.VerticalChange;
-
-		if (top < mapCanvas.Margin.Top) {
-			top = mapCanvas.Margin.Top;
-		} else if (top >= mapCanvas.ActualHeight - mapInfoBox.ActualHeight - mapCanvas.Margin.Top) {
-			top = mapCanvas.ActualHeight - mapInfoBox.ActualHeight - mapCanvas.Margin.Top;
-		}
-		Canvas.SetTop(mapInfoBox, top);
-	 */
 
 	@Override
 	public void mouseDragged(MouseEvent e) {

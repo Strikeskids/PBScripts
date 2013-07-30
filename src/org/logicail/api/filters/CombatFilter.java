@@ -15,24 +15,14 @@ import org.powerbot.script.wrappers.Player;
  */
 public class CombatFilter<T extends Actor & Identifiable> extends LogicailMethodProvider implements Filter<T> {
 
-	private final int[] ids;
-
-	public CombatFilter(LogicailMethodContext context, int... ids) {
+	public CombatFilter(LogicailMethodContext context) {
 		super(context);
-		this.ids = ids;
 	}
 
 	@Override
 	public boolean accept(T t) {
 		final Player local = ctx.players.local();
-		for (int id : ids) {
-			if (t.getId() == id) {
-				final Actor interacting = t.getInteracting();
-				if (interacting == null || !t.isInCombat() || (interacting.equals(local) && t.getHealthPercent() > 0)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		final Actor interacting = t.getInteracting();
+		return interacting == null || !t.isInCombat() || (interacting.equals(local) && t.getHealthPercent() > 0);
 	}
 }

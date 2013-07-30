@@ -3,7 +3,6 @@ package org.logicail.framework.script.state;
 import org.logicail.api.methods.LogicailMethodContext;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,9 +35,7 @@ public abstract class Branch extends Node {
 	@Override
 	public final boolean activate() {
 		if (branch()) {
-			Iterator<Node> iterator = nodes.iterator();
-			while (iterator.hasNext()) {
-				Node node = iterator.next();
+			for (Node node : nodes) {
 				if (node != null && node.activate()) {
 					current_node.set(node);
 					return true;
@@ -50,9 +47,7 @@ public abstract class Branch extends Node {
 
 	@Override
 	public void execute() {
-		Iterator<Node> iterator = nodes.iterator();
-		while (iterator.hasNext()) {
-			Node node = iterator.next();
+		for (Node node : nodes) {
 			if (node != null && node.activate()) {
 				node.execute();
 			}

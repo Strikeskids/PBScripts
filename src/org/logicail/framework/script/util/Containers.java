@@ -11,6 +11,8 @@ import org.logicail.framework.script.JobListener;
  * Time: 16:46
  */
 public class Containers {
+	private static final Object lock = new Object();
+
 	public static boolean awaitTermination(Container container) {
 		return awaitTermination(container, 0);
 	}
@@ -19,7 +21,6 @@ public class Containers {
 		if (container.isTerminated()) {
 			return true;
 		}
-		Object lock = new Object();
 		JobListener jobListener = new JobListener() {
 			public void jobStarted(Job paramAnonymousJob) {
 			}
@@ -28,7 +29,6 @@ public class Containers {
 				synchronized (this) {
 					notify();
 				}
-				return;
 			}
 		};
 		container.addListener(jobListener);

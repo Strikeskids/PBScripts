@@ -42,8 +42,7 @@ public class TaskContainer implements Container {
 			return;
 		}
 		job.setContainer(this);
-		Future localFuture = executor.submit(createWorker(job));
-		((LoopTask) job).future = localFuture;
+		((LoopTask) job).future = executor.submit(createWorker(job));
 	}
 
 	public final boolean isPaused() {
