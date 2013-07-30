@@ -8,9 +8,7 @@ import org.powerbot.event.PaintListener;
 import org.powerbot.script.PollingScript;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +16,7 @@ import java.awt.event.MouseMotionListener;
  * Date: 27/07/13
  * Time: 16:51
  */
-public abstract class ActiveScript extends PollingScript implements PaintListener, MouseListener, MouseMotionListener {
+public abstract class ActiveScript extends PollingScript implements PaintListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	private final Container container = new TaskContainer();
 	public LogicailMethodContext ctx;
 	public SimplePaint paint = null;
@@ -137,6 +135,13 @@ public abstract class ActiveScript extends PollingScript implements PaintListene
 	public void mouseMoved(MouseEvent e) {
 		if (paint != null) {
 			paint.mouseMoved(e);
+		}
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if (paint != null) {
+			paint.mouseWheelMoved(e);
 		}
 	}
 }

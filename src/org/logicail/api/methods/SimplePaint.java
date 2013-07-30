@@ -22,12 +22,12 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	private final Rectangle rectangle;
 	Point start;
 	private int PAINT_X = MIN_PADDING;
-	private int PAINT_Y = 32;
+	private int PAINT_Y = MIN_PADDING;
 	private int height = 1;
 	private int width = 1;
 	private Font fontTitle = new Font("Dialog", Font.BOLD, 16);
 	private Font fontNormal = new Font("Dialog", Font.BOLD, 12);
-	private int alpha = 196;
+	private int alpha = 192;
 	private Color border = new Color(255, 255, 255, alpha);
 	private Color background = new Color(0, 0, 0, alpha);
 	private boolean moving;
@@ -45,8 +45,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (rectangle.contains(e.getPoint())) {
-			alpha = Math.max(64, Math.min(alpha - e.getWheelRotation() * 8, Byte.MAX_VALUE));
-			border = new Color(255, 255, 255, alpha);
+			alpha = Math.max(32, Math.min(alpha - e.getWheelRotation() * 12, 255));
 			background = new Color(0, 0, 0, alpha);
 		}
 	}
@@ -104,7 +103,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (rectangle.contains(e.getPoint())) {
+		if (e.getButton() == MouseEvent.BUTTON1 && rectangle.contains(e.getPoint())) {
 			moving = true;
 			start = e.getPoint();
 		}
