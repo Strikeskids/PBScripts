@@ -1,7 +1,7 @@
 package org.logicail.api.providers;
 
-import org.logicail.api.methods.MyMethodContext;
-import org.logicail.api.methods.MyMethodProvider;
+import org.logicail.api.methods.LogicailMethodContext;
+import org.logicail.api.methods.LogicailMethodProvider;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
 
@@ -11,8 +11,8 @@ import org.powerbot.script.util.Timer;
  * Date: 25/07/13
  * Time: 16:59
  */
-public class Waiting extends MyMethodProvider {
-	public Waiting(MyMethodContext context) {
+public class Waiting extends LogicailMethodProvider {
+	public Waiting(LogicailMethodContext context) {
 		super(context);
 	}
 

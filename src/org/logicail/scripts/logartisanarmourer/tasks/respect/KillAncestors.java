@@ -1,6 +1,7 @@
 package org.logicail.scripts.logartisanarmourer.tasks.respect;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.filters.CombatFilter;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.providers.Condition;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.lang.IdQuery;
@@ -19,89 +20,80 @@ import org.powerbot.script.wrappers.Player;
  */
 public class KillAncestors extends RespectNode {
 	private static final int[] ANCESTOR_IDS = {6657, 6658, 6659, 6660, 6661, 6662};
-	private Npc target = null;
-	private IdQuery<Action> abilities = null;
 
-	public KillAncestors(MyMethodContext ctx) {
+	public KillAncestors(LogicailMethodContext ctx) {
 		super(ctx);
 	}
 
 	@Override
 	public boolean activate() {
 		if (super.activate()
-				&& (target = getAncestor()) != null) {
-			updateAbilities();
-			return !abilities.isEmpty();
+				&& getAncestor()) {
+			return !updateAbilities().isEmpty();
 		}
 		return false;
 	}
 
-	private Npc getAncestor() {
-		for (Npc npc : ctx.npcs.select().id(ANCESTOR_IDS).nearest()) {
-			Actor interacting = npc.getInteracting();
-			if (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) {
-				return npc;
-			}
-		}
-		return null;
+	private boolean getAncestor() {
+		return !ctx.npcs.select(new CombatFilter<Npc>(ctx, ANCESTOR_IDS)).nearest().first().isEmpty();
 	}
 
 	@Override
 	public void execute() {
-		if (!target.isOnScreen()) {
-			ctx.camera.turnTo(target);
-			if (!target.isOnScreen()) {
+		for (final Npc target : ctx.npcs) {
+			if (!ctx.camera.turnTo(target)) {
 				ctx.movement.stepTowards(target.getLocation().randomize(2, 2));
 				ctx.waiting.wait(3000, new Condition() {
 					@Override
 					public boolean validate() {
-						return target.isValid() && target.isOnScreen();
-					}
-				});
-			}
-		}
-
-		if (target.isOnScreen()) {
-			final Player local = ctx.players.local();
-			if (local.getInteracting() == null && target.interact("Attack", target.getName())) {
-				ctx.waiting.wait(2000, new Condition() {
-					@Override
-					public boolean validate() {
-						return local.isInCombat() || target.isInCombat();
+						return target.isOnScreen();
 					}
 				});
 			}
 
-			Timer timer = new Timer(Random.nextInt(5000, 10000));
-
-			while (timer.isRunning()) {
-				target = getAncestor();
-				if (target == null) {
-					break;
+			if (ctx.camera.turnTo(target)) {
+				final Player local = ctx.players.local();
+				if (local.getInteracting() == null && target.interact("Attack", target.getName())) {
+					ctx.waiting.wait(2500, new Condition() {
+						@Override
+						public boolean validate() {
+							return local.isInCombat() || target.isInCombat();
+						}
+					});
 				}
 
-				Actor targetInteracting = target.getInteracting();
-				if (!local.isInMotion() && (!target.isValid() || (targetInteracting != null && !targetInteracting.equals(local)))) {
-					break;
-				}
+				Timer timer = new Timer(Random.nextInt(5000, 10000));
 
-				updateAbilities();
-
-				for (Action action : abilities.shuffle()) {
-					if (action.isReady() && action.select()) {
-						sleep(500, 1100);
+				while (timer.isRunning()) {
+					if (!getAncestor()) {
 						break;
 					}
-				}
 
-				timer.reset();
+					Actor targetInteracting = target.getInteracting();
+					if (targetInteracting != null && !targetInteracting.equals(local)) {
+						break;
+					}
+
+					updateAbilities();
+
+					for (Action action : ctx.combatBar.shuffle()) {
+						if (action.isReady() && action.select()) {
+							sleep(500, 1100);
+							break;
+						}
+					}
+
+					sleep(100, 300);
+
+					timer.reset();
+				}
+				sleep(100, 300);
 			}
-			sleep(100, 300);
 		}
 	}
 
-	private void updateAbilities() {
-		abilities = ctx.combatBar.select(new Filter<Action>() {
+	private IdQuery<Action> updateAbilities() {
+		return ctx.combatBar.select(new Filter<Action>() {
 			@Override
 			public boolean accept(Action action) {
 				return action.getType() == Action.Type.ABILITY && action.isReady();

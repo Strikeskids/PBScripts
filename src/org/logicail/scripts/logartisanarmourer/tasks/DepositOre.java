@@ -1,8 +1,9 @@
 package org.logicail.scripts.logartisanarmourer.tasks;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
@@ -27,9 +28,11 @@ public class DepositOre extends Node {
 	private static final int ID_RUNE_NOTED = 452;
 	private static final int ID_COAL_NOTED = 454;
 	private static final int[] nextDeposit = new int[]{Random.nextInt(400, 1800), Random.nextInt(750, 3500)};
+	private final LogArtisanArmourerOptions options;
 
-	public DepositOre(MyMethodContext ctx) {
+	public DepositOre(LogicailMethodContext ctx) {
 		super(ctx);
+		this.options = ((LogArtisanArmourer) ctx.script).options;
 	}
 
 	public int remainingIron() {
@@ -65,7 +68,7 @@ public class DepositOre extends Node {
 				|| (remainingAdamant() < nextDeposit[0] && !ctx.backpack.select().id(ID_ADAMANT_NOTED).isEmpty())
 				|| (remainingRune() < nextDeposit[0] && !ctx.backpack.select().id(ID_RUNE_NOTED).isEmpty())
 				|| (remainingCoal() < nextDeposit[1] && !ctx.backpack.select().id(ID_COAL_NOTED).isEmpty())
-		);
+		) && !ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first().isEmpty();
 	}
 
 	@Override
@@ -98,9 +101,9 @@ public class DepositOre extends Node {
 
 	private void depositOre(final int oreId) {
 		for (Item item : ctx.backpack.select().id(oreId).first()) {
-			LogArtisanArmourer.instance.options.isSmithing = false;
+			options.isSmithing = false;
 
-			for (GameObject smelter : ctx.objects.select().id(LogArtisanArmourer.instance.options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first()) {
+			for (GameObject smelter : ctx.objects) {
 				if (ctx.camera.turnTo(smelter)) {
 					final int count = item.getStackSize();
 					if (item.interact("Use")) {
@@ -116,6 +119,9 @@ public class DepositOre extends Node {
 							sleep(100, 1000);
 						}
 					}
+				} else {
+					ctx.movement.stepTowards(smelter.getLocation().randomize(2, 2));
+					sleep(600, 1600);
 				}
 			}
 		}

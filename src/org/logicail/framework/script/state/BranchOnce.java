@@ -1,6 +1,6 @@
 package org.logicail.framework.script.state;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +9,7 @@ import org.logicail.api.methods.MyMethodContext;
  * Time: 16:08
  */
 public abstract class BranchOnce extends Branch {
-	public BranchOnce(MyMethodContext ctx) {
+	public BranchOnce(LogicailMethodContext ctx) {
 		super(ctx);
 	}
 

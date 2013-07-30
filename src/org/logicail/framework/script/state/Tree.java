@@ -1,6 +1,6 @@
 package org.logicail.framework.script.state;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 
 import java.util.Arrays;
 import java.util.Queue;
@@ -17,7 +17,7 @@ public class Tree extends Node {
 	private final Queue<Node> nodes = new ConcurrentLinkedQueue<>();
 	private final AtomicReference<Node> current_node = new AtomicReference<>();
 
-	public Tree(MyMethodContext ctx, Node[] nodes) {
+	public Tree(LogicailMethodContext ctx, Node[] nodes) {
 		super(ctx);
 		this.nodes.addAll(Arrays.asList(nodes));
 	}

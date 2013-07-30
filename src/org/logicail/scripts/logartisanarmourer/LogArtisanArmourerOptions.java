@@ -10,7 +10,7 @@ import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
  * Date: 25/07/13
  * Time: 16:24
  */
-public class Options {
+public class LogArtisanArmourerOptions {
 	public boolean killAncestors = false;
 	public boolean repairPipes = false;
 	public Mode mode = Mode.BURIAL_ARMOUR;
@@ -20,6 +20,7 @@ public class Options {
 	public boolean gotPlan;
 	public int failedConsecutiveWithdrawals;
 	public int currentlyMaking;
+	public boolean finishedSword;
 
 	public int getIngotID() {
 		return 20632 + (ingotGrade.ordinal() * 5) + ingotType.ordinal() - 1 + ((ingotGrade.ordinal() >= IngotGrade.FOUR.ordinal()) ? 1 : 0);

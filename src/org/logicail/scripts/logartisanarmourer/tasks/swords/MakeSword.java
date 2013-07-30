@@ -1,9 +1,9 @@
 package org.logicail.scripts.logartisanarmourer.tasks.swords;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.providers.Condition;
 import org.logicail.framework.script.state.Node;
-import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.tasks.Anvil;
 import org.logicail.scripts.logartisanarmourer.wrapper.HitType;
 import org.logicail.scripts.logartisanarmourer.wrapper.Sword;
@@ -26,15 +26,16 @@ public class MakeSword extends Node {
 	public static final int[] HEATED_INGOTS = {20566, 20567, 20568, 20569, 20570, 20571};
 	public static final int TONGS = 20565;
 	public static final int[] SWORD_PLANS = {20559, 20560, 20561, 20562, 20563, 20564};
-	public static boolean finishedSword = false;
+	private final LogArtisanArmourerOptions options;
 	Anvil anvilHelper;
 
-	public MakeSword(MyMethodContext ctx) {
+	public MakeSword(LogicailMethodContext ctx, LogArtisanArmourerOptions options) {
 		super(ctx);
-		anvilHelper = new Anvil(ctx);
+		this.options = options;
+		anvilHelper = new Anvil(ctx, options);
 	}
 
-	public static int getCooldown(MyMethodContext ctx) {
+	public static int getCooldown(LogicailMethodContext ctx) {
 		if (!isOpen(ctx)) {
 			return Integer.MAX_VALUE;
 		}
@@ -43,7 +44,7 @@ public class MakeSword extends Node {
 
 	}
 
-	public static boolean isOpen(MyMethodContext ctx) {
+	public static boolean isOpen(LogicailMethodContext ctx) {
 		return ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).isValid();
 	}
 
@@ -122,8 +123,8 @@ public class MakeSword extends Node {
 
 	@Override
 	public boolean activate() {
-		return !finishedSword
-				&& LogArtisanArmourer.instance.options.gotPlan
+		return !options.finishedSword
+				&& options.gotPlan
 				&& !ctx.backpack.select().id(TONGS).isEmpty();
 	}
 
@@ -159,7 +160,7 @@ public class MakeSword extends Node {
 		}
 
 		if (hitPart == null || getCooldown() == 0) {
-			finishedSword = true;
+			options.finishedSword = true;
 			closeInterface();
 			return;
 		}
@@ -196,9 +197,9 @@ public class MakeSword extends Node {
 	}
 
 	static class SwordComparator implements Comparator<Sword> {
-		private MyMethodContext context;
+		private LogicailMethodContext context;
 
-		SwordComparator(MyMethodContext context) {
+		SwordComparator(LogicailMethodContext context) {
 			this.context = context;
 		}
 

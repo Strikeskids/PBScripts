@@ -1,6 +1,6 @@
 package org.logicail.framework.script;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public abstract class LoopTask extends Job {
 	private final Object init_lock = new Object();
-	public MyMethodContext ctx;
+	public LogicailMethodContext ctx;
 	protected Logger log = Logger.getLogger(getClass().getName());
 	Future<?> future;
 	private boolean paused;
@@ -22,7 +22,7 @@ public abstract class LoopTask extends Job {
 	private volatile boolean alive = false;
 	private volatile boolean interrupted = false;
 
-	public LoopTask(MyMethodContext ctx) {
+	public LoopTask(LogicailMethodContext ctx) {
 		super(ctx);
 		this.ctx = ctx;
 	}

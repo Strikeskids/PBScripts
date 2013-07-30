@@ -1,6 +1,6 @@
 package org.logicail.scripts.logartisanarmourer.tasks.respect;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.framework.script.state.Node;
 
 /**
@@ -12,7 +12,7 @@ import org.logicail.framework.script.state.Node;
 public abstract class RespectNode extends Node {
 	public final static int SETTING_RESPECT = 126;
 
-	public RespectNode(MyMethodContext ctx) {
+	public RespectNode(LogicailMethodContext ctx) {
 		super(ctx);
 	}
 

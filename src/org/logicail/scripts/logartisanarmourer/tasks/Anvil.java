@@ -1,17 +1,16 @@
 package org.logicail.scripts.logartisanarmourer.tasks;
 
-import org.logicail.api.methods.MyMethodContext;
-import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.api.methods.LogicailMethodContext;
+import org.logicail.api.methods.LogicailMethodProvider;
+import org.logicail.api.methods.QueryHelper;
+import org.logicail.api.providers.Condition;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
 import org.powerbot.script.lang.Filter;
-import org.powerbot.script.util.Delay;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Area;
 import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
-
-import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,69 +18,71 @@ import java.util.Arrays;
  * Date: 25/07/13
  * Time: 21:02
  */
-public class Anvil {
+public class Anvil extends LogicailMethodProvider {
 	private static final int[] ID_ANVIL = {4046};
 	private static final int[] ID_ANVIL_SWORD = {4047, 24664, 24677, 24678, 15520, 20258};
 	private static final int[] ID_ANVIL_TRACK = {24820};
 	final Area area = StayInArea.area;
-	private MyMethodContext ctx;
+	//private LogicailMethodContext ctx;
+	private LogArtisanArmourerOptions options;
 	private int[] ids;
 	private GameObject target = null;
 
-	public Anvil(MyMethodContext ctx) {
-		this.ctx = ctx;
+	public Anvil(LogicailMethodContext ctx, LogArtisanArmourerOptions options) {
+		super(ctx);
+		this.options = options;
 		ids = getAnvilId();
 	}
 
 	public void click() {
 		if (target == null) {
-			for (GameObject anvil : ctx.objects.select(new Filter<GameObject>() {
+			target = QueryHelper.first(ctx.objects.select().id(ids).select(new Filter<GameObject>() {
 				@Override
 				public boolean accept(GameObject gameObject) {
-					return area.contains(gameObject) && Arrays.binarySearch(ids, gameObject.getId()) >= 0;
+					return area.contains(gameObject);
 				}
-			}).shuffle().first()) {
-				target = anvil;
-			}
+			}).shuffle());
 		}
 
 		if (target != null) {
-			if (!ctx.skillingInterface.isOpen() && ctx.camera.turnTo(target)) {
-				if (ctx.skillingInterface.isProductionInterfaceOpen()) {
-					ctx.skillingInterface.cancelProduction();
-				}
-				if (target.interact("Smith", "Anvil")) {
-					Delay.sleep(400, 800);
-					if (ctx.players.local().getAnimation() != -1 && !ctx.skillingInterface.isOpen()) {
-						if (target.hover() && !ctx.skillingInterface.isOpen()) {
-							ctx.menu.click("Smith", "Anvil");
-						}
-					}
+			if (ctx.skillingInterface.isOpen() && !ctx.skillingInterface.close()) {
+				return;
+			}
 
-					final Timer t = new Timer(Random.nextInt(5000, 6500));
-					while (t.isRunning()) {
-						if (ctx.skillingInterface.isOpen() || ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, MakeSword.WIDGET_SWORD_COOLDOWN).isValid()) {
-							target = null;
-							Delay.sleep(200, 800);
-							break;
-						}
-						if (ctx.skillingInterface.isProductionInterfaceOpen()) {
-							ctx.skillingInterface.cancelProduction();
-						}
-						Delay.sleep(100, 250);
+			if (ctx.skillingInterface.isProductionInterfaceOpen() && !ctx.skillingInterface.cancelProduction()) {
+				return;
+			}
+
+			if (ctx.interaction.interact(target, "Smith", "Anvil")) {
+				ctx.waiting.wait(600, new Condition() {
+					@Override
+					public boolean validate() {
+						return ctx.skillingInterface.isOpen();
 					}
+				});
+				if (ctx.players.local().getAnimation() != -1 && !ctx.skillingInterface.isOpen() && target.hover() && !ctx.skillingInterface.isOpen()) {
+					ctx.menu.click("Smith", "Anvil");
 				}
-			} else {
-				Tile tile = ctx.movement.reachableNear(target);
-				if (tile != Tile.NIL && ctx.movement.stepTowards(tile)) {
-					Delay.sleep(500, 1500);
+
+				final Timer t = new Timer(Random.nextInt(5000, 7000));
+				while (t.isRunning()) {
+					if (ctx.skillingInterface.isOpen() || ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, MakeSword.WIDGET_SWORD_COOLDOWN).isValid()) {
+						target = null;
+						sleep(200, 800);
+						break;
+					}
+					if (ctx.skillingInterface.isProductionInterfaceOpen()) {
+						ctx.skillingInterface.cancelProduction();
+					}
+					sleep(100, 300);
 				}
+				sleep(400, 1500);
 			}
 		}
 	}
 
 	private int[] getAnvilId() {
-		switch (LogArtisanArmourer.instance.options.mode) {
+		switch (options.mode) {
 			case BURIAL_ARMOUR:
 				return ID_ANVIL;
 			case CEREMONIAL_SWORDS:

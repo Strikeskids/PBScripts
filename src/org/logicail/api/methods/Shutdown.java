@@ -12,9 +12,9 @@ import javax.swing.*;
  * Time: 21:42
  */
 public class Shutdown {
-	private MyMethodContext ctx;
+	private LogicailMethodContext ctx;
 
-	public Shutdown(MyMethodContext ctx) {
+	public Shutdown(LogicailMethodContext ctx) {
 		this.ctx = ctx;
 	}
 

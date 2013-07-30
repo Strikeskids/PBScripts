@@ -28,7 +28,6 @@ public class Area {
 				new Tile(Math.max(t1.getX(), t2.getX()), Math.max(t1.getY(), t2.getY()), t2.getPlane()),
 				new Tile(Math.min(t1.getX(), t2.getX()), Math.max(t1.getY(), t2.getY()), t2.getPlane())
 		);
-		internal = new org.powerbot.script.wrappers.Area(t1, t2);
 	}
 
 	/**
@@ -92,13 +91,13 @@ public class Area {
 	/**
 	 * @return the tiles backing this Area.
 	 */
-	/*public Tile[] getBoundingTiles() {
+	public Tile[] getBoundingTiles() {
 		final Tile[] bounding = new Tile[polygon.npoints];
 		for (int i = 0; i < polygon.npoints; i++) {
 			bounding[i] = new Tile(polygon.xpoints[i], polygon.ypoints[i], plane);
 		}
 		return bounding;
-	}*/
+	}
 
 	/**
 	 * @return an array of all the contained tiles in this area.
@@ -108,8 +107,8 @@ public class Area {
 			final Rectangle bounds = getBounds();
 			final ArrayList<Tile> tiles = new ArrayList<>(bounds.width * bounds.height);
 			final int xMax = bounds.x + bounds.width, yMax = bounds.y + bounds.height;
-			for (int x = bounds.x; x < xMax; x++) {
-				for (int y = bounds.y; y < yMax; y++) {
+			for (int x = bounds.x; x <= xMax; x++) {
+				for (int y = bounds.y; y <= yMax; y++) {
 					if (contains(x, y)) {
 						tiles.add(new Tile(x, y, plane));
 					}

@@ -1,6 +1,6 @@
 package org.logicail.scripts.logartisanarmourer.wrapper;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.providers.Condition;
 import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
 import org.powerbot.script.methods.Skills;
@@ -44,7 +44,7 @@ public enum Sword {
 	 *
 	 * @return
 	 */
-	private static int getSwordPartsRemaining(MyMethodContext ctx) {
+	private static int getSwordPartsRemaining(LogicailMethodContext ctx) {
 		int hits = 0;
 		for (Sword sword : Sword.values()) {
 			if (sword.validate(ctx)) {
@@ -54,7 +54,7 @@ public enum Sword {
 		return hits;
 	}
 
-	int getTarget(MyMethodContext ctx) {
+	int getTarget(LogicailMethodContext ctx) {
 		try {
 			Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
 		} catch (Exception ignored) {
@@ -63,7 +63,7 @@ public enum Sword {
 
 	}
 
-	int getCurrent(MyMethodContext ctx) {
+	int getCurrent(LogicailMethodContext ctx) {
 		try {
 			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
 		} catch (Exception ignored) {
@@ -71,18 +71,18 @@ public enum Sword {
 		return -1;
 	}
 
-	boolean validate(MyMethodContext ctx) {
+	boolean validate(LogicailMethodContext ctx) {
 		return getTarget(ctx) > getCurrent(ctx);
 	}
 
-	public int getHitsNeeded(MyMethodContext context) {
+	public int getHitsNeeded(LogicailMethodContext context) {
 		if (!validate(context)) {
 			return 0;
 		}
 		return getTarget(context) - getCurrent(context);
 	}
 
-	public HitType getRequiredHitType(MyMethodContext ctx) {
+	public HitType getRequiredHitType(LogicailMethodContext ctx) {
 		final int hitsNeeded = getHitsNeeded(ctx);
 		if (hitsNeeded <= 0) {
 			return null;
@@ -110,7 +110,7 @@ public enum Sword {
 		}
 	}
 
-	public boolean clickButton(final MyMethodContext ctx) {
+	public boolean clickButton(final LogicailMethodContext ctx) {
 		final int cooldown = MakeSword.getCooldown(ctx);
 		final int current = getCurrent(ctx);
 		if (getTarget(ctx) > getCurrent(ctx)) {

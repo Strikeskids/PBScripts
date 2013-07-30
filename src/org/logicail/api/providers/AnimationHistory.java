@@ -1,6 +1,6 @@
-package org.logicail.scripts.tasks;
+package org.logicail.api.providers;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.framework.script.LoopTask;
 
 import java.util.Map;
@@ -15,24 +15,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AnimationHistory extends LoopTask {
 	private static final Map<Integer, Long> map = new ConcurrentHashMap<>();
 
-	public AnimationHistory(MyMethodContext ctx) {
+	public AnimationHistory(LogicailMethodContext ctx) {
 		super(ctx);
 	}
 
-	public static void put(int animation) {
+	public void put(int animation) {
 		if (animation != -1) {
 			map.put(animation, System.currentTimeMillis());
 		}
 	}
 
-	public static long timeSinceAnimation(int animationID) {
+	public long timeSinceAnimation(int animationID) {
 		if (map.containsKey(animationID)) {
 			return System.currentTimeMillis() - map.get(animationID);
 		}
 		return Long.MAX_VALUE;
 	}
 
-	public static long timeSinceAnimation(int... animationID) {
+	public long timeSinceAnimation(int... animationID) {
 		long mostRecent = Long.MAX_VALUE;
 		for (int id : animationID) {
 			if (map.containsKey(id)) {
@@ -45,7 +45,6 @@ public class AnimationHistory extends LoopTask {
 		return mostRecent;
 	}
 
-	@Override
 	public int loop() {
 		try {
 			if (ctx.game.isLoggedIn()) {
@@ -53,6 +52,6 @@ public class AnimationHistory extends LoopTask {
 			}
 		} catch (Exception ignored) {
 		}
-		return 150;
+		return 100;
 	}
 }

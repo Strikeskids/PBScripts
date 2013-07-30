@@ -1,6 +1,7 @@
 package org.logicail.framework.script;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
+import org.logicail.api.providers.AnimationHistory;
 import org.logicail.framework.script.state.Tree;
 import org.powerbot.script.PollingScript;
 
@@ -12,7 +13,7 @@ import org.powerbot.script.PollingScript;
  */
 public abstract class ActiveScript extends PollingScript {
 	private final Container container = new TaskContainer();
-	public MyMethodContext ctx;
+	public LogicailMethodContext ctx;
 	protected Tree tree = null;
 
 	protected ActiveScript() {
@@ -35,7 +36,15 @@ public abstract class ActiveScript extends PollingScript {
 			}
 		});
 
-		ctx = new MyMethodContext(super.ctx);
+
+		ctx = new LogicailMethodContext(this, super.ctx);
+
+		getExecQueue(State.START).add(new Runnable() {
+			@Override
+			public void run() {
+				submit(new AnimationHistory(ctx));
+			}
+		});
 	}
 
 	/**

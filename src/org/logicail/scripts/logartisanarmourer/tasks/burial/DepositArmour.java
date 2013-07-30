@@ -1,11 +1,11 @@
 package org.logicail.scripts.logartisanarmourer.tasks.burial;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.providers.Condition;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,36 +16,31 @@ import org.powerbot.script.wrappers.Tile;
 public class DepositArmour extends Node {
 	public static final int ID_CHUTE = 29396;
 	private final int ingotId;
+	private final LogArtisanArmourerOptions options;
 
-	public DepositArmour(MyMethodContext ctx, int ingotId) {
+	public DepositArmour(LogicailMethodContext ctx) {
 		super(ctx);
-		this.ingotId = ingotId;
+		this.options = ((LogArtisanArmourer) ctx.script).options;
+		this.ingotId = options.getIngotID();
 	}
 
 	@Override
 	public void execute() {
-		LogArtisanArmourer.instance.options.isSmithing = false;
+		options.isSmithing = false;
 
 		if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.close()) {
 			return;
 		}
 
 		for (GameObject chute : ctx.objects.select().id(ID_CHUTE).nearest().first()) {
-			if (ctx.camera.turnTo(chute)) {
-				if (chute.interact("Deposit-armour", "Chute")) {
-					ctx.waiting.wait(5000, new Condition() {
-						@Override
-						public boolean validate() {
-							return ctx.backpack.select().id(LogArtisanArmourer.ARMOUR_ID_LIST).isEmpty();
-						}
-					});
-					sleep(150, 750);
-				}
-			} else {
-				Tile tile = chute.getLocation().randomize(2, 2);
-				if (tile != Tile.NIL && ctx.movement.stepTowards(tile)) {
-					sleep(500, 1500);
-				}
+			if (ctx.interaction.interact(chute, "Deposit-armour", "Chute")) {
+				ctx.waiting.wait(5000, new Condition() {
+					@Override
+					public boolean validate() {
+						return ctx.backpack.select().id(LogArtisanArmourer.ARMOUR_ID_LIST).isEmpty();
+					}
+				});
+				sleep(150, 750);
 			}
 		}
 	}

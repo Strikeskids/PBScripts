@@ -1,8 +1,11 @@
 package org.logicail.api.methods;
 
-import org.powerbot.script.lang.Drawable;
+import org.logicail.framework.script.LoopTask;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -14,26 +17,33 @@ import java.util.Map;
  * Date: 26/07/13
  * Time: 10:37
  */
-public class SimplePaint implements Drawable {
+public abstract class SimplePaint extends LoopTask implements MouseListener, MouseMotionListener {
 
-	private static final int PAINT_LINE_SPACE = 18;
-	private static final int PAINT_X = 8;
-	private static final int PAINT_Y = 32;
+	private static final int MIN_PADDING = 8;
 	public final Map<String, String> contents = Collections.synchronizedMap(new LinkedHashMap<String, String>());
-	private final Rectangle rectangle = new Rectangle(PAINT_X, PAINT_Y, 1, 1);
+	private final int PAINT_LINE_SPACE = 18;
+	private final Rectangle rectangle;
+	Point start;
+	private int PAINT_X = MIN_PADDING;
+	private int PAINT_Y = 32;
 	private int height = 1;
 	private int width = 1;
 	private Font fontTitle = new Font("Dialog", Font.BOLD, 16);
 	private Font fontNormal = new Font("Dialog", Font.BOLD, 12);
 	private Color border = new Color(255, 255, 255, 196);
 	private Color background = new Color(0, 0, 0, 196);
+	private boolean moving;
 
-	@Override
-	public void draw(Graphics g, int i) {
-		draw(g, 255);
+	public SimplePaint(LogicailMethodContext ctx) {
+		super(ctx);
+
+		rectangle = new Rectangle(PAINT_X, PAINT_Y, 1, 1);
+
+		contents.put("NAME", ctx.script.getName());
+		contents.put("VERSION", String.valueOf(ctx.script.getVersion()));
+		contents.put("LINE_1", "");
 	}
 
-	@Override
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		height = contents.size() * PAINT_LINE_SPACE + 16;
@@ -60,10 +70,10 @@ public class SimplePaint implements Drawable {
 					if (w > width) {
 						width = w;
 					}
-					int x = (PAINT_X + 8 + widthCopy - w) / 2;
+					int x = PAINT_X + (widthCopy - w) / 2;
 					g.drawString(value, x, y);
 				} else if (key.startsWith("LINE_")) {
-					g.drawLine(PAINT_X + 8, y - PAINT_LINE_SPACE / 2, widthCopy, y - PAINT_LINE_SPACE / 2);
+					g.drawLine(PAINT_X + MIN_PADDING, y - PAINT_LINE_SPACE / 2, PAINT_X + widthCopy - MIN_PADDING, y - PAINT_LINE_SPACE / 2);
 					y -= PAINT_LINE_SPACE / 3;
 				} else if (!value.isEmpty()) {
 					g.setFont(fontNormal);
@@ -72,14 +82,97 @@ public class SimplePaint implements Drawable {
 					if (w > width) {
 						width = w;
 					}
-					g.drawString(value, PAINT_X + 8, y);
+					g.drawString(value, PAINT_X + MIN_PADDING, y);
 				}
 				y += PAINT_LINE_SPACE;
 			}
 		}
 
-		width += PAINT_X + 8;
+		width += MIN_PADDING + MIN_PADDING;
 
 		rectangle.setFrame(PAINT_X, PAINT_Y, width, height);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (rectangle.contains(e.getPoint())) {
+			moving = true;
+			start = e.getPoint();
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		moving = false;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	/*
+		double right = Canvas.GetRight(mapInfoBox) - e.HorizontalChange;
+
+		if (right < mapCanvas.Margin.Right) {
+			right = mapCanvas.Margin.Right;
+		} else if (right >= mapCanvas.ActualWidth - mapInfoBox.ActualWidth - mapCanvas.Margin.Right) {
+			right = mapCanvas.ActualWidth - mapInfoBox.ActualWidth - mapCanvas.Margin.Right;
+		}
+		Canvas.SetRight(mapInfoBox, right);
+
+		double top = Canvas.GetTop(mapInfoBox) + e.VerticalChange;
+
+		if (top < mapCanvas.Margin.Top) {
+			top = mapCanvas.Margin.Top;
+		} else if (top >= mapCanvas.ActualHeight - mapInfoBox.ActualHeight - mapCanvas.Margin.Top) {
+			top = mapCanvas.ActualHeight - mapInfoBox.ActualHeight - mapCanvas.Margin.Top;
+		}
+		Canvas.SetTop(mapInfoBox, top);
+	 */
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		if (moving) {
+			Component component = e.getComponent();
+
+			Point point = e.getPoint();
+
+			if (!component.contains(point)) {
+				return;
+			}
+
+			int xMax = component.getWidth() - MIN_PADDING - rectangle.width;
+			int yMax = component.getHeight() - MIN_PADDING - rectangle.height;
+
+			PAINT_X += point.x - start.x;
+			PAINT_Y += point.y - start.y;
+			start = point;
+
+			if (PAINT_X < MIN_PADDING) {
+				PAINT_X = MIN_PADDING;
+			} else if (PAINT_X > xMax) {
+				PAINT_X = xMax;
+			}
+
+			if (PAINT_Y < MIN_PADDING) {
+				PAINT_Y = MIN_PADDING;
+			} else if (PAINT_Y > yMax) {
+				PAINT_Y = yMax;
+			}
+
+			rectangle.setFrame(PAINT_X, PAINT_Y, rectangle.width, rectangle.height);
+		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
 	}
 }

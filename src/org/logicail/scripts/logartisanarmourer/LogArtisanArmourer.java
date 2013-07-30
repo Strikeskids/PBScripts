@@ -1,17 +1,24 @@
 package org.logicail.scripts.logartisanarmourer;
 
-import org.logicail.api.TimeUtilities;
-import org.logicail.api.methods.SimplePaint;
 import org.logicail.framework.script.ActiveScript;
+import org.logicail.framework.script.state.Node;
+import org.logicail.framework.script.state.Tree;
+import org.logicail.scripts.logartisanarmourer.paint.Paint;
 import org.logicail.scripts.logartisanarmourer.tasks.AntiBan;
-import org.logicail.scripts.tasks.AnimationHistory;
+import org.logicail.scripts.logartisanarmourer.tasks.BurialArmour;
+import org.logicail.scripts.tasks.IdleLogout;
+import org.powerbot.event.MessageEvent;
+import org.powerbot.event.MessageListener;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Game;
-import org.powerbot.script.methods.Skills;
+import org.powerbot.script.util.Random;
 
 import java.awt.*;
-import java.util.Map;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,7 +33,7 @@ import java.util.Map;
 		authors = {"Logicail"},
 		instances = 99,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
-public class LogArtisanArmourer extends ActiveScript implements PaintListener {
+public class LogArtisanArmourer extends ActiveScript implements PaintListener, MessageListener, MouseListener, MouseMotionListener {
 	public static final int ID_SMELTER = 29395;
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ARMOUR_ID_LIST = {20572, 20573, 20574, 20575,
@@ -38,27 +45,13 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 			20621, 20622, 20623, 20624, 20625, 20626, 20627, 20628, 20629,
 			20630, 20631};
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
-	public static LogArtisanArmourer instance;
-	public Options options = new Options();
-	//private WindowHandler handler = null;
-	private SimplePaint paint = new SimplePaint();
+	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
+	private Paint paint;
 
 	public LogArtisanArmourer() {
 		super();
 
-		instance = this;
-
-		Map<String, String> contents = paint.contents;
-		contents.put("NAME", getName());
-		contents.put("VERSION", String.valueOf(getVersion()));
-		contents.put("LINE_1", "");
-		contents.put("Time", TimeUtilities.format(getRuntime()));
-		contents.put("SPACE_1", "");
-		contents.put("Level", ctx.skills.getLevel(Skills.SMITHING) + " (+0)");
-		contents.put("TTL", "00:00:00");
-		contents.put("XP Gained", "1,234,567");
-		contents.put("XP Hour", "123,456");
-		contents.put("Bones Offered", "1,234 (1,234/h)");
+		paint = new Paint(ctx);
 	}
 
 	@Override
@@ -77,10 +70,9 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 			}
 		});*/
 
-		submit(new AnimationHistory(ctx));
-		submit(new AntiBan(ctx));
-
 		//tree = new Tree(ctx, new Node[]{new MouseMover(ctx), new MouseMover(ctx)});
+		submit(new AntiBan(ctx));
+		submit(paint);
 	}
 
 	/*
@@ -112,6 +104,28 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 		}
 	}
 */
+
+	/**
+	 * Create the job tree
+	 */
+	public void create() {
+		ArrayList<Node> nodes = new ArrayList<>();
+
+		nodes.add(new IdleLogout(ctx, 15 * 60, 20 * 60));
+
+		switch (options.mode) {
+			case BURIAL_ARMOUR:
+				nodes.add(new BurialArmour(ctx));
+				break;
+			case CEREMONIAL_SWORDS:
+				break;
+			case REPAIR_TRACK:
+				break;
+		}
+
+		tree = new Tree(ctx, nodes.toArray(new Node[nodes.size()]));
+	}
+
 	@Override
 	public int poll() {
 		try {
@@ -123,11 +137,53 @@ public class LogArtisanArmourer extends ActiveScript implements PaintListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 200;
+		return Random.nextInt(100, 500);
 	}
 
 	@Override
 	public void repaint(Graphics g) {
 		paint.draw(g);
+	}
+
+	@Override
+	public void messaged(MessageEvent messageEvent) {
+		if (tree != null) {
+			paint.messaged(messageEvent);
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		paint.mouseClicked(e);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		paint.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		paint.mouseReleased(e);
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		paint.mouseEntered(e);
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		paint.mouseExited(e);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		paint.mouseDragged(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		paint.mouseMoved(e);
 	}
 }

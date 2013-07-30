@@ -1,7 +1,7 @@
 package org.logicail.api.providers;
 
-import org.logicail.api.methods.MyMethodContext;
-import org.logicail.api.methods.MyMethodProvider;
+import org.logicail.api.methods.LogicailMethodContext;
+import org.logicail.api.methods.LogicailMethodProvider;
 import org.powerbot.script.lang.Locatable;
 import org.powerbot.script.methods.Camera;
 import org.powerbot.script.wrappers.Interactive;
@@ -12,10 +12,10 @@ import org.powerbot.script.wrappers.Interactive;
  * Date: 25/07/13
  * Time: 17:54
  */
-public class MyCamera extends MyMethodProvider {
+public class LogicailCamera extends LogicailMethodProvider {
 	private Camera camera;
 
-	public MyCamera(MyMethodContext arg0) {
+	public LogicailCamera(LogicailMethodContext arg0) {
 		super(arg0);
 		camera = new Camera(arg0);
 	}
@@ -40,6 +40,12 @@ public class MyCamera extends MyMethodProvider {
 		camera.setYaw(yaw);
 	}
 
+	/**
+	 * Turn camera to locatable
+	 *
+	 * @param locatable
+	 * @return if the locatable isOnScreen
+	 */
 	public boolean turnTo(Locatable locatable) {
 		Interactive interactive = (Interactive) locatable;
 		if (interactive.isOnScreen()) {

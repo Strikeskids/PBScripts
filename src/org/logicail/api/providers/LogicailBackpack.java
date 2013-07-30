@@ -9,10 +9,10 @@ import org.powerbot.script.methods.MethodContext;
  * Date: 25/07/13
  * Time: 16:38
  */
-public class MyBackpack extends Backpack {
+public class LogicailBackpack extends Backpack {
 	public static final int BACKPACK_SIZE = 28;
 
-	public MyBackpack(MethodContext arg0) {
+	public LogicailBackpack(MethodContext arg0) {
 		super(arg0);
 	}
 

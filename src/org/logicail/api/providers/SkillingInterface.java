@@ -1,6 +1,6 @@
 package org.logicail.api.providers;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.powerbot.script.lang.ItemQuery;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
@@ -37,9 +37,9 @@ public class SkillingInterface extends ItemQuery<Item> {
 	private static final int WIDGET_PRODUCTION_CANCEL = 48;
 	private static final int WIDGET_MAIN_SELECTED_ITEM = 55;
 	private static final int WIDGET_MAIN_SELECTED_ITEM_NAME = 56;
-	public MyMethodContext ctx;
+	public LogicailMethodContext ctx;
 
-	public SkillingInterface(MyMethodContext context) {
+	public SkillingInterface(LogicailMethodContext context) {
 		super(context);
 		this.ctx = context;
 	}
@@ -196,8 +196,8 @@ public class SkillingInterface extends ItemQuery<Item> {
 
 	public boolean start() {
 		if (canStart()) {
-			Component component = getMainWidget().getComponent(WIDGET_MAIN_ACTION_TOOLTIP);
-			return component != null && component.isValid() && component.interact(component.getTooltip());
+			Component component = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_ACTION_TOOLTIP);
+			return component.isValid() && component.interact(component.getTooltip());
 		}
 		return false;
 	}

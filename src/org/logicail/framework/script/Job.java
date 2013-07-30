@@ -1,7 +1,7 @@
 package org.logicail.framework.script;
 
-import org.logicail.api.methods.MyMethodContext;
-import org.logicail.api.methods.MyMethodProvider;
+import org.logicail.api.methods.LogicailMethodContext;
+import org.logicail.api.methods.LogicailMethodProvider;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,8 +9,8 @@ import org.logicail.api.methods.MyMethodProvider;
  * Date: 23/06/13
  * Time: 17:15
  */
-public abstract class Job extends MyMethodProvider {
-	public Job(MyMethodContext ctx) {
+public abstract class Job extends LogicailMethodProvider {
+	public Job(LogicailMethodContext ctx) {
 		super(ctx);
 	}
 

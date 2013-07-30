@@ -1,12 +1,11 @@
 package org.logicail.scripts.logartisanarmourer.tasks.burial;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.providers.Condition;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.scripts.logartisanarmourer.Options;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.tasks.Anvil;
-import org.logicail.scripts.tasks.AnimationHistory;
 import org.powerbot.script.util.Random;
 
 /**
@@ -18,14 +17,14 @@ import org.powerbot.script.util.Random;
 public class SmithAnvil extends Node {
 	public static final int WIDGET_INSTRUCTION = 1073;
 	public static final int WIDGET_INSTRUCTION_CHILD = 11;
-	private final Options options;
-	Anvil anvilHelper;
+	private final LogArtisanArmourerOptions options;
+	private Anvil anvilHelper;
 	private int animationTimelimit = Random.nextInt(8000, 16000);
 
-	public SmithAnvil(MyMethodContext ctx) {
+	public SmithAnvil(LogicailMethodContext ctx) {
 		super(ctx);
-		options = LogArtisanArmourer.instance.options;
-		anvilHelper = new Anvil(ctx);
+		this.options = ((LogArtisanArmourer) ctx.script).options;
+		anvilHelper = new Anvil(ctx, options);
 	}
 
 	public String getCategoryName() {
@@ -66,7 +65,7 @@ public class SmithAnvil extends Node {
 			if (!ctx.backpack.select().id(options.getIngotID()).isEmpty()) {
 				if (ctx.skillingInterface.isOpen() || !options.isSmithing
 						|| options.currentlyMaking != getMakeNextId()
-						|| AnimationHistory.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > animationTimelimit) {
+						|| ctx.animationHistory.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > animationTimelimit) {
 					return true;
 				}
 			}
@@ -96,12 +95,21 @@ public class SmithAnvil extends Node {
 					}
 				})) {
 					for (int id : LogArtisanArmourer.ANIMATION_SMITHING) {
-						AnimationHistory.put(id);
+						ctx.animationHistory.put(id);
 					}
 				}
 			}
 		} else {
 			options.isSmithing = false;
+
+			if (options.currentlyMaking > 0 && options.currentlyMaking != getMakeNextId()) {
+				// Random delay instead of immediate reaction
+				sleep(200, 1500);
+				if (Random.nextBoolean()) {
+					sleep(1000, 5000);
+				}
+			}
+
 			if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.close()) {
 				return;
 			}

@@ -1,6 +1,6 @@
 package org.logicail.framework.script.state;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -18,11 +18,11 @@ public abstract class Branch extends Node {
 	protected final Queue<Node> nodes = new ConcurrentLinkedQueue();
 	protected final AtomicReference<Node> current_node = new AtomicReference();
 
-	public Branch(MyMethodContext ctx) {
+	public Branch(LogicailMethodContext ctx) {
 		super(ctx);
 	}
 
-	public Branch(MyMethodContext ctx, Node[] tasks) {
+	public Branch(LogicailMethodContext ctx, Node[] tasks) {
 		super(ctx);
 		Collections.addAll(nodes, tasks);
 	}

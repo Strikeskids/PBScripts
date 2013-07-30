@@ -1,6 +1,6 @@
 package org.logicail.framework.banking;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.framework.script.state.Node;
 import org.powerbot.script.wrappers.Item;
 
@@ -14,7 +14,7 @@ import org.powerbot.script.wrappers.Item;
 public class BankActivity extends Node {
 	private final AbstractRequiredItem[] requiredItems;
 
-	public BankActivity(MyMethodContext ctx, AbstractRequiredItem... requiredItems) {
+	public BankActivity(LogicailMethodContext ctx, AbstractRequiredItem... requiredItems) {
 		super(ctx);
 		this.requiredItems = requiredItems;
 	}

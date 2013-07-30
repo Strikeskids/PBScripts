@@ -1,15 +1,14 @@
 package org.logicail.scripts.logartisanarmourer.tasks;
 
-import org.logicail.api.methods.MyMethodContext;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.methods.Shutdown;
 import org.logicail.api.providers.Condition;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.scripts.logartisanarmourer.Options;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
 import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,13 +17,15 @@ import org.powerbot.script.wrappers.Tile;
  * Time: 20:24
  */
 public class MakeIngots extends Node {
-	public MakeIngots(MyMethodContext ctx) {
+	private final LogArtisanArmourerOptions options;
+
+	public MakeIngots(LogicailMethodContext ctx) {
 		super(ctx);
+		this.options = ((LogArtisanArmourer) ctx.script).options;
 	}
 
 	@Override
 	public void execute() {
-		Options options = LogArtisanArmourer.instance.options;
 		options.isSmithing = false;
 
 		if (ctx.skillingInterface.getAction().equals("Smelt")) {
@@ -64,36 +65,30 @@ public class MakeIngots extends Node {
 			//ArtisanArmourer.setStatus("Search for smelter");
 
 			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).nearest().first()) {
-				if (ctx.camera.turnTo(smelter)) {
-					if (smelter.interact("Withdraw-ingots", "Smelter")) {
-						ctx.waiting.wait(6000, new Condition() {
-							@Override
-							public boolean validate() {
-								return ctx.skillingInterface.isOpen();
-							}
-						});
-						sleep(100, 500);
-					}
-				} else {
-					Tile tile = ctx.movement.reachableNear(smelter);
-					if (tile != Tile.NIL && ctx.movement.findPath(tile).traverse()) {
-						sleep(500, 1000);
-					}
+				if (ctx.interaction.interact(smelter, "Withdraw-ingots", "Smelter")) {
+					ctx.waiting.wait(6000, new Condition() {
+						@Override
+						public boolean validate() {
+							return ctx.skillingInterface.isOpen();
+						}
+					});
+					sleep(100, 1000);
 				}
+
 			}
 		}
 	}
 
 	@Override
 	public boolean activate() {
-		return (ctx.skillingInterface.getAction().equals("Smelt") && !ctx.skillingInterface.select().id(MakeSword.HEATED_INGOTS[0]).isEmpty())
+		return (ctx.skillingInterface.getAction().equals("Smelt") && !ctx.skillingInterface.select().id(MakeSword.HEATED_INGOTS).isEmpty())
 				|| (!ctx.backpack.isFull()
-				&& (ctx.backpack.select().id(LogArtisanArmourer.instance.options.getIngotID()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));
+				&& (ctx.backpack.select().id(options.getIngotID()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));
 	}
 
 	private String getCategoryName() {
-		if (LogArtisanArmourer.instance.options.mode == Mode.BURIAL_ARMOUR) {
-			switch (LogArtisanArmourer.instance.options.ingotGrade) {
+		if (options.mode == Mode.BURIAL_ARMOUR) {
+			switch (options.ingotGrade) {
 				case TWO:
 					return "Ingots, Tier II";
 				case THREE:
