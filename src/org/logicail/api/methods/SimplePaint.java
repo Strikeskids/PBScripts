@@ -15,18 +15,17 @@ import java.util.Map;
  * Time: 10:37
  */
 public abstract class SimplePaint extends LoopTask implements MouseListener, MouseMotionListener, MouseWheelListener {
-
 	private static final int MIN_PADDING = 8;
 	public final Map<String, String> contents = Collections.synchronizedMap(new LinkedHashMap<String, String>());
 	private final int PAINT_LINE_SPACE = 18;
 	private final Rectangle rectangle;
-	Point start;
-	private int PAINT_X = MIN_PADDING;
-	private int PAINT_Y = MIN_PADDING;
+	private Point start;
+	private int x = MIN_PADDING;
+	private int y = MIN_PADDING;
 	private int height = 1;
 	private int width = 1;
 	private Font fontTitle = new Font("Dialog", Font.BOLD, 16);
-	private Font fontNormal = new Font("Dialog", Font.BOLD, 12);
+	private Font fontNormal = new Font("Dialog", Font.PLAIN, 12);
 	private int alpha = 192;
 	private Color border = new Color(255, 255, 255, alpha);
 	private Color background = new Color(0, 0, 0, alpha);
@@ -35,7 +34,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	public SimplePaint(LogicailMethodContext ctx) {
 		super(ctx);
 
-		rectangle = new Rectangle(PAINT_X, PAINT_Y, 1, 1);
+		rectangle = new Rectangle(x, y, 1, 1);
 
 		contents.put("NAME", ctx.script.getName());
 		contents.put("VERSION", String.valueOf(ctx.script.getVersion()));
@@ -62,7 +61,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 		int widthCopy = width;
 		width = 1;
 
-		int y = PAINT_Y + PAINT_LINE_SPACE + 8;
+		int y = this.y + PAINT_LINE_SPACE + 8;
 
 		synchronized (contents) {
 			for (Map.Entry<String, String> next : contents.entrySet()) {
@@ -74,10 +73,10 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 					if (w > width) {
 						width = w;
 					}
-					int x = PAINT_X + (widthCopy - w) / 2;
+					int x = this.x + (widthCopy - w) / 2;
 					g.drawString(value, x, y);
 				} else if (key.startsWith("LINE_")) {
-					g.drawLine(PAINT_X + MIN_PADDING, y - PAINT_LINE_SPACE / 2, PAINT_X + widthCopy - MIN_PADDING, y - PAINT_LINE_SPACE / 2);
+					g.drawLine(x + MIN_PADDING, y - PAINT_LINE_SPACE / 2, x + widthCopy - MIN_PADDING, y - PAINT_LINE_SPACE / 2);
 					y -= PAINT_LINE_SPACE / 3;
 				} else if (!value.isEmpty()) {
 					g.setFont(fontNormal);
@@ -86,7 +85,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 					if (w > width) {
 						width = w;
 					}
-					g.drawString(value, PAINT_X + MIN_PADDING, y);
+					g.drawString(value, x + MIN_PADDING, y);
 				}
 				y += PAINT_LINE_SPACE;
 			}
@@ -94,7 +93,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 
 		width += MIN_PADDING + MIN_PADDING;
 
-		rectangle.setFrame(PAINT_X, PAINT_Y, width, height);
+		rectangle.setFrame(x, this.y, width, height);
 	}
 
 	@Override
@@ -136,23 +135,23 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 			int xMax = component.getWidth() - MIN_PADDING - rectangle.width;
 			int yMax = component.getHeight() - MIN_PADDING - rectangle.height;
 
-			PAINT_X += point.x - start.x;
-			PAINT_Y += point.y - start.y;
+			x += point.x - start.x;
+			y += point.y - start.y;
 			start = point;
 
-			if (PAINT_X < MIN_PADDING) {
-				PAINT_X = MIN_PADDING;
-			} else if (PAINT_X > xMax) {
-				PAINT_X = xMax;
+			if (x < MIN_PADDING) {
+				x = MIN_PADDING;
+			} else if (x > xMax) {
+				x = xMax;
 			}
 
-			if (PAINT_Y < MIN_PADDING) {
-				PAINT_Y = MIN_PADDING;
-			} else if (PAINT_Y > yMax) {
-				PAINT_Y = yMax;
+			if (y < MIN_PADDING) {
+				y = MIN_PADDING;
+			} else if (y > yMax) {
+				y = yMax;
 			}
 
-			rectangle.setFrame(PAINT_X, PAINT_Y, rectangle.width, rectangle.height);
+			rectangle.setFrame(x, y, rectangle.width, rectangle.height);
 		}
 	}
 

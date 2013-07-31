@@ -131,7 +131,7 @@ public class SkillingInterface extends ItemQuery<Item> {
 			if (item.isValid()) {
 				// TODO: Check what boolean is for
 				ctx.widgets.scroll(item.getComponent(), ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_SCROLLBAR_PARENT), true);
-				if (item.isOnScreen() && item.click()) {
+				if (item.isOnScreen() && item.click()) { // TODO: Check interaction
 					ctx.waiting.wait(1500, new Condition() {
 						@Override
 						public boolean validate() {
@@ -142,6 +142,7 @@ public class SkillingInterface extends ItemQuery<Item> {
 				}
 			}
 		}
+
 		selectedItem = getSelectedItem();
 		return selectedItem != null && selectedItem.getId() == itemId;
 	}

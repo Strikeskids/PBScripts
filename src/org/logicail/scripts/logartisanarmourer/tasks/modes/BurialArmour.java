@@ -1,9 +1,11 @@
-package org.logicail.scripts.logartisanarmourer.tasks;
+package org.logicail.scripts.logartisanarmourer.tasks.modes;
 
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.framework.script.state.BranchOnce;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
+import org.logicail.scripts.logartisanarmourer.tasks.DepositOre;
+import org.logicail.scripts.logartisanarmourer.tasks.MakeIngots;
 import org.logicail.scripts.logartisanarmourer.tasks.burial.DepositArmour;
 import org.logicail.scripts.logartisanarmourer.tasks.burial.SmithAnvil;
 import org.logicail.scripts.logartisanarmourer.tasks.respect.BrokenPipes;
@@ -20,9 +22,6 @@ public class BurialArmour extends BranchOnce {
 		super(ctx);
 
 		LogArtisanArmourerOptions options = ((LogArtisanArmourer) ctx.script).options;
-
-		nodes.add(new StayInArea(ctx));
-
 
 		if (options.repairPipes) {
 			nodes.add(new BrokenPipes(ctx));

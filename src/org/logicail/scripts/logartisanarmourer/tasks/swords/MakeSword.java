@@ -3,6 +3,7 @@ package org.logicail.scripts.logartisanarmourer.tasks.swords;
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.providers.Condition;
 import org.logicail.framework.script.state.Node;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.tasks.Anvil;
 import org.logicail.scripts.logartisanarmourer.wrapper.HitType;
@@ -29,10 +30,10 @@ public class MakeSword extends Node {
 	private final LogArtisanArmourerOptions options;
 	Anvil anvilHelper;
 
-	public MakeSword(LogicailMethodContext ctx, LogArtisanArmourerOptions options) {
+	public MakeSword(LogicailMethodContext ctx) {
 		super(ctx);
-		this.options = options;
-		anvilHelper = new Anvil(ctx, options);
+		this.options = ((LogArtisanArmourer) ctx.script).options;
+		anvilHelper = new Anvil(ctx);
 	}
 
 	public static int getCooldown(LogicailMethodContext ctx) {
@@ -46,6 +47,24 @@ public class MakeSword extends Node {
 
 	public static boolean isOpen(LogicailMethodContext ctx) {
 		return ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).isValid();
+	}
+
+	public static boolean closeInterface(final LogicailMethodContext ctx) {
+		if (!isOpen(ctx)) {
+			return true;
+		}
+
+		Component component = ctx.widgets.get(1074, 145);
+		if (component.isValid() && component.interact("Close")) {
+			ctx.waiting.wait(1000, new Condition() {
+				@Override
+				public boolean validate() {
+					return !isOpen(ctx);
+				}
+			});
+		}
+
+		return isOpen(ctx);
 	}
 
 	public int getCooldown() {
@@ -104,21 +123,7 @@ public class MakeSword extends Node {
 	}
 
 	public boolean closeInterface() {
-		if (!isOpen()) {
-			return true;
-		}
-
-		Component component = ctx.widgets.get(1074, 145);
-		if (component.isValid() && component.interact("Close")) {
-			ctx.waiting.wait(1000, new Condition() {
-				@Override
-				public boolean validate() {
-					return !isOpen();
-				}
-			});
-		}
-
-		return isOpen();
+		return closeInterface(ctx);
 	}
 
 	@Override

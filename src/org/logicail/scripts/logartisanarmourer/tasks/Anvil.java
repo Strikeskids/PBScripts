@@ -4,6 +4,7 @@ import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.methods.LogicailMethodProvider;
 import org.logicail.api.methods.QueryHelper;
 import org.logicail.api.providers.Condition;
+import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
 import org.powerbot.script.lang.Filter;
@@ -28,9 +29,9 @@ public class Anvil extends LogicailMethodProvider {
 	private int[] ids;
 	private GameObject target = null;
 
-	public Anvil(LogicailMethodContext ctx, LogArtisanArmourerOptions options) {
+	public Anvil(LogicailMethodContext ctx) {
 		super(ctx);
-		this.options = options;
+		options = ((LogArtisanArmourer) ctx.script).options;
 		ids = getAnvilId();
 	}
 

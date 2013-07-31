@@ -33,6 +33,14 @@ public class Paint extends SimplePaint implements MessageListener {
 		this.script = (LogArtisanArmourer) ctx.script;
 		this.options = script.options;
 		skillData = new SkillData(ctx);
+
+		contents.put("Time", "");
+		contents.put("SPACE_1", "");
+		contents.put("Level", "");
+		contents.put("TTL", "");
+		contents.put("XP Gained", "");
+		contents.put("XP Hour", "");
+		contents.put("SPACE_2", "");
 	}
 
 	@Override
@@ -44,12 +52,10 @@ public class Paint extends SimplePaint implements MessageListener {
 		long totalRuntime = script.getTotalRuntime();
 
 		contents.put("Time", Timer.format(totalRuntime));
-		contents.put("SPACE_1", "");
 		contents.put("Level", ctx.skills.getLevel(Skills.SMITHING) + " (" + skillData.level(Skills.SMITHING) + ")");
 		contents.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
 		contents.put("XP Gained", String.format("%,d", xpGained));
 		contents.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
-		contents.put("SPACE_2", "");
 
 		switch (options.mode) {
 			case BURIAL_ARMOUR:
@@ -81,9 +87,7 @@ public class Paint extends SimplePaint implements MessageListener {
 							options.gotPlan = false;
 							break;
 						case "You broke the sword! You'll need to get another set of plans from Egil.":
-							synchronized (this) {
-								brokenSwords++;
-							}
+							brokenSwords++;
 							options.finishedSword = true;
 							options.gotPlan = false;
 							break;
@@ -93,16 +97,12 @@ public class Paint extends SimplePaint implements MessageListener {
 							options.gotPlan = false;
 							break;
 						case "For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!":
-							synchronized (this) {
-								perfectSwords++;
-								swordsSmithed++;
-							}
+							perfectSwords++;
+							swordsSmithed++;
 							break;
 						default:
 							if (e.getMessage().startsWith("Your sword is awarded")) {
-								synchronized (this) {
-									swordsSmithed++;
-								}
+								swordsSmithed++;
 								options.finishedSword = true;
 								options.gotPlan = false;
 							}
@@ -111,9 +111,7 @@ public class Paint extends SimplePaint implements MessageListener {
 					break;
 				case 109:
 					if (e.getMessage().contains("You make a")) {
-						synchronized (this) {
-							ingots++;
-						}
+						ingots++;
 					}
 					break;
 			}

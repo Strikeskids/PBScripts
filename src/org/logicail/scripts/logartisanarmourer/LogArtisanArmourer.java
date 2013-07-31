@@ -5,7 +5,9 @@ import org.logicail.framework.script.state.Node;
 import org.logicail.framework.script.state.Tree;
 import org.logicail.scripts.logartisanarmourer.paint.Paint;
 import org.logicail.scripts.logartisanarmourer.tasks.AntiBan;
-import org.logicail.scripts.logartisanarmourer.tasks.BurialArmour;
+import org.logicail.scripts.logartisanarmourer.tasks.StayInArea;
+import org.logicail.scripts.logartisanarmourer.tasks.modes.BurialArmour;
+import org.logicail.scripts.logartisanarmourer.tasks.modes.CeremonialSwords;
 import org.logicail.scripts.tasks.IdleLogout;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
@@ -61,12 +63,14 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 		ArrayList<Node> nodes = new ArrayList<>();
 
 		nodes.add(new IdleLogout(ctx, 15 * 60, 20 * 60));
+		nodes.add(new StayInArea(ctx));
 
 		switch (options.mode) {
 			case BURIAL_ARMOUR:
 				nodes.add(new BurialArmour(ctx));
 				break;
 			case CEREMONIAL_SWORDS:
+				nodes.add(new CeremonialSwords(ctx));
 				break;
 			case REPAIR_TRACK:
 				break;

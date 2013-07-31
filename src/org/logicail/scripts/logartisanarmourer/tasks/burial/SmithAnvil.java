@@ -24,7 +24,7 @@ public class SmithAnvil extends Node {
 	public SmithAnvil(LogicailMethodContext ctx) {
 		super(ctx);
 		this.options = ((LogArtisanArmourer) ctx.script).options;
-		anvilHelper = new Anvil(ctx, options);
+		anvilHelper = new Anvil(ctx);
 	}
 
 	public String getCategoryName() {

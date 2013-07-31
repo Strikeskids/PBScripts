@@ -20,6 +20,7 @@ public class LogicailMethodContext extends MethodContext {
 	public MyMovement movement;
 	public AbstractScript script;
 	public AnimationHistory animationHistory;
+	public ChatOptions chatOptions;
 
 	public LogicailMethodContext(AbstractScript script, MethodContext original) {
 		super(original.getBot());
@@ -39,5 +40,6 @@ public class LogicailMethodContext extends MethodContext {
 		camera = new LogicailCamera(this);
 		super.movement = movement = new MyMovement(this);
 		animationHistory = new AnimationHistory(this);
+		chatOptions = new ChatOptions(this);
 	}
 }

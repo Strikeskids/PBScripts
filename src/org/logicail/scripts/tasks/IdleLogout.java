@@ -7,6 +7,7 @@ import org.powerbot.script.Script;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
+import org.powerbot.script.wrappers.Player;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,6 +21,7 @@ public class IdleLogout extends Node {
 	long totalXP = -1;
 	private Timer timer;
 	private int seconds;
+	private String name;
 
 	public IdleLogout(LogicailMethodContext ctx, int secondsMin, int secondsMax) {
 		super(ctx);
@@ -40,9 +42,17 @@ public class IdleLogout extends Node {
 		timer = new Timer(seconds = (Random.nextInt(secondsMin, secondsMax) * 1000));
 	}
 
-	// TODO: on resume reset timer
 	@Override
 	public boolean activate() {
+		if (totalXP == -1 && ctx.game.isLoggedIn()) {
+			Player local = ctx.players.local();
+			String currentName = local == null ? null : local.getName();
+			if (currentName != null) {
+				name = currentName;
+				totalXP = getTotalXP();
+			}
+		}
+
 		// TODO: Check could just need isLoggedIn
 		int state = ctx.game.getClientState();
 		return (state == Game.INDEX_MAP_LOADED || state == Game.INDEX_MAP_LOADING) && !timer.isRunning();
@@ -50,7 +60,11 @@ public class IdleLogout extends Node {
 
 	@Override
 	public void execute() {
-		if (totalXP == -1) {
+		// Check player name is the same
+		Player local = ctx.players.local();
+		String currentName = local == null ? null : local.getName();
+		if ((currentName != null && !currentName.equals(name)) || totalXP == -1) {
+			name = currentName;
 			totalXP = getTotalXP();
 			resetTimer();
 		} else {

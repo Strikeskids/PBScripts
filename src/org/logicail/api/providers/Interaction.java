@@ -29,7 +29,7 @@ public class Interaction<T extends Interactive & Locatable> extends LogicailMeth
 			return false;
 		}
 
-		if (!ctx.camera.turnTo(target) || ctx.movement.getDistance(target) >= 10) {
+		if (!ctx.camera.turnTo(target) || ctx.movement.getDistance(target) >= 12) {
 			final Tile destination = ctx.movement.reachableNear(target);
 			if (destination != Tile.NIL && ctx.movement.findPath(destination).traverse()) {
 				ctx.waiting.wait(12000, new Condition() {
@@ -44,6 +44,11 @@ public class Interaction<T extends Interactive & Locatable> extends LogicailMeth
 			}
 		}
 
+		if (ctx.menu.isOpen() && ctx.menu.close()) {
+			// Close the menu since Timer won't fix this
+			sleep(111, 555);
+		}
+
 		switch (Random.nextInt(0, 8)) {
 			case 0:
 				String name = null;
@@ -54,18 +59,23 @@ public class Interaction<T extends Interactive & Locatable> extends LogicailMeth
 						name = ((GameObject) target).getName();
 					}
 				}
-				target.interact("Examine", name);
-				sleep(111, 2222);
+				if (target.interact("Examine", name)) {
+					sleep(111, 2222);
+				}
 				break;
 			case 1:
-				target.interact("Walk here");
-				sleep(111, 2222);
+				if (target.hover() && ctx.menu.indexOf("Walk here") > -1) {
+					sleep(111, 555);
+					if (ctx.menu.click("Walk here")) {
+						sleep(100, 1900);
+					}
+				}
 				break;
 			case 2:
 				if (target instanceof Npc && target.hover() && ctx.menu.indexOf("Talk to") > -1) {
 					sleep(200, 800);
 					if (ctx.menu.click("Talk to")) {
-						sleep(111, 2222);
+						sleep(100, 1900);
 					}
 				}
 				break;
