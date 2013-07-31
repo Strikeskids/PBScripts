@@ -39,7 +39,7 @@ public class HeatIngots extends Node {
 			}
 		} else {
 			for (GameObject furnace : ctx.objects.select().id(FURNACE).nearest().first()) {
-				if (ctx.camera.turnTo(furnace) && ctx.interaction.interact(furnace, "Smelt", "Furnace")) {
+				if (ctx.interaction.prepare(furnace) && ctx.interaction.interact(furnace, "Smelt", "Furnace")) {
 					ctx.waiting.wait(3500, new Condition() {
 						@Override
 						public boolean validate() {

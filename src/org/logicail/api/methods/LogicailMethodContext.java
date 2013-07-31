@@ -13,10 +13,9 @@ import org.powerbot.script.methods.MethodContext;
 public class LogicailMethodContext extends MethodContext {
 	public Interaction interaction;
 	public SkillingInterface skillingInterface;
-	public LogicailBackpack backpack;
+	public MyBackpack backpack;
 	public Waiting waiting;
 	public MyMouse mouse;
-	public LogicailCamera camera;
 	public MyMovement movement;
 	public AbstractScript script;
 	public AnimationHistory animationHistory;
@@ -34,10 +33,9 @@ public class LogicailMethodContext extends MethodContext {
 		super.init(ctx);
 		interaction = new Interaction(this);
 		skillingInterface = new SkillingInterface(this);
-		super.backpack = backpack = new LogicailBackpack(this);
+		super.backpack = backpack = new MyBackpack(this);
 		waiting = new Waiting(this);
 		super.mouse = mouse = new MyMouse(this);
-		camera = new LogicailCamera(this);
 		super.movement = movement = new MyMovement(this);
 		animationHistory = new AnimationHistory(this);
 		chatOptions = new ChatOptions(this);

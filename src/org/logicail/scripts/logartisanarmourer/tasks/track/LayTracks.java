@@ -33,7 +33,7 @@ public class LayTracks extends Node {
 	@Override
 	public void execute() {
 		for (GameObject tunnel : ctx.objects.select().id(TUNNEL).nearest().first()) {
-			if (ctx.camera.turnTo(tunnel) && ctx.interaction.interact(tunnel, "Lay-tracks", "Tunnel")) {
+			if (ctx.interaction.prepare(tunnel) && ctx.interaction.interact(tunnel, "Lay-tracks", "Tunnel")) {
 				if (ctx.waiting.wait(9000, new Condition() {
 					@Override
 					public boolean validate() {

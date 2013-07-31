@@ -20,28 +20,57 @@ public class Interaction<T extends Interactive & Locatable> extends LogicailMeth
 		super(ctx);
 	}
 
-	public boolean interact(T target, String action) {
-		return interact(target, action, null);
-	}
-
-	public boolean interact(T target, String action, String option) {
+	/**
+	 * Turn to target & walk if needed
+	 *
+	 * @param target
+	 * @return
+	 */
+	public boolean prepare(T target) {
 		if (!target.isValid()) {
 			return false;
 		}
 
-		if (!ctx.camera.turnTo(target) || ctx.movement.getDistance(target) >= 12) {
+		if (target.isOnScreen()) {
+			return true;
+		}
+
+		ctx.camera.turnTo(target);
+		sleep(200, 1000);
+
+		if (target.isOnScreen()) {
+			return true;
+		}
+
+		if (ctx.movement.getDistance(target) >= 6) {
 			final Tile destination = ctx.movement.reachableNear(target);
 			if (destination != Tile.NIL && ctx.movement.findPath(destination).traverse()) {
-				ctx.waiting.wait(12000, new Condition() {
+				ctx.waiting.wait(10000, new Condition() {
 					@Override
 					public boolean validate() {
 						return ctx.movement.getDistance(destination) < 6;
 					}
 				});
 			}
-			if (!ctx.camera.turnTo(target)) {
-				return false;
+			if (target.isOnScreen()) {
+				return true;
+			} else {
+				ctx.camera.turnTo(target);
+				sleep(200, 1000);
+				return target.isOnScreen();
 			}
+		}
+
+		return false;
+	}
+
+	public boolean interact(T target, String action) {
+		return interact(target, action, null);
+	}
+
+	public boolean interact(T target, String action, String option) {
+		if (!target.isValid() || !prepare(target)) {
+			return false;
 		}
 
 		if (ctx.menu.isOpen() && ctx.menu.close()) {

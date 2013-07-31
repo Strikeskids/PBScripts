@@ -104,7 +104,7 @@ public class DepositOre extends Node {
 			options.isSmithing = false;
 
 			for (GameObject smelter : ctx.objects) {
-				if (ctx.camera.turnTo(smelter)) {
+				if (ctx.interaction.prepare(smelter)) {
 					final int count = item.getStackSize();
 					if (item.interact("Use")) {
 						sleep(100, 500);

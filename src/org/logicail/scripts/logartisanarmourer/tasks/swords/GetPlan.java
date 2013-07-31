@@ -46,7 +46,7 @@ public class GetPlan extends Node {
 		final int xp = ctx.skills.getExperience(Skills.SMITHING);
 
 		for (Npc npc : ctx.npcs.select().id(EGIL_ABEL).nearest().first()) {
-			if (ctx.camera.turnTo(npc)) {
+			if (ctx.interaction.prepare(npc)) {
 				sleep(111, 333);
 				if (npc.hover()) {
 					sleep(111, 333);

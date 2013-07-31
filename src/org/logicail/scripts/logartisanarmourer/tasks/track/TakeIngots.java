@@ -81,7 +81,7 @@ public class TakeIngots extends Node {
 		}
 
 		for (GameObject trough : ctx.objects) {
-			if (ctx.camera.turnTo(trough)) {
+			if (ctx.interaction.prepare(trough)) {
 				String option = null;
 				switch (options.ingotType) {
 					case BRONZE:

@@ -37,7 +37,7 @@ public class KillAncestors extends RespectNode {
 	@Override
 	public void execute() {
 		for (final Npc target : ctx.npcs) {
-			if (!ctx.camera.turnTo(target)) {
+			if (!ctx.interaction.prepare(target)) {
 				ctx.movement.stepTowards(target.getLocation().randomize(2, 2));
 				ctx.waiting.wait(3000, new Condition() {
 					@Override
@@ -47,7 +47,7 @@ public class KillAncestors extends RespectNode {
 				});
 			}
 
-			if (ctx.camera.turnTo(target)) {
+			if (ctx.interaction.prepare(target)) {
 				final Player local = ctx.players.local();
 				if (local.getInteracting() == null && target.interact("Attack", target.getName())) {
 					ctx.waiting.wait(2500, new Condition() {

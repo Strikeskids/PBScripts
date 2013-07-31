@@ -42,7 +42,7 @@ public class GetTongs extends Node {
 		}
 
 		for (GameObject table : ctx.objects.select().id(TONGS_WORKBENCH).nearest().first()) {
-			if (ctx.camera.turnTo(table) && ctx.interaction.interact(table, "Take", "Workbench")) {
+			if (ctx.interaction.prepare(table) && ctx.interaction.interact(table, "Take", "Workbench")) {
 				ctx.waiting.wait(3000, new Condition() {
 					@Override
 					public boolean validate() {
