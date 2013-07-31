@@ -1,4 +1,4 @@
-package org.logicail.api.providers;
+package org.logicail.api.methods.providers;
 
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.framework.script.LoopTask;

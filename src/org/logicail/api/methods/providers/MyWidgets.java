@@ -1,4 +1,4 @@
-package org.logicail.api.providers;
+package org.logicail.api.methods.providers;
 
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.methods.Widgets;
@@ -16,7 +16,6 @@ public class MyWidgets extends Widgets {
 	}
 
 	public Component getContinue() {
-
 		Component button = get(752, 5);
 		if (button != null && button.isValid() && button.getTextColor() == 128 && button.getRelativeLocation().x == 0) {
 			return button;

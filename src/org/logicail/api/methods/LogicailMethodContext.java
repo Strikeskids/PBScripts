@@ -1,6 +1,6 @@
 package org.logicail.api.methods;
 
-import org.logicail.api.providers.*;
+import org.logicail.api.methods.providers.*;
 import org.powerbot.script.AbstractScript;
 import org.powerbot.script.methods.MethodContext;
 
@@ -20,13 +20,12 @@ public class LogicailMethodContext extends MethodContext {
 	public AbstractScript script;
 	public AnimationHistory animationHistory;
 	public ChatOptions chatOptions;
+	public MyWidgets widgets;
 
-	public LogicailMethodContext(AbstractScript script, MethodContext original) {
+	public LogicailMethodContext(MethodContext original, AbstractScript script) {
 		super(original.getBot());
 		this.script = script;
 	}
-
-	// 	/*public static <J extends Job> J getInstance(Class<J> param_class) {
 
 	@Override
 	public void init(MethodContext ctx) {
@@ -39,5 +38,6 @@ public class LogicailMethodContext extends MethodContext {
 		super.movement = movement = new MyMovement(this);
 		animationHistory = new AnimationHistory(this);
 		chatOptions = new ChatOptions(this);
+		widgets = new MyWidgets(this);
 	}
 }

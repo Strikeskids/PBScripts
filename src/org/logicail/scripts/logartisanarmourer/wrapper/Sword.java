@@ -1,7 +1,7 @@
 package org.logicail.scripts.logartisanarmourer.wrapper;
 
 import org.logicail.api.methods.LogicailMethodContext;
-import org.logicail.api.providers.Condition;
+import org.logicail.api.methods.providers.Condition;
 import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.wrappers.Component;

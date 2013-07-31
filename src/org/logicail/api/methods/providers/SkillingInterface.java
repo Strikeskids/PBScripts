@@ -1,4 +1,4 @@
-package org.logicail.api.providers;
+package org.logicail.api.methods.providers;
 
 import org.logicail.api.methods.LogicailMethodContext;
 import org.powerbot.script.lang.ItemQuery;
@@ -39,9 +39,9 @@ public class SkillingInterface extends ItemQuery<Item> {
 	private static final int WIDGET_MAIN_SELECTED_ITEM_NAME = 56;
 	public LogicailMethodContext ctx;
 
-	public SkillingInterface(LogicailMethodContext context) {
-		super(context);
-		this.ctx = context;
+	public SkillingInterface(LogicailMethodContext ctx) {
+		super(ctx);
+		this.ctx = ctx;
 	}
 
 	public boolean isOpen() {
@@ -62,17 +62,20 @@ public class SkillingInterface extends ItemQuery<Item> {
 			return new Item(ctx, component);
 		}
 
-		return null;
+		return getNil();
 	}
 
 	public String getSelectedName() {
 		if (isOpen()) {
 			Component component = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_SELECTED_ITEM_NAME);
 			if (component != null && component.isValid()) {
-				return component.getText();
+				String text = component.getText();
+				if (text != null) {
+					return text;
+				}
 			}
 		}
-		return "";
+		return getNil().getName();
 	}
 
 	public boolean select(final String category, final int itemId, final int quantity) {
@@ -314,7 +317,7 @@ public class SkillingInterface extends ItemQuery<Item> {
 			//final ScriptHandler scriptHandler = Bot.context().getScriptHandler();
 			final Timer t = new Timer(Math.abs(targetQuantity - currentQuantity) * Random.nextInt(2000, 3000));
 			if (targetQuantity > currentQuantity) {
-				while (t.isRunning() && /*scriptHandler.isActive() &&*/ targetQuantity > currentQuantity) {
+				while (t.isRunning() && !ctx.script.getController().isStopping() && targetQuantity > currentQuantity) {
 					if (!isOpen()) {
 						break;
 					}
@@ -328,7 +331,7 @@ public class SkillingInterface extends ItemQuery<Item> {
 					currentQuantity = getQuantity();
 				}
 			} else {
-				while (t.isRunning() /*&& scriptHandler.isActive()*/ && currentQuantity > targetQuantity) {
+				while (t.isRunning() && !ctx.script.getController().isStopping() && currentQuantity > targetQuantity) {
 					if (!isOpen()) {
 						break;
 					}
@@ -380,11 +383,9 @@ public class SkillingInterface extends ItemQuery<Item> {
 		final Component component = getItemWidget();
 		if (component != null) {
 			final Component[] children = component.getChildren();
-			if (children.length > 0) {
-				for (Component child : children) {
-					if (child.getId() != -1) {
-						items.add(new Item(ctx, child));
-					}
+			for (Component child : children) {
+				if (child.getId() != -1) {
+					items.add(new Item(ctx, child));
 				}
 			}
 		}

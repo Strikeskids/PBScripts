@@ -1,4 +1,4 @@
-package org.logicail.api.providers;
+package org.logicail.api.methods.providers;
 
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.methods.Mouse;
@@ -13,8 +13,8 @@ import java.awt.*;
  * Time: 17:11
  */
 public class MyMouse extends Mouse {
-	public MyMouse(MethodContext arg0) {
-		super(arg0);
+	public MyMouse(MethodContext ctx) {
+		super(ctx);
 	}
 
 	public boolean move(Rectangle rectangle) {

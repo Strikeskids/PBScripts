@@ -2,7 +2,7 @@ package org.logicail.framework.script;
 
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.methods.SimplePaint;
-import org.logicail.api.providers.AnimationHistory;
+import org.logicail.api.methods.providers.AnimationHistory;
 import org.logicail.framework.script.state.Tree;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.PollingScript;
@@ -42,8 +42,7 @@ public abstract class ActiveScript extends PollingScript implements PaintListene
 			}
 		});
 
-
-		ctx = new LogicailMethodContext(this, super.ctx);
+		ctx = new LogicailMethodContext(super.ctx, this);
 
 		getExecQueue(State.START).add(new Runnable() {
 			@Override

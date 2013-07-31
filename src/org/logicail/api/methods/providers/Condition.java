@@ -1,4 +1,4 @@
-package org.logicail.api.providers;
+package org.logicail.api.methods.providers;
 
 /**
  * Created with IntelliJ IDEA.

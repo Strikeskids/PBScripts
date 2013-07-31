@@ -1,7 +1,7 @@
 package org.logicail.scripts.logartisanarmourer.tasks.track;
 
 import org.logicail.api.methods.LogicailMethodContext;
-import org.logicail.api.providers.Condition;
+import org.logicail.api.methods.providers.Condition;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.tasks.modes.Tracks;
 import org.powerbot.script.wrappers.GameObject;

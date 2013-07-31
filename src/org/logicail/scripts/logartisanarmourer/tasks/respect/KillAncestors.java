@@ -2,7 +2,7 @@ package org.logicail.scripts.logartisanarmourer.tasks.respect;
 
 import org.logicail.api.filters.CombatFilter;
 import org.logicail.api.methods.LogicailMethodContext;
-import org.logicail.api.providers.Condition;
+import org.logicail.api.methods.providers.Condition;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.lang.IdQuery;
 import org.powerbot.script.util.Random;

@@ -1,4 +1,4 @@
-package org.logicail.api.providers;
+package org.logicail.api.methods.providers;
 
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.methods.LogicailMethodProvider;
@@ -132,7 +132,6 @@ public class ChatOptions extends LogicailMethodProvider {
 	 * @return Widgets.canContinue().
 	 */
 	public boolean canContinue() {
-		// TODO: Widgets.canContinue
-		return false/*ctx.widgets.canContinue()*/;
+		return ctx.widgets.canContinue();
 	}
 }

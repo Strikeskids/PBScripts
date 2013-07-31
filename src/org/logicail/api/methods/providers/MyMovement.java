@@ -1,4 +1,4 @@
-package org.logicail.api.providers;
+package org.logicail.api.methods.providers;
 
 import org.logicail.api.Area;
 import org.powerbot.script.lang.Locatable;
@@ -19,8 +19,8 @@ import java.util.Comparator;
  * Time: 18:23
  */
 public class MyMovement extends Movement {
-	public MyMovement(MethodContext arg0) {
-		super(arg0);
+	public MyMovement(MethodContext ctx) {
+		super(ctx);
 	}
 
 	public int getDistance(Locatable locatable) {

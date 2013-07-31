@@ -1,7 +1,7 @@
 package org.logicail.scripts.logartisanarmourer.tasks.swords;
 
 import org.logicail.api.methods.LogicailMethodContext;
-import org.logicail.api.providers.Condition;
+import org.logicail.api.methods.providers.Condition;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
