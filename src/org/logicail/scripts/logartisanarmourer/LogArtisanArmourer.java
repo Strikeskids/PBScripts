@@ -8,13 +8,13 @@ import org.logicail.scripts.logartisanarmourer.tasks.AntiBan;
 import org.logicail.scripts.logartisanarmourer.tasks.StayInArea;
 import org.logicail.scripts.logartisanarmourer.tasks.modes.BurialArmour;
 import org.logicail.scripts.logartisanarmourer.tasks.modes.CeremonialSwords;
+import org.logicail.scripts.logartisanarmourer.tasks.modes.Tracks;
 import org.logicail.scripts.tasks.IdleLogout;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Random;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -54,6 +54,14 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 				submit(paint = new Paint(ctx));
 			}
 		});
+
+		final LogArtisanArmourer script = this;
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new LogArtisanArmourerGUI(script);
+			}
+		});
 	}
 
 	/**
@@ -73,24 +81,11 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 				nodes.add(new CeremonialSwords(ctx));
 				break;
 			case REPAIR_TRACK:
+				nodes.add(new Tracks(ctx));
 				break;
 		}
 
 		tree = new Tree(ctx, nodes.toArray(new Node[nodes.size()]));
-	}
-
-	@Override
-	public int poll() {
-		try {
-			if (tree != null && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
-				if (tree.activate()) {
-					tree.execute();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Random.nextInt(100, 500);
 	}
 
 	@Override

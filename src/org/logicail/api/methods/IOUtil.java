@@ -18,10 +18,11 @@ public class IOUtil {
 		try {
 			try (Reader in = new InputStreamReader(is, "UTF-8")) {
 				while (true) {
-					int rsz = in.read(buffer, 0, buffer.length);
-					if (rsz < 0)
+					int read = in.read(buffer, 0, buffer.length);
+					if (read < 0) {
 						break;
-					out.append(buffer, 0, rsz);
+					}
+					out.append(buffer, 0, read);
 				}
 			}
 		} catch (IOException ex) {

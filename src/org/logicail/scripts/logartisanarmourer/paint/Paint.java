@@ -10,6 +10,14 @@ import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.SkillData;
 import org.powerbot.script.util.Timer;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -27,6 +35,7 @@ public class Paint extends SimplePaint implements MessageListener {
 	private int perfectSwords;
 	private int brokenSwords;
 	private int xpGained = 0;
+	private boolean done;
 
 	public Paint(LogicailMethodContext ctx) {
 		super(ctx);
@@ -69,6 +78,120 @@ public class Paint extends SimplePaint implements MessageListener {
 		}
 
 		return 250;
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		super.draw(g);
+
+		if (!done) {
+			done = true;
+
+			try {
+				BufferedImage read = ImageIO.read(new File(script.getStorageDirectory().toString(), "load.png"));
+				BufferedImage croppedImage = trimImage(read);
+				ImageIO.write(croppedImage, "png", new File(script.getStorageDirectory().toString(), "image.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public BufferedImage getImage() {
+		Dimension dimensions = getDimensions();
+		BufferedImage image = new BufferedImage(dimensions.width, dimensions.height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = image.createGraphics();
+
+		draw(g2);
+
+		return image;
+	}
+
+	/**
+	 * Remove transparent pixels
+	 *
+	 * @return
+	 */
+	public BufferedImage trimImage(BufferedImage image) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		int xMin = 0;
+		int xMax = width;
+
+		int yMin = 0;
+		int yMax = height;
+
+		try {
+			for (int y = 0; y < height - 1; ++y) {
+				if (!isTransparentRow(image, y)) {
+					yMin = y;
+					break;
+				}
+			}
+
+			for (int y = height - 1; y > 0; --y) {
+				if (isTransparentRow(image, y)) {
+					yMax = y + 1;
+					break;
+				}
+			}
+
+			for (int x = 0; x < width - 1; ++x) {
+				if (!isTransparentColumn(image, x)) {
+					xMin = x;
+					break;
+				}
+			}
+
+			for (int x = xMax - 1; x > 0; --x) {
+				if (!isTransparentColumn(image, x)) {
+					xMax = x + 1;
+					break;
+				}
+			}
+
+			return image.getSubimage(xMin, yMin, xMax - xMin, yMax - yMin);
+		} catch (Exception e) {
+			// encase I made a mistake
+			return image;
+		}
+	}
+
+	private boolean isTransparentRow(BufferedImage image, int y) {
+		int width = image.getWidth();
+		for (int i = 0; i < width - 1; i++) {
+			if (image.getRGB(i, y) != 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private boolean isTransparentColumn(BufferedImage image, int x) {
+		int height = image.getHeight();
+		for (int i = 0; i < height - 1; i++) {
+			if (image.getRGB(x, i) != 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public Dimension getDimensions() {
+		for (Frame frame : JFrame.getFrames()) {
+			if (frame instanceof JFrame && frame instanceof Closeable) {
+				Component component = frame.getComponent(0);
+				if (component instanceof JRootPane) {
+					return new Dimension(component.getWidth(), component.getHeight());
+				}
+				break;
+			}
+		}
+
+		return new Dimension(0, 0);
 	}
 
 	@Override

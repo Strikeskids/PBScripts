@@ -6,6 +6,8 @@ import org.logicail.api.methods.providers.AnimationHistory;
 import org.logicail.framework.script.state.Tree;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.PollingScript;
+import org.powerbot.script.methods.Game;
+import org.powerbot.script.util.Random;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -50,6 +52,20 @@ public abstract class ActiveScript extends PollingScript implements PaintListene
 				submit(new AnimationHistory(ctx));
 			}
 		});
+	}
+
+	@Override
+	public int poll() {
+		try {
+			if (tree != null && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+				if (tree.activate()) {
+					tree.execute();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Random.nextInt(100, 500);
 	}
 
 	/**

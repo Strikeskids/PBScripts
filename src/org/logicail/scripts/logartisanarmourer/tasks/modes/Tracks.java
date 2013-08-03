@@ -24,13 +24,41 @@ public class Tracks extends BranchOnce {
 	public static final int[] TRACK_80 = {20513, 20527, 20531};
 	public static final int[] TIE = {20510, 20519, 20524};
 	public static final int[] TRACK_100 = {20514, 20528, 20532};
+	private final int rails;
 	public SmithTrack smithTrack;
-	LogArtisanArmourerOptions options;
+	private int basePlate;
+	private int joint;
+	private int tie;
+	private int track40;
+	private int track60;
+	private int track80;
+	private int track100;
+	private int spikes;
+	private int ingotId;
 
 	public Tracks(LogicailMethodContext ctx) {
 		super(ctx);
 
-		options = ((LogArtisanArmourer) ctx.script).options;
+		LogArtisanArmourerOptions options = ((LogArtisanArmourer) ctx.script).options;
+
+		rails = RAILS[options.ingotType.ordinal()];
+		basePlate = BASE_PLATE[options.ingotType.ordinal()];
+		spikes = SPIKES[options.ingotType.ordinal()];
+		joint = JOINT[options.ingotType.ordinal()];
+		tie = TIE[options.ingotType.ordinal()];
+		track40 = TRACK_40[options.ingotType.ordinal()];
+		track60 = TRACK_60[options.ingotType.ordinal()];
+		track80 = TRACK_80[options.ingotType.ordinal()];
+		track100 = TRACK_100[options.ingotType.ordinal()];
+
+		switch (options.ingotType) {
+			case BRONZE:
+				ingotId = 20502;
+			case IRON:
+				ingotId = 20503;
+			case STEEL:
+				ingotId = 20504;
+		}
 
 		nodes.add(new TakeIngots(this));
 		nodes.add(smithTrack = new SmithTrack(this));
@@ -43,51 +71,42 @@ public class Tracks extends BranchOnce {
 	}
 
 	public int getRails() {
-		return RAILS[options.ingotType.ordinal()];
+		return rails;
 	}
 
 	public int getBasePlate() {
-		return BASE_PLATE[options.ingotType.ordinal()];
-	}
-
-	public int getTrack40() {
-		return TRACK_40[options.ingotType.ordinal()];
+		return basePlate;
 	}
 
 	public int getSpikes() {
-		return SPIKES[options.ingotType.ordinal()];
-	}
-
-	public int getTrack60() {
-		return TRACK_60[options.ingotType.ordinal()];
+		return spikes;
 	}
 
 	public int getJoint() {
-		return JOINT[options.ingotType.ordinal()];
-	}
-
-	public int getTrack80() {
-		return TRACK_80[options.ingotType.ordinal()];
+		return joint;
 	}
 
 	public int getTie() {
-		return TIE[options.ingotType.ordinal()];
+		return tie;
+	}
+
+	public int getTrack40() {
+		return track40;
+	}
+
+	public int getTrack60() {
+		return track60;
+	}
+
+	public int getTrack80() {
+		return track80;
 	}
 
 	public int getTrack100() {
-		return TRACK_100[options.ingotType.ordinal()];
+		return track100;
 	}
 
 	public int getIngotId() {
-		switch (options.ingotType) {
-			case BRONZE:
-				return 20502;
-			case IRON:
-				return 20503;
-			case STEEL:
-				return 20504;
-		}
-
-		return 20502;
+		return ingotId;
 	}
 }

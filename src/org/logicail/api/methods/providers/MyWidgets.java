@@ -16,23 +16,24 @@ public class MyWidgets extends Widgets {
 	}
 
 	public Component getContinue() {
+		// TODO: These are pre-RS3 interfaces
 		Component button = get(752, 5);
-		if (button != null && button.isValid() && button.getTextColor() == 128 && button.getRelativeLocation().x == 0) {
+		if (button.isValid() && button.getTextColor() == 128 && button.getRelativeLocation().x == 0) {
 			return button;
 		}
 
 		button = get(1184, 18);
-		if (button != null && button.isValid()) {
+		if (button.isValid()) {
 			return button;
 		}
 
 		button = get(1186, 8);
-		if (button != null && button.isValid()) {
+		if (button.isValid()) {
 			return button;
 		}
 
 		button = get(1191, 18);
-		if (button != null && button.isValid()) {
+		if (button.isValid()) {
 			return button;
 		}
 
@@ -45,6 +46,6 @@ public class MyWidgets extends Widgets {
 
 	public boolean clickContinue() {
 		final Component widgetChild = getContinue();
-		return widgetChild != null && widgetChild.click(true); // TODO: Check getTooltip for interact action
+		return widgetChild != null && widgetChild.click(true);
 	}
 }

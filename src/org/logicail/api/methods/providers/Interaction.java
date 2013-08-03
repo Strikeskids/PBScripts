@@ -2,12 +2,8 @@ package org.logicail.api.methods.providers;
 
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.methods.LogicailMethodProvider;
-import org.powerbot.script.lang.Locatable;
 import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Interactive;
-import org.powerbot.script.wrappers.Npc;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.wrappers.*;
 
 /**
  * Created with IntelliJ IDEA.

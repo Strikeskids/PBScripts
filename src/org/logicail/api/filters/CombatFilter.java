@@ -3,8 +3,8 @@ package org.logicail.api.filters;
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.methods.LogicailMethodProvider;
 import org.powerbot.script.lang.Filter;
-import org.powerbot.script.lang.Identifiable;
 import org.powerbot.script.wrappers.Actor;
+import org.powerbot.script.wrappers.Identifiable;
 import org.powerbot.script.wrappers.Player;
 
 /**

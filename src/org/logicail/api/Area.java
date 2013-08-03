@@ -1,6 +1,6 @@
 package org.logicail.api;
 
-import org.powerbot.script.lang.Locatable;
+import org.powerbot.script.wrappers.Locatable;
 import org.powerbot.script.wrappers.Tile;
 
 import java.awt.*;

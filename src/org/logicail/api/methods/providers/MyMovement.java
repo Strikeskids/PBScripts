@@ -1,10 +1,10 @@
 package org.logicail.api.methods.providers;
 
 import org.logicail.api.Area;
-import org.powerbot.script.lang.Locatable;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.methods.Movement;
 import org.powerbot.script.util.Random;
+import org.powerbot.script.wrappers.Locatable;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
 

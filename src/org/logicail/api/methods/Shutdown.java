@@ -1,6 +1,5 @@
 package org.logicail.api.methods;
 
-import org.powerbot.script.util.Delay;
 import org.powerbot.script.util.Timer;
 
 import javax.swing.*;
@@ -46,7 +45,7 @@ public class Shutdown {
 				// Bank pin
 				ctx.game.logout(lobby);
 
-				Delay.sleep(1000, 3000);
+				ctx.game.sleep(1000, 3000);
 			}
 		} catch (Exception ignored) {
 		}

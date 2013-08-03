@@ -17,6 +17,12 @@ public class MyMouse extends Mouse {
 		super(ctx);
 	}
 
+	/**
+	 * Move mouse to a point within the rectangle
+	 *
+	 * @param rectangle
+	 * @return
+	 */
 	public boolean move(Rectangle rectangle) {
 		if (rectangle.contains(ctx.mouse.getLocation())) {
 			return true;

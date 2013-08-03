@@ -24,6 +24,15 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	private int y = MIN_PADDING;
 	private int height = 1;
 	private int width = 1;
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
 	private Font fontTitle = new Font("Dialog", Font.BOLD, 16);
 	private Font fontNormal = new Font("Dialog", Font.PLAIN, 12);
 	private int alpha = 192;
@@ -44,7 +53,7 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (rectangle.contains(e.getPoint())) {
-			alpha = Math.max(32, Math.min(alpha - e.getWheelRotation() * 12, 255));
+			alpha = Math.max(32, Math.min(alpha + e.getWheelRotation() * 12, 255));
 			background = new Color(0, 0, 0, alpha);
 		}
 	}
