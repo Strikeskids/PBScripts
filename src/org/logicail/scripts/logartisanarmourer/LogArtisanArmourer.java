@@ -50,16 +50,15 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 		getExecQueue(State.START).add(new Runnable() {
 			@Override
 			public void run() {
-				submit(new AntiBan(ctx));
-				submit(paint = new Paint(ctx));
+				ctx.submit(new AntiBan(ctx));
+				ctx.submit(paint = new Paint(ctx));
 			}
 		});
 
-		final LogArtisanArmourer script = this;
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new LogArtisanArmourerGUI(script);
+				new LogArtisanArmourerGUI(ctx);
 			}
 		});
 	}

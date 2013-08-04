@@ -3,7 +3,9 @@ package org.logicail.api.methods;
 import org.logicail.framework.script.LoopTask;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
  * Date: 26/07/13
  * Time: 10:37
  */
-public abstract class SimplePaint extends LoopTask implements MouseListener, MouseMotionListener, MouseWheelListener {
+public abstract class SimplePaint extends LoopTask implements MouseListener, MouseMotionListener/*, MouseWheelListener*/ {
 	private static final int MIN_PADDING = 8;
 	public final Map<String, String> contents = Collections.synchronizedMap(new LinkedHashMap<String, String>());
 	private final int PAINT_LINE_SPACE = 18;
@@ -24,15 +26,6 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	private int y = MIN_PADDING;
 	private int height = 1;
 	private int width = 1;
-
-	public int getHeight() {
-		return height;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
 	private Font fontTitle = new Font("Dialog", Font.BOLD, 16);
 	private Font fontNormal = new Font("Dialog", Font.PLAIN, 12);
 	private int alpha = 192;
@@ -50,13 +43,21 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 		contents.put("LINE_1", "");
 	}
 
-	@Override
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	/*@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (rectangle.contains(e.getPoint())) {
 			alpha = Math.max(32, Math.min(alpha + e.getWheelRotation() * 12, 255));
 			background = new Color(0, 0, 0, alpha);
 		}
-	}
+	}*/
 
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -134,15 +135,16 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 	public void mouseDragged(MouseEvent e) {
 		if (moving) {
 			Component component = e.getComponent();
-
 			Point point = e.getPoint();
 
 			if (!component.contains(point)) {
 				return;
 			}
 
-			int xMax = component.getWidth() - MIN_PADDING - rectangle.width;
-			int yMax = component.getHeight() - MIN_PADDING - rectangle.height;
+			Dimension dimensions = ctx.game.getDimensions();
+
+			int xMax = dimensions.width - MIN_PADDING - rectangle.width;
+			int yMax = dimensions.height - MIN_PADDING - rectangle.height;
 
 			x += point.x - start.x;
 			y += point.y - start.y;

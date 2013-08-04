@@ -1,6 +1,6 @@
 package org.logicail.scripts.logartisanarmourer;
 
-import org.logicail.scripts.StatHat;
+import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
@@ -15,12 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.
@@ -70,9 +64,11 @@ public class LogArtisanArmourerGUI extends JFrame {
 	//private JComboBox<Mode> comboBoxMode;
 	private JCheckBox respectKill;
 	private JButton startButton;
+	private LogicailMethodContext ctx;
 
-	public LogArtisanArmourerGUI(LogArtisanArmourer script) {
-		this.script = script;
+	public LogArtisanArmourerGUI(LogicailMethodContext ctx) {
+		this.ctx = ctx;
+		this.script = (LogArtisanArmourer) ctx.script;
 		options = script.options;
 		initComponents();
 
@@ -91,22 +87,6 @@ public class LogArtisanArmourerGUI extends JFrame {
 		pack();
 		setVisible(true);
 		setLocationRelativeTo(null);
-	}
-
-	public static void testURL() {
-		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL("http://scriptwith.us/api/?item=1517").openConnection();
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line;
-			while ((line = in.readLine()) != null) {
-				System.out.println(line);
-			}
-			in.close();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private JComponent getCenterPanel() {
@@ -131,20 +111,18 @@ public class LogArtisanArmourerGUI extends JFrame {
 
 		inner.add(title, BorderLayout.CENTER);
 
-		JButton button = new JButton("Forum");
+		/*JButton button = new JButton("Forum");
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				/*try {
+				try {
 					Desktop.getDesktop().browse(new URI(LogArtisanArmourer.class.getAnnotation(Manifest.class).website()));
 				} catch (URISyntaxException | IOException exception) {
 					exception.printStackTrace();
-				}*/
-
-				StatHat.ezPostCount("email", "Clay Mined", 1.0);
+				}
 			}
 		});
-		inner.add(button, BorderLayout.EAST);
+		inner.add(button, BorderLayout.EAST);*/
 
 		return inner;
 	}
@@ -268,7 +246,7 @@ public class LogArtisanArmourerGUI extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
-				if (!startPressed && !script.isShutdown()) {
+				if (!startPressed && !ctx.isShutdown()) {
 					script.getController().stop();
 				}
 			}

@@ -1,8 +1,13 @@
 package org.logicail.api.methods;
 
 import org.logicail.api.methods.providers.*;
+import org.logicail.framework.script.LoopTask;
 import org.powerbot.script.AbstractScript;
+import org.powerbot.script.Script;
 import org.powerbot.script.methods.MethodContext;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,6 +16,7 @@ import org.powerbot.script.methods.MethodContext;
  * Time: 11:56
  */
 public class LogicailMethodContext extends MethodContext {
+	private final ExecutorService executor;
 	public Interaction interaction;
 	public SkillingInterface skillingInterface;
 	public MyBackpack backpack;
@@ -21,10 +27,36 @@ public class LogicailMethodContext extends MethodContext {
 	public AnimationHistory animationHistory;
 	public ChatOptions chatOptions;
 	public MyWidgets widgets;
+	private volatile boolean shutdown;
+	private volatile boolean paused;
 
 	public LogicailMethodContext(MethodContext original, AbstractScript script) {
 		super(original.getBot());
+
 		this.script = script;
+		this.executor = Executors.newCachedThreadPool();
+
+		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
+			@Override
+			public void run() {
+				paused = true;
+			}
+		});
+
+		script.getExecQueue(Script.State.RESUME).add(new Runnable() {
+			@Override
+			public void run() {
+				paused = false;
+			}
+		});
+
+		script.getExecQueue(Script.State.STOP).add(new Runnable() {
+			@Override
+			public void run() {
+				shutdown = true;
+				executor.shutdown();
+			}
+		});
 	}
 
 	@Override
@@ -39,5 +71,19 @@ public class LogicailMethodContext extends MethodContext {
 		animationHistory = new AnimationHistory(this);
 		chatOptions = new ChatOptions(this);
 		widgets = new MyWidgets(this);
+	}
+
+	public final boolean isShutdown() {
+		return shutdown;
+	}
+
+	public final boolean isPaused() {
+		return paused;
+	}
+
+	public final void submit(LoopTask loopTask) {
+		if (!isShutdown()) {
+			executor.submit(loopTask);
+		}
 	}
 }

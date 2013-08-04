@@ -17,7 +17,7 @@ public class LogicailMethodProvider extends MethodProvider {
 
 	public LogicailMethodProvider(LogicailMethodContext context) {
 		super(context);
-		super.ctx = this.ctx = context;
+		this.ctx = context;
 	}
 
 	@Override

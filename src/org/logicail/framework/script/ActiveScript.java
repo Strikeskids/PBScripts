@@ -7,10 +7,13 @@ import org.logicail.framework.script.state.Tree;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.PollingScript;
 import org.powerbot.script.methods.Game;
+import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Random;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,38 +21,18 @@ import java.awt.event.*;
  * Date: 27/07/13
  * Time: 16:51
  */
-public abstract class ActiveScript extends PollingScript implements PaintListener, MouseListener, MouseMotionListener, MouseWheelListener {
-	private final Container container = new TaskContainer();
+public abstract class ActiveScript extends PollingScript implements PaintListener, MouseListener, MouseMotionListener/*, MouseWheelListener*/ {
 	public LogicailMethodContext ctx;
 	public SimplePaint paint = null;
 	protected Tree tree = null;
 
 	protected ActiveScript() {
-		getExecQueue(State.SUSPEND).add(new Runnable() {
-			@Override
-			public void run() {
-				setPaused(true);
-			}
-		});
-		getExecQueue(State.RESUME).add(new Runnable() {
-			@Override
-			public void run() {
-				setPaused(false);
-			}
-		});
-		getExecQueue(State.STOP).add(new Runnable() {
-			@Override
-			public void run() {
-				shutdown();
-			}
-		});
-
-		ctx = new LogicailMethodContext(super.ctx, this);
+		this.ctx = new LogicailMethodContext(super.ctx, this);
 
 		getExecQueue(State.START).add(new Runnable() {
 			@Override
 			public void run() {
-				submit(new AnimationHistory(ctx));
+				ctx.submit(new AnimationHistory(ctx));
 			}
 		});
 	}
@@ -66,35 +49,6 @@ public abstract class ActiveScript extends PollingScript implements PaintListene
 			e.printStackTrace();
 		}
 		return Random.nextInt(100, 500);
-	}
-
-	/**
-	 * Graceful shutdown
-	 */
-	public final void shutdown() {
-		if (!isShutdown()) {
-			log.info("Shutdown");
-			container.shutdown();
-		}
-	}
-
-	public final boolean isShutdown() {
-		return container.isShutdown();
-	}
-
-	/**
-	 * Force stop
-	 */
-	public void forceStop() {
-		container.interrupt();
-	}
-
-	public final void setPaused(boolean paused) {
-		container.setPaused(paused);
-	}
-
-	public final void submit(LoopTask job) {
-		container.submit(job);
 	}
 
 	@Override
@@ -153,10 +107,19 @@ public abstract class ActiveScript extends PollingScript implements PaintListene
 		}
 	}
 
-	@Override
+	/*@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (paint != null) {
 			paint.mouseWheelMoved(e);
 		}
+	}*/
+
+	public final void shutdown() {
+		ctx.getBot().stop();
+	}
+
+	@Override
+	public void setContext(MethodContext ctx) {
+		this.ctx.init(ctx);
 	}
 }

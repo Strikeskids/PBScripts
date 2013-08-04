@@ -10,13 +10,10 @@ import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.SkillData;
 import org.powerbot.script.util.Timer;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,7 +24,7 @@ import java.io.IOException;
 public class Paint extends SimplePaint implements MessageListener {
 	private LogArtisanArmourer script;
 	private LogArtisanArmourerOptions options;
-	private SkillData skillData;
+	private SkillData skillData = null;
 	// Burial/Track
 	private int ingots = 0;
 	// Swords
@@ -41,7 +38,6 @@ public class Paint extends SimplePaint implements MessageListener {
 		super(ctx);
 		this.script = (LogArtisanArmourer) ctx.script;
 		this.options = script.options;
-		skillData = new SkillData(ctx);
 
 		contents.put("Time", "");
 		contents.put("SPACE_1", "");
@@ -54,33 +50,35 @@ public class Paint extends SimplePaint implements MessageListener {
 
 	@Override
 	public int loop() {
-		if (!ctx.game.isLoggedIn()) {
+		if (skillData == null && ctx.game.isLoggedIn()) {
 			skillData = new SkillData(ctx);
 		}
 
 		long totalRuntime = script.getTotalRuntime();
 
 		contents.put("Time", Timer.format(totalRuntime));
-		contents.put("Level", ctx.skills.getLevel(Skills.SMITHING) + " (" + skillData.level(Skills.SMITHING) + ")");
-		contents.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
-		contents.put("XP Gained", String.format("%,d", xpGained));
-		contents.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
+		if (skillData != null) {
+			contents.put("Level", ctx.skills.getLevel(Skills.SMITHING) + " (" + skillData.level(Skills.SMITHING) + ")");
+			contents.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
+			contents.put("XP Gained", String.format("%,d", xpGained));
+			contents.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
 
-		switch (options.mode) {
-			case BURIAL_ARMOUR:
-				contents.put("Ingots Smithed", String.format("%,d (%,d/h)", ingots, (int) (ingots / (totalRuntime / 3600000f))));
-				break;
-			case CEREMONIAL_SWORDS:
-				contents.put("Swords Smithed", String.format("%,d (%,d/h)", swordsSmithed, (int) (swordsSmithed / (totalRuntime / 3600000f))));
-				contents.put("Perfect Swords", String.format("%,d (%,d/h)", perfectSwords, (int) (perfectSwords / (totalRuntime / 3600000f))));
-				contents.put("Broken Swords", String.format("%,d (%,d/h)", brokenSwords, (int) (brokenSwords / (totalRuntime / 3600000f))));
-				break;
+			switch (options.mode) {
+				case BURIAL_ARMOUR:
+					contents.put("Ingots Smithed", String.format("%,d (%,d/h)", ingots, (int) (ingots / (totalRuntime / 3600000f))));
+					break;
+				case CEREMONIAL_SWORDS:
+					contents.put("Swords Smithed", String.format("%,d (%,d/h)", swordsSmithed, (int) (swordsSmithed / (totalRuntime / 3600000f))));
+					contents.put("Perfect Swords", String.format("%,d (%,d/h)", perfectSwords, (int) (perfectSwords / (totalRuntime / 3600000f))));
+					contents.put("Broken Swords", String.format("%,d (%,d/h)", brokenSwords, (int) (brokenSwords / (totalRuntime / 3600000f))));
+					break;
+			}
 		}
 
 		return 250;
 	}
 
-	@Override
+	/*@Override
 	public void draw(Graphics g) {
 		super.draw(g);
 
@@ -95,7 +93,7 @@ public class Paint extends SimplePaint implements MessageListener {
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 
 	public BufferedImage getImage() {
 		Dimension dimensions = getDimensions();
