@@ -61,13 +61,11 @@ public class SmithAnvil extends Node {
 
 	@Override
 	public boolean activate() {
-		if (ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).isValid()) {
-			if (!ctx.backpack.select().id(options.getIngotID()).isEmpty()) {
-				if (ctx.skillingInterface.isOpen() || !options.isSmithing
-						|| options.currentlyMaking != getMakeNextId()
-						|| ctx.animationHistory.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > animationTimelimit) {
-					return true;
-				}
+		if (!ctx.backpack.select().id(options.getIngotID()).isEmpty() && ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).isValid()) {
+			if (ctx.skillingInterface.isOpen() || !options.isSmithing
+					|| options.currentlyMaking != getMakeNextId()
+					|| ctx.animationHistory.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > animationTimelimit) {
+				return true;
 			}
 		}
 		return false;

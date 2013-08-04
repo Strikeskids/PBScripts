@@ -10,6 +10,8 @@ import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
 import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.wrappers.GameObject;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -18,10 +20,21 @@ import org.powerbot.script.wrappers.GameObject;
  */
 public class MakeIngots extends Node {
 	private final LogArtisanArmourerOptions options;
+	private int[] ingots = null;
 
 	public MakeIngots(LogicailMethodContext ctx) {
 		super(ctx);
 		this.options = ((LogArtisanArmourer) ctx.script).options;
+		ArrayList<Integer> ids = new ArrayList<>();
+		for (int heatedIngot : MakeSword.HEATED_INGOTS) {
+			ids.add(heatedIngot);
+		}
+		ids.add(options.getIngotID());
+		ingots = new int[ids.size()];
+		int i = 0;
+		for (Integer e : ids) {
+			ingots[i++] = e.intValue();
+		}
 	}
 
 	@Override
@@ -64,7 +77,7 @@ public class MakeIngots extends Node {
 
 			//ArtisanArmourer.setStatus("Search for smelter");
 
-			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).nearest().first()) {
+			for (GameObject smelter : ctx.objects.select().id(options.getSmelter()).nearest().first()) {
 				if (ctx.interaction.interact(smelter, "Withdraw-ingots", "Smelter")) {
 					ctx.waiting.wait(6000, new Condition() {
 						@Override
@@ -82,8 +95,7 @@ public class MakeIngots extends Node {
 	@Override
 	public boolean activate() {
 		return (ctx.skillingInterface.getAction().equals("Smelt") && !ctx.skillingInterface.select().id(MakeSword.HEATED_INGOTS).isEmpty())
-				|| (!ctx.backpack.isFull()
-				&& (ctx.backpack.select().id(options.getIngotID()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));
+				|| (ctx.backpack.select().id(ingots).isEmpty() && !ctx.backpack.isFull());
 	}
 
 	private String getCategoryName() {

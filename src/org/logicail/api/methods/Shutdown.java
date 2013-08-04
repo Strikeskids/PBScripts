@@ -10,11 +10,9 @@ import javax.swing.*;
  * Date: 25/07/13
  * Time: 21:42
  */
-public class Shutdown {
-	private LogicailMethodContext ctx;
-
-	public Shutdown(LogicailMethodContext ctx) {
-		this.ctx = ctx;
+public class Shutdown extends LogicailMethodProvider {
+	public Shutdown(LogicailMethodContext context) {
+		super(context);
 	}
 
 	public void stop(final String reason) {
@@ -45,7 +43,7 @@ public class Shutdown {
 				// Bank pin
 				ctx.game.logout(lobby);
 
-				ctx.game.sleep(1000, 3000);
+				sleep(1000, 3000);
 			}
 		} catch (Exception ignored) {
 		}

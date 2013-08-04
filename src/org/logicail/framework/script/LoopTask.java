@@ -43,4 +43,8 @@ public abstract class LoopTask extends LogicailMethodProvider implements Runnabl
 	}
 
 	public abstract int loop();
+
+	public final boolean isPaused() {
+		return paused;
+	}
 }

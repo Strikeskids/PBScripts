@@ -25,4 +25,8 @@ public class LogArtisanArmourerOptions {
 	public int getIngotID() {
 		return 20632 + (ingotGrade.ordinal() * 5) + ingotType.ordinal() - 1 + ((ingotGrade.ordinal() >= IngotGrade.FOUR.ordinal()) ? 1 : 0);
 	}
+
+	public int getSmelter() {
+		return mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS;
+	}
 }

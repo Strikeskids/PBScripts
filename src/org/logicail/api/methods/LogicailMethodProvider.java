@@ -21,11 +21,6 @@ public class LogicailMethodProvider extends MethodProvider {
 	}
 
 	@Override
-	public void sleep(int arg0) {
-		super.sleep(arg0);
-	}
-
-	@Override
 	public void sleep(int min, int max) {
 		super.sleep(min, max);
 		if (Random.nextBoolean()) {

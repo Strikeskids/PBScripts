@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
  * Time: 11:56
  */
 public class LogicailMethodContext extends MethodContext {
-	private final ExecutorService executor;
+	private final ExecutorService executor = Executors.newCachedThreadPool();
 	public Interaction interaction;
 	public SkillingInterface skillingInterface;
 	public MyBackpack backpack;
@@ -34,7 +34,6 @@ public class LogicailMethodContext extends MethodContext {
 		super(original.getBot());
 
 		this.script = script;
-		this.executor = Executors.newCachedThreadPool();
 
 		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
 			@Override

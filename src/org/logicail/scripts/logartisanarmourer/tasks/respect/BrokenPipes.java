@@ -41,14 +41,12 @@ public class BrokenPipes extends RespectNode {
 	@Override
 	public void execute() {
 		for (GameObject pipe : ctx.objects) {
-			final Timer t = new Timer(Random.nextInt(15000, 20000));
-
 			if (ctx.interaction.interact(pipe, "Mend")) {
 				sleep(1000, 2000);
 
 				options.isSmithing = false;
 
-				t.reset();
+				final Timer t = new Timer(Random.nextInt(15000, 20000));
 
 				while (t.isRunning()) {
 					if (!activate()) {
@@ -72,9 +70,11 @@ public class BrokenPipes extends RespectNode {
 
 	public int getNumFaces(Model model) {
 		if (model == null) {
-			return -1;
+			int length = model.getFaceA().length;
+			System.out.println("Pipe.getFaceA " + length);
+			return length;
 		}
 
-		return model.getTriangles().length;
+		return -1;
 	}
 }
