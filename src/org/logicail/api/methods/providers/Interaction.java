@@ -11,18 +11,17 @@ import org.powerbot.script.wrappers.*;
  * Date: 24/07/13
  * Time: 11:38
  */
-public class Interaction<T extends Interactive & Locatable> extends LogicailMethodProvider {
+public class Interaction extends LogicailMethodProvider {
 	public Interaction(LogicailMethodContext ctx) {
 		super(ctx);
 	}
 
-	/**
-	 * Turn to target & walk if needed
-	 *
-	 * @param target
-	 * @return
-	 */
-	public boolean prepare(T target) {
+	public boolean prepare(Interactive target) {
+		if (!(target instanceof Locatable)) {
+			throw new IllegalArgumentException("not an instace of Interactive");
+		}
+
+		Locatable locatable = (Locatable) target;
 		if (!target.isValid()) {
 			return false;
 		}
@@ -31,15 +30,15 @@ public class Interaction<T extends Interactive & Locatable> extends LogicailMeth
 			return true;
 		}
 
-		ctx.camera.turnTo(target);
+		ctx.camera.turnTo(locatable);
 		sleep(200, 1000);
 
 		if (target.isOnScreen()) {
 			return true;
 		}
 
-		if (ctx.movement.getDistance(target) >= 6) {
-			final Tile destination = ctx.movement.reachableNear(target);
+		if (ctx.movement.getDistance(locatable) >= 6) {
+			final Tile destination = ctx.movement.reachableNear(locatable);
 			if (destination != Tile.NIL && ctx.movement.findPath(destination).traverse()) {
 				ctx.waiting.wait(10000, new Condition() {
 					@Override
@@ -51,20 +50,21 @@ public class Interaction<T extends Interactive & Locatable> extends LogicailMeth
 			if (target.isOnScreen()) {
 				return true;
 			} else {
-				ctx.camera.turnTo(target);
+				ctx.camera.turnTo(locatable);
 				sleep(200, 1000);
 				return target.isOnScreen();
 			}
 		}
 
 		return false;
+
 	}
 
-	public boolean interact(T target, String action) {
+	public boolean interact(Interactive target, String action) {
 		return interact(target, action, null);
 	}
 
-	public boolean interact(T target, String action, String option) {
+	public boolean interact(Interactive target, String action, String option) {
 		if (!target.isValid() || !prepare(target)) {
 			return false;
 		}
