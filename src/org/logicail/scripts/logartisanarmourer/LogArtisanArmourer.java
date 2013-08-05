@@ -13,6 +13,7 @@ import org.logicail.scripts.tasks.IdleLogout;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
+import org.powerbot.script.Script;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 		authors = {"Logicail"},
 		hidden = true,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
-public class LogArtisanArmourer extends ActiveScript implements MessageListener {
+public class LogArtisanArmourer extends ActiveScript implements MessageListener, Script {
 	public static final int ID_SMELTER = 29395;
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ARMOUR_ID_LIST = {20572, 20573, 20574, 20575,
