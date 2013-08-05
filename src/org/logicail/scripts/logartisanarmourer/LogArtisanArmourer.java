@@ -45,20 +45,14 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener,
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
 
-	public LogArtisanArmourer() {
-		super();
-
-		getExecQueue(State.START).add(new Runnable() {
+	@Override
+	public void start() {
+		ctx.submit(new AntiBan(ctx));
+		ctx.submit(paint = new Paint(ctx));
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				ctx.submit(new AntiBan(ctx));
-				ctx.submit(paint = new Paint(ctx));
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						new LogArtisanArmourerGUI(ctx);
-					}
-				});
+				new LogArtisanArmourerGUI(ctx);
 			}
 		});
 	}

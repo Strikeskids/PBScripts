@@ -21,9 +21,8 @@ public class HeatIngots extends Node {
 
 	@Override
 	public boolean activate() {
-		return !ctx.backpack.select().id(INGOT_IDS_IV).isEmpty()
-				&& !MakeSword.isOpen(ctx)
-				&& !ctx.backpack.select().id(MakeSword.TONGS).isEmpty();
+		return !MakeSword.isOpen(ctx)
+				&& !ctx.backpack.select().id(INGOT_IDS_IV).isEmpty();
 	}
 
 	@Override

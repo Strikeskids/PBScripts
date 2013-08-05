@@ -106,7 +106,7 @@ public class DepositOre extends Node {
 				if (ctx.interaction.prepare(smelter)) {
 					final int count = item.getStackSize();
 					if (item.interact("Use")) {
-						sleep(100, 500);
+						sleep(200, 1000);
 						if (smelter.interact("Use", item.getName() + " -> Smelter")) {
 							final Timer t = new Timer(Random.nextInt(4000, 8000));
 							while (t.isRunning()) {

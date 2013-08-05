@@ -47,19 +47,18 @@ public class GetPlan extends Node {
 
 		for (Npc npc : ctx.npcs.select().id(EGIL_ABEL).nearest().first()) {
 			if (ctx.interaction.prepare(npc)) {
-				sleep(111, 333);
+				sleep(100, 600);
 				if (npc.hover()) {
-					sleep(111, 333);
-					String[] actions = npc.getActions();
-					String action = actions.length > 1 ? actions[1] : null;
-					if (action != null && ctx.interaction.interact(npc, action)) {
+					sleep(100, 600);
+					final String[] actions = npc.getActions();
+					if (actions.length > 1 && ctx.interaction.interact(npc, actions[1])) {
 						ctx.waiting.wait(3500, new Condition() {
 							@Override
 							public boolean validate() {
 								return !ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty() || xp != ctx.skills.getExperience(Skills.SMITHING);
 							}
 						});
-						sleep(111, 1111);
+						sleep(200, 1200);
 					}
 				}
 			}

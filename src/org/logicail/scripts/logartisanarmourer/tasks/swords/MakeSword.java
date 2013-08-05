@@ -119,7 +119,7 @@ public class MakeSword extends Node {
 			return newList.toArray(new Sword[newList.size()]);
 		}
 
-		return null;
+		return new Sword[0];
 	}
 
 	public boolean closeInterface() {
@@ -129,8 +129,7 @@ public class MakeSword extends Node {
 	@Override
 	public boolean activate() {
 		return !options.finishedSword
-				&& options.gotPlan
-				&& !ctx.backpack.select().id(TONGS).isEmpty();
+				&& options.gotPlan;
 	}
 
 	@Override
@@ -150,16 +149,7 @@ public class MakeSword extends Node {
 			hitPart = Sword.Sixteenth;
 		} else {
 			final Sword[] parts = getSwordPartsByDistance();
-			if (parts != null && parts.length > 0) {
-/*
-                System.out.println("----");
-
-				for (Sword part : parts) {
-					System.out.println(part.getRequiredHitType());
-				}
-
-				System.out.println("----");
-*/
+			if (parts.length > 0) {
 				hitPart = parts[Random.nextInt(0, parts.length)];
 			}
 		}
@@ -173,7 +163,7 @@ public class MakeSword extends Node {
 		if (setHitType(hitPart.getRequiredHitType(ctx))) {
 			//LogHandler.print("Hit " + hitPart + " with " + hitPart.getRequiredHitType());
 			if (hitPart.clickButton(ctx)) {
-				sleep(250, 700);
+				sleep(200, 1000);
 			}
 		}
 	}

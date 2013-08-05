@@ -43,11 +43,15 @@ public abstract class ActiveScript extends PollingScript implements PaintListene
 			if (tree != null && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
 				if (tree.activate()) {
 					tree.execute();
+					if (Random.nextBoolean() && Random.nextBoolean()) {
+						return Random.nextInt(500, 1000);
+					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return Random.nextInt(100, 500);
 	}
 

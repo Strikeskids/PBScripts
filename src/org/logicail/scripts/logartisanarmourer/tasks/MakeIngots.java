@@ -3,14 +3,13 @@ package org.logicail.scripts.logartisanarmourer.tasks;
 import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.api.methods.Shutdown;
 import org.logicail.api.methods.providers.Condition;
+import org.logicail.api.util.ArrayUtil;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.scripts.logartisanarmourer.tasks.swords.MakeSword;
 import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.wrappers.GameObject;
-
-import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,22 +18,17 @@ import java.util.ArrayList;
  * Time: 20:24
  */
 public class MakeIngots extends Node {
+	private static final String CATEGORY_TIER_I = "Ingots, Tier I";
+	private static final String CATEGORY_TIER_II = "Ingots, Tier II";
+	private static final String CATEGORY_TIER_III = "Ingots, Tier III";
+	private static final String CATEGORY_TIER_IV = "Ingots, Tier IV";
 	private final LogArtisanArmourerOptions options;
-	private int[] ingots = null;
+	private final int[] ingots;
 
 	public MakeIngots(LogicailMethodContext ctx) {
 		super(ctx);
 		this.options = ((LogArtisanArmourer) ctx.script).options;
-		ArrayList<Integer> ids = new ArrayList<>();
-		for (int heatedIngot : MakeSword.HEATED_INGOTS) {
-			ids.add(heatedIngot);
-		}
-		ids.add(options.getIngotID());
-		ingots = new int[ids.size()];
-		int i = 0;
-		for (Integer e : ids) {
-			ingots[i++] = e.intValue();
-		}
+		ingots = ArrayUtil.Join(MakeSword.HEATED_INGOTS, options.getIngotID());
 	}
 
 	@Override
@@ -61,14 +55,8 @@ public class MakeIngots extends Node {
 				}
 			} else {
 				options.failedConsecutiveWithdrawals = 0;
-				if (ctx.skillingInterface.start()) {
-					ctx.waiting.wait(3000, new Condition() {
-						@Override
-						public boolean validate() {
-							return !ctx.skillingInterface.isOpen();
-						}
-					});
-				}
+				ctx.skillingInterface.start();
+				sleep(100, 1000);
 			}
 		} else {
 			if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.close()) {
@@ -87,7 +75,6 @@ public class MakeIngots extends Node {
 					});
 					sleep(100, 1000);
 				}
-
 			}
 		}
 	}
@@ -102,12 +89,12 @@ public class MakeIngots extends Node {
 		if (options.mode == Mode.BURIAL_ARMOUR) {
 			switch (options.ingotGrade) {
 				case TWO:
-					return "Ingots, Tier II";
+					return CATEGORY_TIER_II;
 				case THREE:
-					return "Ingots, Tier III";
+					return CATEGORY_TIER_III;
 			}
-			return "Ingots, Tier I";
+			return CATEGORY_TIER_I;
 		}
-		return "Ingots, Tier IV";
+		return CATEGORY_TIER_IV;
 	}
 }

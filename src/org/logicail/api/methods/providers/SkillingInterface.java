@@ -201,7 +201,15 @@ public class SkillingInterface extends ItemQuery<Item> {
 	public boolean start() {
 		if (canStart()) {
 			Component component = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_ACTION_TOOLTIP);
-			return component.isValid() && component.interact(component.getTooltip());
+			if (component.isValid() && component.interact(component.getTooltip())) {
+				ctx.waiting.wait(3000, new Condition() {
+					@Override
+					public boolean validate() {
+						return !isOpen();
+					}
+				});
+				return true;
+			}
 		}
 		return false;
 	}

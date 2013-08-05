@@ -15,6 +15,28 @@ public class Shutdown extends LogicailMethodProvider {
 		super(context);
 	}
 
+	/**
+	 * Show and error popup and stop script but do not logout
+	 *
+	 * @param reason error to show
+	 */
+	public void error(final String reason, boolean stop) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					new ErrorDialog(null, "Error", reason);
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
+			}
+		});
+
+		if (stop) {
+			ctx.getBot().stop();
+		}
+	}
+
 	public void stop(final String reason) {
 		stop(reason, "Error", true);
 	}

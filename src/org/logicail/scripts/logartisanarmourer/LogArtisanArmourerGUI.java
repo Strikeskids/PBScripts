@@ -1,9 +1,12 @@
 package org.logicail.scripts.logartisanarmourer;
 
 import org.logicail.api.methods.LogicailMethodContext;
+import org.logicail.api.methods.Shutdown;
+import org.logicail.framework.script.LoopTask;
 import org.logicail.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
+import org.powerbot.script.methods.Game;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -36,32 +39,9 @@ public class LogArtisanArmourerGUI extends JFrame {
 	private final JCheckBox swordRespectPipes = new JCheckBox("Repair pipes");
 	public boolean startPressed;
 	private JComponent burialArmourTab;
-	/*private JComponent getModeTab() {
-	    final JPanel panel = new JPanel(new GridBagLayout());
-		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		final GridBagConstraints constraints = new GridBagConstraints();
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.NORTH;
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.weighty = 1;
-		constraints.weightx = 1;
-		{
-			final JPanel innerPanel = new JPanel(new BorderLayout());
-			innerPanel.setBorder(new CompoundBorder(new TitledBorder("Mode"), new EmptyBorder(5, 5, 5, 5)));
-			innerPanel.add(comboBoxMode);
-			panel.add(innerPanel, constraints);
-		}
-
-		return panel;
-	}*/
 	private JComponent swordsTab;
 	private JComponent trackTab;
-	// Variable declaration
 	private JTabbedPane tabbedPane;
-	//private JComponent modeTab;
-	// Mode
-	//private JComboBox<Mode> comboBoxMode;
 	private JCheckBox respectKill;
 	private JButton startButton;
 	private LogicailMethodContext ctx;
@@ -206,7 +186,6 @@ public class LogArtisanArmourerGUI extends JFrame {
 		startPressed = true;
 		//LogArtisanArmourer.status = "Setup finished";
 
-		//Context.get().getScriptHandler().log.info("Mode: " + tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
 		switch (tabbedPane.getTitleAt(tabbedPane.getSelectedIndex())) {
 			case "Burial Armour":
 				options.mode = Mode.BURIAL_ARMOUR;
@@ -224,14 +203,19 @@ public class LogArtisanArmourerGUI extends JFrame {
 			case "Track room":
 				options.mode = Mode.REPAIR_TRACK;
 				options.ingotType = (IngotType) trackIngotType.getSelectedItem();
-				/*LogArtisanArmourer.get().submit(new Task() {
+				ctx.submit(new LoopTask(ctx) {
 					@Override
-					public void execute() {
-						if (Inventory.getCount() != 0) {
-							LogArtisanArmourer.get().getLogHandler().print("It is recommended to start the script with an empty inventory.", Color.RED);
+					public int loop() {
+						if (ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+							if (!ctx.backpack.isEmpty()) {
+								new Shutdown(ctx).error("It is recommended to start the script with an empty inventory.", false);
+							}
+							return -1;
 						}
+
+						return 1000;
 					}
-				});*/
+				});
 				break;
 			default:
 				script.shutdown();
