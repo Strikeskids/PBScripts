@@ -4,7 +4,6 @@ import org.logicail.api.methods.LogicailMethodContext;
 import org.logicail.framework.script.state.Node;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.scripts.logartisanarmourer.LogArtisanArmourerOptions;
-import org.logicail.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.GameObject;
@@ -68,7 +67,7 @@ public class DepositOre extends Node {
 				|| (remainingAdamant() < nextDeposit[0] && !ctx.backpack.select().id(ID_ADAMANT_NOTED).isEmpty())
 				|| (remainingRune() < nextDeposit[0] && !ctx.backpack.select().id(ID_RUNE_NOTED).isEmpty())
 				|| (remainingCoal() < nextDeposit[1] && !ctx.backpack.select().id(ID_COAL_NOTED).isEmpty())
-		) && !ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first().isEmpty();
+		) && !ctx.objects.select().id(options.getSmelter()).first().isEmpty();
 	}
 
 	@Override
