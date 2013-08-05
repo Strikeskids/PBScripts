@@ -53,13 +53,12 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener,
 			public void run() {
 				ctx.submit(new AntiBan(ctx));
 				ctx.submit(paint = new Paint(ctx));
-			}
-		});
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new LogArtisanArmourerGUI(ctx);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						new LogArtisanArmourerGUI(ctx);
+					}
+				});
 			}
 		});
 	}
