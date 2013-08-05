@@ -85,8 +85,8 @@ public class LogArtisanArmourerGUI extends JFrame {
 		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
 		pack();
-		setVisible(true);
 		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 
 	private JComponent getCenterPanel() {

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 		description = "Cheap smithing xp at Artisans Workshop",
 		version = 2.0,
 		authors = {"Logicail"},
-		instances = 99,
+		hidden = true,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
 public class LogArtisanArmourer extends ActiveScript implements MessageListener {
 	public static final int ID_SMELTER = 29395;
