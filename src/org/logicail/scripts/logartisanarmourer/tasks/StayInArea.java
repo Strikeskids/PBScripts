@@ -49,7 +49,6 @@ public class StayInArea extends Node {
 
 	@Override
 	public void execute() {
-
 		if (options.mode == Mode.BURIAL_ARMOUR) {
 			for (GameObject tunnel : ctx.objects.select().id(4618).nearest().first()) {
 				if (ctx.interaction.interact(tunnel, "Climb")) {
