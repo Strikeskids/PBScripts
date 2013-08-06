@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 @Manifest(
 		name = "LogArtisanArmourer",
-		description = "Cheap smithing xp at Artisans Workshop",
+		description = "Cheap smithing at Artisans Workshop",
 		version = 2.0,
 		authors = {"Logicail"},
 		hidden = true,
@@ -79,6 +79,8 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener,
 		}
 
 		tree = new Tree(ctx, nodes.toArray(new Node[nodes.size()]));
+
+		log.info(options.toString());
 	}
 
 	@Override
