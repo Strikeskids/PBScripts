@@ -29,4 +29,20 @@ public class LogArtisanArmourerOptions {
 	public int getSmelter() {
 		return mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS;
 	}
+
+	@Override
+	public String toString() {
+		return "LogArtisanArmourerOptions{" +
+				"killAncestors=" + killAncestors +
+				", repairPipes=" + repairPipes +
+				", mode=" + mode +
+				", isSmithing=" + isSmithing +
+				", ingotType=" + ingotType +
+				", ingotGrade=" + ingotGrade +
+				", gotPlan=" + gotPlan +
+				", failedConsecutiveWithdrawals=" + failedConsecutiveWithdrawals +
+				", currentlyMaking=" + currentlyMaking +
+				", finishedSword=" + finishedSword +
+				'}';
+	}
 }
