@@ -28,7 +28,7 @@ import java.util.ArrayList;
 @Manifest(
 		name = "LogArtisanArmourer",
 		description = "Cheap smithing at Artisans Workshop",
-		version = 2.0,
+		version = 2.01,
 		authors = {"Logicail"},
 		hidden = true,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
