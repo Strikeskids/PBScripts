@@ -32,7 +32,7 @@ import java.util.ArrayList;
 		authors = {"Logicail"},
 		hidden = true,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
-public class LogArtisanArmourer extends ActiveScript implements MessageListener, Script {
+public class LogArtisanArmourer extends ActiveScript implements MessageListener {
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
 	public Paint paint;
