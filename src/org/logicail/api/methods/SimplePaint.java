@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
 public abstract class SimplePaint extends LoopTask implements MouseListener, MouseMotionListener/*, MouseWheelListener*/ {
 	private static final int MIN_PADDING = 8;
 	public final Map<String, String> contents = Collections.synchronizedMap(new LinkedHashMap<String, String>());
-	private final int PAINT_LINE_SPACE = 18;
+	private static final int PAINT_LINE_SPACE = 18;
 	private final Rectangle rectangle;
 	private Point start;
 	private int x = MIN_PADDING;
@@ -168,5 +169,89 @@ public abstract class SimplePaint extends LoopTask implements MouseListener, Mou
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	}
+
+
+	public BufferedImage getImage() {
+		Dimension dimensions = ctx.game.getDimensions();
+		BufferedImage image = new BufferedImage(dimensions.width, dimensions.height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = image.createGraphics();
+
+		draw(g2);
+
+		return trimImage(image);
+	}
+
+	/**
+	 * Remove transparent pixels
+	 *
+	 * @return
+	 */
+	public BufferedImage trimImage(BufferedImage image) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		int xMin = 0;
+		int xMax = width;
+
+		int yMin = 0;
+		int yMax = height;
+
+		try {
+			for (int y = 0; y < height - 1; ++y) {
+				if (!isTransparentRow(image, y)) {
+					yMin = y;
+					break;
+				}
+			}
+
+			for (int y = height - 1; y > 0; --y) {
+				if (isTransparentRow(image, y)) {
+					yMax = y + 1;
+					break;
+				}
+			}
+
+			for (int x = 0; x < width - 1; ++x) {
+				if (!isTransparentColumn(image, x)) {
+					xMin = x;
+					break;
+				}
+			}
+
+			for (int x = xMax - 1; x > 0; --x) {
+				if (!isTransparentColumn(image, x)) {
+					xMax = x + 1;
+					break;
+				}
+			}
+
+			return image.getSubimage(xMin, yMin, xMax - xMin, yMax - yMin);
+		} catch (Exception e) {
+			// encase I made a mistake
+			return image;
+		}
+	}
+
+	private boolean isTransparentRow(BufferedImage image, int y) {
+		int width = image.getWidth();
+		for (int i = 0; i < width - 1; i++) {
+			if (image.getRGB(i, y) != 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private boolean isTransparentColumn(BufferedImage image, int x) {
+		int height = image.getHeight();
+		for (int i = 0; i < height - 1; i++) {
+			if (image.getRGB(x, i) != 0) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

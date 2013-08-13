@@ -21,7 +21,7 @@ public class ArrayUtil {
 		int[] out = new int[list.size()];
 		int i = 0;
 		for (Integer integer : list) {
-			out[i++] = integer.intValue();
+			out[i++] = integer;
 		}
 
 		return out;

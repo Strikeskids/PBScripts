@@ -12,7 +12,6 @@ import org.logicail.scripts.logartisanarmourer.tasks.track.smith.Track60;
 import org.logicail.scripts.logartisanarmourer.tasks.track.smith.Track80;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Player;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +20,7 @@ import org.powerbot.script.wrappers.Player;
  * Time: 12:06
  */
 public class SmithTrack extends BranchOnce {
-	private static final int[] PARTIAL_TRACK = {20511, 20525, 20529, 20512, 20526, 20530, 20513, 20527, 20531};
+	//private static final int[] PARTIAL_TRACK = {20511, 20525, 20529, 20512, 20526, 20530, 20513, 20527, 20531};
 	public static int animationTimelimit = Random.nextInt(4000, 7000);
 	private LogArtisanArmourerOptions options;
 	private Anvil anvil;
@@ -105,8 +104,6 @@ public class SmithTrack extends BranchOnce {
 		if (ctx.game.getClientState() != Game.INDEX_MAP_LOADED) {
 			return false;
 		}
-
-		Player player = ctx.players.local();
 
 		if (!ctx.backpack.isFull()) {
 			return false;

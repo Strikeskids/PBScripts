@@ -69,7 +69,7 @@ public class BrokenPipes extends RespectNode {
 	}
 
 	public int getNumFaces(Model model) {
-		if (model == null) {
+		if (model != null) {
 			int length = model.getFaceA().length;
 			System.out.println("Pipe.getFaceA " + length);
 			return length;

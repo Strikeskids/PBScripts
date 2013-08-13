@@ -60,7 +60,7 @@ public class WindowHandler extends Handler {
 	 * @return the Filter object
 	 */
 	private Filter makeFilter(String filterName) {
-		Class c = null;
+		Class c;
 		Filter f = null;
 		try {
 			c = Class.forName(filterName);
@@ -80,8 +80,8 @@ public class WindowHandler extends Handler {
 	 * @return Formatter object
 	 */
 	private Formatter makeFormatter(String formatterName) {
-		Class c = null;
-		Formatter f = null;
+		Class c;
+		Formatter f;
 
 		try {
 			c = Class.forName(formatterName);
@@ -89,6 +89,7 @@ public class WindowHandler extends Handler {
 		} catch (Exception e) {
 			f = new SimpleFormatter();
 		}
+
 		return f;
 	}
 

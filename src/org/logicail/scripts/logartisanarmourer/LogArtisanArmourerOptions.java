@@ -27,7 +27,7 @@ public class LogArtisanArmourerOptions {
 	}
 
 	public int getSmelter() {
-		return mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS;
+		return mode == Mode.BURIAL_ARMOUR ? 29395 : 29394;
 	}
 
 	@Override

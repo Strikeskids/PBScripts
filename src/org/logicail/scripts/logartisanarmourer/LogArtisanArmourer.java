@@ -14,6 +14,7 @@ import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.Script;
+import org.powerbot.script.methods.Skills;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -32,23 +33,14 @@ import java.util.ArrayList;
 		hidden = true,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
 public class LogArtisanArmourer extends ActiveScript implements MessageListener, Script {
-	public static final int ID_SMELTER = 29395;
-	public static final int ID_SMELTER_SWORDS = 29394;
-	public static final int[] ARMOUR_ID_LIST = {20572, 20573, 20574, 20575,
-			20576, 20577, 20578, 20579, 20580, 20581, 20582, 20583, 20584,
-			20585, 20586, 20587, 20588, 20589, 20590, 20591, 20592, 20593,
-			20594, 20595, 20596, 20597, 20598, 20599, 20600, 20601, 20602,
-			20603, 20604, 20605, 20606, 20607, 20608, 20609, 20610, 20611,
-			20612, 20613, 20614, 20615, 20616, 20617, 20618, 20619, 20620,
-			20621, 20622, 20623, 20624, 20625, 20626, 20627, 20628, 20629,
-			20630, 20631};
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
+	public Paint paint;
 
 	@Override
 	public void start() {
 		ctx.submit(new AntiBan(ctx));
-		ctx.submit(paint = new Paint(ctx));
+		ctx.submit(super.paint = paint = new Paint(ctx));
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -85,8 +77,51 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener,
 
 	@Override
 	public void messaged(MessageEvent messageEvent) {
-		if (tree != null & paint instanceof MessageListener) {
-			((MessageListener) paint).messaged(messageEvent);
+		if (tree != null) {
+			if (ctx.game.isLoggedIn()) {
+				int before = ctx.skills.getExperience(Skills.SMITHING);
+				switch (messageEvent.getId()) {
+					case 0:
+						switch (messageEvent.getMessage()) {
+							case "You need plans to make a sword.":
+								options.gotPlan = false;
+								break;
+							case "This sword is too cool to work. Ask Egil or Abel to rate it.":
+							case "This sword has cooled and you can no longer work it.":
+								options.finishedSword = true;
+								options.gotPlan = false;
+								break;
+							case "You broke the sword! You'll need to get another set of plans from Egil.":
+								paint.brokenSwords++;
+								options.finishedSword = true;
+								options.gotPlan = false;
+								break;
+							case "This sword is now perfect and requires no more work.":
+							case "This sword is perfect. Ask Egil or Abel to rate it.":
+								options.finishedSword = true;
+								options.gotPlan = false;
+								break;
+							case "For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!":
+								paint.perfectSwords++;
+								paint.swordsSmithed++;
+								break;
+							default:
+								if (messageEvent.getMessage().startsWith("Your sword is awarded")) {
+									paint.swordsSmithed++;
+									options.finishedSword = true;
+									options.gotPlan = false;
+								}
+								break;
+						}
+						break;
+					case 109:
+						if (messageEvent.getMessage().contains("You make a")) {
+							paint.ingots++;
+						}
+						break;
+				}
+				paint.xpGained += ctx.skills.getExperience(Skills.SMITHING) - before;
+			}
 		}
 	}
 }

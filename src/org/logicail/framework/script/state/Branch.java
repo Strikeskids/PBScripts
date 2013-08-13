@@ -14,8 +14,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * Time: 14:28
  */
 public abstract class Branch extends Node {
-	protected final Queue<Node> nodes = new ConcurrentLinkedQueue();
-	protected final AtomicReference<Node> current_node = new AtomicReference();
+	protected final Queue<Node> nodes = new ConcurrentLinkedQueue<>();
+	protected final AtomicReference<Node> current_node = new AtomicReference<>();
 
 	public Branch(LogicailMethodContext ctx) {
 		super(ctx);
