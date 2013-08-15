@@ -2,7 +2,9 @@ package org.logicail.framework.script.state;
 
 import org.logicail.api.methods.LogicailMethodContext;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -17,9 +19,9 @@ public class Tree extends Node {
 	private final Queue<Node> nodes = new ConcurrentLinkedQueue<>();
 	private final AtomicReference<Node> current_node = new AtomicReference<>();
 
-	public Tree(LogicailMethodContext ctx, Node[] nodes) {
+	public Tree(LogicailMethodContext ctx, List<Node> nodes) {
 		super(ctx);
-		this.nodes.addAll(Arrays.asList(nodes));
+		this.nodes.addAll(nodes);
 	}
 
 	public final synchronized Node state() {
