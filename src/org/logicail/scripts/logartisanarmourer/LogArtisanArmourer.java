@@ -13,7 +13,6 @@ import org.logicail.scripts.tasks.IdleLogout;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
-import org.powerbot.script.Script;
 import org.powerbot.script.methods.Skills;
 
 import javax.swing.*;
@@ -70,7 +69,7 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 				break;
 		}
 
-		tree = new Tree(ctx, nodes.toArray(new Node[nodes.size()]));
+		tree = new Tree(ctx, nodes);
 
 		log.info(options.toString());
 	}
@@ -80,9 +79,10 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 		if (tree != null) {
 			if (ctx.game.isLoggedIn()) {
 				int before = ctx.skills.getExperience(Skills.SMITHING);
+				final String message = messageEvent.getMessage();
 				switch (messageEvent.getId()) {
 					case 0:
-						switch (messageEvent.getMessage()) {
+						switch (message) {
 							case "You need plans to make a sword.":
 								options.gotPlan = false;
 								break;
@@ -106,7 +106,7 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 								paint.swordsSmithed++;
 								break;
 							default:
-								if (messageEvent.getMessage().startsWith("Your sword is awarded")) {
+								if (message.startsWith("Your sword is awarded")) {
 									paint.swordsSmithed++;
 									options.finishedSword = true;
 									options.gotPlan = false;
@@ -115,12 +115,16 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 						}
 						break;
 					case 109:
-						if (messageEvent.getMessage().contains("You make a")) {
+						if (message.contains("You make a")) {
 							paint.ingots++;
 						}
 						break;
 				}
-				paint.xpGained += ctx.skills.getExperience(Skills.SMITHING) - before;
+
+				int now = ctx.skills.getExperience(Skills.SMITHING);
+				if (now > before) {
+					paint.xpGained += now - before;
+				}
 			}
 		}
 	}
