@@ -29,7 +29,7 @@ import java.util.ArrayList;
 		description = "Cheap smithing at Artisans Workshop",
 		version = 2.02,
 		authors = {"Logicail"},
-		hidden = false,
+		hidden = true,
 		website = "http://www.powerbot.org/community/topic/704413-logartisan-artisan-armourer-cheap-smither/")
 public class LogArtisanArmourer extends ActiveScript implements MessageListener {
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
