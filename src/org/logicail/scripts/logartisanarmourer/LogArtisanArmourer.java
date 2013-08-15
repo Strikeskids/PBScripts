@@ -35,6 +35,7 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
 	public Paint paint;
+	private JFrame gui = null;
 
 	@Override
 	public void start() {
@@ -43,9 +44,24 @@ public class LogArtisanArmourer extends ActiveScript implements MessageListener 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new LogArtisanArmourerGUI(ctx);
+				gui = new LogArtisanArmourerGUI(ctx);
 			}
 		});
+	}
+
+	@Override
+	public void stop() {
+		try {
+			if (gui != null && gui.isVisible()) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						gui.dispose();
+					}
+				});
+			}
+		} catch (Exception ignored) {
+		}
 	}
 
 	/**
