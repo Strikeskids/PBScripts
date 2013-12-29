@@ -51,7 +51,7 @@ public class GetPlan extends AbstractStrategy {
 		final int xp = ctx.skills.getExperience(Skills.SMITHING);
 
 		for (Npc egil : ctx.npcs.select().id(EGIL_ABEL).nearest().first()) {
-			if (ctx.camera.myTurnTo(egil) && egil.click(false) && ctx.menu.isOpen()) {
+			if (ctx.camera.prepare(egil) && egil.click(false) && ctx.menu.isOpen()) {
 				final String[] actions = egil.getActions();
 				sleep(250, 1000);
 				if (actions.length > 1 && actions[1] != null && egil.interact(actions[1])) {

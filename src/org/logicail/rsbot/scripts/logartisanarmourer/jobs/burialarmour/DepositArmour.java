@@ -39,7 +39,7 @@ public class DepositArmour extends AbstractStrategy {
 
 		// Deposit current
 		for (GameObject chute : ctx.objects.select().id(ID_CHUTE).nearest().first()) {
-			if (ctx.camera.myTurnTo(chute)) {
+			if (ctx.camera.prepare(chute)) {
 				LogArtisanArmourer.status = "Clicking on chute";
 				if (chute.interact("Deposit-armour", "Chute")) {
 					if (Condition.wait(new Callable<Boolean>() {

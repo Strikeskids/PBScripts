@@ -77,7 +77,7 @@ public class Ancestors extends RespectStrategy {
 	@Override
 	public void run() {
 		for (Npc ancestor : getAncestor()) {
-			if (ctx.camera.myTurnTo((ancestor))) {
+			if (ctx.camera.prepare((ancestor))) {
 				LogArtisanArmourer.status = "Attacking ancestor";
 				LogArtisanArmourer.isSmithing = false;
 				boolean fought = false;

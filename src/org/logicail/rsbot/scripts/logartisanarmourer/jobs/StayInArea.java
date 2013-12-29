@@ -30,7 +30,7 @@ public class StayInArea extends AbstractStrategy {
 	public void run() {
 		if (LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR) {
 			for (GameObject tunnel : ctx.objects.select().id(4618).nearest().first()) {
-				if (ctx.camera.myTurnTo(tunnel) && tunnel.interact("Climb")) {
+				if (ctx.camera.prepare(tunnel) && tunnel.interact("Climb")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {

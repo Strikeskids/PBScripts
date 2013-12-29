@@ -14,6 +14,7 @@ import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Player;
 
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -33,6 +34,52 @@ public class SmithTrack extends Branch {
 	public static final int[] TRACK_100 = {20514, 20528, 20532};
 	private static final int[] PARTIAL_TRACK = {20511, 20525, 20529, 20512, 20526, 20530, 20513, 20527, 20531};
 	public static int animationTimelimit = Random.nextInt(2000, 4000);
+	public static final int[] PARTS;
+	static {
+		List<Integer> ids = new ArrayList<Integer>();
+
+		for (int i : RAILS) {
+			ids.add(i);
+		}
+		for (int i : BASE_PLATE) {
+			ids.add(i);
+		}
+		for (int i : TRACK_40) {
+			ids.add(i);
+		}
+		for (int i : SPIKES) {
+			ids.add(i);
+		}
+		for (int i : TRACK_60) {
+			ids.add(i);
+		}
+		for (int i : JOINT) {
+			ids.add(i);
+		}
+		for (int i : TRACK_80) {
+			ids.add(i);
+		}
+		for (int i : TIE) {
+			ids.add(i);
+		}
+		for (int i : TRACK_100) {
+			ids.add(i);
+		}
+		for (int i : PARTIAL_TRACK) {
+			ids.add(i);
+		}
+
+		PARTS = convertIntegers(ids);
+	}
+	public static int[] convertIntegers(List<Integer> integers)
+	{
+		int[] ret = new int[integers.size()];
+		for (int i=0; i < ret.length; i++)
+		{
+			ret[i] = integers.get(i);
+		}
+		return ret;
+	}
 
 	@Override
 	public String toString() {
@@ -107,20 +154,33 @@ public class SmithTrack extends Branch {
 		smith(makeid, 0);
 	}
 
-	public void smith(int makeid, int quanity) {
+	public void smith(final int makeid, int quanity) {
 		//ctx.log.info("Smith: " + makeid + " " + quanity);
 		if (quanity > 0 ? ctx.skillingInterface.select(SmithTrack.getCategoryName(), makeid, quanity) : ctx.skillingInterface.select(SmithTrack.getCategoryName(), makeid)) {
 			String name = ctx.skillingInterface.getSelectedName();
+			final int target = ctx.backpack.select().id(makeid).count() + ctx.skillingInterface.getQuantity();
 			if (ctx.skillingInterface.start()) {
 				LogArtisanArmourer.isSmithing = true;
 				//animationTimelimit = Random.nextInt(2000, 5000);
 				LogArtisanArmourer.status = "Smithing " + name;
 
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.isPaused()
+								|| ctx.isShutdown()
+								|| ctx.backpack.select().id(makeid).count() >= target
+								|| AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > 4000;
+					}
+				}, 600, 100);
+				sleep(200,1000);
+				LogArtisanArmourer.isSmithing = false;
+
 				/*if (Random.nextInt(0, 5) == 0) {
 					sleep(500, 3000);
 					//Util.mouseOffScreen();
 				}*/
-
+/*
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -130,7 +190,7 @@ public class SmithTrack extends Branch {
 					for (int id : LogArtisanArmourer.ANIMATION_SMITHING) {
 						AnimationMonitor.put(id);
 					}
-				}
+				}*/
 			}
 		}
 	}
@@ -164,6 +224,11 @@ public class SmithTrack extends Branch {
 		}
 
 		if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.getAction().equals("Smith")) {
+			return true;
+		}
+
+		if(!LogArtisanArmourer.isSmithing) {
+			//ctx.log.info("SmithTrack branch not smithing");
 			return true;
 		}
 

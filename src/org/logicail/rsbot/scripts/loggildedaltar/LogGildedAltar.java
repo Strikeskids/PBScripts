@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
+import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.script.Manifest;
 
 /**
@@ -21,5 +22,10 @@ public class LogGildedAltar extends LogicailScript {
 	@Override
 	public void start() {
 		ctx.submit(new AnimationMonitor(ctx));
+	}
+
+	@Override
+	public LinkedProperties getPaintInfo() {
+		return null;
 	}
 }

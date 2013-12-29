@@ -106,16 +106,23 @@ public class DepositOre extends AbstractStrategy {
 				LogArtisanArmourer.status = "Depositing ore in smelter";
 
 				if (item.interact("Use", item.getName())) {
-					sleep(100, 500);
-					if (smelter.interact("Use", item.getName() + " -> Smelter")) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								Item poll = ctx.backpack.select().id(oreId).poll();
-								return poll.getStackSize() < count;
-							}
-						});
-						sleep(100, 1000);
+					if (Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return ctx.backpack.getSelectedItem().getId() == oreId;
+						}
+					})) {
+						sleep(100, 500);
+						if (smelter.interact("Use", item.getName() + " -> Smelter")) {
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									Item poll = ctx.backpack.select().id(oreId).poll();
+									return poll.getStackSize() < count;
+								}
+							});
+							sleep(100, 1000);
+						}
 					}
 				}
 			}

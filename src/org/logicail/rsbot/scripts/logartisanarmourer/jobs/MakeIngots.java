@@ -83,7 +83,7 @@ public class MakeIngots extends AbstractStrategy {
 
 			//ArtisanArmourer.setStatus("Search for smelter");
 			for (GameObject smelter : ctx.objects.select().id(LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).nearest().first()) {
-				if (ctx.camera.myTurnTo(smelter)) {
+				if (ctx.camera.prepare(smelter)) {
 					LogArtisanArmourer.status = "Clicking on smelter";
 					if (smelter.interact("Withdraw-ingots", "Smelter")) {
 						if (Condition.wait(new Callable<Boolean>() {

@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.util.TargetableRectangle;
+import org.powerbot.script.lang.Filter;
 import org.powerbot.script.methods.Menu;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
@@ -37,6 +38,7 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 	private static final int WIDGET_QUANTITY_DECREASE = 34;
 	private static final int WIDGET_SCROLLBAR_PARENT = 47;
 	private static final int WIDGET_PRODUCTION_MAIN = 1251;
+	private static final int WIDGET_PRODUCTION_PROGRESS = 33;
 	private static final int WIDGET_PRODUCTION_CANCEL = 48;
 	protected LogicailMethodContext ctx;
 
@@ -85,6 +87,20 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		}
 
 		setCategory(category);
+
+		if (Random.nextBoolean() && Random.nextBoolean()) {
+			if(select(new Filter<Item>() {
+				@Override
+				public boolean accept(Item item) {
+					return item.isOnScreen();
+				}
+			}).count() > 1) {
+				for (Item item : shuffle().first()) {
+					item.interact("Select");
+					sleep(250, 1000);
+				}
+			}
+		}
 
 		for (Item item : select().id(itemId).first()) {
 			if (item.isOnScreen() || ctx.widgets.scroll(item.getComponent(), ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_SCROLLBAR_PARENT), true)) {
@@ -214,9 +230,32 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		return component.isValid() && component.isVisible();
 	}
 
+	public boolean isProductionComplete() {
+		final Component component = getProductionWidget().getComponent(WIDGET_PRODUCTION_PROGRESS);
+
+		if (component.isValid() && component.isVisible()) {
+			final String[] split = component.getText().split("/");
+			return split.length == 2 && split[0].equals(split[1]);
+		}
+
+		return false;
+	}
+
 	public boolean cancelProduction() {
-		if (isProductionInterfaceOpen() && getProductionWidget().getComponent(WIDGET_PRODUCTION_CANCEL).interact("Cancel")) {
-			if (Condition.wait(new Callable<Boolean>() {
+		if (isProductionInterfaceOpen()) {
+			if (isProductionComplete()) {
+				ctx.log.info("Production Complete");
+				if (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !isProductionInterfaceOpen();
+					}
+				})) {
+					return true;
+				}
+			}
+
+			if (getProductionWidget().getComponent(WIDGET_PRODUCTION_CANCEL).interact("Cancel") && Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return !isProductionInterfaceOpen();

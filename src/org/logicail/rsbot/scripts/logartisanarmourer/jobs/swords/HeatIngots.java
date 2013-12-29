@@ -47,7 +47,7 @@ public class HeatIngots extends AbstractStrategy {
 			});
 		} else {
 			for (GameObject furnace : ctx.objects.select().id(FURNACE).nearest().first()) {
-				if (ctx.camera.myTurnTo(furnace) && furnace.interact("Smelt", "Furnace")) {
+				if (ctx.camera.prepare(furnace) && furnace.interact("Smelt", "Furnace")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {

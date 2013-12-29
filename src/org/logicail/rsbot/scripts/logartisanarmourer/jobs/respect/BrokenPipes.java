@@ -53,7 +53,7 @@ public class BrokenPipes extends RespectStrategy {
 		final Timer t = new Timer(Random.nextInt(15000, 20000));
 
 		for (GameObject pipe : getPipe()) {
-			if (ctx.camera.myTurnTo(pipe) && pipe.interact("Mend")) {
+			if (ctx.camera.prepare(pipe) && pipe.interact("Mend")) {
 				LogArtisanArmourer.status = "Repairing pipe";
 				LogArtisanArmourer.isSmithing = false;
 				sleep(1000, 2000);

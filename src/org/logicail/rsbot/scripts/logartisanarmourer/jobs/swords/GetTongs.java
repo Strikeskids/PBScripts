@@ -49,7 +49,7 @@ public class GetTongs extends AbstractStrategy {
 		}
 
 		for (GameObject workbench : ctx.objects.select().id(TONGS_WORKBENCH).nearest().first()) {
-			if (ctx.camera.myTurnTo(workbench) && workbench.interact("Take", "Workbench")) {
+			if (ctx.camera.prepare(workbench) && workbench.interact("Take", "Workbench")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

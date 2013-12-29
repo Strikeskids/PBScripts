@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.framework.tasks;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -28,6 +29,14 @@ public class Tree extends Task {
 		this.tasks.addAll(Arrays.asList(tasks));
 	}
 
+	public void add(Task... task) {
+		Collections.addAll(tasks, task);
+	}
+
+	public void clear() {
+		tasks.clear();
+	}
+
 	public final synchronized Task state() {
 		/*Task current = currentTask.get();
 		if (current != null && current.activate()) {
@@ -42,6 +51,7 @@ public class Tree extends Task {
 				return next;
 			}
 		}
+
 		return null;
 	}
 
@@ -72,5 +82,9 @@ public class Tree extends Task {
 				task.run();
 			}
 		}
+	}
+
+	public boolean any() {
+		return tasks.size() > 0;
 	}
 }

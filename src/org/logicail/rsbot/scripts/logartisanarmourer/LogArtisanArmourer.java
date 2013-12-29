@@ -3,11 +3,12 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.logicail.rsbot.scripts.framework.tasks.Tree;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.gui.NewGUI;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.*;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.Painter;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AntiBan;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.DepositOre;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.MakeIngots;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.StayInArea;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.DepositArmour;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect.Ancestors;
@@ -23,6 +24,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.logicail.rsbot.util.ErrorDialog;
+import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
@@ -33,9 +35,6 @@ import org.powerbot.script.wrappers.Area;
 import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 @Manifest(
 		name = "LogArtisanArmourer",
@@ -59,6 +58,8 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	public static final Area AREAS_ARTISAN_WORKSHOP_SWORDS = new Area(new Tile(3034, 3346, 0), new Tile(3049, 3332, 0));
 	public static final Area AREAS_ARTISAN_WORKSHOP_TRACKS = new Area(new Tile(3054, 9719, 0), new Tile(3080, 9704, 0));
 	public static final Area AREAS_ARTISAN_WORKSHOP_LARGE = new Area(new Tile(3040, 3344, 0), new Tile(3061, 3333, 0));
+
+	public static final int ID_MINE_CART = 24824;
 	public static final int ID_SMELTER = 29395;
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
@@ -66,6 +67,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	public static int brokenSwords;
 	public static boolean gotPlan = true;
 	public static int perfectSwords;
+	public static int completedTracks;
 
 	/* Settings */
 	public static IngotType ingotType = IngotType.IRON;
@@ -78,26 +80,18 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	public static String currentlyMaking = "";
 	public static Mode mode = Mode.BURIAL_ARMOUR;
 	public static int failedConsecutiveWithdrawals;
-	private Painter paint;
 
 	public LogArtisanArmourer() {
 		super();
-		paint = new Painter(ctx, this);
-	}
-
-	@Override
-	public void repaint(Graphics g) {
-		if (paint != null) {
-			paint.repaint(g, getPaintInfo());
-		}
 	}
 
 	private SkillData skillData = null;
 	private int currentLevel = -1;
 	private int startLevel = -1;
 
-	private String[] getPaintInfo() {
-		LinkedList<String> info = new LinkedList<String>();
+	@Override
+	public LinkedProperties getPaintInfo() {
+		LinkedProperties properties = new LinkedProperties();
 
 		if (ctx.game.isLoggedIn()) {
 			if (skillData == null) {
@@ -111,34 +105,36 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 
 		final long runtime = getRuntime();
 
-		info.add("Status: " + status);
-		info.add("Time Running: " + Timer.format(runtime));
+		properties.put("Status", status);
+		properties.put("Time Running: ", Timer.format(runtime));
 
 		if (skillData != null) {
-			info.add("TTL: " + Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
-			info.add("Level: " + currentLevel + " (+" + (currentLevel - startLevel) + ")");
-			info.add(String.format("XP Gained: %,d", skillData.experience(Skills.SMITHING)));
-			info.add(String.format("XP Hour: %,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
+			properties.put("TTL: ", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
+			properties.put("Level: ", currentLevel + " (+" + (currentLevel - startLevel) + ")");
+			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.SMITHING)));
+			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
 
 			final float time = runtime / 3600000f;
 
 			switch (mode) {
 				case BURIAL_ARMOUR:
-					info.add(String.format("Ingots Smithed: %,d (%,d/h)", ingotsSmithed, (int) (ingotsSmithed / time)));
+					properties.put("Ingots Smithed", String.format("%,d (%,d/h)", ingotsSmithed, (int) (ingotsSmithed / time)));
 					break;
 				case CEREMONIAL_SWORDS:
-					info.add(String.format("Swords Smithed: %,d (%,d/h)", swordsSmithed, (int) (swordsSmithed / time)));
-					info.add(String.format("Perfect Swords: %,d (%,d/h)", perfectSwords, (int) (perfectSwords / time)));
-					info.add(String.format("Broken Swords: %,d (%,d/h)", brokenSwords, (int) (brokenSwords / time)));
+					properties.put("Swords Smithed", String.format("%,d (%,d/h)", swordsSmithed, (int) (swordsSmithed / time)));
+					properties.put("Perfect Swords", String.format("Perfect Swords: %,d (%,d/h)", perfectSwords, (int) (perfectSwords / time)));
+					properties.put("Broken Swords", String.format("Broken Swords: %,d (%,d/h)", brokenSwords, (int) (brokenSwords / time)));
 					break;
-				//case REPAIR_TRACK:
-				//	break;
+				case REPAIR_TRACK:
+					properties.put("Completed Tracks", String.format("%,d (%,d/h)", completedTracks, (int) (completedTracks / time)));
+					break;
 			}
 		}
 
-		//info.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
+		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
+		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING));
 
-		return info.toArray(new String[info.size()]);
+		return properties;
 	}
 
 	public static Area getAreaSmall() {
@@ -178,18 +174,15 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 		} catch (NullPointerException npe) {
 		}
 
-		final ArrayList<Task> list = new ArrayList<Task>();
+		//tree.add(new SpinTicket());
+		//tree.add(new LogoutIdle());
+		//tree.add(new EraseChatText());
+		//tree.add(new GetSmithingLevel());
 
-		//list.add(new SpinTicket());
-
-		//list.add(new LogoutIdle());
-
-		//list.add(new EraseChatText());
-		//list.add(new GetSmithingLevel());
-		list.add(new StayInArea(ctx));
+		tree.add(new StayInArea(ctx));
 
 		if (respectRepairPipes) {
-			list.add(new BrokenPipes(ctx));
+			tree.add(new BrokenPipes(ctx));
 		}
 
 		switch (mode) {
@@ -197,31 +190,28 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 				if (respectAncestors) {
 					//LogHandler.print("Killing ancestors disabled - not updated for eoc");
 					//logHandler.print("Add ancestors");
-					list.add(new Ancestors(ctx));
+					tree.add(new Ancestors(ctx));
 				}
 
-				list.add(new DepositOre(ctx));
-				list.add(new DepositArmour(ctx));
-				list.add(new MakeIngots(ctx));
-				list.add(new SmithAnvil(ctx));
+				tree.add(new DepositOre(ctx));
+				tree.add(new DepositArmour(ctx));
+				tree.add(new MakeIngots(ctx));
+				tree.add(new SmithAnvil(ctx));
 				break;
 			case CEREMONIAL_SWORDS:
-				list.add(new DepositOre(ctx));
-				list.add(new MakeIngots(ctx));
-				list.add(new GetTongs(ctx));
-				list.add(new GetPlan(ctx));
-				list.add(new HeatIngots(ctx));
-				list.add(new MakeSword(ctx));
+				tree.add(new DepositOre(ctx));
+				tree.add(new MakeIngots(ctx));
+				tree.add(new GetTongs(ctx));
+				tree.add(new GetPlan(ctx));
+				tree.add(new HeatIngots(ctx));
+				tree.add(new MakeSword(ctx));
 				break;
 			case REPAIR_TRACK:
-				list.add(new TakeIngots(ctx));
-				//list.add(new SmithTrackOld());
-				list.add(new SmithTrack(ctx));
-				list.add(new LayTracks(ctx));
+				tree.add(new TakeIngots(ctx));
+				tree.add(new SmithTrack(ctx));
+				tree.add(new LayTracks(ctx));
 				break;
 		}
-
-		tree = new Tree(ctx, list.toArray(new Task[list.size()]));
 	}
 
 	@Override
@@ -255,14 +245,23 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 			}
 		});
 
-		paint = new Painter(ctx, this);
+		/*try {
+			final File file = download("http://logicail.co.uk/resources/fonts/OpenSans-Regular.ttf", "OpenSans-Regular.ttf");
+			final Font font = FontLoader.load(file);
+			Painter.FONT = font.deriveFont(Font.BOLD, 14);
+			Painter.FONT_SMALL = font.deriveFont(Font.BOLD, 12);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+
+		//Painter.FONT
 	}
 
 	@Override
 	public void messaged(MessageEvent e) {
 		// TODO: Need message for when smithing level not high enough
 
-		if (tree != null) {
+		if (tree.any()) {
 		    /*if (e.getId() == 0) {
 		        if (e.getMessage().contains("You don't have enough")) {
                     ++failedConsecutiveWithdrawals;
@@ -273,47 +272,38 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
                 } else if (e.getMessage().contains("You collect the"))
                     failedConsecutiveWithdrawals = 0;
             } else */
+			String s = e.getMessage();
 			switch (e.getId()) {
 				case 0:
-					String s = e.getMessage();
 					if (s.equals("You need plans to make a sword.")) {
-						LogArtisanArmourer.gotPlan = false;
-
+						gotPlan = false;
 					} else if (s.equals("This sword is too cool to work. Ask Egil or Abel to rate it.") || s.equals("This sword has cooled and you can no longer work it.")) {
 						MakeSword.finishedSword = true;
-						LogArtisanArmourer.gotPlan = false;
+						gotPlan = false;
 
 					} else if (s.equals("You broke the sword! You'll need to get another set of plans from Egil.")) {
-						synchronized (this) {
-							brokenSwords++;
-						}
+						brokenSwords++;
 						MakeSword.finishedSword = true;
-						LogArtisanArmourer.gotPlan = false;
+						gotPlan = false;
 
 					} else if (s.equals("This sword is now perfect and requires no more work.") || s.equals("This sword is perfect. Ask Egil or Abel to rate it.")) {
 						MakeSword.finishedSword = true;
-						LogArtisanArmourer.gotPlan = false;
+						gotPlan = false;
 
 					} else if (s.equals("For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!")) {
-						synchronized (this) {
-							perfectSwords++;
-							swordsSmithed++;
-						}
-
-					} else {
-						if (e.getMessage().startsWith("Your sword is awarded")) {
-							LogArtisanArmourer.swordsSmithed++;
-							MakeSword.finishedSword = true;
-							LogArtisanArmourer.gotPlan = false;
-						}
-
+						perfectSwords++;
+						swordsSmithed++;
+					} else if (s.startsWith("Your sword is awarded")) {
+						swordsSmithed++;
+						MakeSword.finishedSword = true;
+						gotPlan = false;
 					}
 					break;
 				case 109:
-					if (e.getMessage().contains("You make a")) {
-						synchronized (this) {
-							ingotsSmithed++;
-						}
+					if (s.contains("You make a")) {
+						ingotsSmithed++;
+					} else if (s.endsWith("track 100%.")) {
+						completedTracks++;
 					}
 					break;
 			}

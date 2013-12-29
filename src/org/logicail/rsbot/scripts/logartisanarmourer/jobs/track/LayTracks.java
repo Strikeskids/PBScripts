@@ -35,7 +35,7 @@ public class LayTracks extends AbstractStrategy {
 	@Override
 	public void run() {
 		for (GameObject tunnel : ctx.objects.select().id(TUNNEL).nearest().first()) {
-			if (ctx.camera.myTurnTo(tunnel) && tunnel.interact("Lay-tracks", "Tunnel")) {
+			if (ctx.camera.prepare(tunnel) && tunnel.interact("Lay-tracks", "Tunnel")) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

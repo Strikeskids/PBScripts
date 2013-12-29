@@ -5,9 +5,11 @@ import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
+import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.wrappers.Tile;
 
 import java.util.concurrent.Callable;
 
@@ -62,6 +64,7 @@ public class SmithAnvil extends AbstractStrategy {
 		return ID_ANVIL_TRACK;
 	}
 
+	public static Tile anvilLocation = null;
 	public void clickAnvil() {
 		if (ctx.skillingInterface.isOpen()) {
 			return;
@@ -71,8 +74,16 @@ public class SmithAnvil extends AbstractStrategy {
 			ctx.skillingInterface.cancelProduction();
 		}
 
-		for (final GameObject anvil : ctx.objects.select().id(getAnvilId()).nearest().first()) {
-			if (ctx.camera.myTurnTo(anvil)) {
+		BasicNamedQuery<GameObject> anvils = null;
+		if(anvilLocation != null) {
+			anvils = ctx.objects.select().id(getAnvilId()).nearest(anvilLocation).first();
+		}
+		if(anvils == null || anvils.isEmpty()) {
+			anvils = ctx.objects.select().id(getAnvilId()).nearest().first();
+		}
+
+		for (final GameObject anvil : anvils) {
+			if (ctx.camera.prepare(anvil)) {
 				LogArtisanArmourer.status = "Clicking on anvil";
 				if (anvil.interact("Smith", "Anvil")) {
 					Condition.wait(new Callable<Boolean>() {
@@ -132,18 +143,29 @@ public class SmithAnvil extends AbstractStrategy {
 	public void run() {
 		if (ctx.skillingInterface.getAction().equals("Smith")) {
 			//System.out.println("Make: " + getMakeNextId());
-			if (ctx.skillingInterface.select(getCategoryName(), getMakeNextId()) && ctx.skillingInterface.start()) {
-				LogArtisanArmourer.isSmithing = true;
-				animationTimelimit = Random.nextInt(8000, 16000);
-				LogArtisanArmourer.currentlyMaking = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
-				LogArtisanArmourer.status = "Smithing " + LogArtisanArmourer.currentlyMaking;
+			if (ctx.skillingInterface.select(getCategoryName(), getMakeNextId())) {
+				final int target = ctx.backpack.select().id(getMakeNextId()).count() + ctx.skillingInterface.getQuantity();
+				if (ctx.skillingInterface.start()) {
+					LogArtisanArmourer.isSmithing = true;
+					animationTimelimit = Random.nextInt(8000, 16000);
+					LogArtisanArmourer.currentlyMaking = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
+					LogArtisanArmourer.status = "Smithing " + LogArtisanArmourer.currentlyMaking;
 
 				/*if (Random.nextInt(0, 5) == 0) {
 					sleep(500, 3000);
 					Util.mouseOffScreen();
 				}*/
 
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return ctx.isPaused() || ctx.isShutdown() || ctx.backpack.select().id(getMakeNextId()).count() >= target || AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > 4000;
+						}
+					}, 600, 100);
+					sleep(200, 1000);
+					LogArtisanArmourer.isSmithing = false;
 
+/*
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -153,6 +175,7 @@ public class SmithAnvil extends AbstractStrategy {
 					for (int id : LogArtisanArmourer.ANIMATION_SMITHING) {
 						AnimationMonitor.put(id);
 					}
+				}*/
 				}
 			}
 		} else {

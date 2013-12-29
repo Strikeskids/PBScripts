@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -80,16 +81,24 @@ public class TakeIngots extends AbstractStrategy {
 			}
 		}
 
-		for (GameObject trough : ctx.objects.first()) {
-			if (trough.isOnScreen()) {
-				if (trough.interact("Take-ingots", trough.getName())) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.skillingInterface.isOpen();
-						}
-					});
-				}
+		for (final GameObject trough : ctx.objects.first()) {
+			if (SmithAnvil.anvilLocation == null) {
+				SmithAnvil.anvilLocation = trough.getLocation();
+			}
+			if (ctx.camera.prepare(trough) && trough.interact("Take-ingots", trough.getName())) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return trough.getLocation().distanceTo(ctx.players.local()) < 3;
+					}
+				});
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.skillingInterface.isOpen();
+					}
+				});
+				sleep(250, 1000);
 			} else if (ctx.movement.stepTowards(trough)) {
 				sleep(750, 1600);
 			}
