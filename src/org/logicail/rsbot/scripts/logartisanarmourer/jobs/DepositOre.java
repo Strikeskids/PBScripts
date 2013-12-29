@@ -10,7 +10,7 @@ import org.powerbot.script.wrappers.Item;
 
 import java.util.concurrent.Callable;
 
-public class DepositOre extends AbstractStrategy {
+public class DepositOre extends ArtisanArmourerTask {
 	private static final int SETTING_IRON = 125;
 	//private static final int[] IDS_ORES = {441, 448, 450, 452, 454};
 	private static final int SETTING_MITHRIL = 126;

@@ -17,7 +17,7 @@ import java.util.Arrays;
  * Date: 13/08/12
  * Time: 17:36
  */
-public class BrokenPipes extends RespectStrategy {
+public class BrokenPipes extends RespectTask {
 	public BrokenPipes(LogicailMethodContext context) {
 		super(context);
 	}

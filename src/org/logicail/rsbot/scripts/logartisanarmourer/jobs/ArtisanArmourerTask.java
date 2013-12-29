@@ -11,8 +11,8 @@ import org.powerbot.script.wrappers.Player;
  * Date: 22/06/12
  * Time: 10:32
  */
-public abstract class AbstractStrategy extends Task {
-	public AbstractStrategy(LogicailMethodContext context) {
+public abstract class ArtisanArmourerTask extends Task {
+	public ArtisanArmourerTask(LogicailMethodContext context) {
 		super(context);
 	}
 
@@ -21,7 +21,7 @@ public abstract class AbstractStrategy extends Task {
 		Player player = ctx.players.local();
 		return ctx.game.isLoggedIn()
 				&& player != null
-				//&& !player.isInMotion()
+				//&& !player.isInMotion() Too stop-starty
 				&& LogArtisanArmourer.getAreaSmall().contains(player.getLocation());
 	}
 }

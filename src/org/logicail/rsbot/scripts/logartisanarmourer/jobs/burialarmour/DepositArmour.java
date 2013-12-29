@@ -2,13 +2,13 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
 
 import java.util.concurrent.Callable;
 
-public class DepositArmour extends AbstractStrategy {
+public class DepositArmour extends ArtisanArmourerTask {
 	public DepositArmour(LogicailMethodContext context) {
 		super(context);
 	}

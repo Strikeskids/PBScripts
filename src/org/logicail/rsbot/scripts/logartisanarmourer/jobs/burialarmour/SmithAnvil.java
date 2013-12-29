@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
@@ -13,7 +13,7 @@ import org.powerbot.script.wrappers.Tile;
 
 import java.util.concurrent.Callable;
 
-public class SmithAnvil extends AbstractStrategy {
+public class SmithAnvil extends ArtisanArmourerTask {
 	public static final int WIDGET_INSTRUCTION = 1073;
 	public static final int WIDGET_INSTRUCTION_CHILD = 11;
 	private static final int[] ID_ANVIL = {4046};

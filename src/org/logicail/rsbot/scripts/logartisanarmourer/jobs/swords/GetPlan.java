@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Npc;
@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
  * Date: 14/12/12
  * Time: 11:16
  */
-public class GetPlan extends AbstractStrategy {
+public class GetPlan extends ArtisanArmourerTask {
 	public static final int[] EGIL_ABEL = {6642, 6647};
 
 	public GetPlan(LogicailMethodContext context) {

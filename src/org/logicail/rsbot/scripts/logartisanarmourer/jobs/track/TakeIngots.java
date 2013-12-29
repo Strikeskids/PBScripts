@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  * Date: 23/01/13
  * Time: 11:57
  */
-public class TakeIngots extends AbstractStrategy {
+public class TakeIngots extends ArtisanArmourerTask {
 	public TakeIngots(LogicailMethodContext context) {
 		super(context);
 	}

@@ -9,7 +9,7 @@ import org.powerbot.script.wrappers.Player;
 
 import java.util.concurrent.Callable;
 
-public class StayInArea extends AbstractStrategy {
+public class StayInArea extends ArtisanArmourerTask {
 	public StayInArea(LogicailMethodContext context) {
 		super(context);
 	}

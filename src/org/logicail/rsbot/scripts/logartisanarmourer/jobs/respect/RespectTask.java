@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.methods.Game;
 
 /**
@@ -10,10 +10,10 @@ import org.powerbot.script.methods.Game;
  * Date: 13/08/12
  * Time: 17:17
  */
-public abstract class RespectStrategy extends AbstractStrategy {
+public abstract class RespectTask extends ArtisanArmourerTask {
 	public final static int SETTING_RESPECT = 126;
 
-	public RespectStrategy(LogicailMethodContext context) {
+	public RespectTask(LogicailMethodContext context) {
 		super(context);
 	}
 

@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.ChatOption;
@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
  * Date: 14/12/12
  * Time: 11:28
  */
-public class GetTongs extends AbstractStrategy {
+public class GetTongs extends ArtisanArmourerTask {
 	public GetTongs(LogicailMethodContext context) {
 		super(context);
 	}

@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
  * Date: 23/01/13
  * Time: 13:49
  */
-public class LayTracks extends AbstractStrategy {
+public class LayTracks extends ArtisanArmourerTask {
 	public LayTracks(LogicailMethodContext context) {
 		super(context);
 	}

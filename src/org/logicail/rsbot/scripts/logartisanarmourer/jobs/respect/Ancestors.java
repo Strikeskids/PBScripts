@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * Date: 13/08/12
  * Time: 16:35
  */
-public class Ancestors extends RespectStrategy {
+public class Ancestors extends RespectTask {
 	private static final int[] ANCESTOR_IDS = {6657, 6658, 6659, 6660, 6661, 6662};
 
 	public Ancestors(LogicailMethodContext context) {

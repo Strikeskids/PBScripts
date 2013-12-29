@@ -10,7 +10,7 @@ import org.powerbot.script.wrappers.GameObject;
 import java.util.concurrent.Callable;
 
 
-public class MakeIngots extends AbstractStrategy {
+public class MakeIngots extends ArtisanArmourerTask {
 	public MakeIngots(LogicailMethodContext context) {
 		super(context);
 	}

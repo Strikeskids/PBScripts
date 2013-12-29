@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AbstractStrategy;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
  * Date: 14/12/12
  * Time: 11:02
  */
-public class HeatIngots extends AbstractStrategy {
+public class HeatIngots extends ArtisanArmourerTask {
 	public static final int[] INGOT_IDS_IV = {20647, 20648, 20649, 20650, 20651, 20652};
 	public static final int FURNACE = 24720;
 
