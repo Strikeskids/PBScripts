@@ -4,7 +4,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
-import org.logicail.rsbot.scripts.logartisanarmourer.gui.NewGUI;
+import org.logicail.rsbot.scripts.logartisanarmourer.gui.ArtisanGUI;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AntiBan;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.DepositOre;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.MakeIngots;
@@ -68,6 +68,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	public static boolean gotPlan = true;
 	public static int perfectSwords;
 	public static int completedTracks;
+	private JFrame gui;
 
 	/* Settings */
 	public static IngotType ingotType = IngotType.IRON;
@@ -84,6 +85,23 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	public LogArtisanArmourer() {
 		super();
 	}
+
+	/*@Override
+	public void repaint(Graphics g) {
+		super.repaint(g);
+
+		for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
+			if (pipe.isOnScreen()) {
+				final AbstractModel abstractModel = pipe.getInternal().getModel();
+				final Point point = pipe.getCenterPoint();
+				final String s = String.format("Pipe: %d", BrokenPipes.getNumFaces(abstractModel));
+				g.setColor(Color.BLACK);
+				g.drawString(s, point.x + 1, point.y + 1);
+				g.setColor(Color.WHITE);
+				g.drawString(s, point.x, point.y);
+			}
+		}
+	}*/
 
 	private SkillData skillData = null;
 	private int currentLevel = -1;
@@ -106,11 +124,11 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 		final long runtime = getRuntime();
 
 		properties.put("Status", status);
-		properties.put("Time Running: ", Timer.format(runtime));
+		properties.put("Time Running", Timer.format(runtime));
 
 		if (skillData != null) {
-			properties.put("TTL: ", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
-			properties.put("Level: ", currentLevel + " (+" + (currentLevel - startLevel) + ")");
+			properties.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
+			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
 			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.SMITHING)));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
 
@@ -133,6 +151,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 
 		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
 		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING));
+		//properties.put("SKCat", ctx.skillingInterface.getCategory());
 
 		return properties;
 	}
@@ -231,7 +250,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 					@Override
 					public void run() {
 						try {
-							new NewGUI(LogArtisanArmourer.this);
+							gui = new ArtisanGUI(LogArtisanArmourer.this);
 						} catch (Exception exception) {
 							exception.printStackTrace();
 						}
@@ -248,13 +267,23 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 		/*try {
 			final File file = download("http://logicail.co.uk/resources/fonts/OpenSans-Regular.ttf", "OpenSans-Regular.ttf");
 			final Font font = FontLoader.load(file);
-			Painter.FONT = font.deriveFont(Font.BOLD, 14);
+			Painter.FONT_TITLE = font.deriveFont(Font.BOLD, 14);
 			Painter.FONT_SMALL = font.deriveFont(Font.BOLD, 12);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}*/
 
-		//Painter.FONT
+		//Painter.FONT_TITLE
+	}
+
+	@Override
+	public void stop() {
+		try {
+			if (gui != null && gui.isVisible()) {
+				gui.dispose();
+			}
+		} catch (Exception ignored) {
+		}
 	}
 
 	@Override

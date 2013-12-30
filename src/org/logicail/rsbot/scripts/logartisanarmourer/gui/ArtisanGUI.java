@@ -1,9 +1,11 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.gui;
 
+import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
+import org.logicail.rsbot.util.ErrorDialog;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -22,7 +24,7 @@ import java.awt.event.WindowEvent;
  * Date: 11/11/12
  * Time: 12:20
  */
-public class NewGUI extends JFrame {
+public class ArtisanGUI extends JFrame {
 	private final LogArtisanArmourer script;
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
@@ -66,7 +68,7 @@ public class NewGUI extends JFrame {
 	private JCheckBox respectKill;
 	private JButton startButton;
 
-	public NewGUI(LogArtisanArmourer logArtisanArmourer) {
+	public ArtisanGUI(LogArtisanArmourer logArtisanArmourer) {
 		this.script = logArtisanArmourer;
 		initComponents();
 
@@ -209,15 +211,27 @@ public class NewGUI extends JFrame {
 		} else if (s.equals("Track room")) {
 			LogArtisanArmourer.mode = Mode.REPAIR_TRACK;
 			LogArtisanArmourer.ingotType = (IngotType) trackIngotType.getSelectedItem();
-				/*LogArtisanArmourer.get().submit(new Task() {
-					@Override
-					public void run() {
-						if (Inventory.getCount() != 0) {
-							LogArtisanArmourer.get().getLogHandler().print("It is recommended to start the script with an empty inventory.", Color.RED);
-						}
-					}
-				});*/
+			script.submit(new Task(script.ctx) {
+				@Override
+				public boolean activate() {
+					return true;
+				}
 
+				@Override
+				public void run() {
+					if (!ctx.backpack.select().isEmpty()) {
+						EventQueue.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									new ErrorDialog(null, "Backpack not empty", "It is recommended to start the script with an empty backpack, if the script messes up restart with an empty backpack");
+								} catch (Exception ignored) {
+								}
+							}
+						});
+					}
+				}
+			});
 		} else {
 			script.getController().stop();
 		}
