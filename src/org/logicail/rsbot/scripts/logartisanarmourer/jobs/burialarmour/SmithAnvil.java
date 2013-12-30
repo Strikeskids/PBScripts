@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
+import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
@@ -41,15 +42,17 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	}
 
 	public static String getCategoryName() {
-		switch (LogArtisanArmourer.ingotGrade) {
-			case ONE:
-				return "Ingots, Tier I";
-			case TWO:
-				return "Ingots, Tier II";
-			case THREE:
-				return "Ingots, Tier III";
+		if (LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR) {
+			switch (LogArtisanArmourer.ingotGrade) {
+				case ONE:
+					return "Miner's Burial Armour";
+				case TWO:
+					return "Warrior's Burial Armour";
+				case THREE:
+					return "Smith's Burial Armour";
+			}
 		}
-		return "Ingots, Tier I";
+		return "Ingots, Tier IV";
 	}
 
 	private static int[] getAnvilId() {
@@ -65,6 +68,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	}
 
 	public static Tile anvilLocation = null;
+
 	public void clickAnvil() {
 		if (ctx.skillingInterface.isOpen()) {
 			return;
@@ -75,10 +79,10 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		}
 
 		BasicNamedQuery<GameObject> anvils = null;
-		if(anvilLocation != null) {
+		if (anvilLocation != null) {
 			anvils = ctx.objects.select().id(getAnvilId()).nearest(anvilLocation).first();
 		}
-		if(anvils == null || anvils.isEmpty()) {
+		if (anvils == null || anvils.isEmpty()) {
 			anvils = ctx.objects.select().id(getAnvilId()).nearest().first();
 		}
 
@@ -91,7 +95,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						public Boolean call() throws Exception {
 							return anvil.getLocation().distanceTo(ctx.players.local()) < 2;
 						}
-					});
+					}, 300, 8);
 					sleep(300, 1000);
 					if (ctx.players.local().getAnimation() != -1 && !ctx.skillingInterface.isOpen()) {
 						if (anvil.interact("Smith", "Anvil")) {
@@ -143,12 +147,17 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	public void run() {
 		if (ctx.skillingInterface.getAction().equals("Smith")) {
 			//System.out.println("Make: " + getMakeNextId());
+			final String make = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
 			if (ctx.skillingInterface.select(getCategoryName(), getMakeNextId())) {
 				final int target = ctx.backpack.select().id(getMakeNextId()).count() + ctx.skillingInterface.getQuantity();
-				if (ctx.skillingInterface.start()) {
+				if (ctx.skillingInterface.getSelectedItem().getId() == getMakeNextId() && ctx.skillingInterface.start()) {
 					LogArtisanArmourer.isSmithing = true;
 					animationTimelimit = Random.nextInt(8000, 16000);
-					LogArtisanArmourer.currentlyMaking = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
+					LogArtisanArmourer.currentlyMaking = make;
+					if(!make.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())) {
+						LogArtisanArmourer.isSmithing = false;
+						return;
+					}
 					LogArtisanArmourer.status = "Smithing " + LogArtisanArmourer.currentlyMaking;
 
 				/*if (Random.nextInt(0, 5) == 0) {
@@ -156,12 +165,16 @@ public class SmithAnvil extends ArtisanArmourerTask {
 					Util.mouseOffScreen();
 				}*/
 
+					// 250 sec for burial
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.isPaused() || ctx.isShutdown() || ctx.backpack.select().id(getMakeNextId()).count() >= target || AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > 4000;
+							return ctx.isPaused() || ctx.isShutdown()
+									|| ctx.backpack.select().id(getMakeNextId()).count() >= target
+									|| AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > 4000
+									|| (LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR && !LogArtisanArmourer.currentlyMaking.equals(make));
 						}
-					}, 600, 100);
+					}, 600, LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR ? 420 : 100);
 					sleep(200, 1000);
 					LogArtisanArmourer.isSmithing = false;
 

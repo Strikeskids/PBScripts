@@ -2,6 +2,8 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.powerbot.client.AbstractModel;
+import org.powerbot.client.ModelCapture;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.methods.Skills;
@@ -27,7 +29,7 @@ public class BrokenPipes extends RespectTask {
 		return "Repair pipes";
 	}
 
-	private static final int[] BROKEN_PIPE = {29410, 29411, 29413, 29414, 29761, 29762};
+	public static final int[] BROKEN_PIPE = {29410, 29411, 29413, 29414, 29761, 29762};
 
 	@Override
 	public boolean activate() {
@@ -36,12 +38,20 @@ public class BrokenPipes extends RespectTask {
 				&& !getPipe().isEmpty();
 	}
 
+
+	public static int getNumFaces(AbstractModel model) {
+		if (model == null) {
+			return -1;
+		}
+		return model instanceof ModelCapture ? ((ModelCapture) model).getFaces() : Math.min(model.getIndices1().length, Math.min(model.getIndices2().length, model.getIndices3().length));
+	}
+
 	private BasicNamedQuery<GameObject> getPipe() {
 		return ctx.objects.select(new Filter<GameObject>() {
 			@Override
 			public boolean accept(GameObject gameObject) {
 				if (Arrays.binarySearch(BROKEN_PIPE, gameObject.getId()) >= 0) {
-					return gameObject.getModel().getTriangles().length == 63;
+					return getNumFaces(gameObject.getInternal().getModel()) == 63;
 				}
 				return false;
 			}

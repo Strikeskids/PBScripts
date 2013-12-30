@@ -62,7 +62,7 @@ public class MyCamera extends Camera {
 		final double currentDistance = locatable.getLocation().distanceTo(ctx.players.local());
 		if (currentDistance > distance) {
 			final Tile tile = getReachableTile(locatable);
-			if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(locatable)) {
+			if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(tile)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

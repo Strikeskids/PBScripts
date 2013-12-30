@@ -14,10 +14,12 @@ import java.util.Properties;
 public class LinkedProperties extends Properties {
 	private final LinkedHashSet<Object> keys = new LinkedHashSet<Object>();
 
+	@Override
 	public Enumeration<Object> keys() {
 		return Collections.enumeration(keys);
 	}
 
+	@Override
 	public Object put(Object key, Object value) {
 		keys.add(key);
 		return super.put(key, value);

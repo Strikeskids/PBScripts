@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Condition;
@@ -28,31 +29,18 @@ public class MakeIngots extends ArtisanArmourerTask {
 				|| (!ctx.backpack.isFull() && (ctx.backpack.select().id(LogArtisanArmourer.getIngotID()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));
 	}
 
-	private String getCategoryName() {
-		if (LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR) {
-			switch (LogArtisanArmourer.ingotGrade) {
-				case TWO:
-					return "Ingots, Tier II";
-				case THREE:
-					return "Ingots, Tier III";
-			}
-			return "Ingots, Tier I";
-		}
-		return "Ingots, Tier IV";
-	}
-
 	@Override
 	public void run() {
 		LogArtisanArmourer.isSmithing = false;
 
 		if (ctx.skillingInterface.getAction().equals("Smelt")) {
 			if (LogArtisanArmourer.mode == Mode.CEREMONIAL_SWORDS) {
-				if (!ctx.skillingInterface.select(getCategoryName(), LogArtisanArmourer.getIngotID(), !ctx.backpack.select().id(MakeSword.TONGS).isEmpty() ? -1 : 26 - ctx.backpack.select().count())) {
+				if (!ctx.skillingInterface.select(SmithAnvil.getCategoryName(), LogArtisanArmourer.getIngotID(), !ctx.backpack.select().id(MakeSword.TONGS).isEmpty() ? -1 : 26 - ctx.backpack.select().count())) {
 					return;
 				}
 			} else {
 				//Context.get().getScriptHandler().log.info("Ingot: " + LogArtisanArmourer.getIngotID());
-				if (!ctx.skillingInterface.select(getCategoryName(), LogArtisanArmourer.getIngotID())) {
+				if (!ctx.skillingInterface.select(SmithAnvil.getCategoryName(), LogArtisanArmourer.getIngotID())) {
 					return;
 				}
 			}
@@ -60,6 +48,7 @@ public class MakeIngots extends ArtisanArmourerTask {
 			LogArtisanArmourer.status = "Making ingots";
 
 			if (!ctx.skillingInterface.canStart()) {
+				LogArtisanArmourer.status = "Can't start";
 				++LogArtisanArmourer.failedConsecutiveWithdrawals;
 				if (LogArtisanArmourer.failedConsecutiveWithdrawals >= 3) {
 					ctx.skillingInterface.close();
