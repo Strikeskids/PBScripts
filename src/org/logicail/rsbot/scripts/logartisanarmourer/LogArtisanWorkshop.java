@@ -40,7 +40,8 @@ import java.awt.*;
 		name = "Log Artisan Workshop",
 		description = "Cheap smithing xp at Artisans Workshop",
 		version = 2,
-		authors = {"Logicail"}
+		authors = {"Logicail"},
+		topic = 1134701
 )
 public class LogArtisanWorkshop extends LogicailScript implements MessageListener {
 	public static final int[] INGOT_IDS = {20632, 20633, 20634, 20635, 20636,
