@@ -65,14 +65,11 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	private JFrame gui;
 	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
 
-	public LogArtisanArmourer() {
-		super();
-	}
-
 	@Override
 	public void repaint(Graphics g) {
 		super.repaint(g);
 
+		// Debug incase repairing pipes doeesn't work (Haven't been able to test yet)
 		for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
 			if (pipe.isOnScreen()) {
 				final AbstractModel abstractModel = pipe.getInternal().getModel();
@@ -117,27 +114,30 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
 			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.SMITHING)));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
+		}
 
-			final float time = runtime / 3600000f;
+		final float time = runtime / 3600000f;
 
-			switch (options.mode) {
-				case BURIAL_ARMOUR:
-					properties.put("Ingots Smithed", String.format("%,d (%,d/h)", options.ingotsSmithed, (int) (options.ingotsSmithed / time)));
-					break;
-				case CEREMONIAL_SWORDS:
-					properties.put("Swords Smithed", String.format("%,d (%,d/h)", options.swordsSmithed, (int) (options.swordsSmithed / time)));
-					properties.put("Perfect Swords", String.format("Perfect Swords: %,d (%,d/h)", options.perfectSwords, (int) (options.perfectSwords / time)));
-					properties.put("Broken Swords", String.format("Broken Swords: %,d (%,d/h)", options.brokenSwords, (int) (options.brokenSwords / time)));
-					break;
-				case REPAIR_TRACK:
-					properties.put("Completed Tracks", String.format("%,d (%,d/h)", options.completedTracks, (int) (options.completedTracks / time)));
-					break;
-			}
+		switch (options.mode) {
+			case BURIAL_ARMOUR:
+				properties.put("Ingots Smithed", String.format("%,d (%,d/h)", options.ingotsSmithed, (int) (options.ingotsSmithed / time)));
+				break;
+			case CEREMONIAL_SWORDS:
+				properties.put("Swords Smithed", String.format("%,d (%,d/h)", options.swordsSmithed, (int) (options.swordsSmithed / time)));
+				properties.put("Perfect Swords", String.format("Perfect Swords: %,d (%,d/h)", options.perfectSwords, (int) (options.perfectSwords / time)));
+				properties.put("Broken Swords", String.format("Broken Swords: %,d (%,d/h)", options.brokenSwords, (int) (options.brokenSwords / time)));
+				break;
+			case REPAIR_TRACK:
+				properties.put("Completed Tracks", String.format("%,d (%,d/h)", options.completedTracks, (int) (options.completedTracks / time)));
+				break;
 		}
 
 		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
 		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING));
 		//properties.put("SKCat", ctx.skillingInterface.getCategory());
+		//properties.put("Iron3", IngotType.IRON.getID(IngotGrade.THREE));
+		//properties.put("Iron4", IngotType.IRON.getID(IngotGrade.FOUR));
+		//properties.put("Steel3", IngotType.STEEL.getID(IngotGrade.THREE));
 
 		return properties;
 	}

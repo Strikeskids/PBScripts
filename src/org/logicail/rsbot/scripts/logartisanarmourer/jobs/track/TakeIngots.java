@@ -54,8 +54,6 @@ public class TakeIngots extends ArtisanArmourerTask {
 
 	@Override
 	public void run() {
-		//Logger.getLogger(LogArtisanArmourer.class.getName()).info("Should make:" + SmithTrackOld.getMaking());
-
 		options.status = "Take ingots";
 
 		if (ctx.skillingInterface.isProductionInterfaceOpen()) {

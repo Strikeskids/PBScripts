@@ -37,7 +37,7 @@ public class MyCamera extends Camera {
 			tries--;
 		}
 
-		return null;
+		return location;
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class MyCamera extends Camera {
 
 		if (!targetable.isOnScreen()) {
 			final Tile tile = getReachableTile(locatable);
-			if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(locatable)) {
+			if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(tile)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
