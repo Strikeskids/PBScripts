@@ -1,21 +1,16 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.TakeIngots;
 
 /**
  * Created with IntelliJ IDEA.
  * Date: 17/03/13
  * Time: 16:45
  */
-public class Track60 extends Task {
-	private SmithTrack smithTrack;
-
-	public Track60(LogicailMethodContext context, SmithTrack smithTrack) {
-		super(context);
-		this.smithTrack = smithTrack;
+public class Track60 extends AbstractTrack {
+	public Track60(LogArtisanArmourer script, SmithTrack smithTrack, int ingotId) {
+		super(script, smithTrack, ingotId);
 	}
 
 	@Override
@@ -25,7 +20,7 @@ public class Track60 extends Task {
 
 	@Override
 	public boolean activate() {
-		return !ctx.backpack.select().id(SmithTrack.getTrack40()).isEmpty() && !ctx.backpack.select().id(TakeIngots.getIngotId(), SmithTrack.getSpikes()).isEmpty();
+		return !ctx.backpack.select().id(smithTrack.getTrack40()).isEmpty() && !ctx.backpack.select().id(ingotId, smithTrack.getSpikes()).isEmpty();
 	}
 
 	@Override
@@ -34,15 +29,15 @@ public class Track60 extends Task {
 			return;
 		}
 
-		int tracks = ctx.backpack.select().id(SmithTrack.getTrack40()).count();
+		int tracks = ctx.backpack.select().id(smithTrack.getTrack40()).count();
 
-		int spikes = ctx.backpack.select().id(SmithTrack.getSpikes()).count();
-		int ingots = ctx.backpack.select().id(TakeIngots.getIngotId()).count();
+		int spikes = ctx.backpack.select().id(smithTrack.getSpikes()).count();
+		int ingots = ctx.backpack.select().id(ingotId).count();
 
 		if (tracks > spikes && ingots > 0) {
-			smithTrack.smith(SmithTrack.getSpikes(), tracks - spikes);
+			smithTrack.smith(smithTrack.getSpikes(), tracks - spikes);
 		} else {
-			smithTrack.smith(SmithTrack.getTrack60());
+			smithTrack.smith(smithTrack.getTrack60());
 		}
 	}
 }

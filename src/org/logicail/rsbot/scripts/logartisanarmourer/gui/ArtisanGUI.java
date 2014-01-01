@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.gui;
 
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourerOptions;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
@@ -191,26 +192,27 @@ public class ArtisanGUI extends JFrame {
 
 	private void startButtonActionPerformed() {
 		startPressed = true;
-		LogArtisanArmourer.status = "Setup finished";
+		final LogArtisanArmourerOptions options = script.options;
+		options.status = "Setup finished";
 
 		//Context.get().getScriptHandler().log.info("Mode: " + tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
 		String s = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
 		if (s.equals("Burial Armour")) {
-			LogArtisanArmourer.mode = Mode.BURIAL_ARMOUR;
-			LogArtisanArmourer.ingotType = (IngotType) burialIngotType.getSelectedItem();
-			LogArtisanArmourer.ingotGrade = (IngotGrade) burialIngotGrade.getSelectedItem();
-			LogArtisanArmourer.respectRepairPipes = burialRespectPipes.isSelected();
-			LogArtisanArmourer.respectAncestors = respectKill.isSelected();
+			options.mode = Mode.BURIAL_ARMOUR;
+			options.ingotType = (IngotType) burialIngotType.getSelectedItem();
+			options.ingotGrade = (IngotGrade) burialIngotGrade.getSelectedItem();
+			options.respectRepairPipes = burialRespectPipes.isSelected();
+			options.respectAncestors = respectKill.isSelected();
 
 		} else if (s.equals("Ceremonial Swords")) {
-			LogArtisanArmourer.mode = Mode.CEREMONIAL_SWORDS;
-			LogArtisanArmourer.ingotType = (IngotType) swordIngotType.getSelectedItem();
-			LogArtisanArmourer.ingotGrade = IngotGrade.FOUR;
-			LogArtisanArmourer.respectRepairPipes = swordRespectPipes.isSelected();
+			options.mode = Mode.CEREMONIAL_SWORDS;
+			options.ingotType = (IngotType) swordIngotType.getSelectedItem();
+			options.ingotGrade = IngotGrade.FOUR;
+			options.respectRepairPipes = swordRespectPipes.isSelected();
 
 		} else if (s.equals("Track room")) {
-			LogArtisanArmourer.mode = Mode.REPAIR_TRACK;
-			LogArtisanArmourer.ingotType = (IngotType) trackIngotType.getSelectedItem();
+			options.mode = Mode.REPAIR_TRACK;
+			options.ingotType = (IngotType) trackIngotType.getSelectedItem();
 			script.submit(new Task(script.ctx) {
 				@Override
 				public boolean activate() {

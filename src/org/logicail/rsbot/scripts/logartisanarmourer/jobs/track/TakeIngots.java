@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
@@ -18,8 +17,8 @@ import java.util.concurrent.Callable;
  * Time: 11:57
  */
 public class TakeIngots extends ArtisanArmourerTask {
-	public TakeIngots(LogicailMethodContext context) {
-		super(context);
+	public TakeIngots(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 	private static final int STEEL_TROUGH = 24823;
 
 	private BasicNamedQuery<GameObject> getTrough() {
-		switch (LogArtisanArmourer.ingotType) {
+		switch (script.options.ingotType) {
 			case BRONZE:
 				return ctx.objects.select().id(BRONZE_TROUGH).nearest().first();
 			case IRON:
@@ -57,7 +56,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 	public void run() {
 		//Logger.getLogger(LogArtisanArmourer.class.getName()).info("Should make:" + SmithTrackOld.getMaking());
 
-		LogArtisanArmourer.status = "Take ingots";
+		script.options.status = "Take ingots";
 
 		if (ctx.skillingInterface.isProductionInterfaceOpen()) {
 			ctx.skillingInterface.cancelProduction();
@@ -107,8 +106,8 @@ public class TakeIngots extends ArtisanArmourerTask {
 		}
 	}
 
-	public static int getIngotId() {
-		switch (LogArtisanArmourer.ingotType) {
+	public int getIngotId() {
+		switch (script.options.ingotType) {
 			case BRONZE:
 				return 20502;
 			case IRON:

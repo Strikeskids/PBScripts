@@ -1,10 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.TakeIngots;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
 
@@ -15,12 +12,9 @@ import java.util.concurrent.Callable;
  * Date: 17/03/13
  * Time: 16:45
  */
-public class Track40 extends Task {
-	private SmithTrack smithTrack;
-
-	public Track40(LogicailMethodContext context, SmithTrack smithTrack) {
-		super(context);
-		this.smithTrack = smithTrack;
+public class Track40 extends AbstractTrack {
+	public Track40(LogArtisanArmourer script, SmithTrack smithTrack, int ingotId) {
+		super(script, smithTrack, ingotId);
 	}
 
 	@Override
@@ -30,7 +24,7 @@ public class Track40 extends Task {
 
 	@Override
 	public boolean activate() {
-		return !ctx.backpack.select().id(TakeIngots.getIngotId()).isEmpty() || !ctx.backpack.select().id(SmithTrack.getBasePlate()).isEmpty();
+		return !ctx.backpack.select().id(ingotId).isEmpty() || !ctx.backpack.select().id(smithTrack.getBasePlate()).isEmpty();
 	}
 
 	@Override
@@ -40,10 +34,10 @@ public class Track40 extends Task {
 			return;
 		}
 
-		int rails = ctx.backpack.select().id(SmithTrack.getRails()).count();
+		int rails = ctx.backpack.select().id(smithTrack.getRails()).count();
 
-		int baseplate = ctx.backpack.select().id(SmithTrack.getBasePlate()).count();
-		int ingots = ctx.backpack.select().id(TakeIngots.getIngotId()).count();
+		int baseplate = ctx.backpack.select().id(smithTrack.getBasePlate()).count();
+		int ingots = ctx.backpack.select().id(ingotId).count();
 
 		//ctx.log.info(rails + " " + baseplate + " " + ingots);
 
@@ -71,20 +65,20 @@ public class Track40 extends Task {
 						sleep(250, 1000);
 					} else {
 						ctx.log.info("Make Rails");
-						smithTrack.smith(SmithTrack.getRails());
+						smithTrack.smith(smithTrack.getRails());
 					}
 				} else {
 					if (rails > baseplate) {
 						ctx.log.info("Make BasePlate");
-						smithTrack.smith(SmithTrack.getBasePlate(), rails - baseplate);
+						smithTrack.smith(smithTrack.getBasePlate(), rails - baseplate);
 					} else {
 						ctx.log.info("Make Rails");
-						smithTrack.smith(SmithTrack.getRails(), baseplate - rails);
+						smithTrack.smith(smithTrack.getRails(), baseplate - rails);
 					}
 				}
 			}
 		} else {
-			smithTrack.smith(SmithTrack.getTrack40());
+			smithTrack.smith(smithTrack.getTrack40());
 		}
 	}
 }

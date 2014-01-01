@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.lang.Filter;
@@ -25,8 +24,8 @@ import java.util.concurrent.Callable;
 public class Ancestors extends RespectTask {
 	private static final int[] ANCESTOR_IDS = {6657, 6658, 6659, 6660, 6661, 6662};
 
-	public Ancestors(LogicailMethodContext context) {
-		super(context);
+	public Ancestors(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class Ancestors extends RespectTask {
 			public boolean accept(Npc npc) {
 				if (Arrays.binarySearch(ANCESTOR_IDS, npc.getId()) >= 0) {
 					final Actor interacting = npc.getInteracting();
-					return (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) && ctx.movement.getDistance(LogArtisanArmourer.getAreaSmall().getCentralTile(), npc) < 50;
+					return (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) && ctx.movement.getDistance(script.getAreaSmall().getCentralTile(), npc) < 50;
 				}
 				return false;
 			}
@@ -78,8 +77,8 @@ public class Ancestors extends RespectTask {
 	public void run() {
 		for (Npc ancestor : getAncestor()) {
 			if (ctx.camera.prepare((ancestor))) {
-				LogArtisanArmourer.status = "Attacking ancestor";
-				LogArtisanArmourer.isSmithing = false;
+				options.status = "Attacking ancestor";
+				options.isSmithing = false;
 				boolean fought = false;
 
 				final Player local = ctx.players.local();

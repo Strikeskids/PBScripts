@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.methods.Skills;
@@ -18,8 +17,8 @@ import java.util.concurrent.Callable;
 public class GetPlan extends ArtisanArmourerTask {
 	public static final int[] EGIL_ABEL = {6642, 6647};
 
-	public GetPlan(LogicailMethodContext context) {
-		super(context);
+	public GetPlan(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	@Override
@@ -30,18 +29,18 @@ public class GetPlan extends ArtisanArmourerTask {
 	@Override
 	public boolean activate() {
 		return super.activate()
-				&& MakeSword.finishedSword || !LogArtisanArmourer.gotPlan;
+				&& options.finishedSword || !options.gotPlan;
 	}
 
 	@Override
 	public void run() {
 		if (!ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty()) {
-			MakeSword.finishedSword = false;
-			LogArtisanArmourer.gotPlan = true;
+			options.finishedSword = false;
+			options.gotPlan = true;
 			return;
 		}
 
-		LogArtisanArmourer.status = "Talk to Egil/Abel";
+		options.status = "Talk to Egil/Abel";
 
 		if (MakeSword.get().isOpen()) {
 			MakeSword.get().closeInterface();

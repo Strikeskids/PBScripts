@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 
 /**
@@ -12,8 +12,8 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 public abstract class RespectTask extends ArtisanArmourerTask {
 	public final static int SETTING_RESPECT = 126;
 
-	public RespectTask(LogicailMethodContext context) {
-		super(context);
+	public RespectTask(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	@Override

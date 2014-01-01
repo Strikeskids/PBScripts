@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
@@ -15,8 +14,8 @@ import java.util.concurrent.Callable;
  * Time: 13:49
  */
 public class LayTracks extends ArtisanArmourerTask {
-	public LayTracks(LogicailMethodContext context) {
-		super(context);
+	public LayTracks(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class LayTracks extends ArtisanArmourerTask {
 
 	@Override
 	public void run() {
-		LogArtisanArmourer.status = "Laying tracks";
+		options.status = "Laying tracks";
 		for (GameObject tunnel : ctx.objects.select().id(TUNNEL).nearest().first()) {
 			if (ctx.camera.prepare(tunnel) && tunnel.interact("Lay-tracks", "Tunnel")) {
 				if (Condition.wait(new Callable<Boolean>() {

@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
@@ -74,6 +73,8 @@ public class SmithTrack extends Branch {
 		PARTS = convertIntegers(ids);
 	}
 
+	private final LogArtisanArmourer script;
+
 	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
 		for (int i = 0; i < ret.length; i++) {
@@ -89,50 +90,51 @@ public class SmithTrack extends Branch {
 
 	private SmithAnvil anvil;
 
-	public SmithTrack(LogicailMethodContext ctx) {
-		super(ctx);
-		anvil = new SmithAnvil(ctx);
+	public SmithTrack(LogArtisanArmourer script, TakeIngots takeIngots) {
+		super(script.ctx);
+		this.script = script;
+		anvil = new SmithAnvil(script);
 
-		tasks.add(new Track100(ctx, this));
-		tasks.add(new Track80(ctx, this));
-		tasks.add(new Track60(ctx, this));
-		tasks.add(new Track40(ctx, this));
+		tasks.add(new Track100(script, this, takeIngots.getIngotId()));
+		tasks.add(new Track80(script, this, takeIngots.getIngotId()));
+		tasks.add(new Track60(script, this, takeIngots.getIngotId()));
+		tasks.add(new Track40(script, this, takeIngots.getIngotId()));
 	}
 
-	public static int getRails() {
-		return RAILS[LogArtisanArmourer.ingotType.ordinal()];
+	public int getRails() {
+		return RAILS[script.options.ingotType.ordinal()];
 	}
 
-	public static int getBasePlate() {
-		return BASE_PLATE[LogArtisanArmourer.ingotType.ordinal()];
+	public int getBasePlate() {
+		return BASE_PLATE[script.options.ingotType.ordinal()];
 	}
 
-	public static int getTrack40() {
-		return TRACK_40[LogArtisanArmourer.ingotType.ordinal()];
+	public int getTrack40() {
+		return TRACK_40[script.options.ingotType.ordinal()];
 	}
 
-	public static int getSpikes() {
-		return SPIKES[LogArtisanArmourer.ingotType.ordinal()];
+	public int getSpikes() {
+		return SPIKES[script.options.ingotType.ordinal()];
 	}
 
-	public static int getTrack60() {
-		return TRACK_60[LogArtisanArmourer.ingotType.ordinal()];
+	public int getTrack60() {
+		return TRACK_60[script.options.ingotType.ordinal()];
 	}
 
-	public static int getJoint() {
-		return JOINT[LogArtisanArmourer.ingotType.ordinal()];
+	public int getJoint() {
+		return JOINT[script.options.ingotType.ordinal()];
 	}
 
-	public static int getTrack80() {
-		return TRACK_80[LogArtisanArmourer.ingotType.ordinal()];
+	public int getTrack80() {
+		return TRACK_80[script.options.ingotType.ordinal()];
 	}
 
-	public static int getTie() {
-		return TIE[LogArtisanArmourer.ingotType.ordinal()];
+	public int getTie() {
+		return TIE[script.options.ingotType.ordinal()];
 	}
 
-	public static int getTrack100() {
-		return TRACK_100[LogArtisanArmourer.ingotType.ordinal()];
+	public int getTrack100() {
+		return TRACK_100[script.options.ingotType.ordinal()];
 	}
 
 	public boolean anvilReady() {
@@ -157,13 +159,13 @@ public class SmithTrack extends Branch {
 
 	public void smith(final int makeid, int quanity) {
 		//ctx.log.info("Smith: " + makeid + " " + quanity);
-		if (quanity > 0 ? ctx.skillingInterface.select(SmithTrack.getCategoryName(), makeid, quanity) : ctx.skillingInterface.select(SmithTrack.getCategoryName(), makeid)) {
+		if (quanity > 0 ? ctx.skillingInterface.select(getCategoryName(), makeid, quanity) : ctx.skillingInterface.select(getCategoryName(), makeid)) {
 			String name = ctx.skillingInterface.getSelectedName();
 			final int target = ctx.backpack.select().id(makeid).count() + ctx.skillingInterface.getQuantity();
 			if (ctx.skillingInterface.start()) {
-				LogArtisanArmourer.isSmithing = true;
+				script.options.isSmithing = true;
 				//animationTimelimit = Random.nextInt(2000, 5000);
-				LogArtisanArmourer.status = "Smithing " + name;
+				script.options.status = "Smithing " + name;
 
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -175,7 +177,7 @@ public class SmithTrack extends Branch {
 					}
 				}, 600, 100);
 				sleep(200, 1000);
-				LogArtisanArmourer.isSmithing = false;
+				script.options.isSmithing = false;
 
 				/*if (Random.nextInt(0, 5) == 0) {
 					sleep(500, 3000);
@@ -196,8 +198,8 @@ public class SmithTrack extends Branch {
 		}
 	}
 
-	public static String getCategoryName() {
-		switch (LogArtisanArmourer.ingotType) {
+	public String getCategoryName() {
+		switch (script.options.ingotType) {
 			case BRONZE:
 				return "Bronze Tracks";
 			case IRON:
@@ -217,7 +219,7 @@ public class SmithTrack extends Branch {
 			return false;
 		}
 
-		if (player == null || !LogArtisanArmourer.getAreaSmall().contains(player)) {
+		if (player == null || !script.getAreaSmall().contains(player)) {
 			return false;
 		}
 
@@ -229,7 +231,7 @@ public class SmithTrack extends Branch {
 			return true;
 		}
 
-		if (!LogArtisanArmourer.isSmithing) {
+		if (!script.options.isSmithing) {
 			//ctx.log.info("SmithTrack branch not smithing");
 			return true;
 		}

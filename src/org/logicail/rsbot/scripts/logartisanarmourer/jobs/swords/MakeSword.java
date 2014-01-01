@@ -27,13 +27,14 @@ public class MakeSword extends Task {
 	public static final int[] HEATED_INGOTS = {20566, 20567, 20568, 20569, 20570, 20571};
 	public static final int TONGS = 20565;
 	public static final int[] SWORD_PLANS = {20559, 20560, 20561, 20562, 20563, 20564};
-	public static boolean finishedSword = false;
 	private static MakeSword instance;
+	private final LogArtisanArmourer script;
 	private SmithAnvil smithAnvil;
 
-	public MakeSword(LogicailMethodContext context) {
-		super(context);
-		smithAnvil = new SmithAnvil(ctx);
+	public MakeSword(LogArtisanArmourer script) {
+		super(script.ctx);
+		this.script = script;
+		smithAnvil = new SmithAnvil(script);
 		instance = this;
 	}
 
@@ -44,8 +45,8 @@ public class MakeSword extends Task {
 
 	@Override
 	public boolean activate() {
-		return !finishedSword
-				&& LogArtisanArmourer.gotPlan
+		return !script.options.finishedSword
+				&& script.options.gotPlan
 				&& !ctx.backpack.select().id(TONGS).isEmpty();
 	}
 
@@ -57,7 +58,7 @@ public class MakeSword extends Task {
 			return;
 		}
 
-		LogArtisanArmourer.status = "Making sword";
+		script.options.status = "Making sword";
 
 		Sword hitPart = null;
 
@@ -84,7 +85,7 @@ public class MakeSword extends Task {
 
 		if (hitPart == null || getCooldown() == 0) {
 			//LogArtisanArmourer.get().getLogHandler().print("No more parts can be hit");
-			finishedSword = true;
+			script.options.finishedSword = true;
 			closeInterface();
 			return;
 		}

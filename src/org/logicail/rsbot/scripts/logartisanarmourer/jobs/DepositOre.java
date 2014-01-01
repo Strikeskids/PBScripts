@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Condition;
@@ -23,8 +22,8 @@ public class DepositOre extends ArtisanArmourerTask {
 	private static final int ID_COAL_NOTED = 454;
 	private static final int[] nextDeposit = new int[]{Random.nextInt(500, 2000), Random.nextInt(500, 4000)};
 
-	public DepositOre(LogicailMethodContext context) {
-		super(context);
+	public DepositOre(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	public int remainingIron() {
@@ -93,17 +92,17 @@ public class DepositOre extends ArtisanArmourerTask {
 
 	private void depositOre(final int oreId) {
 		for (Item item : ctx.backpack.select().id(oreId).first()) {
-			LogArtisanArmourer.isSmithing = false;
+			script.options.isSmithing = false;
 			//ArtisanArmourer.setStatus("Searching for smelter");
 
-			for (GameObject smelter : ctx.objects.select().id(LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first()) {
+			for (GameObject smelter : ctx.objects.select().id(script.options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first()) {
 				ctx.camera.turnTo(smelter);
 				if (!smelter.isOnScreen()) {
 					break;
 				}
 
 				final int count = item.getStackSize();
-				LogArtisanArmourer.status = "Depositing ore in smelter";
+				script.options.status = "Depositing ore in smelter";
 
 				if (item.interact("Use", item.getName())) {
 					if (Condition.wait(new Callable<Boolean>() {

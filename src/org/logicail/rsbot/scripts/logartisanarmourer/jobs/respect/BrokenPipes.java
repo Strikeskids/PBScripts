@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.powerbot.client.AbstractModel;
 import org.powerbot.client.ModelCapture;
@@ -20,8 +19,8 @@ import java.util.Arrays;
  * Time: 17:36
  */
 public class BrokenPipes extends RespectTask {
-	public BrokenPipes(LogicailMethodContext context) {
-		super(context);
+	public BrokenPipes(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	@Override
@@ -64,8 +63,8 @@ public class BrokenPipes extends RespectTask {
 
 		for (GameObject pipe : getPipe()) {
 			if (ctx.camera.prepare(pipe) && pipe.interact("Mend")) {
-				LogArtisanArmourer.status = "Repairing pipe";
-				LogArtisanArmourer.isSmithing = false;
+				options.status = "Repairing pipe";
+				options.isSmithing = false;
 				sleep(1000, 2000);
 
 				t.reset();

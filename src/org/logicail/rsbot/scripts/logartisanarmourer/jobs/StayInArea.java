@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Condition;
@@ -10,8 +9,8 @@ import org.powerbot.script.wrappers.Player;
 import java.util.concurrent.Callable;
 
 public class StayInArea extends ArtisanArmourerTask {
-	public StayInArea(LogicailMethodContext context) {
-		super(context);
+	public StayInArea(LogArtisanArmourer script) {
+		super(script);
 	}
 
 	@Override
@@ -23,18 +22,18 @@ public class StayInArea extends ArtisanArmourerTask {
 	public boolean activate() {
 		final Player local = ctx.players.local();
 		return local.isIdle()
-				&& !LogArtisanArmourer.getAreaSmall().contains(local);
+				&& !script.getAreaSmall().contains(local);
 	}
 
 	@Override
 	public void run() {
-		if (LogArtisanArmourer.mode == Mode.BURIAL_ARMOUR) {
+		if (options.mode == Mode.BURIAL_ARMOUR) {
 			for (GameObject tunnel : ctx.objects.select().id(4618).nearest().first()) {
 				if (ctx.camera.prepare(tunnel) && tunnel.interact("Climb")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return LogArtisanArmourer.getAreaSmall().contains(ctx.players.local());
+							return script.getAreaSmall().contains(ctx.players.local());
 						}
 					});
 				}
@@ -42,8 +41,8 @@ public class StayInArea extends ArtisanArmourerTask {
 			}
 		}
 
-		if (ctx.movement.findPath(LogArtisanArmourer.getAreaSmall().getCentralTile().randomize(3, 3)).traverse()
-				|| ctx.movement.stepTowards(LogArtisanArmourer.getAreaSmall().getCentralTile().randomize(3, 3))) {
+		if (ctx.movement.findPath(script.getAreaSmall().getCentralTile().randomize(3, 3)).traverse()
+				|| ctx.movement.stepTowards(script.getAreaSmall().getCentralTile().randomize(3, 3))) {
 			sleep(500, 1500);
 		}
 
