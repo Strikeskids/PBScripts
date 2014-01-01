@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
 import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track100;
@@ -74,7 +74,7 @@ public class SmithTrack extends Branch {
 		PARTS = convertIntegers(ids);
 	}
 
-	private final LogArtisanArmourer script;
+	private final LogArtisanWorkshop script;
 
 	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
@@ -91,7 +91,7 @@ public class SmithTrack extends Branch {
 
 	private SmithAnvil anvil;
 
-	public SmithTrack(LogArtisanArmourer script, MakeSword makeSword) {
+	public SmithTrack(LogArtisanWorkshop script, MakeSword makeSword) {
 		super(script.ctx);
 		this.script = script;
 		anvil = new SmithAnvil(script, makeSword);
@@ -174,7 +174,7 @@ public class SmithTrack extends Branch {
 						return ctx.isPaused()
 								|| ctx.isShutdown()
 								|| ctx.backpack.select().id(makeid).count() >= target
-								|| AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > 4000;
+								|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
 					}
 				}, 600, 100);
 				sleep(200, 1000);
@@ -191,7 +191,7 @@ public class SmithTrack extends Branch {
 						return !ctx.skillingInterface.isOpen() && ctx.players.local().getAnimation() != -1;
 					}
 				})) {
-					for (int id : LogArtisanArmourer.ANIMATION_SMITHING) {
+					for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {
 						AnimationMonitor.put(id);
 					}
 				}*/
@@ -237,7 +237,7 @@ public class SmithTrack extends Branch {
 			return true;
 		}
 
-		if (AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > animationTimelimit) {
+		if (AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > animationTimelimit) {
 			animationTimelimit = Random.nextInt(2000, 4000);
 			if (Random.nextBoolean()) {
 				animationTimelimit *= 2;

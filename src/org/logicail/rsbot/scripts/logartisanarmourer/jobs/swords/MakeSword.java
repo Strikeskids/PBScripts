@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.HitType;
@@ -27,7 +27,7 @@ public class MakeSword extends ArtisanArmourerTask {
 	public static final int[] SWORD_PLANS = {20559, 20560, 20561, 20562, 20563, 20564};
 	private SmithAnvil smithAnvil;
 
-	public MakeSword(LogArtisanArmourer script, SmithAnvil smithAnvil) {
+	public MakeSword(LogArtisanWorkshop script, SmithAnvil smithAnvil) {
 		super(script);
 		this.smithAnvil = smithAnvil;
 	}
@@ -78,7 +78,7 @@ public class MakeSword extends ArtisanArmourerTask {
 		}
 
 		if (hitPart == null || getCooldown() == 0) {
-			//LogArtisanArmourer.get().getLogHandler().print("No more parts can be hit");
+			//LogArtisanWorkshop.get().getLogHandler().print("No more parts can be hit");
 			options.finishedSword = true;
 			closeInterface();
 			return;

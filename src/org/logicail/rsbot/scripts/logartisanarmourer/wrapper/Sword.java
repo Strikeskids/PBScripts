@@ -108,7 +108,7 @@ public enum Sword {
 						// Have to risk some Softs
 						return HitType.CAREFUL;
 					} /*else {
-						LogArtisanArmourer.get().getLogHandler().print("Not enough cooldown, risking soft");
+						LogArtisanWorkshop.get().getLogHandler().print("Not enough cooldown, risking soft");
 					}*/
 				}
 				return HitType.SOFT; // Take chance with soft

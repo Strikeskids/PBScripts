@@ -37,12 +37,12 @@ import javax.swing.*;
 import java.awt.*;
 
 @Manifest(
-		name = "LogArtisanArmourer",
+		name = "LogArtisanWorkshop",
 		description = "Cheap smithing xp at Artisans Workshop",
 		version = 2,
 		authors = {"Logicail"}
 )
-public class LogArtisanArmourer extends LogicailScript implements MessageListener {
+public class LogArtisanWorkshop extends LogicailScript implements MessageListener {
 	public static final int[] INGOT_IDS = {20632, 20633, 20634, 20635, 20636,
 			20637, 20638, 20639, 20640, 20641, 20642, 20643, 20644, 20645,
 			20646, 20647, 20648, 20649, 20650, 20651, 20652};
@@ -63,7 +63,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	private JFrame gui;
-	public LogArtisanArmourerOptions options = new LogArtisanArmourerOptions();
+	public LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
 
 	@Override
 	public void repaint(Graphics g) {
@@ -133,7 +133,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 		}
 
 		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
-		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING));
+		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING));
 		//properties.put("SKCat", ctx.skillingInterface.getCategory());
 		//properties.put("Iron3", IngotType.IRON.getID(IngotGrade.THREE));
 		//properties.put("Iron4", IngotType.IRON.getID(IngotGrade.FOUR));
@@ -222,7 +222,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 					@Override
 					public void run() {
 						try {
-							gui = new ArtisanGUI(LogArtisanArmourer.this);
+							gui = new ArtisanGUI(LogArtisanWorkshop.this);
 						} catch (Exception exception) {
 							exception.printStackTrace();
 						}

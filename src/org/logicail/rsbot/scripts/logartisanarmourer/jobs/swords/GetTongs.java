@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
  * Time: 11:28
  */
 public class GetTongs extends ArtisanArmourerTask {
-	public GetTongs(LogArtisanArmourer script) {
+	public GetTongs(LogArtisanWorkshop script) {
 		super(script);
 	}
 

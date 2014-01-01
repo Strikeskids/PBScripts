@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 
 /**
@@ -9,7 +9,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
  * Time: 16:45
  */
 public class Track80 extends AbstractTrack {
-	public Track80(LogArtisanArmourer script, SmithTrack smithTrack) {
+	public Track80(LogArtisanWorkshop script, SmithTrack smithTrack) {
 		super(script, smithTrack);
 	}
 

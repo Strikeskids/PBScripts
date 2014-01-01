@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -9,7 +9,7 @@ import org.powerbot.script.wrappers.Player;
 import java.util.concurrent.Callable;
 
 public class StayInArea extends ArtisanArmourerTask {
-	public StayInArea(LogArtisanArmourer script) {
+	public StayInArea(LogArtisanWorkshop script) {
 		super(script);
 	}
 
@@ -46,8 +46,8 @@ public class StayInArea extends ArtisanArmourerTask {
 			sleep(500, 1500);
 		}
 
-		/*if (LogArtisanArmourer.getAreaSmall().getCentralTile().distanceTo(ctx.players.local()) > 100) {
-			LogArtisanArmourer.get().getLogHandler().print("Too far from Artisan Workshop");
+		/*if (LogArtisanWorkshop.getAreaSmall().getCentralTile().distanceTo(ctx.players.local()) > 100) {
+			LogArtisanWorkshop.get().getLogHandler().print("Too far from Artisan Workshop");
 		}*/
 	}
 }

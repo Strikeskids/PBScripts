@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -8,7 +8,7 @@ import org.powerbot.script.wrappers.GameObject;
 import java.util.concurrent.Callable;
 
 public class DepositArmour extends ArtisanArmourerTask {
-	public DepositArmour(LogArtisanArmourer script) {
+	public DepositArmour(LogArtisanWorkshop script) {
 		super(script);
 	}
 
@@ -23,7 +23,7 @@ public class DepositArmour extends ArtisanArmourerTask {
 	public boolean activate() {
 		return super.activate()
 				&& ctx.backpack.select().id(options.getIngotId()).isEmpty()
-				&& !ctx.backpack.select().id(LogArtisanArmourer.ARMOUR_ID_LIST).isEmpty();
+				&& !ctx.backpack.select().id(LogArtisanWorkshop.ARMOUR_ID_LIST).isEmpty();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class DepositArmour extends ArtisanArmourerTask {
 					if (Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.backpack.select().id(LogArtisanArmourer.ARMOUR_ID_LIST).isEmpty();
+							return ctx.backpack.select().id(LogArtisanWorkshop.ARMOUR_ID_LIST).isEmpty();
 						}
 					})) {
 						sleep(200, 600);

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 
@@ -13,7 +13,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 public abstract class AbstractTrack extends ArtisanArmourerTask {
 	protected final SmithTrack smithTrack;
 
-	public AbstractTrack(LogArtisanArmourer script, SmithTrack smithTrack) {
+	public AbstractTrack(LogArtisanWorkshop script, SmithTrack smithTrack) {
 		super(script);
 		this.smithTrack = smithTrack;
 	}

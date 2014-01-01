@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.powerbot.script.lang.BasicNamedQuery;
@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  * Time: 11:57
  */
 public class TakeIngots extends ArtisanArmourerTask {
-	public TakeIngots(LogArtisanArmourer script) {
+	public TakeIngots(LogArtisanWorkshop script) {
 		super(script);
 	}
 
@@ -30,7 +30,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 	public boolean activate() {
 		return super.activate()
 				//&& (!Inventory.isFull() && (!Inventory.contains(SmithTrackOld.RAILS) || !Inventory.contains(SmithTrackOld.BASE_PLATE)))
-				&& AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > SmithTrack.animationTimelimit
+				&& AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > SmithTrack.animationTimelimit
 				&& ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty()
 				&& !ctx.backpack.isFull()
 				//&& !Inventory.contains(getIngotId())

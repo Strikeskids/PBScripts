@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
  * Time: 13:49
  */
 public class LayTracks extends ArtisanArmourerTask {
-	public LayTracks(LogArtisanArmourer script) {
+	public LayTracks(LogArtisanWorkshop script) {
 		super(script);
 	}
 

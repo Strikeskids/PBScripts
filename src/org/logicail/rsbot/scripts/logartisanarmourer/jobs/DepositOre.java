@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
@@ -22,7 +22,7 @@ public class DepositOre extends ArtisanArmourerTask {
 	private static final int ID_COAL_NOTED = 454;
 	private static final int[] nextDeposit = new int[]{Random.nextInt(500, 2000), Random.nextInt(500, 4000)};
 
-	public DepositOre(LogArtisanArmourer script) {
+	public DepositOre(LogArtisanWorkshop script) {
 		super(script);
 	}
 
@@ -95,7 +95,7 @@ public class DepositOre extends ArtisanArmourerTask {
 			options.isSmithing = false;
 			//ArtisanArmourer.setStatus("Searching for smelter");
 
-			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first()) {
+			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanWorkshop.ID_SMELTER : LogArtisanWorkshop.ID_SMELTER_SWORDS).first()) {
 				ctx.camera.turnTo(smelter);
 				if (!smelter.isOnScreen()) {
 					break;

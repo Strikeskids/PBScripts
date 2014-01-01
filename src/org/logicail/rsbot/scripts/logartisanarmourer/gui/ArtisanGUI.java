@@ -1,8 +1,8 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.gui;
 
 import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourerOptions;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
@@ -26,7 +26,7 @@ import java.awt.event.WindowEvent;
  * Time: 12:20
  */
 public class ArtisanGUI extends JFrame {
-	private final LogArtisanArmourer script;
+	private final LogArtisanWorkshop script;
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
 	private final JCheckBox burialRespectPipes = new JCheckBox("Repair pipes");
@@ -69,8 +69,8 @@ public class ArtisanGUI extends JFrame {
 	private JCheckBox respectKill;
 	private JButton startButton;
 
-	public ArtisanGUI(LogArtisanArmourer logArtisanArmourer) {
-		this.script = logArtisanArmourer;
+	public ArtisanGUI(LogArtisanWorkshop logArtisanWorkshop) {
+		this.script = logArtisanWorkshop;
 		initComponents();
 
 		setTitle(script.getName() + " v" + script.getVersion());
@@ -192,7 +192,7 @@ public class ArtisanGUI extends JFrame {
 
 	private void startButtonActionPerformed() {
 		startPressed = true;
-		final LogArtisanArmourerOptions options = script.options;
+		final LogArtisanWorkshopOptions options = script.options;
 		options.status = "Setup finished";
 
 		//Context.get().getScriptHandler().log.info("Mode: " + tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
@@ -267,7 +267,7 @@ public class ArtisanGUI extends JFrame {
 		comboBoxMode.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				LogArtisanArmourer.mode = (Mode) comboBoxMode.getSelectedItem();
+				LogArtisanWorkshop.mode = (Mode) comboBoxMode.getSelectedItem();
 			}
 		});*/
 

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -18,7 +18,7 @@ public class HeatIngots extends ArtisanArmourerTask {
 	public static final int FURNACE = 24720;
 	private final MakeSword makeSword;
 
-	public HeatIngots(LogArtisanArmourer script, MakeSword makeSword) {
+	public HeatIngots(LogArtisanWorkshop script, MakeSword makeSword) {
 		super(script);
 		this.makeSword = makeSword;
 	}

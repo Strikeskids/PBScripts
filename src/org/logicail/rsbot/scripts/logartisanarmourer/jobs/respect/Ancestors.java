@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.lang.IdQuery;
@@ -24,7 +24,7 @@ import java.util.concurrent.Callable;
 public class Ancestors extends RespectTask {
 	private static final int[] ANCESTOR_IDS = {6657, 6658, 6659, 6660, 6661, 6662};
 
-	public Ancestors(LogArtisanArmourer script) {
+	public Ancestors(LogArtisanWorkshop script) {
 		super(script);
 	}
 

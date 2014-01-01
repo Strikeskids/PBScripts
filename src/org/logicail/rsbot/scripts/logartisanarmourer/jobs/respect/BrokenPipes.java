@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.powerbot.client.AbstractModel;
 import org.powerbot.client.ModelCapture;
 import org.powerbot.script.lang.BasicNamedQuery;
@@ -19,7 +19,7 @@ import java.util.Arrays;
  * Time: 17:36
  */
 public class BrokenPipes extends RespectTask {
-	public BrokenPipes(LogArtisanArmourer script) {
+	public BrokenPipes(LogArtisanWorkshop script) {
 		super(script);
 	}
 

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
  * Time: 16:45
  */
 public class Track40 extends AbstractTrack {
-	public Track40(LogArtisanArmourer script, SmithTrack smithTrack) {
+	public Track40(LogArtisanWorkshop script, SmithTrack smithTrack) {
 		super(script, smithTrack);
 	}
 
@@ -49,7 +49,7 @@ public class Track40 extends AbstractTrack {
 						ctx.log.info("Deposit partial tracks/parts");
 						ctx.skillingInterface.close();
 						sleep(200, 1000);
-						for (GameObject minecart : ctx.objects.select().id(LogArtisanArmourer.ID_MINE_CART).nearest().first()) {
+						for (GameObject minecart : ctx.objects.select().id(LogArtisanWorkshop.ID_MINE_CART).nearest().first()) {
 							if (ctx.camera.prepare(minecart) && minecart.interact("Deposit-components", "Mine cart")) {
 								Condition.wait(new Callable<Boolean>() {
 									@Override

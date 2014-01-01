@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
@@ -18,7 +18,7 @@ public class GetPlan extends ArtisanArmourerTask {
 	public static final int[] EGIL_ABEL = {6642, 6647};
 	private final MakeSword makeSword;
 
-	public GetPlan(LogArtisanArmourer script, MakeSword makeSword) {
+	public GetPlan(LogArtisanWorkshop script, MakeSword makeSword) {
 		super(script);
 		this.makeSword = makeSword;
 	}

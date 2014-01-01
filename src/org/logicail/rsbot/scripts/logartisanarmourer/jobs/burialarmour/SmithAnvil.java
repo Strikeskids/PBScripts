@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour;
 
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
@@ -26,13 +26,13 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		this.makeSword = makeSword;
 	}
 
-	public SmithAnvil(LogArtisanArmourer logArtisanArmourer, MakeSword makeSword) {
-		super(logArtisanArmourer);
+	public SmithAnvil(LogArtisanWorkshop logArtisanWorkshop, MakeSword makeSword) {
+		super(logArtisanWorkshop);
 		animationTimelimit = Random.nextInt(8000, 16000);
 		setMakeSword(makeSword);
 	}
 
-	public SmithAnvil(LogArtisanArmourer script) {
+	public SmithAnvil(LogArtisanWorkshop script) {
 		this(script, null);
 	}
 
@@ -149,7 +149,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			if (!ctx.backpack.select().id(options.getIngotId()).isEmpty()) {
 				if (ctx.skillingInterface.isOpen() || !options.isSmithing
 						|| !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())
-						|| AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > animationTimelimit) {
+						|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > animationTimelimit) {
 					return true;
 				}
 				//}
@@ -186,7 +186,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						public Boolean call() throws Exception {
 							return ctx.isPaused() || ctx.isShutdown()
 									|| ctx.backpack.select().id(getMakeNextId()).count() >= target
-									|| AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > 4000
+									|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000
 									|| (options.mode == Mode.BURIAL_ARMOUR && !options.currentlyMaking.equals(make));
 						}
 					}, 600, options.mode == Mode.BURIAL_ARMOUR ? 420 : 100);
@@ -200,7 +200,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						return !ctx.skillingInterface.isOpen() && ctx.players.local().getAnimation() != -1;
 					}
 				})) {
-					for (int id : LogArtisanArmourer.ANIMATION_SMITHING) {
+					for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {
 						AnimationMonitor.put(id);
 					}
 				}*/

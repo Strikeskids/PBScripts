@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 public class MakeIngots extends ArtisanArmourerTask {
 	private final SmithAnvil smithAnvil;
 
-	public MakeIngots(LogArtisanArmourer script, SmithAnvil smithAnvil) {
+	public MakeIngots(LogArtisanWorkshop script, SmithAnvil smithAnvil) {
 		super(script);
 		this.smithAnvil = smithAnvil;
 	}
@@ -41,7 +41,7 @@ public class MakeIngots extends ArtisanArmourerTask {
 					return;
 				}
 			} else {
-				//Context.get().getScriptHandler().log.info("Ingot: " + LogArtisanArmourer.getIngotID());
+				//Context.get().getScriptHandler().log.info("Ingot: " + LogArtisanWorkshop.getIngotID());
 				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), options.getIngotId())) {
 					return;
 				}
@@ -73,7 +73,7 @@ public class MakeIngots extends ArtisanArmourerTask {
 			}
 
 			//ArtisanArmourer.setStatus("Search for smelter");
-			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).nearest().first()) {
+			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanWorkshop.ID_SMELTER : LogArtisanWorkshop.ID_SMELTER_SWORDS).nearest().first()) {
 				if (ctx.camera.prepare(smelter)) {
 					options.status = "Clicking on smelter";
 					if (smelter.interact("Withdraw-ingots", "Smelter")) {

@@ -1,8 +1,8 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
 import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourerOptions;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,10 +11,10 @@ import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourerOptions;
  * Time: 10:32
  */
 public abstract class ArtisanArmourerTask extends Task {
-	protected final LogArtisanArmourer script;
-	protected final LogArtisanArmourerOptions options;
+	protected final LogArtisanWorkshop script;
+	protected final LogArtisanWorkshopOptions options;
 
-	public ArtisanArmourerTask(LogArtisanArmourer script) {
+	public ArtisanArmourerTask(LogArtisanWorkshop script) {
 		super(script.ctx);
 		this.script = script;
 		this.options = script.options;

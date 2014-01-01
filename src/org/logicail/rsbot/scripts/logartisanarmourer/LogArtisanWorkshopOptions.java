@@ -11,7 +11,7 @@ import org.powerbot.script.wrappers.Area;
  * Date: 01/01/14
  * Time: 17:01
  */
-public class LogArtisanArmourerOptions {
+public class LogArtisanWorkshopOptions {
 	/* Statistics */
 	public boolean isSmithing;
 	public int swordsSmithed;
@@ -42,13 +42,13 @@ public class LogArtisanArmourerOptions {
 	public Area getAreaSmall() {
 		switch (mode) {
 			case BURIAL_ARMOUR:
-				return LogArtisanArmourer.AREAS_ARTISAN_WORKSHOP_BURIAL;
+				return LogArtisanWorkshop.AREAS_ARTISAN_WORKSHOP_BURIAL;
 			case CEREMONIAL_SWORDS:
-				return LogArtisanArmourer.AREAS_ARTISAN_WORKSHOP_SWORDS;
+				return LogArtisanWorkshop.AREAS_ARTISAN_WORKSHOP_SWORDS;
 			case REPAIR_TRACK:
-				return LogArtisanArmourer.AREAS_ARTISAN_WORKSHOP_TRACKS;
+				return LogArtisanWorkshop.AREAS_ARTISAN_WORKSHOP_TRACKS;
 			default:
-				return LogArtisanArmourer.AREAS_ARTISAN_WORKSHOP_BURIAL;
+				return LogArtisanWorkshop.AREAS_ARTISAN_WORKSHOP_BURIAL;
 		}
 	}
 }
