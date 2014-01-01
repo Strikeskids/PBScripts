@@ -54,7 +54,7 @@ public class Track40 extends Task {
 					if (!ctx.backpack.select().id(SmithTrack.PARTS).isEmpty()) {
 						ctx.log.info("Deposit partial tracks/parts");
 						ctx.skillingInterface.close();
-						sleep(200,1000);
+						sleep(200, 1000);
 						for (GameObject minecart : ctx.objects.select().id(LogArtisanArmourer.ID_MINE_CART).nearest().first()) {
 							if (ctx.camera.prepare(minecart) && minecart.interact("Deposit-components", "Mine cart")) {
 								Condition.wait(new Callable<Boolean>() {

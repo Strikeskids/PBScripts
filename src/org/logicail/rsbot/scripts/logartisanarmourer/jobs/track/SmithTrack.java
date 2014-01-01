@@ -14,7 +14,8 @@ import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -35,6 +36,7 @@ public class SmithTrack extends Branch {
 	private static final int[] PARTIAL_TRACK = {20511, 20525, 20529, 20512, 20526, 20530, 20513, 20527, 20531};
 	public static int animationTimelimit = Random.nextInt(2000, 4000);
 	public static final int[] PARTS;
+
 	static {
 		List<Integer> ids = new ArrayList<Integer>();
 
@@ -71,11 +73,10 @@ public class SmithTrack extends Branch {
 
 		PARTS = convertIntegers(ids);
 	}
-	public static int[] convertIntegers(List<Integer> integers)
-	{
+
+	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
-		for (int i=0; i < ret.length; i++)
-		{
+		for (int i = 0; i < ret.length; i++) {
 			ret[i] = integers.get(i);
 		}
 		return ret;
@@ -173,7 +174,7 @@ public class SmithTrack extends Branch {
 								|| AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > 4000;
 					}
 				}, 600, 100);
-				sleep(200,1000);
+				sleep(200, 1000);
 				LogArtisanArmourer.isSmithing = false;
 
 				/*if (Random.nextInt(0, 5) == 0) {
@@ -203,8 +204,9 @@ public class SmithTrack extends Branch {
 				return "Iron Tracks";
 			case STEEL:
 				return "Steel Tracks";
+			default:
+				return "Bronze Tracks";
 		}
-		return "Steel Tracks";
 	}
 
 	@Override
@@ -227,7 +229,7 @@ public class SmithTrack extends Branch {
 			return true;
 		}
 
-		if(!LogArtisanArmourer.isSmithing) {
+		if (!LogArtisanArmourer.isSmithing) {
 			//ctx.log.info("SmithTrack branch not smithing");
 			return true;
 		}

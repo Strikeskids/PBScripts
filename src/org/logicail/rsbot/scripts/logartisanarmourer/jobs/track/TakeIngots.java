@@ -115,8 +115,8 @@ public class TakeIngots extends ArtisanArmourerTask {
 				return 20503;
 			case STEEL:
 				return 20504;
+			default:
+				return 20502;
 		}
-
-		return 20502;
 	}
 }

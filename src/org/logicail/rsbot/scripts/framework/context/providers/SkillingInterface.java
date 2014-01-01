@@ -89,7 +89,7 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		setCategory(category);
 
 		if (Random.nextBoolean() && Random.nextBoolean()) {
-			if(select(new Filter<Item>() {
+			if (select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
 					return item.isOnScreen();

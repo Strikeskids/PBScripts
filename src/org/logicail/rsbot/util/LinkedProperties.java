@@ -13,6 +13,7 @@ import java.util.Properties;
  */
 public class LinkedProperties extends Properties {
 	private final LinkedHashSet<Object> keys = new LinkedHashSet<Object>();
+	private static final long serialVersionUID = 4112578634029874841L;
 
 	@Override
 	public Enumeration<Object> keys() {

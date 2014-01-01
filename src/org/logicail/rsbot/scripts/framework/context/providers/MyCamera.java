@@ -44,6 +44,7 @@ public class MyCamera extends Camera {
 	 * Prepare object for interaction
 	 * +TurnTo
 	 * +WalkTowards
+	 *
 	 * @param locatable
 	 * @return if object is on screen
 	 */

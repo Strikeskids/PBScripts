@@ -50,6 +50,8 @@ public class SmithAnvil extends ArtisanArmourerTask {
 					return "Warrior's Burial Armour";
 				case THREE:
 					return "Smith's Burial Armour";
+				default:
+					return "Miner's Burial Armour";
 			}
 		}
 		return "Ingots, Tier IV";
@@ -154,7 +156,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 					LogArtisanArmourer.isSmithing = true;
 					animationTimelimit = Random.nextInt(8000, 16000);
 					LogArtisanArmourer.currentlyMaking = make;
-					if(!make.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())) {
+					if (!make.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())) {
 						LogArtisanArmourer.isSmithing = false;
 						return;
 					}

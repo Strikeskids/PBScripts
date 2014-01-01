@@ -49,6 +49,7 @@ public abstract class LogicailScript extends PollingScript implements PaintListe
 
 	/**
 	 * Submit task to executor (runs separate to script poll)
+	 *
 	 * @param task
 	 */
 	public void submit(Task task) {
@@ -57,6 +58,7 @@ public abstract class LogicailScript extends PollingScript implements PaintListe
 
 	/**
 	 * Ordered properties to show on paint box
+	 *
 	 * @return
 	 */
 	public abstract LinkedProperties getPaintInfo();
