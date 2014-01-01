@@ -20,7 +20,6 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.LayTracks;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.TakeIngots;
-import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.client.AbstractModel;
@@ -59,7 +58,6 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 	public static final Area AREAS_ARTISAN_WORKSHOP_SWORDS = new Area(new Tile(3034, 3346, 0), new Tile(3049, 3332, 0));
 	public static final Area AREAS_ARTISAN_WORKSHOP_TRACKS = new Area(new Tile(3054, 9719, 0), new Tile(3080, 9704, 0));
 	public static final Area AREAS_ARTISAN_WORKSHOP_LARGE = new Area(new Tile(3040, 3344, 0), new Tile(3061, 3333, 0));
-
 	public static final int ID_MINE_CART = 24824;
 	public static final int ID_SMELTER = 29395;
 	public static final int ID_SMELTER_SWORDS = 29394;
@@ -144,28 +142,6 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 		return properties;
 	}
 
-	public Area getAreaSmall() {
-		switch (options.mode) {
-			case BURIAL_ARMOUR:
-				return AREAS_ARTISAN_WORKSHOP_BURIAL;
-			case CEREMONIAL_SWORDS:
-				return AREAS_ARTISAN_WORKSHOP_SWORDS;
-			case REPAIR_TRACK:
-				return AREAS_ARTISAN_WORKSHOP_TRACKS;
-		}
-
-		return AREAS_ARTISAN_WORKSHOP_BURIAL;
-	}
-
-	/**
-	 * Burial armour/Swords id
-	 *
-	 * @return
-	 */
-	public int getIngotID() {
-		return 20632 + (options.ingotGrade.ordinal() * 5) + options.ingotType.ordinal() - 1 + ((options.ingotGrade.ordinal() >= IngotGrade.FOUR.ordinal()) ? 1 : 0);
-	}
-
 	public void createTree() {
 		// Check have required level
 		try {
@@ -222,9 +198,8 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 				tree.add(makeSword);
 				break;
 			case REPAIR_TRACK:
-				TakeIngots takeIngots = new TakeIngots(this);
-				tree.add(takeIngots);
-				tree.add(new SmithTrack(this, takeIngots, makeSword));
+				tree.add(new TakeIngots(this));
+				tree.add(new SmithTrack(this, makeSword));
 				tree.add(new LayTracks(this));
 				break;
 		}

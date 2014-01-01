@@ -12,11 +12,9 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
  */
 public abstract class AbstractTrack extends ArtisanArmourerTask {
 	protected final SmithTrack smithTrack;
-	protected final int ingotId;
 
-	public AbstractTrack(LogArtisanArmourer script, SmithTrack smithTrack, int ingotId) {
+	public AbstractTrack(LogArtisanArmourer script, SmithTrack smithTrack) {
 		super(script);
 		this.smithTrack = smithTrack;
-		this.ingotId = ingotId;
 	}
 }

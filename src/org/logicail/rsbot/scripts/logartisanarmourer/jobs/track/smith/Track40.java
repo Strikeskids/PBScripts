@@ -13,8 +13,8 @@ import java.util.concurrent.Callable;
  * Time: 16:45
  */
 public class Track40 extends AbstractTrack {
-	public Track40(LogArtisanArmourer script, SmithTrack smithTrack, int ingotId) {
-		super(script, smithTrack, ingotId);
+	public Track40(LogArtisanArmourer script, SmithTrack smithTrack) {
+		super(script, smithTrack);
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class Track40 extends AbstractTrack {
 
 	@Override
 	public boolean activate() {
-		return !ctx.backpack.select().id(ingotId).isEmpty() || !ctx.backpack.select().id(smithTrack.getBasePlate()).isEmpty();
+		return !ctx.backpack.select().id(options.getIngotId()).isEmpty() || !ctx.backpack.select().id(smithTrack.getBasePlate()).isEmpty();
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class Track40 extends AbstractTrack {
 		int rails = ctx.backpack.select().id(smithTrack.getRails()).count();
 
 		int baseplate = ctx.backpack.select().id(smithTrack.getBasePlate()).count();
-		int ingots = ctx.backpack.select().id(ingotId).count();
+		int ingots = ctx.backpack.select().id(options.getIngotId()).count();
 
 		//ctx.log.info(rails + " " + baseplate + " " + ingots);
 

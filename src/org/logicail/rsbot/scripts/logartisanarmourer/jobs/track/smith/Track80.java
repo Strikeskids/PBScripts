@@ -9,8 +9,8 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
  * Time: 16:45
  */
 public class Track80 extends AbstractTrack {
-	public Track80(LogArtisanArmourer script, SmithTrack smithTrack, int ingotId) {
-		super(script, smithTrack, ingotId);
+	public Track80(LogArtisanArmourer script, SmithTrack smithTrack) {
+		super(script, smithTrack);
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class Track80 extends AbstractTrack {
 
 	@Override
 	public boolean activate() {
-		return !ctx.backpack.select().id(smithTrack.getTrack60()).isEmpty() && !ctx.backpack.select().id(ingotId, smithTrack.getJoint()).isEmpty();
+		return !ctx.backpack.select().id(smithTrack.getTrack60()).isEmpty() && !ctx.backpack.select().id(options.getIngotId(), smithTrack.getJoint()).isEmpty();
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class Track80 extends AbstractTrack {
 
 		int tracks = ctx.backpack.select().id(smithTrack.getTrack60()).count();
 		int joints = ctx.backpack.select().id(smithTrack.getJoint()).count();
-		int ingots = ctx.backpack.select().id(ingotId).count();
+		int ingots = ctx.backpack.select().id(options.getIngotId()).count();
 
 		if (tracks > joints && ingots > 0) {
 			smithTrack.smith(smithTrack.getJoint(), tracks - joints);

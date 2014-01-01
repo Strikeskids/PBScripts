@@ -146,7 +146,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			return false;
 		}
 		if (super.activate() && ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).isValid()) {
-			if (!ctx.backpack.select().id(script.getIngotID()).isEmpty()) {
+			if (!ctx.backpack.select().id(options.getIngotId()).isEmpty()) {
 				if (ctx.skillingInterface.isOpen() || !options.isSmithing
 						|| !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())
 						|| AnimationMonitor.timeSinceAnimation(LogArtisanArmourer.ANIMATION_SMITHING) > animationTimelimit) {

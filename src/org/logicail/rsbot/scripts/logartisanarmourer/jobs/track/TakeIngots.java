@@ -65,12 +65,12 @@ public class TakeIngots extends ArtisanArmourerTask {
 
 		if (ctx.skillingInterface.isOpen()) {
 			if (ctx.skillingInterface.getAction().equals("Take")) {
-				if (ctx.skillingInterface.select("Ingots, Tier I", getIngotId())) {
+				if (ctx.skillingInterface.select("Ingots, Tier I", options.getIngotId())) {
 					if (ctx.skillingInterface.start()) {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return !ctx.backpack.select().id(getIngotId()).isEmpty();
+								return !ctx.backpack.select().id(options.getIngotId()).isEmpty();
 							}
 						});
 					}
@@ -103,19 +103,6 @@ public class TakeIngots extends ArtisanArmourerTask {
 			} else if (ctx.movement.stepTowards(trough)) {
 				sleep(750, 1600);
 			}
-		}
-	}
-
-	public int getIngotId() {
-		switch (options.ingotType) {
-			case BRONZE:
-				return 20502;
-			case IRON:
-				return 20503;
-			case STEEL:
-				return 20504;
-			default:
-				return 20502;
 		}
 	}
 }

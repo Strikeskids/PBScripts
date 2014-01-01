@@ -22,7 +22,7 @@ public class StayInArea extends ArtisanArmourerTask {
 	public boolean activate() {
 		final Player local = ctx.players.local();
 		return local.isIdle()
-				&& !script.getAreaSmall().contains(local);
+				&& !options.getAreaSmall().contains(local);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class StayInArea extends ArtisanArmourerTask {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return script.getAreaSmall().contains(ctx.players.local());
+							return options.getAreaSmall().contains(ctx.players.local());
 						}
 					});
 				}
@@ -41,8 +41,8 @@ public class StayInArea extends ArtisanArmourerTask {
 			}
 		}
 
-		if (ctx.movement.findPath(script.getAreaSmall().getCentralTile().randomize(3, 3)).traverse()
-				|| ctx.movement.stepTowards(script.getAreaSmall().getCentralTile().randomize(3, 3))) {
+		if (ctx.movement.findPath(options.getAreaSmall().getCentralTile().randomize(3, 3)).traverse()
+				|| ctx.movement.stepTowards(options.getAreaSmall().getCentralTile().randomize(3, 3))) {
 			sleep(500, 1500);
 		}
 

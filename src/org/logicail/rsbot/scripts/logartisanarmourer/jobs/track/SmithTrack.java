@@ -91,15 +91,15 @@ public class SmithTrack extends Branch {
 
 	private SmithAnvil anvil;
 
-	public SmithTrack(LogArtisanArmourer script, TakeIngots takeIngots, MakeSword makeSword) {
+	public SmithTrack(LogArtisanArmourer script, MakeSword makeSword) {
 		super(script.ctx);
 		this.script = script;
 		anvil = new SmithAnvil(script, makeSword);
 
-		tasks.add(new Track100(script, this, takeIngots.getIngotId()));
-		tasks.add(new Track80(script, this, takeIngots.getIngotId()));
-		tasks.add(new Track60(script, this, takeIngots.getIngotId()));
-		tasks.add(new Track40(script, this, takeIngots.getIngotId()));
+		tasks.add(new Track100(script, this));
+		tasks.add(new Track80(script, this));
+		tasks.add(new Track60(script, this));
+		tasks.add(new Track40(script, this));
 	}
 
 	public int getRails() {
@@ -220,7 +220,7 @@ public class SmithTrack extends Branch {
 			return false;
 		}
 
-		if (player == null || !script.getAreaSmall().contains(player)) {
+		if (player == null || !script.options.getAreaSmall().contains(player)) {
 			return false;
 		}
 

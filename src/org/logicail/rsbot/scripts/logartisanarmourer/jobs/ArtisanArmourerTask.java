@@ -22,6 +22,6 @@ public abstract class ArtisanArmourerTask extends Task {
 
 	@Override
 	public boolean activate() {
-		return script.getAreaSmall().contains(ctx.players.local());
+		return options.getAreaSmall().contains(ctx.players.local());
 	}
 }

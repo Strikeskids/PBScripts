@@ -66,7 +66,7 @@ public class Ancestors extends RespectTask {
 			public boolean accept(Npc npc) {
 				if (Arrays.binarySearch(ANCESTOR_IDS, npc.getId()) >= 0) {
 					final Actor interacting = npc.getInteracting();
-					return (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) && ctx.movement.getDistance(script.getAreaSmall().getCentralTile(), npc) < 50;
+					return (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) && ctx.movement.getDistance(options.getAreaSmall().getCentralTile(), npc) < 50;
 				}
 				return false;
 			}

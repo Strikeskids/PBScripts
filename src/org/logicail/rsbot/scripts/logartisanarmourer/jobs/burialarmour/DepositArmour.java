@@ -22,7 +22,7 @@ public class DepositArmour extends ArtisanArmourerTask {
 	@Override
 	public boolean activate() {
 		return super.activate()
-				&& ctx.backpack.select().id(script.getIngotID()).isEmpty()
+				&& ctx.backpack.select().id(options.getIngotId()).isEmpty()
 				&& !ctx.backpack.select().id(LogArtisanArmourer.ARMOUR_ID_LIST).isEmpty();
 	}
 

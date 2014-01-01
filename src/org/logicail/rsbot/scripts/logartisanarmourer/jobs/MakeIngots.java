@@ -28,7 +28,7 @@ public class MakeIngots extends ArtisanArmourerTask {
 		return super.activate()
 				&& !ctx.widgets.get(13).isValid() // Bank pin
 				&& (ctx.skillingInterface.getAction().equals("Smelt") && !ctx.skillingInterface.select().id(MakeSword.HEATED_INGOTS[0]).isEmpty())
-				|| (!ctx.backpack.isFull() && (ctx.backpack.select().id(script.getIngotID()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));
+				|| (!ctx.backpack.isFull() && (ctx.backpack.select().id(options.getIngotId()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));
 	}
 
 	@Override
@@ -37,12 +37,12 @@ public class MakeIngots extends ArtisanArmourerTask {
 
 		if (ctx.skillingInterface.getAction().equals("Smelt")) {
 			if (options.mode == Mode.CEREMONIAL_SWORDS) {
-				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), script.getIngotID(), !ctx.backpack.select().id(MakeSword.TONGS).isEmpty() ? -1 : 26 - ctx.backpack.select().count())) {
+				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), options.getIngotId(), !ctx.backpack.select().id(MakeSword.TONGS).isEmpty() ? -1 : 26 - ctx.backpack.select().count())) {
 					return;
 				}
 			} else {
 				//Context.get().getScriptHandler().log.info("Ingot: " + LogArtisanArmourer.getIngotID());
-				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), script.getIngotID())) {
+				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), options.getIngotId())) {
 					return;
 				}
 			}
