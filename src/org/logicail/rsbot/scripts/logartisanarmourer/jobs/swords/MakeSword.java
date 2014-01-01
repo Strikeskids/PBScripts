@@ -2,17 +2,15 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.HitType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Sword;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -21,21 +19,17 @@ import java.util.concurrent.Callable;
  * Date: 13/12/12
  * Time: 23:32
  */
-public class MakeSword extends Task {
+public class MakeSword extends ArtisanArmourerTask {
 	public static final int WIDGET_SWORD_INTERFACE = 1074;
 	public static final int WIDGET_SWORD_COOLDOWN = 16;
 	public static final int[] HEATED_INGOTS = {20566, 20567, 20568, 20569, 20570, 20571};
 	public static final int TONGS = 20565;
 	public static final int[] SWORD_PLANS = {20559, 20560, 20561, 20562, 20563, 20564};
-	private static MakeSword instance;
-	private final LogArtisanArmourer script;
 	private SmithAnvil smithAnvil;
 
-	public MakeSword(LogArtisanArmourer script) {
-		super(script.ctx);
-		this.script = script;
-		smithAnvil = new SmithAnvil(script);
-		instance = this;
+	public MakeSword(LogArtisanArmourer script, SmithAnvil smithAnvil) {
+		super(script);
+		this.smithAnvil = smithAnvil;
 	}
 
 	@Override
@@ -45,8 +39,8 @@ public class MakeSword extends Task {
 
 	@Override
 	public boolean activate() {
-		return !script.options.finishedSword
-				&& script.options.gotPlan
+		return !options.finishedSword
+				&& options.gotPlan
 				&& !ctx.backpack.select().id(TONGS).isEmpty();
 	}
 
@@ -58,7 +52,7 @@ public class MakeSword extends Task {
 			return;
 		}
 
-		script.options.status = "Making sword";
+		options.status = "Making sword";
 
 		Sword hitPart = null;
 
@@ -85,14 +79,14 @@ public class MakeSword extends Task {
 
 		if (hitPart == null || getCooldown() == 0) {
 			//LogArtisanArmourer.get().getLogHandler().print("No more parts can be hit");
-			script.options.finishedSword = true;
+			options.finishedSword = true;
 			closeInterface();
 			return;
 		}
 
-		if (HitType.setHitType(ctx, hitPart.getRequiredHitType(ctx))) {
+		if (HitType.setHitType(ctx, hitPart.getRequiredHitType(ctx, this))) {
 			//LogHandler.print("Hit " + hitPart + " with " + hitPart.getRequiredHitType());
-			if (hitPart.clickButton(ctx)) {
+			if (hitPart.clickButton(ctx, this)) {
 				sleep(250, 700);
 			}
 		}
@@ -126,12 +120,12 @@ public class MakeSword extends Task {
 		if (list.size() > 0) {
 			Collections.sort(list, new SwordComparator(ctx));
 
-			HitType hitType = list.get(0).getRequiredHitType(ctx);
+			HitType hitType = list.get(0).getRequiredHitType(ctx, this);
 
-			final ArrayList<Sword> newList = new ArrayList<Sword>();
+			final List<Sword> newList = new LinkedList<Sword>();
 
 			for (final Sword sword : list) {
-				if (sword.getRequiredHitType(ctx) == hitType) {
+				if (sword.getRequiredHitType(ctx, this) == hitType) {
 					newList.add(sword);
 				}
 			}
@@ -158,10 +152,6 @@ public class MakeSword extends Task {
 		}
 
 		return isOpen();
-	}
-
-	public static MakeSword get() {
-		return instance;
 	}
 
 	static class SwordComparator extends LogicailMethodProvider implements Comparator<Sword> {

@@ -16,9 +16,11 @@ import java.util.concurrent.Callable;
  */
 public class GetPlan extends ArtisanArmourerTask {
 	public static final int[] EGIL_ABEL = {6642, 6647};
+	private final MakeSword makeSword;
 
-	public GetPlan(LogArtisanArmourer script) {
+	public GetPlan(LogArtisanArmourer script, MakeSword makeSword) {
 		super(script);
+		this.makeSword = makeSword;
 	}
 
 	@Override
@@ -42,8 +44,8 @@ public class GetPlan extends ArtisanArmourerTask {
 
 		options.status = "Talk to Egil/Abel";
 
-		if (MakeSword.get().isOpen()) {
-			MakeSword.get().closeInterface();
+		if (makeSword.isOpen()) {
+			makeSword.closeInterface();
 			return;
 		}
 

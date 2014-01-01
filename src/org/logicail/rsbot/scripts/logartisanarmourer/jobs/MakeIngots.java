@@ -33,10 +33,10 @@ public class MakeIngots extends ArtisanArmourerTask {
 
 	@Override
 	public void run() {
-		script.options.isSmithing = false;
+		options.isSmithing = false;
 
 		if (ctx.skillingInterface.getAction().equals("Smelt")) {
-			if (script.options.mode == Mode.CEREMONIAL_SWORDS) {
+			if (options.mode == Mode.CEREMONIAL_SWORDS) {
 				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), script.getIngotID(), !ctx.backpack.select().id(MakeSword.TONGS).isEmpty() ? -1 : 26 - ctx.backpack.select().count())) {
 					return;
 				}
@@ -47,17 +47,17 @@ public class MakeIngots extends ArtisanArmourerTask {
 				}
 			}
 
-			script.options.status = "Making ingots";
+			options.status = "Making ingots";
 
 			if (!ctx.skillingInterface.canStart()) {
-				script.options.status = "Can't start";
-				++script.options.failedConsecutiveWithdrawals;
-				if (script.options.failedConsecutiveWithdrawals >= 3) {
+				options.status = "Can't start";
+				++options.failedConsecutiveWithdrawals;
+				if (options.failedConsecutiveWithdrawals >= 3) {
 					ctx.skillingInterface.close();
 					ctx.stop("Ran out of ore... stopping!");
 				}
 			} else {
-				script.options.failedConsecutiveWithdrawals = 0;
+				options.failedConsecutiveWithdrawals = 0;
 				if (ctx.skillingInterface.start()) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
@@ -73,9 +73,9 @@ public class MakeIngots extends ArtisanArmourerTask {
 			}
 
 			//ArtisanArmourer.setStatus("Search for smelter");
-			for (GameObject smelter : ctx.objects.select().id(script.options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).nearest().first()) {
+			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).nearest().first()) {
 				if (ctx.camera.prepare(smelter)) {
-					script.options.status = "Clicking on smelter";
+					options.status = "Clicking on smelter";
 					if (smelter.interact("Withdraw-ingots", "Smelter")) {
 						if (Condition.wait(new Callable<Boolean>() {
 							@Override

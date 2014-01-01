@@ -43,19 +43,19 @@ public enum Sword {
 	}
 
 	int getTarget(LogicailMethodContext ctx) {
-		if (!MakeSword.get().isOpen()) {
+		try {
+			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
+		} catch (Exception e) {
 			return -1;
 		}
-
-		return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
 	}
 
 	int getCurrent(LogicailMethodContext ctx) {
-		if (!MakeSword.get().isOpen()) {
+		try {
+			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
+		} catch (Exception e) {
 			return -1;
 		}
-
-		return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
 	}
 
 	boolean validate(LogicailMethodContext ctx) {
@@ -94,7 +94,7 @@ public enum Sword {
 		return hits;
 	}
 
-	public HitType getRequiredHitType(LogicailMethodContext ctx) {
+	public HitType getRequiredHitType(LogicailMethodContext ctx, MakeSword makeSword) {
 		final int hitsNeeded = getHitsNeeded(ctx);
 		if (hitsNeeded <= 0) {
 			return null;
@@ -102,9 +102,9 @@ public enum Sword {
 
 		switch (hitsNeeded) {
 			case 1:
-				if (ctx.skills.getRealLevel(Skills.SMITHING) < 95 && MakeSword.get().getCooldown() >= 2) {
+				if (ctx.skills.getRealLevel(Skills.SMITHING) < 95 && makeSword.getCooldown() >= 2) {
 					final int hitsRemaining = getSwordPartsRemaining(ctx);
-					if (hitsRemaining * 2 <= MakeSword.get().getCooldown()) {
+					if (hitsRemaining * 2 <= makeSword.getCooldown()) {
 						// Have to risk some Softs
 						return HitType.CAREFUL;
 					} /*else {
@@ -124,8 +124,8 @@ public enum Sword {
 		}
 	}
 
-	public boolean clickButton(final LogicailMethodContext ctx) {
-		final int cooldown = MakeSword.get().getCooldown();
+	public boolean clickButton(final LogicailMethodContext ctx, final MakeSword makeSword) {
+		final int cooldown = makeSword.getCooldown();
 		final int current = getCurrent(ctx);
 		if (getTarget(ctx) > getCurrent(ctx)) {
 			final Component button = ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, buttonWidgetId);
@@ -134,7 +134,7 @@ public enum Sword {
 					@Override
 					public Boolean call() throws Exception {
 						return ctx.players.local().getAnimation() == -1 &&
-								(MakeSword.get().getCooldown() != cooldown
+								(makeSword.getCooldown() != cooldown
 										|| current != getCurrent(ctx));
 					}
 				});

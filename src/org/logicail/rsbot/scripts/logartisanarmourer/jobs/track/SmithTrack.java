@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanArmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track100;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track40;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track60;
@@ -90,10 +91,10 @@ public class SmithTrack extends Branch {
 
 	private SmithAnvil anvil;
 
-	public SmithTrack(LogArtisanArmourer script, TakeIngots takeIngots) {
+	public SmithTrack(LogArtisanArmourer script, TakeIngots takeIngots, MakeSword makeSword) {
 		super(script.ctx);
 		this.script = script;
-		anvil = new SmithAnvil(script);
+		anvil = new SmithAnvil(script, makeSword);
 
 		tasks.add(new Track100(script, this, takeIngots.getIngotId()));
 		tasks.add(new Track80(script, this, takeIngots.getIngotId()));

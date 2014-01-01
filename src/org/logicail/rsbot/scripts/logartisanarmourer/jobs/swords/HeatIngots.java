@@ -16,9 +16,11 @@ import java.util.concurrent.Callable;
 public class HeatIngots extends ArtisanArmourerTask {
 	public static final int[] INGOT_IDS_IV = {20647, 20648, 20649, 20650, 20651, 20652};
 	public static final int FURNACE = 24720;
+	private final MakeSword makeSword;
 
-	public HeatIngots(LogArtisanArmourer script) {
+	public HeatIngots(LogArtisanArmourer script, MakeSword makeSword) {
 		super(script);
+		this.makeSword = makeSword;
 	}
 
 	@Override
@@ -30,7 +32,7 @@ public class HeatIngots extends ArtisanArmourerTask {
 	public boolean activate() {
 		return super.activate()
 				&& !ctx.backpack.select().id(INGOT_IDS_IV).isEmpty()
-				&& !MakeSword.get().isOpen()
+				&& !makeSword.isOpen()
 				&& !ctx.backpack.select().id(MakeSword.TONGS).isEmpty();
 	}
 

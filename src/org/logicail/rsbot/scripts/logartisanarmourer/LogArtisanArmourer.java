@@ -159,6 +159,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 
 	/**
 	 * Burial armour/Swords id
+	 *
 	 * @return
 	 */
 	public int getIngotID() {
@@ -197,6 +198,8 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 		}
 
 		final SmithAnvil smithAnvil = new SmithAnvil(this);
+		final MakeSword makeSword = new MakeSword(this, smithAnvil);
+		smithAnvil.setMakeSword(makeSword);
 		switch (options.mode) {
 			case BURIAL_ARMOUR:
 				if (options.respectAncestors) {
@@ -214,14 +217,14 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 				tree.add(new DepositOre(this));
 				tree.add(new MakeIngots(this, smithAnvil));
 				tree.add(new GetTongs(this));
-				tree.add(new GetPlan(this));
-				tree.add(new HeatIngots(this));
-				tree.add(new MakeSword(this));
+				tree.add(new GetPlan(this, makeSword));
+				tree.add(new HeatIngots(this, makeSword));
+				tree.add(makeSword);
 				break;
 			case REPAIR_TRACK:
 				TakeIngots takeIngots = new TakeIngots(this);
 				tree.add(takeIngots);
-				tree.add(new SmithTrack(this, takeIngots));
+				tree.add(new SmithTrack(this, takeIngots, makeSword));
 				tree.add(new LayTracks(this));
 				break;
 		}
@@ -232,7 +235,7 @@ public class LogArtisanArmourer extends LogicailScript implements MessageListene
 		super.start();
 
 		// Change this static api crap
-		new MakeSword(this);
+		//new MakeSword(this);
 
 		submit(new AnimationMonitor(ctx));
 		submit(new AntiBan(ctx));

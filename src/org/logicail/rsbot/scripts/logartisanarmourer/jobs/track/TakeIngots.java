@@ -42,7 +42,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 	private static final int STEEL_TROUGH = 24823;
 
 	private BasicNamedQuery<GameObject> getTrough() {
-		switch (script.options.ingotType) {
+		switch (options.ingotType) {
 			case BRONZE:
 				return ctx.objects.select().id(BRONZE_TROUGH).nearest().first();
 			case IRON:
@@ -56,7 +56,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 	public void run() {
 		//Logger.getLogger(LogArtisanArmourer.class.getName()).info("Should make:" + SmithTrackOld.getMaking());
 
-		script.options.status = "Take ingots";
+		options.status = "Take ingots";
 
 		if (ctx.skillingInterface.isProductionInterfaceOpen()) {
 			ctx.skillingInterface.cancelProduction();
@@ -107,7 +107,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 	}
 
 	public int getIngotId() {
-		switch (script.options.ingotType) {
+		switch (options.ingotType) {
 			case BRONZE:
 				return 20502;
 			case IRON:

@@ -17,7 +17,7 @@ public abstract class ArtisanArmourerTask extends Task {
 	public ArtisanArmourerTask(LogArtisanArmourer script) {
 		super(script.ctx);
 		this.script = script;
-		options = script.options;
+		this.options = script.options;
 	}
 
 	@Override

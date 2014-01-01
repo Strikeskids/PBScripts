@@ -92,17 +92,17 @@ public class DepositOre extends ArtisanArmourerTask {
 
 	private void depositOre(final int oreId) {
 		for (Item item : ctx.backpack.select().id(oreId).first()) {
-			script.options.isSmithing = false;
+			options.isSmithing = false;
 			//ArtisanArmourer.setStatus("Searching for smelter");
 
-			for (GameObject smelter : ctx.objects.select().id(script.options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first()) {
+			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanArmourer.ID_SMELTER : LogArtisanArmourer.ID_SMELTER_SWORDS).first()) {
 				ctx.camera.turnTo(smelter);
 				if (!smelter.isOnScreen()) {
 					break;
 				}
 
 				final int count = item.getStackSize();
-				script.options.status = "Depositing ore in smelter";
+				options.status = "Depositing ore in smelter";
 
 				if (item.interact("Use", item.getName())) {
 					if (Condition.wait(new Callable<Boolean>() {
