@@ -50,20 +50,18 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		return 20572 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
 	}
 
-	public String getCategoryName() {
+	public int getCategoryIndex() {
 		if (options.mode == Mode.BURIAL_ARMOUR) {
 			switch (options.ingotGrade) {
 				case ONE:
-					return "Miner's Burial Armour";
+					return 0;
 				case TWO:
-					return "Warrior's Burial Armour";
+					return 1;
 				case THREE:
-					return "Smith's Burial Armour";
-				default:
-					return "Miner's Burial Armour";
+					return 2;
 			}
 		}
-		return "Ingots, Tier IV";
+		return 0;
 	}
 
 	private int[] getAnvilId() {
@@ -163,7 +161,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		if (ctx.skillingInterface.getAction().equals("Smith")) {
 			//System.out.println("Make: " + getMakeNextId());
 			final String make = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
-			if (ctx.skillingInterface.select(getCategoryName(), getMakeNextId())) {
+			if (ctx.skillingInterface.select(getCategoryIndex(), getMakeNextId())) {
 				final int target = ctx.backpack.select().id(getMakeNextId()).count() + ctx.skillingInterface.getQuantity();
 				if (ctx.skillingInterface.getSelectedItem().getId() == getMakeNextId() && ctx.skillingInterface.start()) {
 					options.isSmithing = true;

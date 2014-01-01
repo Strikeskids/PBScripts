@@ -35,11 +35,12 @@ import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 @Manifest(
 		name = "Log Artisan Workshop",
 		description = "Cheap smithing xp at Artisans Workshop",
-		version = 2,
+		version = 2.01,
 		authors = {"Logicail"},
 		topic = 1134701
 )
@@ -140,6 +141,17 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 		//properties.put("Iron4", IngotType.IRON.getID(IngotGrade.FOUR));
 		//properties.put("Steel3", IngotType.STEEL.getID(IngotGrade.THREE));
 
+		final List<String> categorys = ctx.skillingInterface.getCategorys();
+		if (categorys.size() > 0) {
+			StringBuilder stringBuilder = new StringBuilder("\"");
+			for (String s : categorys) {
+				stringBuilder.append(s).append("\", ");
+			}
+			final String s = stringBuilder.toString();
+			if (!s.isEmpty()) {
+				properties.put("Categorys", s.substring(0, s.length() - 2));
+			}
+		}
 		return properties;
 	}
 

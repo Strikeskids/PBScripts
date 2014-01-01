@@ -160,7 +160,7 @@ public class SmithTrack extends Branch {
 
 	public void smith(final int makeid, int quanity) {
 		//ctx.log.info("Smith: " + makeid + " " + quanity);
-		if (quanity > 0 ? ctx.skillingInterface.select(getCategoryName(), makeid, quanity) : ctx.skillingInterface.select(getCategoryName(), makeid)) {
+		if (quanity > 0 ? ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid, quanity) : ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid)) {
 			String name = ctx.skillingInterface.getSelectedName();
 			final int target = ctx.backpack.select().id(makeid).count() + ctx.skillingInterface.getQuantity();
 			if (ctx.skillingInterface.start()) {
@@ -196,19 +196,6 @@ public class SmithTrack extends Branch {
 					}
 				}*/
 			}
-		}
-	}
-
-	public String getCategoryName() {
-		switch (script.options.ingotType) {
-			case BRONZE:
-				return "Bronze Tracks";
-			case IRON:
-				return "Iron Tracks";
-			case STEEL:
-				return "Steel Tracks";
-			default:
-				return "Bronze Tracks";
 		}
 	}
 

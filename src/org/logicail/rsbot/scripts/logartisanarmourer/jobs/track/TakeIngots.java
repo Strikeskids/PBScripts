@@ -63,7 +63,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 
 		if (ctx.skillingInterface.isOpen()) {
 			if (ctx.skillingInterface.getAction().equals("Take")) {
-				if (ctx.skillingInterface.select("Ingots, Tier I", options.getIngotId())) {
+				if (ctx.skillingInterface.select(0, options.getIngotId())) {
 					if (ctx.skillingInterface.start()) {
 						Condition.wait(new Callable<Boolean>() {
 							@Override

@@ -3,7 +3,6 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.util.TargetableRectangle;
 import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.Menu;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
@@ -72,11 +71,44 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		return "";
 	}
 
-	public boolean select(final String category, final int itemId, final int quantity) {
-		return select(category, itemId) && setQuantity(quantity);
+	public List<String> getCategorys() {
+		List<String> list = new LinkedList<String>();
+
+		final Component[] options = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 62).getChildren();
+
+		for (Component option : options) {
+			final String text = option.getText();
+			if (isOpen() && !text.isEmpty()) {
+				list.add(text);
+			}
+		}
+
+		return list;
 	}
 
-	public boolean select(final String category, final int itemId) {
+	public boolean select(final String categoryString, final int itemId, final int quantity) {
+		return select(categoryString, itemId) && setQuantity(quantity);
+	}
+
+	public boolean select(final String categoryString, final int itemId) {
+		final List<String> categorys = getCategorys();
+		int i = -1;
+		for (String category : categorys) {
+			if (category.equalsIgnoreCase(categoryString)) {
+				return select(i, itemId);
+			}
+			++i;
+		}
+
+		return false;
+	}
+
+	public boolean select(final int categoryIndex, final int itemId, final int quantity) {
+		return select(categoryIndex, itemId) && setQuantity(quantity);
+	}
+
+	public boolean select(final int categoryIndex, final int itemId) {
+		//ctx.log.info(String.format("SkillingInterface %d %d", categoryIndex, itemId));
 		//System.out.println("Select " + category + " " + itemId);
 		if (!isOpen()) {
 			return false;
@@ -86,7 +118,7 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 			return true;
 		}
 
-		setCategory(category);
+		setCategory(categoryIndex);
 
 		if (Random.nextBoolean() && Random.nextBoolean()) {
 			if (select(new Filter<Item>() {
@@ -118,23 +150,29 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		return getSelectedItem().getId() == itemId;
 	}
 
-	private boolean setCategory(final String category) {
+	private boolean setCategory(int index) {
 		final String currentCategory = getCategory();
+		final List<String> categorys = getCategorys();
 
-		if (!currentCategory.equalsIgnoreCase(category)) {
+		if (categorys.size() > index) {
+			final String target = categorys.get(index);
+			if (currentCategory.equalsIgnoreCase(target)) {
+				return true;
+			}
+
 			Component child = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY).getChild(0);
 			if (child.isValid() && child.click(true)) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return getCategoryRectangle(category) != null;
+						return getCategoryRectangle(target) != null;
 					}
 				})) {
 					sleep(250, 750);
-					TargetableRectangle rectangle = getCategoryRectangle(category);
+					TargetableRectangle rectangle = getCategoryRectangle(target);
 					if (rectangle != null && ctx.mouse.move(rectangle)) {
 						sleep(200, 500);
-						if (rectangle.contains(ctx.mouse.getLocation()) && ctx.menu.click(Menu.filter("Select"))) {
+						if (rectangle.contains(ctx.mouse.getLocation()) && ctx.menu.click(org.powerbot.script.methods.Menu.filter("Select"))) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
@@ -146,9 +184,13 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 					}
 				}
 			}
+
+			return getCategory().equalsIgnoreCase(target);
 		}
 
-		return category.equalsIgnoreCase(getCategory());
+
+		// Assume true for only one category
+		return true;
 	}
 
 	public String getCategory() {

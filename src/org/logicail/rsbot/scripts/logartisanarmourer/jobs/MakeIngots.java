@@ -37,12 +37,13 @@ public class MakeIngots extends ArtisanArmourerTask {
 
 		if (ctx.skillingInterface.getAction().equals("Smelt")) {
 			if (options.mode == Mode.CEREMONIAL_SWORDS) {
-				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), options.getIngotId(), !ctx.backpack.select().id(MakeSword.TONGS).isEmpty() ? -1 : 26 - ctx.backpack.select().count())) {
+				if (!ctx.skillingInterface.select(smithAnvil.getCategoryIndex(), options.getIngotId(), !ctx.backpack.select().id(MakeSword.TONGS).isEmpty() ? -1 : 26 - ctx.backpack.select().count())) {
 					return;
 				}
 			} else {
 				//Context.get().getScriptHandler().log.info("Ingot: " + LogArtisanWorkshop.getIngotID());
-				if (!ctx.skillingInterface.select(smithAnvil.getCategoryName(), options.getIngotId())) {
+				// Anvil and Furnace have different categorys
+				if (!ctx.skillingInterface.select(smithAnvil.getCategoryIndex(), options.getIngotId())) {
 					return;
 				}
 			}
