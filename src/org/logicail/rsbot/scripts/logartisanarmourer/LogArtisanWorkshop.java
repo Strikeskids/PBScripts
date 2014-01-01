@@ -20,6 +20,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.LayTracks;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.TakeIngots;
+import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.client.AbstractModel;
@@ -35,7 +36,6 @@ import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 @Manifest(
 		name = "Log Artisan Workshop",
@@ -72,18 +72,20 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 		super.repaint(g);
 
 		// Debug incase repairing pipes doeesn't work (Haven't been able to test yet)
-		for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
-			if (pipe.isOnScreen()) {
-				final AbstractModel abstractModel = pipe.getInternal().getModel();
-				if (abstractModel == null) {
-					continue;
+		if (options.mode != Mode.REPAIR_TRACK && options.respectRepairPipes) {
+			for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
+				if (pipe.isOnScreen()) {
+					final AbstractModel abstractModel = pipe.getInternal().getModel();
+					if (abstractModel == null) {
+						continue;
+					}
+					final Point point = pipe.getCenterPoint();
+					final String s = String.format("Pipe: %d", BrokenPipes.getNumFaces(abstractModel));
+					g.setColor(Color.BLACK);
+					g.drawString(s, point.x + 1, point.y + 1);
+					g.setColor(Color.WHITE);
+					g.drawString(s, point.x, point.y);
 				}
-				final Point point = pipe.getCenterPoint();
-				final String s = String.format("Pipe: %d", BrokenPipes.getNumFaces(abstractModel));
-				g.setColor(Color.BLACK);
-				g.drawString(s, point.x + 1, point.y + 1);
-				g.setColor(Color.WHITE);
-				g.drawString(s, point.x, point.y);
 			}
 		}
 	}
@@ -141,7 +143,7 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 		//properties.put("Iron4", IngotType.IRON.getID(IngotGrade.FOUR));
 		//properties.put("Steel3", IngotType.STEEL.getID(IngotGrade.THREE));
 
-		final List<String> categorys = ctx.skillingInterface.getCategorys();
+		/*final List<String> categorys = ctx.skillingInterface.getCategorys();
 		if (categorys.size() > 0) {
 			StringBuilder stringBuilder = new StringBuilder("\"");
 			for (String s : categorys) {
@@ -151,7 +153,7 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 			if (!s.isEmpty()) {
 				properties.put("Categorys", s.substring(0, s.length() - 2));
 			}
-		}
+		}*/
 		return properties;
 	}
 
