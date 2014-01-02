@@ -31,6 +31,7 @@ public class ArtisanGUI extends JFrame {
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
 	private final JCheckBox burialRespectPipes = new JCheckBox("Repair pipes");
+	private final JCheckBox followInstructions = new JCheckBox("Follow instructions (XP/H often quicker when unticked but slightly move expensive)", true);
 	private final JComboBox<IngotType> burialIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
 	// Track
 	private final JComboBox<IngotType> trackIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.BRONZE, IngotType.IRON, IngotType.STEEL});
@@ -183,10 +184,10 @@ public class ArtisanGUI extends JFrame {
 			final GridBagConstraints innerConstraints = new GridBagConstraints();
 			innerConstraints.fill = GridBagConstraints.HORIZONTAL;
 			innerConstraints.anchor = GridBagConstraints.NORTH;
-			innerConstraints.gridx = 0;
-			innerConstraints.gridy = 0;
-			innerConstraints.weightx = 0.1;
 			{
+				innerConstraints.gridx = 0;
+				innerConstraints.gridy = 0;
+				innerConstraints.weightx = 0.1;
 				ingots.add(new JLabel("Type:"), innerConstraints);
 				innerConstraints.gridx++;
 				innerConstraints.weightx = 1;
@@ -194,14 +195,21 @@ public class ArtisanGUI extends JFrame {
 				ingots.add(burialIngotType, innerConstraints);
 			}
 			innerConstraints.insets = new Insets(5, 0, 0, 0);
-			innerConstraints.gridx = 0;
-			innerConstraints.gridy++;
-			innerConstraints.weightx = 0.1;
 			{
+				innerConstraints.gridx = 0;
+				innerConstraints.gridy++;
+				innerConstraints.weightx = 0.1;
 				ingots.add(new JLabel("Grade:"), innerConstraints);
 				innerConstraints.gridx++;
 				innerConstraints.weightx = 1;
 				ingots.add(burialIngotGrade, innerConstraints);
+			}
+			{
+				innerConstraints.gridx = 0;
+				innerConstraints.gridy++;
+				innerConstraints.gridwidth = 2;
+				innerConstraints.weightx = 1;
+				ingots.add(followInstructions, innerConstraints);
 			}
 			panel.add(ingots, constraints);
 		}
@@ -326,6 +334,7 @@ public class ArtisanGUI extends JFrame {
 			options.ingotGrade = (IngotGrade) burialIngotGrade.getSelectedItem();
 			options.respectRepairPipes = burialRespectPipes.isSelected();
 			options.respectAncestors = respectKill.isSelected();
+			options.followInstructions = followInstructions.isSelected();
 		} else if (s.equals("Ceremonial Swords")) {
 			options.mode = Mode.CEREMONIAL_SWORDS;
 			options.ingotType = (IngotType) swordIngotType.getSelectedItem();

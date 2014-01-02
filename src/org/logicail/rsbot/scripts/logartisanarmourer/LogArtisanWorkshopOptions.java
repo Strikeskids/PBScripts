@@ -31,6 +31,7 @@ public class LogArtisanWorkshopOptions {
 	public String currentlyMaking = "";
 	public Mode mode = Mode.BURIAL_ARMOUR;
 	public int failedConsecutiveWithdrawals;
+	public boolean followInstructions = true;
 
 	public Area getAreaSmall() {
 		switch (mode) {
