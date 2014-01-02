@@ -203,17 +203,31 @@ public class SmithTrack extends Branch {
 				script.options.isSmithing = true;
 				//animationTimelimit = Random.nextInt(2000, 5000);
 				script.options.status = "Smithing " + name;
-
-				Condition.wait(new Callable<Boolean>() {
+				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.isPaused()
-								|| ctx.isShutdown()
-								|| ctx.backpack.select().id(makeid).count() >= target
-								|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
+						for (int i : LogArtisanWorkshop.ANIMATION_SMITHING) {
+							if (ctx.players.local().getAnimation() == i) {
+								return true;
+							}
+						}
+						return false;
 					}
-				}, 600, 100);
-				sleep(200, 1000);
+				})) {
+					for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {
+						AnimationMonitor.put(id);
+					}
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return ctx.isPaused()
+									|| ctx.isShutdown()
+									|| ctx.backpack.select().id(makeid).count() >= target
+									|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
+						}
+					}, 600, 100);
+					sleep(200, 1000);
+				}
 				script.options.isSmithing = false;
 
 				/*if (Random.nextInt(0, 5) == 0) {

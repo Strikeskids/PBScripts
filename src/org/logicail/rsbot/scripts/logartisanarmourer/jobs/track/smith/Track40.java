@@ -42,7 +42,8 @@ public class Track40 extends AbstractTrack {
 		//ctx.log.info(rails + " " + baseplate + " " + ingots);
 
 		if (ingots > 0) {
-			if (rails != baseplate || rails == 0) {
+			int x = (ingots + rails + baseplate) / 2;
+			if (rails != x || baseplate != x || rails == 0) {
 				if (rails == 0) {
 					// Check don't have any partially complete tracks
 					if (!ctx.backpack.select().id(SmithTrack.PARTS).isEmpty()) {
@@ -68,12 +69,12 @@ public class Track40 extends AbstractTrack {
 						smithTrack.smith(smithTrack.getRails());
 					}
 				} else {
-					if (rails > baseplate) {
-						ctx.log.info("Make BasePlate");
-						smithTrack.smith(smithTrack.getBasePlate(), rails - baseplate);
-					} else {
+					if (rails != x) {
 						ctx.log.info("Make Rails");
-						smithTrack.smith(smithTrack.getRails(), baseplate - rails);
+						smithTrack.smith(smithTrack.getRails(), x - rails);
+					} else {
+						ctx.log.info("Make BasePlate");
+						smithTrack.smith(smithTrack.getBasePlate(), x - baseplate);
 					}
 				}
 			}
