@@ -197,12 +197,11 @@ public class SmithTrack extends Branch {
 	public void smith(final int makeid, int quanity) {
 		//ctx.log.info("Smith: " + makeid + " " + quanity);
 		if (quanity > 0 ? ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid, quanity) : ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid)) {
-			String name = ctx.skillingInterface.getSelectedItem().getName();
 			final int target = ctx.backpack.select().id(makeid).count() + ctx.skillingInterface.getQuantity();
 			if (ctx.skillingInterface.start()) {
 				script.options.isSmithing = true;
 				//animationTimelimit = Random.nextInt(2000, 5000);
-				script.options.status = "Smithing " + name;
+				script.options.status = "Smithing";
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

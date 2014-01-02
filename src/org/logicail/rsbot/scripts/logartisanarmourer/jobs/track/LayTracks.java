@@ -46,20 +46,7 @@ public class LayTracks extends ArtisanArmourerTask {
 					sleep(1750, 3500);
 				}
 			} else {
-				ctx.camera.turnTo(tunnel);
-				if (tunnel.interact("Lay-tracks", "Tunnel")) {
-					if (Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty();
-						}
-					})) {
-						sleep(1750, 3500);
-					}
-				} else {
-					ctx.movement.stepTowards(tunnel);
-					sleep(1000, 2000);
-				}
+				options.status = "Laying tracks [interact failed]";
 			}
 		}
 	}

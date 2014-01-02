@@ -1,14 +1,16 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.methods.Camera;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Area;
 import org.powerbot.script.wrappers.Interactive;
 import org.powerbot.script.wrappers.Locatable;
 import org.powerbot.script.wrappers.Tile;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -39,7 +41,7 @@ public class MyCamera extends Camera {
 			return false;
 		}
 
-		Interactive targetable = (Interactive) locatable;
+		final Interactive targetable = (Interactive) locatable;
 		if (targetable.isOnScreen()) {
 			return true;
 		}
@@ -52,7 +54,7 @@ public class MyCamera extends Camera {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return locatable.getLocation().distanceTo(ctx.players.local()) <= distance;
+						return targetable.isOnScreen() || locatable.getLocation().distanceTo(ctx.players.local()) <= distance;
 					}
 				});
 				sleep(250, 1000);
@@ -72,7 +74,7 @@ public class MyCamera extends Camera {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return locatable.getLocation().distanceTo(ctx.players.local()) <= 4;
+						return targetable.isOnScreen() || locatable.getLocation().distanceTo(ctx.players.local()) <= 4;
 					}
 				});
 				sleep(250, 1000);
@@ -85,14 +87,16 @@ public class MyCamera extends Camera {
 
 	private Tile getReachableTile(Locatable locatable) {
 		final Tile location = locatable.getLocation();
-		final Area area = new Area(location.derive(-3, -3), location.derive(3, 3));
-		int tries = 10;
-		while (tries > 0) {
-			final Tile tile = area.getRandomTile();
+		final LogicailArea area = new LogicailArea(location.derive(-3, -3), location.derive(4, 4));
+		List<Tile> reachable = new LinkedList<Tile>();
+		for (Tile tile : area.getTileArray()) {
 			if (tile.getMatrix(ctx).isReachable()) {
-				return tile;
+				reachable.add(tile);
 			}
-			tries--;
+		}
+
+		if (!reachable.isEmpty()) {
+			return reachable.get(Random.nextInt(0, reachable.size()));
 		}
 
 		return location;
