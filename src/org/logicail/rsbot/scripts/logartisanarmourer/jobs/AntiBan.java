@@ -38,7 +38,7 @@ public class AntiBan extends LoopTask {
 					//Util.mouseOffScreen();
 					break;
 				case 3:
-					for (GameObject object : ctx.objects.select(new Filter<GameObject>() {
+					for (GameObject object : ctx.objects.select().select(new Filter<GameObject>() {
 						@Override
 						public boolean accept(GameObject gameObject) {
 							return Random.nextInt(0, 10) == 0;

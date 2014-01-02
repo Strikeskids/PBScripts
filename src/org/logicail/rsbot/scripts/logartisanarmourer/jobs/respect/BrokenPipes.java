@@ -76,7 +76,7 @@ public class BrokenPipes extends RespectTask {
 	}
 
 	private BasicNamedQuery<GameObject> getPipe() {
-		return ctx.objects.select(new Filter<GameObject>() {
+		return ctx.objects.select().select(new Filter<GameObject>() {
 			@Override
 			public boolean accept(GameObject gameObject) {
 				if (Arrays.binarySearch(BROKEN_PIPE, gameObject.getId()) >= 0) {

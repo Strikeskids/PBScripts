@@ -99,7 +99,7 @@ public class Ancestors extends RespectTask {
 	}
 
 	private BasicNamedQuery<Npc> getAncestor() {
-		return ctx.npcs.select(new Filter<Npc>() {
+		return ctx.npcs.select().select(new Filter<Npc>() {
 			@Override
 			public boolean accept(Npc npc) {
 				if (Arrays.binarySearch(ANCESTOR_IDS, npc.getId()) >= 0) {
@@ -112,7 +112,7 @@ public class Ancestors extends RespectTask {
 	}
 
 	private IdQuery<Action> updateAbilities() {
-		return ctx.combatBar.select(new Filter<Action>() {
+		return ctx.combatBar.select().select(new Filter<Action>() {
 			@Override
 			public boolean accept(Action action) {
 				return action.getType() == Action.Type.ABILITY;

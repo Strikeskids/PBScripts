@@ -40,7 +40,7 @@ import java.awt.*;
 @Manifest(
 		name = "Log Artisan Workshop",
 		description = "Cheap smithing xp at Artisans Workshop",
-		version = 2.04,
+		version = 2.05,
 		authors = {"Logicail"},
 		topic = 1134701
 )

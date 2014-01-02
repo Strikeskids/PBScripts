@@ -7,18 +7,20 @@ package org.logicail.rsbot.scripts.logartisanarmourer.wrapper;
  * Time: 14:52
  */
 public enum IngotType {
-	BRONZE("Bronze", 20631, -1, -1, 20647), // 20632
-	IRON("Iron", 20632, 20637, 20642, 20648),
-	STEEL("Steel", 20633, 20638, 20643, 20649),
-	MITHRIL("Mithril", 20634, 20639, 20644, 20650),
-	ADAMANT("Adamant", 20635, 20640, 20645, 20651),
-	RUNE("Rune", 20636, 20641, 20646, 20652);
+	BRONZE("Bronze", 20502, -1, -1, -1, 20647),
+	IRON("Iron", 20503, 20632, 20637, 20642, 20648),
+	STEEL("Steel", 20504, 20633, 20638, 20643, 20649),
+	MITHRIL("Mithril", -1, 20634, 20639, 20644, 20650),
+	ADAMANT("Adamant", -1, 20635, 20640, 20645, 20651),
+	RUNE("Rune", -1, 20636, 20641, 20646, 20652);
 
 	private final String name;
+	private final int idRepairTracks;
 	private final int[] ids;
 
-	IngotType(String name, int... ids) {
+	IngotType(String name, int idRepairTracks, int... ids) {
 		this.name = name;
+		this.idRepairTracks = idRepairTracks;
 		this.ids = ids;
 	}
 
@@ -32,6 +34,6 @@ public enum IngotType {
 	}
 
 	public int getIngotIdRepairTracks() {
-		return ids[0] - 129;
+		return idRepairTracks;
 	}
 }
