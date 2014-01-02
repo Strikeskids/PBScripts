@@ -26,26 +26,6 @@ public class DepositOre extends ArtisanArmourerTask {
 		super(script);
 	}
 
-	public int remainingIron() {
-		return ctx.settings.get(SETTING_IRON, 20, 0xFFF);
-	}
-
-	public int remainingMithril() {
-		return ctx.settings.get(SETTING_MITHRIL, 17, 0xFFF);
-	}
-
-	public int remainingAdamant() {
-		return ctx.settings.get(SETTING_ADAMANT_RUNE, 0xFFF);
-	}
-
-	public int remainingRune() {
-		return ctx.settings.get(SETTING_ADAMANT_RUNE, 12, 0xFFF);
-	}
-
-	public int remainingCoal() {
-		return ctx.settings.get(SETTING_COAL, 0x1FFF);
-	}
-
 	@Override
 	public String toString() {
 		return "Deposit Ore";
@@ -60,6 +40,26 @@ public class DepositOre extends ArtisanArmourerTask {
 				|| (remainingAdamant() < nextDeposit[0] && !ctx.backpack.select().id(ID_ADAMANT_NOTED).isEmpty())
 				|| (remainingRune() < nextDeposit[0] && !ctx.backpack.select().id(ID_RUNE_NOTED).isEmpty())
 				|| (remainingCoal() < nextDeposit[1] && !ctx.backpack.select().id(ID_COAL_NOTED).isEmpty());
+	}
+
+	public int remainingAdamant() {
+		return ctx.settings.get(SETTING_ADAMANT_RUNE, 0xFFF);
+	}
+
+	public int remainingCoal() {
+		return ctx.settings.get(SETTING_COAL, 0x1FFF);
+	}
+
+	public int remainingIron() {
+		return ctx.settings.get(SETTING_IRON, 20, 0xFFF);
+	}
+
+	public int remainingMithril() {
+		return ctx.settings.get(SETTING_MITHRIL, 17, 0xFFF);
+	}
+
+	public int remainingRune() {
+		return ctx.settings.get(SETTING_ADAMANT_RUNE, 12, 0xFFF);
 	}
 
 	@Override

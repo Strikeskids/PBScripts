@@ -33,9 +33,13 @@ public class SmithTrack extends Branch {
 	public static final int[] TRACK_80 = {20513, 20527, 20531};
 	public static final int[] TIE = {20510, 20519, 20524};
 	public static final int[] TRACK_100 = {20514, 20528, 20532};
-	private static final int[] PARTIAL_TRACK = {20511, 20525, 20529, 20512, 20526, 20530, 20513, 20527, 20531};
-	public static int animationTimelimit = Random.nextInt(2000, 4000);
 	public static final int[] PARTS;
+	public static int animationTimelimit = Random.nextInt(2000, 4000);
+	private static final int[] PARTIAL_TRACK = {20511, 20525, 20529, 20512, 20526, 20530, 20513, 20527, 20531};
+
+	private final LogArtisanWorkshop script;
+
+	private SmithAnvil anvil;
 
 	static {
 		List<Integer> ids = new ArrayList<Integer>();
@@ -74,8 +78,6 @@ public class SmithTrack extends Branch {
 		PARTS = convertIntegers(ids);
 	}
 
-	private final LogArtisanWorkshop script;
-
 	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
 		for (int i = 0; i < ret.length; i++) {
@@ -83,13 +85,6 @@ public class SmithTrack extends Branch {
 		}
 		return ret;
 	}
-
-	@Override
-	public String toString() {
-		return "SmithTrack";
-	}
-
-	private SmithAnvil anvil;
 
 	public SmithTrack(LogArtisanWorkshop script, MakeSword makeSword) {
 		super(script.ctx);
@@ -102,40 +97,9 @@ public class SmithTrack extends Branch {
 		tasks.add(new Track40(script, this));
 	}
 
-	public int getRails() {
-		return RAILS[script.options.ingotType.ordinal()];
-	}
-
-	public int getBasePlate() {
-		return BASE_PLATE[script.options.ingotType.ordinal()];
-	}
-
-	public int getTrack40() {
-		return TRACK_40[script.options.ingotType.ordinal()];
-	}
-
-	public int getSpikes() {
-		return SPIKES[script.options.ingotType.ordinal()];
-	}
-
-	public int getTrack60() {
-		return TRACK_60[script.options.ingotType.ordinal()];
-	}
-
-	public int getJoint() {
-		return JOINT[script.options.ingotType.ordinal()];
-	}
-
-	public int getTrack80() {
-		return TRACK_80[script.options.ingotType.ordinal()];
-	}
-
-	public int getTie() {
-		return TIE[script.options.ingotType.ordinal()];
-	}
-
-	public int getTrack100() {
-		return TRACK_100[script.options.ingotType.ordinal()];
+	@Override
+	public String toString() {
+		return "SmithTrack";
 	}
 
 	public boolean anvilReady() {
@@ -152,51 +116,6 @@ public class SmithTrack extends Branch {
 			anvil.clickAnvil();
 		}
 		return ctx.skillingInterface.getAction().equalsIgnoreCase("Smith");
-	}
-
-	public void smith(int makeid) {
-		smith(makeid, 0);
-	}
-
-	public void smith(final int makeid, int quanity) {
-		//ctx.log.info("Smith: " + makeid + " " + quanity);
-		if (quanity > 0 ? ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid, quanity) : ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid)) {
-			String name = ctx.skillingInterface.getSelectedName();
-			final int target = ctx.backpack.select().id(makeid).count() + ctx.skillingInterface.getQuantity();
-			if (ctx.skillingInterface.start()) {
-				script.options.isSmithing = true;
-				//animationTimelimit = Random.nextInt(2000, 5000);
-				script.options.status = "Smithing " + name;
-
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.isPaused()
-								|| ctx.isShutdown()
-								|| ctx.backpack.select().id(makeid).count() >= target
-								|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
-					}
-				}, 600, 100);
-				sleep(200, 1000);
-				script.options.isSmithing = false;
-
-				/*if (Random.nextInt(0, 5) == 0) {
-					sleep(500, 3000);
-					//Util.mouseOffScreen();
-				}*/
-/*
-				if (Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !ctx.skillingInterface.isOpen() && ctx.players.local().getAnimation() != -1;
-					}
-				})) {
-					for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {
-						AnimationMonitor.put(id);
-					}
-				}*/
-			}
-		}
 	}
 
 	@Override
@@ -233,5 +152,86 @@ public class SmithTrack extends Branch {
 		}
 
 		return false;
+	}
+
+	public int getBasePlate() {
+		return BASE_PLATE[script.options.ingotType.ordinal()];
+	}
+
+	public int getJoint() {
+		return JOINT[script.options.ingotType.ordinal()];
+	}
+
+	public int getRails() {
+		return RAILS[script.options.ingotType.ordinal()];
+	}
+
+	public int getSpikes() {
+		return SPIKES[script.options.ingotType.ordinal()];
+	}
+
+	public int getTie() {
+		return TIE[script.options.ingotType.ordinal()];
+	}
+
+	public int getTrack100() {
+		return TRACK_100[script.options.ingotType.ordinal()];
+	}
+
+	public int getTrack40() {
+		return TRACK_40[script.options.ingotType.ordinal()];
+	}
+
+	public int getTrack60() {
+		return TRACK_60[script.options.ingotType.ordinal()];
+	}
+
+	public int getTrack80() {
+		return TRACK_80[script.options.ingotType.ordinal()];
+	}
+
+	public void smith(int makeid) {
+		smith(makeid, 0);
+	}
+
+	public void smith(final int makeid, int quanity) {
+		//ctx.log.info("Smith: " + makeid + " " + quanity);
+		if (quanity > 0 ? ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid, quanity) : ctx.skillingInterface.select(script.options.ingotType.ordinal(), makeid)) {
+			String name = ctx.skillingInterface.getSelectedItem().getName();
+			final int target = ctx.backpack.select().id(makeid).count() + ctx.skillingInterface.getQuantity();
+			if (ctx.skillingInterface.start()) {
+				script.options.isSmithing = true;
+				//animationTimelimit = Random.nextInt(2000, 5000);
+				script.options.status = "Smithing " + name;
+
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.isPaused()
+								|| ctx.isShutdown()
+								|| ctx.backpack.select().id(makeid).count() >= target
+								|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
+					}
+				}, 600, 100);
+				sleep(200, 1000);
+				script.options.isSmithing = false;
+
+				/*if (Random.nextInt(0, 5) == 0) {
+					sleep(500, 3000);
+					//Util.mouseOffScreen();
+				}*/
+/*
+				if (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !ctx.skillingInterface.isOpen() && ctx.players.local().getAnimation() != -1;
+					}
+				})) {
+					for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {
+						AnimationMonitor.put(id);
+					}
+				}*/
+			}
+		}
 	}
 }

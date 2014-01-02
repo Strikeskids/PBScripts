@@ -38,10 +38,10 @@ public class HouseHandler implements MessageListener {
 	};
 	public final PriorityQueue<OpenHouse> openHouses = new PriorityQueue<OpenHouse>();
 	public final Set<String> ignoreHouses = new HashSet<String>();
+	public boolean houseValid;
 	private final AtomicReference<OpenHouse> current_house = new AtomicReference<OpenHouse>();
 	private final LogicailScript script;
 	private final HashMap<String, Boolean> checkedNames = new HashMap<String, Boolean>();
-	public boolean houseValid;
 	private int nextTimeBounds = 900000;
 	private long waitUntil = System.currentTimeMillis();
 	private long nextCheckForhouses = 0;
@@ -94,25 +94,61 @@ public class HouseHandler implements MessageListener {
 		return null;
 	}
 
-	public void currentHouseFailed() {
-		OpenHouse current = current_house.get();
-		if (current != null) {
-			current.setSkipping();
-			//GildedAltar.get().getLogHandler().print("Ignoring house at \"" + current.getPlayerName() + "\" for a while", Color.RED);
-			current_house.set(null);
-		}
-		houseValid = false;
+	/**
+	 * Request open houses from server
+	 */
+	public void addOpenHouses() {
+		nextCheckForhouses = System.currentTimeMillis() + 600000; // 10 minutes
+		/*HttpURLConnection connection = null;
+
+		try {
+			connection = (HttpURLConnection) (new URL("http://logicail.co.uk/get_houses.php")).openConnection();
+			connection.addRequestProperty("User-Agent", script.useragent);
+			connection.addRequestProperty("Connection", "close");
+			connection.setRequestMethod("GET");
+			connection.setConnectTimeout(15000);
+			connection.setReadTimeout(15000);
+
+			JSONParser parser = new JSONParser();
+			ContainerFactory containerFactory = new ContainerFactory() {
+				public List createArrayContainer() {
+					return new LinkedList();
+				}
+
+				public Map createObjectContainer() {
+					return new LinkedHashMap();
+				}
+			};
+
+			Map parsed = (Map) parser.parse(new InputStreamReader(connection.getInputStream()), containerFactory);
+
+			if (parsed.containsKey("open_houses") && parsed.get("open_houses") instanceof LinkedList) {
+				LinkedList<String> houses = (LinkedList) parsed.get("open_houses");
+				for (String playername : houses) {
+					if (!ignoreHouses.contains(playername)) {
+						final OpenHouse house = new OpenHouse(playername);
+						if (!openHouses.contains(house)) {
+							openHouses.add(house);
+							GildedAltar.get().getLogHandler().print("Added house at \"" + playername + "\"");
+						}
+					}
+					checkedNames.put(playername, true);
+				}
+			}
+		} catch (Exception ignored) {
+			ignored.printStackTrace();
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
+		}*/
 	}
 
-	public void noAltar() {
-	    /*OpenHouse current = current_house.get();
-		if (current != null) {
-			openHouses.remove(current);
-			ignoreHouses.add(current.getPlayerName());
-			current_house.set(null);
+	@Override
+	public void messaged(MessageEvent messageEvent) {
+		if (messageEvent.getId() == 0) { // TODO
+			parseHouses(messageEvent.getMessage());
 		}
-		houseValid = false;*/
-		currentHouseFailed();
 	}
 
 	/**
@@ -174,60 +210,24 @@ public class HouseHandler implements MessageListener {
 		return checkedNames.put(underscoreName, false);
 	}
 
-	/**
-	 * Request open houses from server
-	 */
-	public void addOpenHouses() {
-		nextCheckForhouses = System.currentTimeMillis() + 600000; // 10 minutes
-		/*HttpURLConnection connection = null;
-
-		try {
-			connection = (HttpURLConnection) (new URL("http://logicail.co.uk/get_houses.php")).openConnection();
-			connection.addRequestProperty("User-Agent", script.useragent);
-			connection.addRequestProperty("Connection", "close");
-			connection.setRequestMethod("GET");
-			connection.setConnectTimeout(15000);
-			connection.setReadTimeout(15000);
-
-			JSONParser parser = new JSONParser();
-			ContainerFactory containerFactory = new ContainerFactory() {
-				public List createArrayContainer() {
-					return new LinkedList();
-				}
-
-				public Map createObjectContainer() {
-					return new LinkedHashMap();
-				}
-			};
-
-			Map parsed = (Map) parser.parse(new InputStreamReader(connection.getInputStream()), containerFactory);
-
-			if (parsed.containsKey("open_houses") && parsed.get("open_houses") instanceof LinkedList) {
-				LinkedList<String> houses = (LinkedList) parsed.get("open_houses");
-				for (String playername : houses) {
-					if (!ignoreHouses.contains(playername)) {
-						final OpenHouse house = new OpenHouse(playername);
-						if (!openHouses.contains(house)) {
-							openHouses.add(house);
-							GildedAltar.get().getLogHandler().print("Added house at \"" + playername + "\"");
-						}
-					}
-					checkedNames.put(playername, true);
-				}
-			}
-		} catch (Exception ignored) {
-			ignored.printStackTrace();
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
-		}*/
+	public void noAltar() {
+	    /*OpenHouse current = current_house.get();
+		if (current != null) {
+			openHouses.remove(current);
+			ignoreHouses.add(current.getPlayerName());
+			current_house.set(null);
+		}
+		houseValid = false;*/
+		currentHouseFailed();
 	}
 
-	@Override
-	public void messaged(MessageEvent messageEvent) {
-		if (messageEvent.getId() == 0) { // TODO
-			parseHouses(messageEvent.getMessage());
+	public void currentHouseFailed() {
+		OpenHouse current = current_house.get();
+		if (current != null) {
+			current.setSkipping();
+			//GildedAltar.get().getLogHandler().print("Ignoring house at \"" + current.getPlayerName() + "\" for a while", Color.RED);
+			current_house.set(null);
 		}
+		houseValid = false;
 	}
 }

@@ -16,14 +16,16 @@ import java.util.concurrent.Callable;
 public class SmithAnvil extends ArtisanArmourerTask {
 	public static final int WIDGET_INSTRUCTION = 1073;
 	public static final int WIDGET_INSTRUCTION_CHILD = 11;
+
+	public static Tile anvilLocation = null;
 	private static final int[] ID_ANVIL = {4046};
 	private static final int[] ID_ANVIL_SWORD = {4047, 24664, 24677, 24678, 15520, 20258};
 	private static final int[] ID_ANVIL_TRACK = {24820};
 	private MakeSword makeSword;
 	private int animationTimelimit;
 
-	public void setMakeSword(MakeSword makeSword) {
-		this.makeSword = makeSword;
+	public SmithAnvil(LogArtisanWorkshop script) {
+		this(script, null);
 	}
 
 	public SmithAnvil(LogArtisanWorkshop logArtisanWorkshop, MakeSword makeSword) {
@@ -32,104 +34,8 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		setMakeSword(makeSword);
 	}
 
-	public SmithAnvil(LogArtisanWorkshop script) {
-		this(script, null);
-	}
-
-	private int getMakeNextId() {
-		String text = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
-		if (text.equals("Helm")) {
-			return 20572 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
-		} else if (text.equals("Boots")) {
-			return 20577 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
-		} else if (text.equals("Chestplate")) {
-			return 20582 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
-		} else if (text.equals("Gauntlets")) {
-			return 20587 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
-		}
-		return 20572 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
-	}
-
-	public int getCategoryIndex() {
-		if (options.mode == Mode.BURIAL_ARMOUR) {
-			switch (options.ingotGrade) {
-				case ONE:
-					return 0;
-				case TWO:
-					return 1;
-				case THREE:
-					return 2;
-			}
-		}
-		return 0;
-	}
-
-	private int[] getAnvilId() {
-		switch (options.mode) {
-			case BURIAL_ARMOUR:
-				return ID_ANVIL;
-			case CEREMONIAL_SWORDS:
-				return ID_ANVIL_SWORD;
-			case REPAIR_TRACK:
-				return ID_ANVIL_TRACK;
-		}
-		return ID_ANVIL_TRACK;
-	}
-
-	public static Tile anvilLocation = null;
-
-	public void clickAnvil() {
-		if (ctx.skillingInterface.isOpen()) {
-			return;
-		}
-
-		if (ctx.skillingInterface.isProductionInterfaceOpen()) {
-			ctx.skillingInterface.cancelProduction();
-		}
-
-		BasicNamedQuery<GameObject> anvils = null;
-		if (anvilLocation != null) {
-			anvils = ctx.objects.select().id(getAnvilId()).nearest(anvilLocation).first();
-		}
-		if (anvils == null || anvils.isEmpty()) {
-			anvils = ctx.objects.select().id(getAnvilId()).nearest().first();
-		}
-
-		for (final GameObject anvil : anvils) {
-			if (ctx.camera.prepare(anvil)) {
-				options.status = "Clicking on anvil";
-				if (anvil.interact("Smith", "Anvil")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return anvil.getLocation().distanceTo(ctx.players.local()) < 2;
-						}
-					}, 300, 8);
-					sleep(300, 1000);
-					if (ctx.players.local().getAnimation() != -1 && !ctx.skillingInterface.isOpen()) {
-						if (anvil.interact("Smith", "Anvil")) {
-							sleep(200, 600);
-						}
-					}
-
-					if (!Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							if (ctx.skillingInterface.isOpen() || makeSword.isOpen()) {
-								return true;
-							}
-							if (ctx.skillingInterface.isProductionInterfaceOpen()) {
-								ctx.skillingInterface.cancelProduction();
-							}
-							return false;
-						}
-					}, 300, 6)) {
-						anvil.interact("Smith", "Anvil");
-					}
-					sleep(200, 600);
-				}
-			}
-		}
+	public void setMakeSword(MakeSword makeSword) {
+		this.makeSword = makeSword;
 	}
 
 	@Override
@@ -154,6 +60,18 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			}
 		}
 		return false;
+	}
+
+	private int[] getAnvilId() {
+		switch (options.mode) {
+			case BURIAL_ARMOUR:
+				return ID_ANVIL;
+			case CEREMONIAL_SWORDS:
+				return ID_ANVIL_SWORD;
+			case REPAIR_TRACK:
+				return ID_ANVIL_TRACK;
+		}
+		return ID_ANVIL_TRACK;
 	}
 
 	@Override
@@ -216,5 +134,87 @@ public class SmithAnvil extends ArtisanArmourerTask {
 
 			clickAnvil();
 		}
+	}
+
+	public void clickAnvil() {
+		if (ctx.skillingInterface.isOpen()) {
+			return;
+		}
+
+		if (ctx.skillingInterface.isProductionInterfaceOpen()) {
+			ctx.skillingInterface.cancelProduction();
+		}
+
+		BasicNamedQuery<GameObject> anvils = null;
+		if (anvilLocation != null) {
+			anvils = ctx.objects.select().id(getAnvilId()).nearest(anvilLocation).first();
+		}
+		if (anvils == null || anvils.isEmpty()) {
+			anvils = ctx.objects.select().id(getAnvilId()).nearest().first();
+		}
+
+		for (final GameObject anvil : anvils) {
+			if (ctx.camera.prepare(anvil)) {
+				options.status = "Clicking on anvil";
+				if (anvil.interact("Smith", "Anvil")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return anvil.getLocation().distanceTo(ctx.players.local()) < 2;
+						}
+					}, 300, 8);
+					sleep(300, 1000);
+					if (ctx.players.local().getAnimation() != -1 && !ctx.skillingInterface.isOpen()) {
+						if (anvil.interact("Smith", "Anvil")) {
+							sleep(200, 600);
+						}
+					}
+
+					if (!Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							if (ctx.skillingInterface.isOpen() || makeSword.isOpen()) {
+								return true;
+							}
+							if (ctx.skillingInterface.isProductionInterfaceOpen()) {
+								ctx.skillingInterface.cancelProduction();
+							}
+							return false;
+						}
+					}, 300, 6)) {
+						anvil.interact("Smith", "Anvil");
+					}
+					sleep(200, 600);
+				}
+			}
+		}
+	}
+
+	public int getCategoryIndex() {
+		if (options.mode == Mode.BURIAL_ARMOUR) {
+			switch (options.ingotGrade) {
+				case ONE:
+					return 0;
+				case TWO:
+					return 1;
+				case THREE:
+					return 2;
+			}
+		}
+		return 0;
+	}
+
+	private int getMakeNextId() {
+		String text = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
+		if (text.equals("Helm")) {
+			return 20572 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
+		} else if (text.equals("Boots")) {
+			return 20577 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
+		} else if (text.equals("Chestplate")) {
+			return 20582 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
+		} else if (text.equals("Gauntlets")) {
+			return 20587 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
+		}
+		return 20572 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
 	}
 }

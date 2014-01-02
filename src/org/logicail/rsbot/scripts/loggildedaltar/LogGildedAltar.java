@@ -20,12 +20,12 @@ import org.powerbot.script.Manifest;
 )
 public class LogGildedAltar extends LogicailScript {
 	@Override
-	public void start() {
-		ctx.submit(new AnimationMonitor(ctx));
+	public LinkedProperties getPaintInfo() {
+		return null;
 	}
 
 	@Override
-	public LinkedProperties getPaintInfo() {
-		return null;
+	public void start() {
+		ctx.submit(new AnimationMonitor(ctx));
 	}
 }

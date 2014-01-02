@@ -23,8 +23,6 @@ public class SummoningTask extends Branch {
 		instance = this;
 
 		boolean edgeville = false;
-
-
 	}
 
 	@Override

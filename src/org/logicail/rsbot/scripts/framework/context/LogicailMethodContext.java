@@ -23,19 +23,19 @@ import java.util.logging.Logger;
  * Time: 20:53
  */
 public class LogicailMethodContext extends MethodContext {
-	// Concurrent task executor
-	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private final AbstractScript script;
 	public final Logger log;
-	private volatile boolean shutdown;
-	private volatile boolean paused;
-
-	private final String useragent;
 
 	// Providers
 	public SkillingInterface skillingInterface;
 	public MyBackPack backpack;
 	public MyCamera camera;
+	// Concurrent task executor
+	private final ExecutorService executor = Executors.newCachedThreadPool();
+	private final AbstractScript script;
+	private volatile boolean shutdown;
+	private volatile boolean paused;
+
+	private final String useragent;
 
 	public LogicailMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext.getBot());
@@ -67,6 +67,14 @@ public class LogicailMethodContext extends MethodContext {
 		});
 	}
 
+	public final boolean isPaused() {
+		return paused;
+	}
+
+	public final boolean isShutdown() {
+		return shutdown;
+	}
+
 	@Override
 	public void init(MethodContext context) {
 		super.init(context);
@@ -74,20 +82,6 @@ public class LogicailMethodContext extends MethodContext {
 		skillingInterface = new SkillingInterface(this);
 		backpack = new MyBackPack(this);
 		camera = new MyCamera(this);
-	}
-
-	public final boolean isShutdown() {
-		return shutdown;
-	}
-
-	public final boolean isPaused() {
-		return paused;
-	}
-
-	public final void submit(Task task) {
-		if (!isShutdown()) {
-			executor.submit(task);
-		}
 	}
 
 	public void stop(final String reason) {
@@ -128,6 +122,11 @@ public class LogicailMethodContext extends MethodContext {
 		} finally {
 			script.getController().stop();
 		}
+	}
 
+	public final void submit(Task task) {
+		if (!isShutdown()) {
+			executor.submit(task);
+		}
 	}
 }

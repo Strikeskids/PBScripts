@@ -25,21 +25,6 @@ public class MyCamera extends Camera {
 		ctx = context;
 	}
 
-	private Tile getReachableTile(Locatable locatable) {
-		final Tile location = locatable.getLocation();
-		final Area area = new Area(location.derive(-3, -3), location.derive(3, 3));
-		int tries = 10;
-		while (tries > 0) {
-			final Tile tile = area.getRandomTile();
-			if (tile.getMatrix(ctx).isReachable()) {
-				return tile;
-			}
-			tries--;
-		}
-
-		return location;
-	}
-
 	/**
 	 * Prepare object for interaction
 	 * +TurnTo
@@ -98,4 +83,18 @@ public class MyCamera extends Camera {
 		return targetable.isOnScreen();
 	}
 
+	private Tile getReachableTile(Locatable locatable) {
+		final Tile location = locatable.getLocation();
+		final Area area = new Area(location.derive(-3, -3), location.derive(3, 3));
+		int tries = 10;
+		while (tries > 0) {
+			final Tile tile = area.getRandomTile();
+			if (tile.getMatrix(ctx).isReachable()) {
+				return tile;
+			}
+			tries--;
+		}
+
+		return location;
+	}
 }

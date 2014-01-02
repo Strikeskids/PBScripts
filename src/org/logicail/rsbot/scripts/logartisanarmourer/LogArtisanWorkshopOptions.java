@@ -32,13 +32,6 @@ public class LogArtisanWorkshopOptions {
 	public Mode mode = Mode.BURIAL_ARMOUR;
 	public int failedConsecutiveWithdrawals;
 
-	public int getIngotId() {
-		if (mode == Mode.REPAIR_TRACK) {
-			return ingotType.getIngotIdRepairTracks();
-		}
-		return ingotType.getID(ingotGrade);
-	}
-
 	public Area getAreaSmall() {
 		switch (mode) {
 			case BURIAL_ARMOUR:
@@ -50,5 +43,12 @@ public class LogArtisanWorkshopOptions {
 			default:
 				return LogArtisanWorkshop.AREAS_ARTISAN_WORKSHOP_BURIAL;
 		}
+	}
+
+	public int getIngotId() {
+		if (mode == Mode.REPAIR_TRACK) {
+			return ingotType.getIngotIdRepairTracks();
+		}
+		return ingotType.getID(ingotGrade);
 	}
 }

@@ -26,6 +26,7 @@ import java.awt.event.WindowEvent;
  * Time: 12:20
  */
 public class ArtisanGUI extends JFrame {
+	public boolean startPressed;
 	private final LogArtisanWorkshop script;
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
@@ -36,7 +37,6 @@ public class ArtisanGUI extends JFrame {
 	// Sword
 	private final JComboBox<IngotType> swordIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
 	private final JCheckBox swordRespectPipes = new JCheckBox("Repair pipes");
-	public boolean startPressed;
 	private JComponent burialArmourTab;
 
 	/*private JComponent getModeTab() {
@@ -90,6 +90,19 @@ public class ArtisanGUI extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
+	private JComponent getBottomPanel() {
+		final JPanel inner = new JPanel(new GridBagLayout());
+		final GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+
+		inner.add(startButton, gbc);
+
+		return inner;
+	}
+
 	private JComponent getCenterPanel() {
 		final JPanel inner = new JPanel(new BorderLayout());
 		inner.setBorder(new EmptyBorder(10, 0, 10, 0));
@@ -115,17 +128,43 @@ public class ArtisanGUI extends JFrame {
 		return inner;
 	}
 
-	private JComponent getBottomPanel() {
-		final JPanel inner = new JPanel(new GridBagLayout());
-		final GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1;
-		gbc.gridx = 0;
-		gbc.gridy = 0;
+	private void initComponents() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				if (!startPressed && !script.ctx.isShutdown()) {
+					script.getController().stop();
+				}
+			}
+		});
 
-		inner.add(startButton, gbc);
+		// Bottom
+		startButton = new JButton("Start Script");
+		startButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startButtonActionPerformed();
+			}
+		});
 
-		return inner;
+		// Mode
+		/*comboBoxMode = new JComboBox<>(Mode.values());
+		comboBoxMode.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LogArtisanWorkshop.mode = (Mode) comboBoxMode.getSelectedItem();
+			}
+		});*/
+
+		// Respect
+		respectKill = new JCheckBox("Kill Ancestors");
+		//respectKill.setEnabled(false);
+
+		tabbedPane = new JTabbedPane();
+		//modeTab = getModeTab();
+		burialArmourTab = getBurialArmourTab();
+		trackTab = getTrackTab();
+		swordsTab = getSwordsTab();
 	}
 
 	JComponent getBurialArmourTab() {
@@ -190,132 +229,6 @@ public class ArtisanGUI extends JFrame {
 		return panel;
 	}
 
-	private void startButtonActionPerformed() {
-		startPressed = true;
-		final LogArtisanWorkshopOptions options = script.options;
-		options.status = "Setup finished";
-
-		//Context.get().getScriptHandler().log.info("Mode: " + tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
-		String s = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
-		if (s.equals("Burial Armour")) {
-			options.mode = Mode.BURIAL_ARMOUR;
-			options.ingotType = (IngotType) burialIngotType.getSelectedItem();
-			options.ingotGrade = (IngotGrade) burialIngotGrade.getSelectedItem();
-			options.respectRepairPipes = burialRespectPipes.isSelected();
-			options.respectAncestors = respectKill.isSelected();
-
-		} else if (s.equals("Ceremonial Swords")) {
-			options.mode = Mode.CEREMONIAL_SWORDS;
-			options.ingotType = (IngotType) swordIngotType.getSelectedItem();
-			options.ingotGrade = IngotGrade.FOUR;
-			options.respectRepairPipes = swordRespectPipes.isSelected();
-
-		} else if (s.equals("Track room")) {
-			options.mode = Mode.REPAIR_TRACK;
-			options.ingotType = (IngotType) trackIngotType.getSelectedItem();
-			script.submit(new Task(script.ctx) {
-				@Override
-				public boolean activate() {
-					return true;
-				}
-
-				@Override
-				public void run() {
-					if (!ctx.backpack.select().isEmpty()) {
-						EventQueue.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								try {
-									new ErrorDialog(null, "Backpack not empty", "It is recommended to start the script with an empty backpack, if the script messes up restart with an empty backpack");
-								} catch (Exception ignored) {
-								}
-							}
-						});
-					}
-				}
-			});
-		} else {
-			script.getController().stop();
-		}
-
-		script.createTree();
-
-		dispose();
-	}
-
-	private void initComponents() {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				if (!startPressed && !script.ctx.isShutdown()) {
-					script.getController().stop();
-				}
-			}
-		});
-
-		// Bottom
-		startButton = new JButton("Start Script");
-		startButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startButtonActionPerformed();
-			}
-		});
-
-		// Mode
-		/*comboBoxMode = new JComboBox<>(Mode.values());
-		comboBoxMode.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				LogArtisanWorkshop.mode = (Mode) comboBoxMode.getSelectedItem();
-			}
-		});*/
-
-		// Respect
-		respectKill = new JCheckBox("Kill Ancestors");
-		//respectKill.setEnabled(false);
-
-		tabbedPane = new JTabbedPane();
-		//modeTab = getModeTab();
-		burialArmourTab = getBurialArmourTab();
-		trackTab = getTrackTab();
-		swordsTab = getSwordsTab();
-	}
-
-	JComponent getTrackTab() {
-		final JPanel panel = new JPanel(new GridBagLayout());
-		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		final GridBagConstraints constraints = new GridBagConstraints();
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.NORTH;
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.weightx = 1;
-		{
-			final JPanel ingots = new JPanel(new GridBagLayout());
-			ingots.setBorder(new CompoundBorder(new TitledBorder("Ingot"), new EmptyBorder(5, 5, 5, 5)));
-
-			final GridBagConstraints innerConstraints = new GridBagConstraints();
-			innerConstraints.fill = GridBagConstraints.HORIZONTAL;
-			innerConstraints.anchor = GridBagConstraints.NORTH;
-			innerConstraints.gridx = 0;
-			innerConstraints.gridy = 0;
-			innerConstraints.weightx = 0.1;
-			constraints.weighty = 1;
-			{
-				ingots.add(new JLabel("Type:"), innerConstraints);
-				innerConstraints.gridx++;
-				innerConstraints.weightx = 1;
-
-				ingots.add(trackIngotType, innerConstraints);
-			}
-			panel.add(ingots, constraints);
-		}
-
-
-		return panel;
-	}
-
 	JComponent getSwordsTab() {
 		final JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -364,5 +277,90 @@ public class ArtisanGUI extends JFrame {
 		}
 
 		return panel;
+	}
+
+	JComponent getTrackTab() {
+		final JPanel panel = new JPanel(new GridBagLayout());
+		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		final GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.weightx = 1;
+		{
+			final JPanel ingots = new JPanel(new GridBagLayout());
+			ingots.setBorder(new CompoundBorder(new TitledBorder("Ingot"), new EmptyBorder(5, 5, 5, 5)));
+
+			final GridBagConstraints innerConstraints = new GridBagConstraints();
+			innerConstraints.fill = GridBagConstraints.HORIZONTAL;
+			innerConstraints.anchor = GridBagConstraints.NORTH;
+			innerConstraints.gridx = 0;
+			innerConstraints.gridy = 0;
+			innerConstraints.weightx = 0.1;
+			constraints.weighty = 1;
+			{
+				ingots.add(new JLabel("Type:"), innerConstraints);
+				innerConstraints.gridx++;
+				innerConstraints.weightx = 1;
+
+				ingots.add(trackIngotType, innerConstraints);
+			}
+			panel.add(ingots, constraints);
+		}
+
+
+		return panel;
+	}
+
+	private void startButtonActionPerformed() {
+		startPressed = true;
+		final LogArtisanWorkshopOptions options = script.options;
+		options.status = "Setup finished";
+
+		//Context.get().getScriptHandler().log.info("Mode: " + tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+		String s = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+		if (s.equals("Burial Armour")) {
+			options.mode = Mode.BURIAL_ARMOUR;
+			options.ingotType = (IngotType) burialIngotType.getSelectedItem();
+			options.ingotGrade = (IngotGrade) burialIngotGrade.getSelectedItem();
+			options.respectRepairPipes = burialRespectPipes.isSelected();
+			options.respectAncestors = respectKill.isSelected();
+		} else if (s.equals("Ceremonial Swords")) {
+			options.mode = Mode.CEREMONIAL_SWORDS;
+			options.ingotType = (IngotType) swordIngotType.getSelectedItem();
+			options.ingotGrade = IngotGrade.FOUR;
+			options.respectRepairPipes = swordRespectPipes.isSelected();
+		} else if (s.equals("Track room")) {
+			options.mode = Mode.REPAIR_TRACK;
+			options.ingotType = (IngotType) trackIngotType.getSelectedItem();
+			script.submit(new Task(script.ctx) {
+				@Override
+				public boolean activate() {
+					return true;
+				}
+
+				@Override
+				public void run() {
+					if (!ctx.backpack.select().isEmpty()) {
+						EventQueue.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									new ErrorDialog(null, "Backpack not empty", "It is recommended to start the script with an empty backpack, if the script messes up restart with an empty backpack");
+								} catch (Exception ignored) {
+								}
+							}
+						});
+					}
+				}
+			});
+		} else {
+			script.getController().stop();
+		}
+
+		script.createTree();
+
+		dispose();
 	}
 }

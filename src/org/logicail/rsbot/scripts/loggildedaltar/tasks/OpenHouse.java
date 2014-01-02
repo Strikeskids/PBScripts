@@ -21,28 +21,21 @@ public class OpenHouse implements Comparable<OpenHouse> {
 		this.playerName = playerName.toLowerCase();
 	}
 
-	public void setHasObelisk(boolean value) {
-		hasObelisk = value;
-	}
-
 	public String getPlayerName() {
 		return playerName;
-	}
-
-	public void setEntered() {
-		success = System.currentTimeMillis();
-	}
-
-	public void setSkipping() {
-		skipUntil = System.currentTimeMillis() + Random.nextInt(5 * 60 * 1000, 9 * 60 * 1000);
 	}
 
 	public long getSuccess() {
 		return success;
 	}
 
-	public long getTimeAdded() {
-		return added;
+	public void setHasObelisk(boolean value) {
+		hasObelisk = value;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj != null && (obj == this || obj.getClass() == getClass() && hashCode() == obj.hashCode());
 	}
 
 	@Override
@@ -51,12 +44,8 @@ public class OpenHouse implements Comparable<OpenHouse> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return obj != null && (obj == this || obj.getClass() == getClass() && hashCode() == obj.hashCode());
-	}
-
-	public void setTimeAdded(long timeAdded) {
-		added = timeAdded;
+	public String toString() {
+		return "House: " + playerName + " isSkipping: " + isSkipping();
 	}
 
 	public boolean isSkipping() {
@@ -86,8 +75,19 @@ public class OpenHouse implements Comparable<OpenHouse> {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "House: " + playerName + " isSkipping: " + isSkipping();
+	public long getTimeAdded() {
+		return added;
+	}
+
+	public void setEntered() {
+		success = System.currentTimeMillis();
+	}
+
+	public void setSkipping() {
+		skipUntil = System.currentTimeMillis() + Random.nextInt(5 * 60 * 1000, 9 * 60 * 1000);
+	}
+
+	public void setTimeAdded(long timeAdded) {
+		added = timeAdded;
 	}
 }

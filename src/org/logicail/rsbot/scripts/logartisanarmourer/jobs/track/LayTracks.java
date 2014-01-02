@@ -14,6 +14,8 @@ import java.util.concurrent.Callable;
  * Time: 13:49
  */
 public class LayTracks extends ArtisanArmourerTask {
+	private final static int TUNNEL = 24843;
+
 	public LayTracks(LogArtisanWorkshop script) {
 		super(script);
 	}
@@ -29,8 +31,6 @@ public class LayTracks extends ArtisanArmourerTask {
 				&& !ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty()
 				&& (ctx.backpack.select().id(SmithTrack.TRACK_80).isEmpty() || ctx.backpack.select().id(SmithTrack.TIE).isEmpty());
 	}
-
-	private final static int TUNNEL = 24843;
 
 	@Override
 	public void run() {

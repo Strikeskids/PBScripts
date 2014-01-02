@@ -15,6 +15,10 @@ public abstract class LoopTask extends Task {
 		super(context);
 	}
 
+	public final boolean isPaused() {
+		return paused;
+	}
+
 	@Override
 	public boolean activate() {
 		return true; // Not used for LoopTasks
@@ -47,8 +51,4 @@ public abstract class LoopTask extends Task {
 	}
 
 	public abstract int loop();
-
-	public final boolean isPaused() {
-		return paused;
-	}
 }

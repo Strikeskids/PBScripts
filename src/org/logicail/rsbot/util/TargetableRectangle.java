@@ -29,12 +29,12 @@ public class TargetableRectangle implements Targetable {
 	}
 
 	@Override
-	public Point getNextPoint() {
-		return new Point(Random.nextInt(rectangle.x + 1, rectangle.x + rectangle.width), Random.nextInt(rectangle.y + 1, rectangle.y + rectangle.height));
+	public Point getInteractPoint() {
+		return getNextPoint();
 	}
 
 	@Override
-	public Point getInteractPoint() {
-		return getNextPoint();
+	public Point getNextPoint() {
+		return new Point(Random.nextInt(rectangle.x + 1, rectangle.x + rectangle.width), Random.nextInt(rectangle.y + 1, rectangle.y + rectangle.height));
 	}
 }

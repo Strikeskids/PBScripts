@@ -12,8 +12,8 @@ import java.util.Properties;
  * Time: 11:56
  */
 public class LinkedProperties extends Properties {
-	private final LinkedHashSet<Object> keys = new LinkedHashSet<Object>();
 	private static final long serialVersionUID = 4112578634029874841L;
+	private final LinkedHashSet<Object> keys = new LinkedHashSet<Object>();
 
 	@Override
 	public Enumeration<Object> keys() {

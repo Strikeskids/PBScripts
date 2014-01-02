@@ -15,14 +15,14 @@ public abstract class Branch extends Tree {
 		super(ctx);
 	}
 
-	public void addTask(Task... tasks) {
-		Collections.addAll(this.tasks, tasks);
+	@Override
+	public final boolean activate() {
+		return branch() && super.activate();
 	}
 
 	public abstract boolean branch();
 
-	@Override
-	public final boolean activate() {
-		return branch() && super.activate();
+	public void addTask(Task... tasks) {
+		Collections.addAll(this.tasks, tasks);
 	}
 }

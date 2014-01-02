@@ -19,23 +19,7 @@ import java.util.Arrays;
  * Time: 17:36
  */
 public class BrokenPipes extends RespectTask {
-	public BrokenPipes(LogArtisanWorkshop script) {
-		super(script);
-	}
-
-	@Override
-	public String toString() {
-		return "Repair pipes";
-	}
-
 	public static final int[] BROKEN_PIPE = {29410, 29411, 29413, 29414, 29761, 29762};
-
-	@Override
-	public boolean activate() {
-		return super.activate()
-				&& ctx.skills.getRealLevel(Skills.SMITHING) >= 50
-				&& !getPipe().isEmpty();
-	}
 
 
 	public static int getNumFaces(AbstractModel model) {
@@ -45,16 +29,20 @@ public class BrokenPipes extends RespectTask {
 		return model instanceof ModelCapture ? ((ModelCapture) model).getFaces() : Math.min(model.getIndices1().length, Math.min(model.getIndices2().length, model.getIndices3().length));
 	}
 
-	private BasicNamedQuery<GameObject> getPipe() {
-		return ctx.objects.select(new Filter<GameObject>() {
-			@Override
-			public boolean accept(GameObject gameObject) {
-				if (Arrays.binarySearch(BROKEN_PIPE, gameObject.getId()) >= 0) {
-					return getNumFaces(gameObject.getInternal().getModel()) == 63;
-				}
-				return false;
-			}
-		}).nearest().first();
+	public BrokenPipes(LogArtisanWorkshop script) {
+		super(script);
+	}
+
+	@Override
+	public String toString() {
+		return "Repair pipes";
+	}
+
+	@Override
+	public boolean activate() {
+		return super.activate()
+				&& ctx.skills.getRealLevel(Skills.SMITHING) >= 50
+				&& !getPipe().isEmpty();
 	}
 
 	@Override
@@ -85,5 +73,17 @@ public class BrokenPipes extends RespectTask {
 				sleep(50, 500);
 			}
 		}
+	}
+
+	private BasicNamedQuery<GameObject> getPipe() {
+		return ctx.objects.select(new Filter<GameObject>() {
+			@Override
+			public boolean accept(GameObject gameObject) {
+				if (Arrays.binarySearch(BROKEN_PIPE, gameObject.getId()) >= 0) {
+					return getNumFaces(gameObject.getInternal().getModel()) == 63;
+				}
+				return false;
+			}
+		}).nearest().first();
 	}
 }

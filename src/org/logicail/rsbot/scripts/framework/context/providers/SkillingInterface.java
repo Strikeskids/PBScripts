@@ -8,7 +8,6 @@ import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Item;
-import org.powerbot.script.wrappers.Widget;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -29,10 +28,11 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 	private static final int WIDGET_MAIN_ACTION_TOOLTIP = 37;
 	private static final int WIDGET_MAIN_QUANTITY = 74;
 	private static final int WIDGET_INTERFACE_MAIN = 1371;
+	private static final int WIDGET_INTERFACE_MAIN_ITEMS = 44;
+	private static final int WIDGET_INTERFACE_MAIN_SELECTED_ITEM = 55;
 	private static final int WIDGET_INTERFACE_CATEGORY_MENU = 60;
 	private static final int WIDGET_INTERFACE_CATEGORY = 51;
-	private static final int WIDGET_PICK_ITEM = 44;
-	private static final int WIDGET_BUTTON_CLOSE = 30;
+	private static final int WIDGET_MAIN_CLOSE_BUTTON = 30;
 	private static final int WIDGET_QUANTITY_INCREASE = 29;
 	private static final int WIDGET_QUANTITY_DECREASE = 34;
 	private static final int WIDGET_SCROLLBAR_PARENT = 47;
@@ -41,37 +41,152 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 	private static final int WIDGET_PRODUCTION_CANCEL = 48;
 	protected LogicailMethodContext ctx;
 
+
 	public SkillingInterface(LogicailMethodContext context) {
 		super(context);
 		ctx = context;
 	}
 
-	public boolean isOpen() {
-		return getMainWidget().getComponent(0).isValid();
+	public boolean cancelProduction() {
+		if (isProductionInterfaceOpen()) {
+			if (isProductionComplete()) {
+				ctx.log.info("Production Complete");
+				if (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !isProductionInterfaceOpen();
+					}
+				})) {
+					return true;
+				}
+			}
+
+			if (ctx.widgets.get(WIDGET_PRODUCTION_MAIN, WIDGET_PRODUCTION_CANCEL).interact("Cancel") && Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !isProductionInterfaceOpen();
+				}
+			})) {
+				sleep(100, 600);
+			}
+		}
+
+		return !isProductionInterfaceOpen();
 	}
 
-	public Widget getMainWidget() {
-		return ctx.widgets.get(WIDGET_MAIN);
+	public boolean isProductionComplete() {
+		final Component component = ctx.widgets.get(WIDGET_PRODUCTION_MAIN, WIDGET_PRODUCTION_PROGRESS);
+
+		if (component.isValid() && component.isVisible()) {
+			final String[] split = component.getText().split("/");
+			return split.length == 2 && split[0].equals(split[1]);
+		}
+
+		return false;
+	}
+
+	public boolean isProductionInterfaceOpen() {
+		Component component = ctx.widgets.get(WIDGET_PRODUCTION_MAIN, 5);
+		return component.isValid() && component.isVisible();
+	}
+
+	public boolean close() {
+		if (!isOpen()) {
+			return true;
+		}
+
+		/*if (Random.nextBoolean()) {
+			ctx.keyboard.send("{VK_ESCAPE down}");
+			ctx.keyboard.send("{VK_ESCAPE up}");
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !isOpen();
+				}
+			});
+		} else*/
+		{
+			Component closeButton = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_CLOSE_BUTTON);
+			if (closeButton.isValid() && closeButton.interact("Close")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !isOpen();
+					}
+				});
+			}
+		}
+
+		return !isOpen();
+	}
+
+	public boolean isOpen() {
+		return ctx.widgets.get(WIDGET_MAIN, 0).isValid();
+	}
+
+	@Override
+	protected List<Item> get() {
+		List<Item> items = new LinkedList<Item>();
+
+		final Component[] children = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_MAIN_ITEMS).getChildren();
+		if (children != null && children.length > 0) {
+			for (Component child : children) {
+				if (child.getItemId() != -1) {
+					items.add(new Item(ctx, child));
+				}
+			}
+		}
+
+		return items;
+	}
+
+	public String getAction() {
+		try {
+			if (isOpen()) {
+				return ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_ACTION).getChild(0).getText();
+			}
+		} catch (Exception ignored) {
+		}
+
+		return "Unknown";
 	}
 
 	public Item getSelectedItem() {
-		Component component = getMainWidget().getComponent(55);
+		Component component = ctx.widgets.get(WIDGET_MAIN, WIDGET_INTERFACE_MAIN_SELECTED_ITEM);
 		if (component.isValid()) {
 			return new Item(ctx, component);
 		}
 		return getNil();
 	}
 
-	public String getSelectedName() {
-		Component component = ctx.widgets.get(WIDGET_MAIN, 56);
-		if (component.isValid()) {
-			return component.getText();
-		}
-
-		return "";
+	@Override
+	public Item getNil() {
+		return ctx.backpack.getNil();
 	}
 
-	public List<String> getCategorys() {
+	public boolean select(final String categoryString, final int itemId) {
+		return select(getCategoryIndexOf(new Filter<String>() {
+			@Override
+			public boolean accept(String s) {
+				return s.equalsIgnoreCase(categoryString);
+			}
+		}), itemId);
+	}
+
+	public int getCategoryIndexOf(org.powerbot.script.lang.Filter<String> filter) {
+		final String[] categorys = getCategorys();
+
+		for (int i = 0; i < categorys.length; i++) {
+			String category = categorys[i];
+			if (filter.accept(category)) {
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+	public String[] getCategorys() {
 		List<String> list = new LinkedList<String>();
 
 		final Component[] options = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 62).getChildren();
@@ -83,28 +198,7 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 			}
 		}
 
-		return list;
-	}
-
-	public boolean select(final String categoryString, final int itemId, final int quantity) {
-		return select(categoryString, itemId) && setQuantity(quantity);
-	}
-
-	public boolean select(final String categoryString, final int itemId) {
-		final List<String> categorys = getCategorys();
-		int i = -1;
-		for (String category : categorys) {
-			if (category.equalsIgnoreCase(categoryString)) {
-				return select(i, itemId);
-			}
-			++i;
-		}
-
-		return false;
-	}
-
-	public boolean select(final int categoryIndex, final int itemId, final int quantity) {
-		return select(categoryIndex, itemId) && setQuantity(quantity);
+		return list.toArray(new String[list.size()]);
 	}
 
 	public boolean select(final int categoryIndex, final int itemId) {
@@ -121,15 +215,16 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		setCategory(categoryIndex);
 
 		if (Random.nextBoolean() && Random.nextBoolean()) {
-			if (select(new Filter<Item>() {
+			if (!select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
 					return item.isOnScreen();
 				}
-			}).count() > 1) {
+			}).isEmpty()) {
 				for (Item item : shuffle().first()) {
-					item.interact("Select");
-					sleep(250, 1000);
+					if (item.interact("Select")) {
+						sleep(250, 1000);
+					}
 				}
 			}
 		}
@@ -152,10 +247,10 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 
 	private boolean setCategory(int index) {
 		final String currentCategory = getCategory();
-		final List<String> categorys = getCategorys();
+		final String[] categorys = getCategorys();
 
-		if (categorys.size() > index) {
-			final String target = categorys.get(index);
+		if (categorys.length > index) {
+			final String target = categorys[index];
 			if (currentCategory.equalsIgnoreCase(target)) {
 				return true;
 			}
@@ -208,10 +303,6 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		return "";
 	}
 
-	private Component getItemComponent() {
-		return ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_PICK_ITEM);
-	}
-
 	public TargetableRectangle getCategoryRectangle(String text) {
 		final Component widgetChild = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY_MENU);
 		final Component[] options = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 62).getChildren();
@@ -230,137 +321,8 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		return null;
 	}
 
-	public String getAction() {
-		try {
-			if (isOpen()) {
-				return getMainWidget().getComponent(WIDGET_MAIN_ACTION).getChild(0).getText();
-			}
-		} catch (Exception ignored) {
-		}
-
-		return "Unknown";
-	}
-
-	public boolean start() {
-		if (canStart()) {
-			Component widgetChild = getMainWidget().getComponent(WIDGET_MAIN_ACTION_TOOLTIP);
-			return widgetChild.isValid() && widgetChild.interact(widgetChild.getTooltip());
-		}
-		return false;
-	}
-
-	public boolean canStart() {
-		final Component component = getMainWidget().getComponent(WIDGET_MAIN_ACTION_TOOLTIP);
-
-		if (component.isValid()) {
-			final Pattern pattern = Pattern.compile("Make (\\d+) ");
-			final Matcher matcher = pattern.matcher(component.getTooltip());
-			if (matcher.find()) {
-				return Integer.parseInt(matcher.group(1)) > 0;
-			}
-		}
-
-		return false;
-	}
-
-	private Widget getProductionWidget() {
-		return ctx.widgets.get(WIDGET_PRODUCTION_MAIN);
-	}
-
-	public boolean isProductionInterfaceOpen() {
-		Component component = getProductionWidget().getComponent(5);
-		return component.isValid() && component.isVisible();
-	}
-
-	public boolean isProductionComplete() {
-		final Component component = getProductionWidget().getComponent(WIDGET_PRODUCTION_PROGRESS);
-
-		if (component.isValid() && component.isVisible()) {
-			final String[] split = component.getText().split("/");
-			return split.length == 2 && split[0].equals(split[1]);
-		}
-
-		return false;
-	}
-
-	public boolean cancelProduction() {
-		if (isProductionInterfaceOpen()) {
-			if (isProductionComplete()) {
-				ctx.log.info("Production Complete");
-				if (Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !isProductionInterfaceOpen();
-					}
-				})) {
-					return true;
-				}
-			}
-
-			if (getProductionWidget().getComponent(WIDGET_PRODUCTION_CANCEL).interact("Cancel") && Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return !isProductionInterfaceOpen();
-				}
-			})) {
-				sleep(100, 600);
-			}
-		}
-
-		return !isProductionInterfaceOpen();
-	}
-
-	public boolean close() {
-		if (!isOpen()) {
-			return true;
-		}
-
-		/*if (Random.nextBoolean()) {
-			ctx.keyboard.send("{VK_ESCAPE down}");
-			ctx.keyboard.send("{VK_ESCAPE up}");
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return !isOpen();
-				}
-			});
-		} else*/
-		{
-			Component component = getMainWidget().getComponent(WIDGET_BUTTON_CLOSE);
-			if (component.isValid() && component.interact("Close")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !isOpen();
-					}
-				});
-			}
-		}
-
-		return !isOpen();
-	}
-
-	public int getQuantity() {
-		Component component = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_QUANTITY);
-		if (component.isValid()) {
-			try {
-				return Integer.parseInt(component.getText());
-			} catch (Exception ignored) {
-			}
-		}
-		return -1;
-	}
-
-	public int getQuantityPercent() {
-		Component component = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 148);
-		if (component.isValid()) {
-			final int x = component.getRelativeLocation().x;
-			if (x > 0) {
-				return (int) (x * 100 / 151D);
-			}
-		}
-
-		return -1;
+	public boolean select(final String categoryString, final int itemId, final int quantity) {
+		return select(categoryString, itemId) && setQuantity(quantity);
 	}
 
 	public boolean setQuantity(final int amount) {
@@ -438,6 +400,29 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		return currentQuantity != getQuantity();
 	}
 
+	public int getQuantity() {
+		Component quantity = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_QUANTITY);
+		if (quantity.isValid()) {
+			try {
+				return Integer.parseInt(quantity.getText());
+			} catch (Exception ignored) {
+			}
+		}
+		return -1;
+	}
+
+	public int getQuantityPercent() {
+		Component component = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 148);
+		if (component.isValid()) {
+			final int x = component.getRelativeLocation().x;
+			if (x > 0) {
+				return (int) (x * 100 / 151D);
+			}
+		}
+
+		return -1;
+	}
+
 	private boolean increaseQuantity() {
 		final int currentQuantity = getQuantity();
 		Component component = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_QUANTITY_INCREASE);
@@ -452,25 +437,34 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 		return currentQuantity != getQuantity();
 	}
 
-	@Override
-	public Item getNil() {
-		return ctx.backpack.getNil();
+	public boolean select(final int categoryIndex, final int itemId, final int quantity) {
+		return select(categoryIndex, itemId) && setQuantity(quantity);
 	}
 
-	@Override
-	protected List<Item> get() {
-		List<Item> items = new LinkedList<Item>();
+	public boolean start() {
+		if (canStart()) {
+			Component startButton = getStartButton();
+			return startButton.isValid() && startButton.interact(startButton.getTooltip());
+		}
+		return false;
+	}
 
-		final Component[] children = getItemComponent().getChildren();
-		if (children != null && children.length > 0) {
-			for (Component child : children) {
-				if (child.getItemId() != -1) {
-					items.add(new Item(ctx, child));
-				}
+	public boolean canStart() {
+		final Component startButton = getStartButton();
+
+		if (startButton.isValid()) {
+			final Pattern pattern = Pattern.compile("Make (\\d+) ");
+			final Matcher matcher = pattern.matcher(startButton.getTooltip());
+			if (matcher.find()) {
+				return Integer.parseInt(matcher.group(1)) > 0;
 			}
 		}
 
-		return items;
+		return false;
+	}
+
+	private Component getStartButton() {
+		return ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_ACTION_TOOLTIP);
 	}
 }
 

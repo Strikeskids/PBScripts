@@ -51,28 +51,6 @@ public class Ancestors extends RespectTask {
 		return false;
 	}
 
-	private IdQuery<Action> updateAbilities() {
-		return ctx.combatBar.select(new Filter<Action>() {
-			@Override
-			public boolean accept(Action action) {
-				return action.getType() == Action.Type.ABILITY;
-			}
-		});
-	}
-
-	private BasicNamedQuery<Npc> getAncestor() {
-		return ctx.npcs.select(new Filter<Npc>() {
-			@Override
-			public boolean accept(Npc npc) {
-				if (Arrays.binarySearch(ANCESTOR_IDS, npc.getId()) >= 0) {
-					final Actor interacting = npc.getInteracting();
-					return (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) && ctx.movement.getDistance(options.getAreaSmall().getCentralTile(), npc) < 50;
-				}
-				return false;
-			}
-		}).first();
-	}
-
 	@Override
 	public void run() {
 		for (Npc ancestor : getAncestor()) {
@@ -118,6 +96,28 @@ public class Ancestors extends RespectTask {
 				}
 			}
 		}
+	}
+
+	private BasicNamedQuery<Npc> getAncestor() {
+		return ctx.npcs.select(new Filter<Npc>() {
+			@Override
+			public boolean accept(Npc npc) {
+				if (Arrays.binarySearch(ANCESTOR_IDS, npc.getId()) >= 0) {
+					final Actor interacting = npc.getInteracting();
+					return (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) && ctx.movement.getDistance(options.getAreaSmall().getCentralTile(), npc) < 50;
+				}
+				return false;
+			}
+		}).first();
+	}
+
+	private IdQuery<Action> updateAbilities() {
+		return ctx.combatBar.select(new Filter<Action>() {
+			@Override
+			public boolean accept(Action action) {
+				return action.getType() == Action.Type.ABILITY;
+			}
+		});
 	}
 }
 

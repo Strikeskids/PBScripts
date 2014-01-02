@@ -17,6 +17,10 @@ import java.util.concurrent.Callable;
  * Time: 11:57
  */
 public class TakeIngots extends ArtisanArmourerTask {
+	private static final int BRONZE_TROUGH = 24821;
+	private static final int IRON_TROUGH = 24822;
+	private static final int STEEL_TROUGH = 24823;
+
 	public TakeIngots(LogArtisanWorkshop script) {
 		super(script);
 	}
@@ -36,10 +40,6 @@ public class TakeIngots extends ArtisanArmourerTask {
 				//&& !Inventory.contains(getIngotId())
 				&& !getTrough().isEmpty();
 	}
-
-	private static final int BRONZE_TROUGH = 24821;
-	private static final int IRON_TROUGH = 24822;
-	private static final int STEEL_TROUGH = 24823;
 
 	private BasicNamedQuery<GameObject> getTrough() {
 		switch (options.ingotType) {

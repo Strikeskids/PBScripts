@@ -20,13 +20,13 @@ public class Painter extends LogicailMethodProvider implements PaintListener {
 	private final BasicStroke mouseStroke = new BasicStroke(2f);
 	private final String title;
 
+	private Point location = new Point(50, 200);
+	private Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
+
 	public Painter(LogicailMethodContext context, AbstractScript script) {
 		super(context);
 		title = String.format("%s v%s", script.getName(), script.getVersion());
 	}
-
-	private Point location = new Point(50, 200);
-	private Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
 
 	public Painter properties(LinkedProperties properties) {
 		this.properties = properties;

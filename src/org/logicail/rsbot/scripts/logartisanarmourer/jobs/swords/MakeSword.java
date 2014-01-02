@@ -92,16 +92,30 @@ public class MakeSword extends ArtisanArmourerTask {
 		}
 	}
 
+	public boolean closeInterface() {
+		if (!isOpen()) {
+			return true;
+		}
+
+		Component component = ctx.widgets.get(1074, 145);
+		if (component.isValid() && component.interact("Close")) {
+			org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !isOpen();
+				}
+			});
+		}
+
+		return isOpen();
+	}
+
 	public int getCooldown() {
 		if (!isOpen()) {
 			return Integer.MAX_VALUE;
 		}
 
 		return Integer.parseInt(ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).getText());
-	}
-
-	public boolean isOpen() {
-		return ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).isValid();
 	}
 
 	/**
@@ -136,22 +150,8 @@ public class MakeSword extends ArtisanArmourerTask {
 		return null;
 	}
 
-	public boolean closeInterface() {
-		if (!isOpen()) {
-			return true;
-		}
-
-		Component component = ctx.widgets.get(1074, 145);
-		if (component.isValid() && component.interact("Close")) {
-			org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return !isOpen();
-				}
-			});
-		}
-
-		return isOpen();
+	public boolean isOpen() {
+		return ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).isValid();
 	}
 
 	static class SwordComparator extends LogicailMethodProvider implements Comparator<Sword> {

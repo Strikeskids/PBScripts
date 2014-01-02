@@ -42,56 +42,23 @@ public enum Sword {
 		this.buttonWidgetId = buttonWidgetId;
 	}
 
-	int getTarget(LogicailMethodContext ctx) {
-		try {
-			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
-		} catch (Exception e) {
-			return -1;
-		}
-	}
-
-	int getCurrent(LogicailMethodContext ctx) {
-		try {
-			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
-		} catch (Exception e) {
-			return -1;
-		}
-	}
-
-	boolean validate(LogicailMethodContext ctx) {
-		return getTarget(ctx) > getCurrent(ctx);
-	}
-
-	public int getHitsNeeded(LogicailMethodContext ctx) {
-		if (!validate(ctx)) {
-			return 0;
-		}
-		return getTarget(ctx) - getCurrent(ctx);
-	}
-
-    /*
-    Hit	Percentage of hit
-                                5	4	  3	    2	1	  0
-    Hard	                    10%	17.5% 25%	25%	17.5% 5%
-    Medium	                    0%	0%	  17.5%	60%	17.5% 5%
-    Soft (below 95)	            0%	0%	  0%	35%	50%	  15%
-    Soft (above 95)	            0%	0%	  0%	0%	80%	  20%
-    Careful (uses 2 cooldown)	0%	0%	  0%	0%	100%  0%
-     */
-
-	/**
-	 * Get the number of parts still requiring a hit
-	 *
-	 * @return
-	 */
-	private static int getSwordPartsRemaining(LogicailMethodContext ctx) {
-		int hits = 0;
-		for (Sword sword : Sword.values()) {
-			if (sword.validate(ctx)) {
-				hits++;
+	public boolean clickButton(final LogicailMethodContext ctx, final MakeSword makeSword) {
+		final int cooldown = makeSword.getCooldown();
+		final int current = getCurrent(ctx);
+		if (getTarget(ctx) > getCurrent(ctx)) {
+			final Component button = ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, buttonWidgetId);
+			if (button.isValid() && button.interact("Select")) {
+				return Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.players.local().getAnimation() == -1 &&
+								(makeSword.getCooldown() != cooldown
+										|| current != getCurrent(ctx));
+					}
+				});
 			}
 		}
-		return hits;
+		return false;
 	}
 
 	public HitType getRequiredHitType(LogicailMethodContext ctx, MakeSword makeSword) {
@@ -124,22 +91,55 @@ public enum Sword {
 		}
 	}
 
-	public boolean clickButton(final LogicailMethodContext ctx, final MakeSword makeSword) {
-		final int cooldown = makeSword.getCooldown();
-		final int current = getCurrent(ctx);
-		if (getTarget(ctx) > getCurrent(ctx)) {
-			final Component button = ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, buttonWidgetId);
-			if (button.isValid() && button.interact("Select")) {
-				return Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.players.local().getAnimation() == -1 &&
-								(makeSword.getCooldown() != cooldown
-										|| current != getCurrent(ctx));
-					}
-				});
+	public int getHitsNeeded(LogicailMethodContext ctx) {
+		if (!validate(ctx)) {
+			return 0;
+		}
+		return getTarget(ctx) - getCurrent(ctx);
+	}
+
+	boolean validate(LogicailMethodContext ctx) {
+		return getTarget(ctx) > getCurrent(ctx);
+	}
+
+	int getCurrent(LogicailMethodContext ctx) {
+		try {
+			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
+		} catch (Exception e) {
+			return -1;
+		}
+	}
+
+	int getTarget(LogicailMethodContext ctx) {
+		try {
+			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
+		} catch (Exception e) {
+			return -1;
+		}
+	}
+
+    /*
+    Hit	Percentage of hit
+                                5	4	  3	    2	1	  0
+    Hard	                    10%	17.5% 25%	25%	17.5% 5%
+    Medium	                    0%	0%	  17.5%	60%	17.5% 5%
+    Soft (below 95)	            0%	0%	  0%	35%	50%	  15%
+    Soft (above 95)	            0%	0%	  0%	0%	80%	  20%
+    Careful (uses 2 cooldown)	0%	0%	  0%	0%	100%  0%
+     */
+
+	/**
+	 * Get the number of parts still requiring a hit
+	 *
+	 * @return
+	 */
+	private static int getSwordPartsRemaining(LogicailMethodContext ctx) {
+		int hits = 0;
+		for (Sword sword : Sword.values()) {
+			if (sword.validate(ctx)) {
+				hits++;
 			}
 		}
-		return false;
+		return hits;
 	}
 }

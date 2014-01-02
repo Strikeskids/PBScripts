@@ -22,16 +22,16 @@ public enum IngotType {
 		this.ids = ids;
 	}
 
-	public int getIngotIdRepairTracks() {
-		return ids[0] - 129;
+	@Override
+	public String toString() {
+		return name;
 	}
 
 	public int getID(IngotGrade grade) {
 		return ids[grade.ordinal()];
 	}
 
-	@Override
-	public String toString() {
-		return name;
+	public int getIngotIdRepairTracks() {
+		return ids[0] - 129;
 	}
 }

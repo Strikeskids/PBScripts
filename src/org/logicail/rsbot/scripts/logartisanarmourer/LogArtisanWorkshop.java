@@ -64,97 +64,67 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 	public static final int ID_SMELTER = 29395;
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
-	private JFrame gui;
 	public LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
-
-	@Override
-	public void repaint(Graphics g) {
-		super.repaint(g);
-
-		// Debug incase repairing pipes doeesn't work (Haven't been able to test yet)
-		if (options.mode != Mode.REPAIR_TRACK && options.respectRepairPipes) {
-			for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
-				if (pipe.isOnScreen()) {
-					final AbstractModel abstractModel = pipe.getInternal().getModel();
-					if (abstractModel == null) {
-						continue;
-					}
-					final Point point = pipe.getCenterPoint();
-					final String s = String.format("Pipe: %d", BrokenPipes.getNumFaces(abstractModel));
-					g.setColor(Color.BLACK);
-					g.drawString(s, point.x + 1, point.y + 1);
-					g.setColor(Color.WHITE);
-					g.drawString(s, point.x, point.y);
-				}
-			}
-		}
-	}
+	private JFrame gui;
 
 	private SkillData skillData = null;
 	private int currentLevel = -1;
 	private int startLevel = -1;
 
-	@Override
-	public LinkedProperties getPaintInfo() {
-		LinkedProperties properties = new LinkedProperties();
-
-		if (ctx.game.isLoggedIn()) {
-			if (skillData == null) {
-				skillData = new SkillData(ctx);
-			}
-			currentLevel = ctx.skills.getLevel(Skills.SMITHING);
-			if (startLevel == -1) {
-				startLevel = currentLevel;
-			}
-		}
-
-		final long runtime = getRuntime();
-
-		properties.put("Status", options.status);
-		properties.put("Time Running", Timer.format(runtime));
-
-		if (skillData != null) {
-			properties.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
-			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
-			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.SMITHING)));
-			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
-		}
-
-		final float time = runtime / 3600000f;
-
+	private int getRequiredLevel() {
+		int requiredLevel = 30;
 		switch (options.mode) {
 			case BURIAL_ARMOUR:
-				properties.put("Ingots Smithed", String.format("%,d (%,d/h)", options.ingotsSmithed, (int) (options.ingotsSmithed / time)));
+				switch (options.ingotType) {
+					case IRON:
+						requiredLevel = 30;
+						break;
+					case STEEL:
+						requiredLevel = 45;
+						break;
+					case MITHRIL:
+						requiredLevel = 60;
+						break;
+					case ADAMANT:
+						requiredLevel = 70;
+						break;
+					case RUNE:
+						requiredLevel = 90;
+						break;
+				}
 				break;
 			case CEREMONIAL_SWORDS:
-				properties.put("Swords Smithed", String.format("%,d (%,d/h)", options.swordsSmithed, (int) (options.swordsSmithed / time)));
-				properties.put("Perfect Swords", String.format("Perfect Swords: %,d (%,d/h)", options.perfectSwords, (int) (options.perfectSwords / time)));
-				properties.put("Broken Swords", String.format("Broken Swords: %,d (%,d/h)", options.brokenSwords, (int) (options.brokenSwords / time)));
-				break;
+				switch (options.ingotType) {
+					case IRON:
+						requiredLevel = 70;
+						break;
+					case STEEL:
+						requiredLevel = 75;
+						break;
+					case MITHRIL:
+						requiredLevel = 80;
+						break;
+					case ADAMANT:
+						requiredLevel = 85;
+						break;
+					case RUNE:
+						requiredLevel = 90;
+						break;
+				}
 			case REPAIR_TRACK:
-				properties.put("Completed Tracks", String.format("%,d (%,d/h)", options.completedTracks, (int) (options.completedTracks / time)));
-				break;
+				switch (options.ingotType) {
+					case BRONZE:
+						requiredLevel = 12;
+						break;
+					case IRON:
+						requiredLevel = 35;
+						break;
+					case STEEL:
+						requiredLevel = 60;
+						break;
+				}
 		}
-
-		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
-		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING));
-		//properties.put("SKCat", ctx.skillingInterface.getCategory());
-		//properties.put("Iron3", IngotType.IRON.getID(IngotGrade.THREE));
-		//properties.put("Iron4", IngotType.IRON.getID(IngotGrade.FOUR));
-		//properties.put("Steel3", IngotType.STEEL.getID(IngotGrade.THREE));
-
-		/*final List<String> categorys = ctx.skillingInterface.getCategorys();
-		if (categorys.size() > 0) {
-			StringBuilder stringBuilder = new StringBuilder("\"");
-			for (String s : categorys) {
-				stringBuilder.append(s).append("\", ");
-			}
-			final String s = stringBuilder.toString();
-			if (!s.isEmpty()) {
-				properties.put("Categorys", s.substring(0, s.length() - 2));
-			}
-		}*/
-		return properties;
+		return requiredLevel;
 	}
 
 	public void createTree() {
@@ -221,6 +191,143 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 	}
 
 	@Override
+	public LinkedProperties getPaintInfo() {
+		LinkedProperties properties = new LinkedProperties();
+
+		if (ctx.game.isLoggedIn()) {
+			if (skillData == null) {
+				skillData = new SkillData(ctx);
+			}
+			currentLevel = ctx.skills.getLevel(Skills.SMITHING);
+			if (startLevel == -1) {
+				startLevel = currentLevel;
+			}
+		}
+
+		final long runtime = getRuntime();
+
+		properties.put("Status", options.status);
+		properties.put("Time Running", Timer.format(runtime));
+
+		if (skillData != null) {
+			properties.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
+			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
+			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.SMITHING)));
+			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
+		}
+
+		final float time = runtime / 3600000f;
+
+		switch (options.mode) {
+			case BURIAL_ARMOUR:
+				properties.put("Ingots Smithed", String.format("%,d (%,d/h)", options.ingotsSmithed, (int) (options.ingotsSmithed / time)));
+				break;
+			case CEREMONIAL_SWORDS:
+				properties.put("Swords Smithed", String.format("%,d (%,d/h)", options.swordsSmithed, (int) (options.swordsSmithed / time)));
+				properties.put("Perfect Swords", String.format("Perfect Swords: %,d (%,d/h)", options.perfectSwords, (int) (options.perfectSwords / time)));
+				properties.put("Broken Swords", String.format("Broken Swords: %,d (%,d/h)", options.brokenSwords, (int) (options.brokenSwords / time)));
+				break;
+			case REPAIR_TRACK:
+				properties.put("Completed Tracks", String.format("%,d (%,d/h)", options.completedTracks, (int) (options.completedTracks / time)));
+				break;
+		}
+
+		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
+		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING));
+		//properties.put("SKCat", ctx.skillingInterface.getCategory());
+		//properties.put("Iron3", IngotType.IRON.getID(IngotGrade.THREE));
+		//properties.put("Iron4", IngotType.IRON.getID(IngotGrade.FOUR));
+		//properties.put("Steel3", IngotType.STEEL.getID(IngotGrade.THREE));
+
+		/*final List<String> categorys = ctx.skillingInterface.getCategorys();
+		if (categorys.size() > 0) {
+			StringBuilder stringBuilder = new StringBuilder("\"");
+			for (String s : categorys) {
+				stringBuilder.append(s).append("\", ");
+			}
+			final String s = stringBuilder.toString();
+			if (!s.isEmpty()) {
+				properties.put("Categorys", s.substring(0, s.length() - 2));
+			}
+		}*/
+
+		return properties;
+	}
+
+	@Override
+	public void messaged(MessageEvent e) {
+		// TODO: Need message for when smithing level not high enough
+
+		if (tree.any()) {
+		    /*if (e.getId() == 0) {
+		        if (e.getMessage().contains("You don't have enough")) {
+                    ++failedConsecutiveWithdrawals;
+                    if (failedConsecutiveWithdrawals >= 3) {
+                        log.log(Level.SEVERE, "Ran out of ore... stopping!");
+                        shutdown();
+                    }
+                } else if (e.getMessage().contains("You collect the"))
+                    failedConsecutiveWithdrawals = 0;
+            } else */
+			String s = e.getMessage();
+			switch (e.getId()) {
+				case 0:
+					if (s.equals("You need plans to make a sword.")) {
+						options.gotPlan = false;
+					} else if (s.equals("This sword is too cool to work. Ask Egil or Abel to rate it.") || s.equals("This sword has cooled and you can no longer work it.")) {
+						options.finishedSword = true;
+						options.gotPlan = false;
+					} else if (s.equals("You broke the sword! You'll need to get another set of plans from Egil.")) {
+						options.brokenSwords++;
+						options.finishedSword = true;
+						options.gotPlan = false;
+					} else if (s.equals("This sword is now perfect and requires no more work.") || s.equals("This sword is perfect. Ask Egil or Abel to rate it.")) {
+						options.finishedSword = true;
+						options.gotPlan = false;
+					} else if (s.equals("For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!")) {
+						options.perfectSwords++;
+						options.swordsSmithed++;
+					} else if (s.startsWith("Your sword is awarded")) {
+						options.swordsSmithed++;
+						options.finishedSword = true;
+						options.gotPlan = false;
+					}
+					break;
+				case 109:
+					if (s.contains("You make a")) {
+						options.ingotsSmithed++;
+					} else if (s.endsWith("track 100%.")) {
+						options.completedTracks++;
+					}
+					break;
+			}
+		}
+	}
+
+	@Override
+	public void repaint(Graphics g) {
+		super.repaint(g);
+
+		// Debug incase repairing pipes doeesn't work (Haven't been able to test yet)
+		if (options.mode != Mode.REPAIR_TRACK && options.respectRepairPipes) {
+			for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
+				if (pipe.isOnScreen()) {
+					final AbstractModel abstractModel = pipe.getInternal().getModel();
+					if (abstractModel == null) {
+						continue;
+					}
+					final Point point = pipe.getCenterPoint();
+					final String s = String.format("Pipe: %d", BrokenPipes.getNumFaces(abstractModel));
+					g.setColor(Color.BLACK);
+					g.drawString(s, point.x + 1, point.y + 1);
+					g.setColor(Color.WHITE);
+					g.drawString(s, point.x, point.y);
+				}
+			}
+		}
+	}
+
+	@Override
 	public void start() {
 		super.start();
 
@@ -271,114 +378,5 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 			}
 		} catch (Exception ignored) {
 		}
-	}
-
-	@Override
-	public void messaged(MessageEvent e) {
-		// TODO: Need message for when smithing level not high enough
-
-		if (tree.any()) {
-		    /*if (e.getId() == 0) {
-		        if (e.getMessage().contains("You don't have enough")) {
-                    ++failedConsecutiveWithdrawals;
-                    if (failedConsecutiveWithdrawals >= 3) {
-                        log.log(Level.SEVERE, "Ran out of ore... stopping!");
-                        shutdown();
-                    }
-                } else if (e.getMessage().contains("You collect the"))
-                    failedConsecutiveWithdrawals = 0;
-            } else */
-			String s = e.getMessage();
-			switch (e.getId()) {
-				case 0:
-					if (s.equals("You need plans to make a sword.")) {
-						options.gotPlan = false;
-					} else if (s.equals("This sword is too cool to work. Ask Egil or Abel to rate it.") || s.equals("This sword has cooled and you can no longer work it.")) {
-						options.finishedSword = true;
-						options.gotPlan = false;
-
-					} else if (s.equals("You broke the sword! You'll need to get another set of plans from Egil.")) {
-						options.brokenSwords++;
-						options.finishedSword = true;
-						options.gotPlan = false;
-
-					} else if (s.equals("This sword is now perfect and requires no more work.") || s.equals("This sword is perfect. Ask Egil or Abel to rate it.")) {
-						options.finishedSword = true;
-						options.gotPlan = false;
-
-					} else if (s.equals("For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!")) {
-						options.perfectSwords++;
-						options.swordsSmithed++;
-					} else if (s.startsWith("Your sword is awarded")) {
-						options.swordsSmithed++;
-						options.finishedSword = true;
-						options.gotPlan = false;
-					}
-					break;
-				case 109:
-					if (s.contains("You make a")) {
-						options.ingotsSmithed++;
-					} else if (s.endsWith("track 100%.")) {
-						options.completedTracks++;
-					}
-					break;
-			}
-		}
-	}
-
-	private int getRequiredLevel() {
-		int requiredLevel = 30;
-		switch (options.mode) {
-			case BURIAL_ARMOUR:
-				switch (options.ingotType) {
-					case IRON:
-						requiredLevel = 30;
-						break;
-					case STEEL:
-						requiredLevel = 45;
-						break;
-					case MITHRIL:
-						requiredLevel = 60;
-						break;
-					case ADAMANT:
-						requiredLevel = 70;
-						break;
-					case RUNE:
-						requiredLevel = 90;
-						break;
-				}
-				break;
-			case CEREMONIAL_SWORDS:
-				switch (options.ingotType) {
-					case IRON:
-						requiredLevel = 70;
-						break;
-					case STEEL:
-						requiredLevel = 75;
-						break;
-					case MITHRIL:
-						requiredLevel = 80;
-						break;
-					case ADAMANT:
-						requiredLevel = 85;
-						break;
-					case RUNE:
-						requiredLevel = 90;
-						break;
-				}
-			case REPAIR_TRACK:
-				switch (options.ingotType) {
-					case BRONZE:
-						requiredLevel = 12;
-						break;
-					case IRON:
-						requiredLevel = 35;
-						break;
-					case STEEL:
-						requiredLevel = 60;
-						break;
-				}
-		}
-		return requiredLevel;
 	}
 }

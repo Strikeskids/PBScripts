@@ -30,6 +30,13 @@ public abstract class LogicailScript extends PollingScript implements PaintListe
 		paint = new Painter(ctx, this);
 	}
 
+	/**
+	 * Ordered properties to show on paint box
+	 *
+	 * @return
+	 */
+	public abstract LinkedProperties getPaintInfo();
+
 	@Override
 	public int poll() {
 		try {
@@ -55,11 +62,4 @@ public abstract class LogicailScript extends PollingScript implements PaintListe
 	public void submit(Task task) {
 		ctx.submit(task);
 	}
-
-	/**
-	 * Ordered properties to show on paint box
-	 *
-	 * @return
-	 */
-	public abstract LinkedProperties getPaintInfo();
 }

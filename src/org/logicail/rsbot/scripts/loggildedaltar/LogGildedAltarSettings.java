@@ -12,7 +12,6 @@ import java.util.Properties;
  * Time: 21:58
  */
 public class LogGildedAltarSettings {
-	private static final String FILENAME = "settings.ini";
 	/* Settings */
 	public static boolean setupFinished = false;
 	public static boolean lightBurners = true;
@@ -34,6 +33,7 @@ public class LogGildedAltarSettings {
 	public static boolean bobonce = false;
 	public static boolean stopLevelEnabled = false;
 	public static int stopLevel;
+	private static final String FILENAME = "settings.ini";
 
 	public static void save(Properties properties, File file) {
 		FileWriter fw = null;

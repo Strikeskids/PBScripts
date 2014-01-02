@@ -16,6 +16,8 @@ import java.util.concurrent.Callable;
  * Time: 11:28
  */
 public class GetTongs extends ArtisanArmourerTask {
+	public static final int TONGS_WORKBENCH = 29393;
+
 	public GetTongs(LogArtisanWorkshop script) {
 		super(script);
 	}
@@ -24,8 +26,6 @@ public class GetTongs extends ArtisanArmourerTask {
 	public String toString() {
 		return "Get Tongs";
 	}
-
-	public static final int TONGS_WORKBENCH = 29393;
 
 	@Override
 	public boolean activate() {

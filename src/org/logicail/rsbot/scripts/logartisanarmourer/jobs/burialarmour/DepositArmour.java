@@ -8,6 +8,8 @@ import org.powerbot.script.wrappers.GameObject;
 import java.util.concurrent.Callable;
 
 public class DepositArmour extends ArtisanArmourerTask {
+	private static final int ID_CHUTE = 29396;
+
 	public DepositArmour(LogArtisanWorkshop script) {
 		super(script);
 	}
@@ -16,8 +18,6 @@ public class DepositArmour extends ArtisanArmourerTask {
 	public String toString() {
 		return "Deposit Armour";
 	}
-
-	private static final int ID_CHUTE = 29396;
 
 	@Override
 	public boolean activate() {

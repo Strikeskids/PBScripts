@@ -33,8 +33,37 @@ public class Tree extends Task {
 		Collections.addAll(tasks, task);
 	}
 
+	public boolean any() {
+		return tasks.size() > 0;
+	}
+
 	public void clear() {
 		tasks.clear();
+	}
+
+	@Override
+	public void run() {
+		if (activate()) {
+			Task task = get();
+			if (task != null) {
+				ctx.log.info("Run: " + task);
+				task.run();
+			}
+		}
+	}
+
+	@Override
+	public boolean activate() {
+		Task state = state();
+		if (state != null) {
+			set(state);
+			return true;
+		}
+		return false;
+	}
+
+	public final void set(Task node) {
+		currentTask.set(node);
 	}
 
 	public final synchronized Task state() {
@@ -55,36 +84,7 @@ public class Tree extends Task {
 		return null;
 	}
 
-	public final void set(Task node) {
-		currentTask.set(node);
-	}
-
 	public final Task get() {
 		return currentTask.get();
-	}
-
-	@Override
-	public boolean activate() {
-		Task state = state();
-		if (state != null) {
-			set(state);
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void run() {
-		if (activate()) {
-			Task task = get();
-			if (task != null) {
-				ctx.log.info("Run: " + task);
-				task.run();
-			}
-		}
-	}
-
-	public boolean any() {
-		return tasks.size() > 0;
 	}
 }

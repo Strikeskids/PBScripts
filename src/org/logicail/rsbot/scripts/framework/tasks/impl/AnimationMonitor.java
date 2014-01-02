@@ -15,16 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AnimationMonitor extends LoopTask {
 	private static final Map<Integer, Long> map = new ConcurrentHashMap<Integer, Long>();
 
-	public AnimationMonitor(LogicailMethodContext ctx) {
-		super(ctx);
-	}
-
-	public static void put(int animation) {
-		if (animation != -1) {
-			map.put(animation, System.currentTimeMillis());
-		}
-	}
-
 	/**
 	 * Time since since animation
 	 *
@@ -54,6 +44,10 @@ public class AnimationMonitor extends LoopTask {
 		return mostRecent;
 	}
 
+	public AnimationMonitor(LogicailMethodContext ctx) {
+		super(ctx);
+	}
+
 	public int loop() {
 		try {
 			if (ctx.game.isLoggedIn()) {
@@ -62,5 +56,11 @@ public class AnimationMonitor extends LoopTask {
 		} catch (Exception ignored) {
 		}
 		return 100;
+	}
+
+	public static void put(int animation) {
+		if (animation != -1) {
+			map.put(animation, System.currentTimeMillis());
+		}
 	}
 }
