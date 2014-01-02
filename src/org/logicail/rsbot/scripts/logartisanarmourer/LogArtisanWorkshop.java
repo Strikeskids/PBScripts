@@ -147,6 +147,9 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 		} catch (NullPointerException npe) {
 		}
 
+		submit(new AnimationMonitor(ctx));
+		submit(new AntiBan(ctx));
+
 		//tree.add(new SpinTicket());
 		//tree.add(new LogoutIdle());
 		//tree.add(new EraseChatText());
@@ -330,12 +333,6 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 	@Override
 	public void start() {
 		super.start();
-
-		// Change this static api crap
-		//new MakeSword(this);
-
-		submit(new AnimationMonitor(ctx));
-		submit(new AntiBan(ctx));
 
 		submit(new Task(ctx) {
 			@Override
