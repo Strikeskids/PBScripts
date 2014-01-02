@@ -42,7 +42,7 @@ public class LogicailMethodContext extends MethodContext {
 		this.script = script;
 		log = script.log;
 
-		useragent = script.getName().toUpperCase() + "/" + script.getVersion();
+		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
 
 		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
 			@Override
