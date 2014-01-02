@@ -110,19 +110,19 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {
 							AnimationMonitor.put(id);
 						}
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return ctx.isPaused() || ctx.isShutdown() || !options.isSmithing
+										|| ctx.backpack.select().id(getMakeNextId()).count() >= target
+										|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000
+										|| (options.mode == Mode.BURIAL_ARMOUR && !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText()));
+							}
+						}, 600, options.mode == Mode.BURIAL_ARMOUR ? 420 : 100);
+						// 250 sec for burial
+						sleep(200, 1000);
 					}
 
-					// 250 sec for burial
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.isPaused() || ctx.isShutdown() || !options.isSmithing
-									|| ctx.backpack.select().id(getMakeNextId()).count() >= target
-									|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000
-									|| (options.mode == Mode.BURIAL_ARMOUR && !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText()));
-						}
-					}, 600, options.mode == Mode.BURIAL_ARMOUR ? 420 : 100);
-					sleep(200, 1000);
 					options.isSmithing = false;
 
 /*
