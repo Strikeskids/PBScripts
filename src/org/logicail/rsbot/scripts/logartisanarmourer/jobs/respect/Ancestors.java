@@ -53,7 +53,7 @@ public class Ancestors extends RespectTask {
 
 	@Override
 	public void run() {
-		for (Npc ancestor : getAncestor()) {
+		for (Npc ancestor : ctx.npcs) {
 			if (ctx.camera.prepare((ancestor))) {
 				options.status = "Attacking ancestor";
 				options.isSmithing = false;

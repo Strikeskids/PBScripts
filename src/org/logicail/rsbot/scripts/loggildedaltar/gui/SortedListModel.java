@@ -1,0 +1,85 @@
+package org.logicail.rsbot.scripts.loggildedaltar.gui;
+
+import javax.swing.*;
+import java.util.*;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Logicail
+ * Date: 03/01/14
+ * Time: 15:35
+ */
+public class SortedListModel<T> extends AbstractListModel {
+
+	// Define a SortedSet
+	final SortedSet<T> model;
+
+	public SortedListModel() {
+		// Create a TreeSet
+		// Store it in SortedSet variable
+		model = new TreeSet<T>();
+	}
+
+	// ListModel methods
+	public int getSize() {
+		// Return the model size
+		return model.size();
+	}
+
+	public Object getElementAt(int index) {
+		// Return the appropriate element
+		return model.toArray()[index];
+	}
+
+	// Other methods
+	public void add(T element) {
+		if (model.add(element)) {
+			fireContentsChanged(this, 0, getSize());
+		}
+	}
+
+	public void addAll(T elements[]) {
+		Collection c = Arrays.asList(elements);
+		model.addAll(c);
+		fireContentsChanged(this, 0, getSize());
+	}
+
+	public void clear() {
+		model.clear();
+		fireContentsChanged(this, 0, getSize());
+	}
+
+	public boolean contains(T element) {
+		return model.contains(element);
+	}
+
+	public T firstElement() {
+		// Return the appropriate element
+		return model.first();
+	}
+
+	public Iterator iterator() {
+		return model.iterator();
+	}
+
+	public T lastElement() {
+		// Return the appropriate element
+		return model.last();
+	}
+
+	public boolean removeElement(T element) {
+		boolean removed = model.remove(element);
+		if (removed) {
+			fireContentsChanged(this, 0, getSize());
+		}
+		return removed;
+	}
+
+	public boolean isEmpty() {
+		return model.isEmpty();
+	}
+
+	public Object[] toArray() {
+		return model.toArray();
+	}
+}

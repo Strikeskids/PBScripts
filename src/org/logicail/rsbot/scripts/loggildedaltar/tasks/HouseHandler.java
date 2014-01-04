@@ -1,7 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
-import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarSettings;
+import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.util.Hiscores;
@@ -40,13 +39,13 @@ public class HouseHandler implements MessageListener {
 	public final Set<String> ignoreHouses = new HashSet<String>();
 	public boolean houseValid;
 	private final AtomicReference<OpenHouse> current_house = new AtomicReference<OpenHouse>();
-	private final LogicailScript script;
+	private final LogGildedAltar script;
 	private final HashMap<String, Boolean> checkedNames = new HashMap<String, Boolean>();
 	private int nextTimeBounds = 900000;
 	private long waitUntil = System.currentTimeMillis();
 	private long nextCheckForhouses = 0;
 
-	public HouseHandler(LogicailScript script) {
+	public HouseHandler(LogGildedAltar script) {
 		this.script = script;
 		ignoreHouses.add("lit g altar");
 		ignoreHouses.add("altar");
@@ -86,7 +85,7 @@ public class HouseHandler implements MessageListener {
 			}
 		}
 
-		if (LogGildedAltarSettings.detectHouses && System.currentTimeMillis() > nextCheckForhouses) {
+		if (script.options.detectHouses && System.currentTimeMillis() > nextCheckForhouses) {
 			nextCheckForhouses = System.currentTimeMillis() + 600000;
 			addOpenHouses();
 		}
@@ -175,7 +174,7 @@ public class HouseHandler implements MessageListener {
 				}
 				if (!player.isEmpty() && !player.contains("join") && !player.contains(".")
 						&& !ignoreHouses.contains(player)) {
-					final OpenHouse house = new OpenHouse(player);
+					final OpenHouse house = new OpenHouse(script, player);
 					if (!openHouses.contains(house)) {
 						if (validatePlayer(player)) {
 							openHouses.add(house);

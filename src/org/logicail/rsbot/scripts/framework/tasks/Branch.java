@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.tasks;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 
 import java.util.Collections;
 
@@ -10,9 +10,9 @@ import java.util.Collections;
  * Date: 07/12/13
  * Time: 21:22
  */
-public abstract class Branch extends Tree {
-	public Branch(LogicailMethodContext ctx) {
-		super(ctx);
+public abstract class Branch<T extends LogicailScript<T>> extends Tree<T> {
+	public Branch(T script) {
+		super(script);
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public abstract class Branch extends Tree {
 
 	public abstract boolean branch();
 
-	public void addTask(Task... tasks) {
+	public void addTask(Task<T>... tasks) {
 		Collections.addAll(this.tasks, tasks);
 	}
 }

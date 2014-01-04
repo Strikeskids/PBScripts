@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.tasks.impl;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.LoopTask;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 07/12/13
  * Time: 21:33
  */
-public class AnimationMonitor extends LoopTask {
+public class AnimationMonitor<T extends LogicailScript<T>> extends LoopTask<T> {
 	private static final Map<Integer, Long> map = new ConcurrentHashMap<Integer, Long>();
 
 	/**
@@ -44,8 +44,8 @@ public class AnimationMonitor extends LoopTask {
 		return mostRecent;
 	}
 
-	public AnimationMonitor(LogicailMethodContext ctx) {
-		super(ctx);
+	public AnimationMonitor(T script) {
+		super(script);
 	}
 
 	public int loop() {

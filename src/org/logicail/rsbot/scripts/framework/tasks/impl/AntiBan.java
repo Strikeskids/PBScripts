@@ -1,6 +1,6 @@
-package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
+package org.logicail.rsbot.scripts.framework.tasks.impl;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.LoopTask;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.util.Random;
@@ -14,11 +14,11 @@ import java.awt.*;
  * Date: 25/05/12
  * Time: 09:46
  */
-public class AntiBan extends LoopTask {
+public class AntiBan<T extends LogicailScript<T>> extends LoopTask<T> {
 	private final Timer nextAntiBan = new Timer(Random.nextInt(5000, 45000));
 
-	public AntiBan(LogicailMethodContext context) {
-		super(context);
+	public AntiBan(T script) {
+		super(script);
 	}
 
 	@Override

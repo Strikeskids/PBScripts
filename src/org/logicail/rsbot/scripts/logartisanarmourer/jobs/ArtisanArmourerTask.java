@@ -10,13 +10,11 @@ import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
  * Date: 22/06/12
  * Time: 10:32
  */
-public abstract class ArtisanArmourerTask extends Task {
-	protected final LogArtisanWorkshop script;
+public abstract class ArtisanArmourerTask extends Task<LogArtisanWorkshop> {
 	protected final LogArtisanWorkshopOptions options;
 
 	public ArtisanArmourerTask(LogArtisanWorkshop script) {
-		super(script.ctx);
-		this.script = script;
+		super(script);
 		this.options = script.options;
 	}
 

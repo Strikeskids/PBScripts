@@ -26,7 +26,12 @@ public class BrokenPipes extends RespectTask {
 		if (model == null) {
 			return -1;
 		}
-		return model instanceof ModelCapture ? ((ModelCapture) model).getFaces() : Math.min(model.getIndices1().length, Math.min(model.getIndices2().length, model.getIndices3().length));
+
+		if (model instanceof ModelCapture) {
+			return ((ModelCapture) model).getFaces();
+		}
+
+		return Math.min(model.getIndices1().length, Math.min(model.getIndices2().length, model.getIndices3().length));
 	}
 
 	public BrokenPipes(LogArtisanWorkshop script) {

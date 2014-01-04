@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.tasks;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,11 +8,11 @@ import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
  * Date: 07/12/13
  * Time: 20:58
  */
-public abstract class LoopTask extends Task {
+public abstract class LoopTask<T extends LogicailScript<T>> extends Task<T> {
 	private boolean paused;
 
-	public LoopTask(LogicailMethodContext context) {
-		super(context);
+	public LoopTask(T script) {
+		super(script);
 	}
 
 	public final boolean isPaused() {

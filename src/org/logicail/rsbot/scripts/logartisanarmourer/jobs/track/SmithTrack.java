@@ -87,7 +87,7 @@ public class SmithTrack extends Branch {
 	}
 
 	public SmithTrack(LogArtisanWorkshop script, MakeSword makeSword) {
-		super(script.ctx);
+		super(script);
 		this.script = script;
 		anvil = new SmithAnvil(script, makeSword);
 

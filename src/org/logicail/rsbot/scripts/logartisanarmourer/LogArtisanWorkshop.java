@@ -4,8 +4,8 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
+import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.logartisanarmourer.gui.ArtisanGUI;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.AntiBan;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.DepositOre;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.MakeIngots;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.StayInArea;
@@ -44,7 +44,7 @@ import java.awt.*;
 		authors = {"Logicail"},
 		topic = 1134701
 )
-public class LogArtisanWorkshop extends LogicailScript implements MessageListener {
+public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> implements MessageListener {
 	public static final int[] INGOT_IDS = {20632, 20633, 20634, 20635, 20636,
 			20637, 20638, 20639, 20640, 20641, 20642, 20643, 20644, 20645,
 			20646, 20647, 20648, 20649, 20650, 20651, 20652};
@@ -65,7 +65,6 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
-	private JFrame gui;
 
 	private SkillData skillData = null;
 	private int currentLevel = -1;
@@ -144,16 +143,13 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 				getController().stop();
 				return;
 			}
-		} catch (NullPointerException npe) {
+		} catch (NullPointerException ignored) {
 		}
 
-		submit(new AnimationMonitor(ctx));
-		submit(new AntiBan(ctx));
+		submit(new AnimationMonitor<LogArtisanWorkshop>(this));
+		submit(new AntiBan<LogArtisanWorkshop>(this));
 
-		//tree.add(new SpinTicket());
 		//tree.add(new LogoutIdle());
-		//tree.add(new EraseChatText());
-		//tree.add(new GetSmithingLevel());
 
 		tree.add(new StayInArea(this));
 
@@ -334,7 +330,7 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 	public void start() {
 		super.start();
 
-		submit(new Task(ctx) {
+		submit(new Task<LogArtisanWorkshop>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -365,15 +361,5 @@ public class LogArtisanWorkshop extends LogicailScript implements MessageListene
 		}*/
 
 		//Painter.FONT_TITLE
-	}
-
-	@Override
-	public void stop() {
-		try {
-			if (gui != null && gui.isVisible()) {
-				gui.dispose();
-			}
-		} catch (Exception ignored) {
-		}
 	}
 }

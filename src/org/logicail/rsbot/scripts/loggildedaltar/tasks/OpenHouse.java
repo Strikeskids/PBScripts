@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
+import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.util.Random;
 
 /**
@@ -9,13 +10,15 @@ import org.powerbot.script.util.Random;
  * Time: 14:46
  */
 public class OpenHouse implements Comparable<OpenHouse> {
+	private final LogGildedAltar script;
 	private long added;
 	private long success;
 	private final String playerName;
 	private long skipUntil;
 	private boolean hasObelisk = true;
 
-	public OpenHouse(String playerName) {
+	public OpenHouse(LogGildedAltar script, String playerName) {
+		this.script = script;
 		this.added = System.currentTimeMillis();
 		this.success = System.currentTimeMillis();
 		this.playerName = playerName.toLowerCase();
@@ -56,7 +59,7 @@ public class OpenHouse implements Comparable<OpenHouse> {
 	public int compareTo(OpenHouse o) {
 		double dist = getSuccess() - o.getSuccess();
 
-		final SummoningTask summoningTask = SummoningTask.getInstance();
+		final SummoningTask summoningTask = script.summoningTask;
 		if (summoningTask != null && summoningTask.branch()) {
 			// Need to recharge pick house with obelisk
 			if (hasObelisk) {

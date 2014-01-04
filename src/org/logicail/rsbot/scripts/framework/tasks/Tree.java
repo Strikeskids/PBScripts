@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.tasks;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,20 +16,20 @@ import java.util.concurrent.atomic.AtomicReference;
  * Date: 07/12/13
  * Time: 21:15
  */
-public class Tree extends Task {
-	protected final Queue<Task> tasks = new ConcurrentLinkedQueue<Task>();
-	protected final AtomicReference<Task> currentTask = new AtomicReference<Task>();
+public class Tree<T extends LogicailScript> extends Task<T> {
+	protected final Queue<Task<T>> tasks = new ConcurrentLinkedQueue<Task<T>>();
+	protected final AtomicReference<Task<T>> currentTask = new AtomicReference<Task<T>>();
 
-	public Tree(LogicailMethodContext ctx) {
-		super(ctx);
+	public Tree(T script) {
+		super(script);
 	}
 
-	public Tree(LogicailMethodContext ctx, Task[] tasks) {
-		this(ctx);
+	public Tree(T script, Task<T>[] tasks) {
+		this(script);
 		this.tasks.addAll(Arrays.asList(tasks));
 	}
 
-	public void add(Task... task) {
+	public void add(Task<T>... task) {
 		Collections.addAll(tasks, task);
 	}
 
@@ -54,7 +54,7 @@ public class Tree extends Task {
 
 	@Override
 	public boolean activate() {
-		Task state = state();
+		Task<T> state = state();
 		if (state != null) {
 			set(state);
 			return true;
@@ -62,11 +62,11 @@ public class Tree extends Task {
 		return false;
 	}
 
-	public final void set(Task node) {
+	public final void set(Task<T> node) {
 		currentTask.set(node);
 	}
 
-	public final synchronized Task state() {
+	public final synchronized Task<T> state() {
 		/*Task current = currentTask.get();
 		if (current != null && current.activate()) {
 			if (current.activate()) {
@@ -75,7 +75,7 @@ public class Tree extends Task {
 			}
 		}*/
 
-		for (Task next : tasks) {
+		for (Task<T> next : tasks) {
 			if (next != null && next.activate()) {
 				return next;
 			}
@@ -84,7 +84,11 @@ public class Tree extends Task {
 		return null;
 	}
 
-	public final Task get() {
+	public final Task<T> get() {
 		return currentTask.get();
+	}
+
+	public Queue<Task<T>> getTasks() {
+		return tasks;
 	}
 }

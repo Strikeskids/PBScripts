@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.tasks;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
 
 /**
@@ -9,9 +9,11 @@ import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
  * Date: 07/12/13
  * Time: 20:58
  */
-public abstract class Task extends LogicailMethodProvider implements Runnable {
-	public Task(LogicailMethodContext context) {
-		super(context);
+public abstract class Task<T extends LogicailScript> extends LogicailMethodProvider implements Runnable {
+	public T script;
+	public Task(T script) {
+		super(script.ctx);
+		this.script = script;
 	}
 
 	public abstract boolean activate();

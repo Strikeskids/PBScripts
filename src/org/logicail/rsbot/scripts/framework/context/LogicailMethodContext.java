@@ -1,8 +1,9 @@
 package org.logicail.rsbot.scripts.framework.context;
 
-import org.logicail.rsbot.scripts.framework.context.providers.MyBackPack;
-import org.logicail.rsbot.scripts.framework.context.providers.MyCamera;
-import org.logicail.rsbot.scripts.framework.context.providers.SkillingInterface;
+import com.sk.methods.Combat;
+import com.sk.methods.SkKeyboard;
+import com.sk.methods.action.ActionBar;
+import org.logicail.rsbot.scripts.framework.context.providers.*;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.AbstractScript;
@@ -25,17 +26,29 @@ import java.util.logging.Logger;
 public class LogicailMethodContext extends MethodContext {
 	public final Logger log;
 
+	public boolean debug;
+
 	// Providers
 	public SkillingInterface skillingInterface;
 	public MyBackPack backpack;
 	public MyCamera camera;
+	public MyEquipment equipment;
+	public MySummoning summoning;
+	public MyChat chat;
+	public Lodestones lodestones;
 	// Concurrent task executor
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AbstractScript script;
 	private volatile boolean shutdown;
 	private volatile boolean paused;
+	// SK
+	public SkKeyboard keyboard;
+	public ActionBar actionBar;
+	public Combat combat;
+	// !SK
 
 	private final String useragent;
+	public Magic magic;
 
 	public LogicailMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext.getBot());
@@ -82,6 +95,16 @@ public class LogicailMethodContext extends MethodContext {
 		skillingInterface = new SkillingInterface(this);
 		backpack = new MyBackPack(this);
 		camera = new MyCamera(this);
+		equipment = new MyEquipment(this);
+		summoning = new MySummoning(this);
+		chat = new MyChat(this);
+		lodestones = new Lodestones(this);
+
+		super.keyboard = this.keyboard = new SkKeyboard(this);
+		actionBar = new ActionBar(this);
+		combat = new Combat(this);
+
+		magic = new Magic(this);
 	}
 
 	public void stop(final String reason) {

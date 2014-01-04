@@ -10,6 +10,7 @@ import org.powerbot.script.PollingScript;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -18,16 +19,29 @@ import java.awt.*;
  * Date: 07/12/13
  * Time: 21:07
  */
-public abstract class LogicailScript extends PollingScript implements PaintListener {
+public abstract class LogicailScript<T extends LogicailScript> extends PollingScript implements PaintListener {
 	public final LogicailMethodContext ctx;
-	protected final Tree tree;
+	protected final Tree<T> tree;
 	private final Painter paint;
+	protected JFrame gui;
 
 	protected LogicailScript() {
 		this.ctx = new LogicailMethodContext(super.ctx, this);
 		this.ctx.init(super.ctx);
-		tree = new Tree(ctx);
+		tree = new Tree<T>((T)this);
 		paint = new Painter(ctx, this);
+
+		getExecQueue(State.STOP).add(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (gui != null && gui.isVisible()) {
+						gui.dispose();
+					}
+				} catch (Exception ignored) {
+				}
+			}
+		});
 	}
 
 	/**
@@ -59,7 +73,7 @@ public abstract class LogicailScript extends PollingScript implements PaintListe
 	 *
 	 * @param task
 	 */
-	public void submit(Task task) {
+	public void submit(Task<T> task) {
 		ctx.submit(task);
 	}
 }
