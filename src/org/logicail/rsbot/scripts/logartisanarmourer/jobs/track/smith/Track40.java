@@ -23,7 +23,7 @@ public class Track40 extends AbstractTrack {
 	}
 
 	@Override
-	public boolean activate() {
+	public boolean isValid() {
 		return !ctx.backpack.select().id(options.getIngotId()).isEmpty() || !ctx.backpack.select().id(smithTrack.getBasePlate()).isEmpty();
 	}
 
@@ -50,7 +50,7 @@ public class Track40 extends AbstractTrack {
 						ctx.log.info("Deposit partial tracks/parts");
 						ctx.skillingInterface.close();
 						sleep(200, 1000);
-						for (GameObject minecart : ctx.objects.select().id(LogArtisanWorkshop.ID_MINE_CART).nearest().first()) {
+						for (GameObject minecart : ctx.objects.select().id(LogArtisanWorkshop.ID_MINE_CART).nearest().limit(3).shuffle().first()) {
 							if (ctx.camera.prepare(minecart) && minecart.interact("Deposit-components", "Mine cart")) {
 								Condition.wait(new Callable<Boolean>() {
 									@Override

@@ -5,11 +5,9 @@ import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
-import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
 
 import java.util.concurrent.Callable;
 
@@ -17,7 +15,6 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	public static final int WIDGET_INSTRUCTION = 1073;
 	public static final int WIDGET_INSTRUCTION_CHILD = 11;
 
-	public static Tile anvilLocation = null;
 	private static final int[] ID_ANVIL = {4046};
 	private static final int[] ID_ANVIL_SWORD = {4047, 24664, 24677, 24678, 15520, 20258};
 	private static final int[] ID_ANVIL_TRACK = {24820};
@@ -43,25 +40,6 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		return "Smith Anvil";
 	}
 
-	@Override
-	public boolean activate() {
-		if (makeSword == null) {
-			script.log.severe("SmithAnvil.makeSword is null!");
-			return false;
-		}
-		if (super.activate() && ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).isValid()) {
-			if (!ctx.backpack.select().id(options.getIngotId()).isEmpty()) {
-				if (ctx.skillingInterface.isOpen() || !options.isSmithing
-						|| !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())
-						|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > animationTimelimit) {
-					return true;
-				}
-				//}
-			}
-		}
-		return false;
-	}
-
 	private int[] getAnvilId() {
 		switch (options.mode) {
 			case BURIAL_ARMOUR:
@@ -72,6 +50,25 @@ public class SmithAnvil extends ArtisanArmourerTask {
 				return ID_ANVIL_TRACK;
 		}
 		return ID_ANVIL_TRACK;
+	}
+
+	@Override
+	public boolean isValid() {
+		if (makeSword == null) {
+			script.log.severe("SmithAnvil.makeSword is null!");
+			return false;
+		}
+		if (super.isValid() && ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).isValid()) {
+			if (!ctx.backpack.select().id(options.getIngotId()).isEmpty()) {
+				if (ctx.skillingInterface.isOpen() || !options.isSmithing
+						|| !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())
+						|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > animationTimelimit) {
+					return true;
+				}
+				//}
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -161,15 +158,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			ctx.skillingInterface.cancelProduction();
 		}
 
-		BasicNamedQuery<GameObject> anvils = null;
-		if (anvilLocation != null) {
-			anvils = ctx.objects.select().id(getAnvilId()).nearest(anvilLocation).first();
-		}
-		if (anvils == null || anvils.isEmpty()) {
-			anvils = ctx.objects.select().id(getAnvilId()).nearest().first();
-		}
-
-		for (final GameObject anvil : anvils) {
+		for (final GameObject anvil : ctx.objects.select().id(getAnvilId()).nearest().limit(3).shuffle().first()) {
 			if (ctx.camera.prepare(anvil)) {
 				options.status = "Clicking on anvil";
 				if (anvil.interact("Smith", "Anvil")) {

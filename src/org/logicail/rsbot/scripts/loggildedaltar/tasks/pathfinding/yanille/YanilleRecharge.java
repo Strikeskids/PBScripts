@@ -26,5 +26,6 @@ public class YanilleRecharge extends RechargeSummoning {
 
 	public YanilleRecharge(LogGildedAltar script) {
 		super(script, Path.YANILLE_OBELISK, PATH_HOUSE_OBELISK);
-		this.pathToSmall = new TilePath(ctx, YanilleBankWalk.PATH_FROM_OBELISK);	}
+		this.pathToSmall = new TilePath(ctx, YanilleBankWalk.PATH_FROM_OBELISK);
+	}
 }

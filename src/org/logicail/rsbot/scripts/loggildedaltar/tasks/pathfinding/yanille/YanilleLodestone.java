@@ -8,6 +8,7 @@ import org.logicail.rsbot.util.DoorOpener;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Area;
 import org.powerbot.script.wrappers.GameObject;
 import org.powerbot.script.wrappers.Tile;
@@ -28,31 +29,17 @@ public class YanilleLodestone extends LodestoneTeleport {
 		super(script, Path.YANILLE_LODESTONE, Lodestones.Lodestone.YANILlE);
 	}
 
-	public BasicNamedQuery<GameObject> nextDoor() {
-		final Tile playerLocation = ctx.players.local().getLocation();
-		return ctx.objects.select().id(CLOSED_DOOR).select(new Filter<GameObject>() {
-			@Override
-			public boolean accept(GameObject gameObject) {
-				return gameObject.getLocation().x >= playerLocation.x && DOOR_AREA.contains(gameObject);
-			}
-		}).nearest().first();
-	}
-
 	@Override
 	public boolean doLarge() {
-		if (!script.houseTask.isInHouse() && !locationAttribute.isInLargeArea(ctx)) {
-			return super.doLarge();
-		}
-		return false;
+		return !script.houseTask.isInHouse() && !locationAttribute.isInLargeArea(ctx) && super.doLarge();
 	}
 
 	@Override
 	public boolean doSmall() {
 		if (!script.houseTask.isInHouse()) {
-			final BasicNamedQuery<GameObject> door = nextDoor();
-			if (!door.isEmpty()) {
-				door.each(new DoorOpener(ctx));
-				if (nextDoor().isEmpty()) {
+			GameObject door = nextDoor().poll();
+			if (door.isValid()) {
+				if (DoorOpener.open(ctx, door)) {
 					if (locationAttribute.getSmallRandom(ctx).getMatrix(ctx).isReachable()) {
 						script.housePortal.enterPortal();
 					} else {
@@ -68,7 +55,7 @@ public class YanilleLodestone extends LodestoneTeleport {
 				public Boolean call() throws Exception {
 					return ctx.players.local().isInMotion();
 				}
-			}, 600, 3)) {
+			}, 600, Random.nextInt(4, 8))) {
 				return Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -78,5 +65,15 @@ public class YanilleLodestone extends LodestoneTeleport {
 			}
 		}
 		return locationAttribute.isInSmallArea(ctx);
+	}
+
+	public BasicNamedQuery<GameObject> nextDoor() {
+		final Tile playerLocation = ctx.players.local().getLocation();
+		return ctx.objects.select().id(CLOSED_DOOR).select(new Filter<GameObject>() {
+			@Override
+			public boolean accept(GameObject gameObject) {
+				return gameObject.getLocation().x >= playerLocation.x && DOOR_AREA.contains(gameObject);
+			}
+		}).nearest().limit(2).shuffle().first(); // Left and right door => limit 2
 	}
 }

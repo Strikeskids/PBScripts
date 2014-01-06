@@ -8,11 +8,11 @@ import org.powerbot.script.wrappers.Tile;
 import java.util.concurrent.Callable;
 
 /**
-* Created with IntelliJ IDEA.
-* User: Logicail
-* Date: 04/01/14
-* Time: 18:06
-*/
+ * Created with IntelliJ IDEA.
+ * User: Logicail
+ * Date: 04/01/14
+ * Time: 18:06
+ */
 public class TeleportSucceeded extends LogicailMethodProvider implements Callable<Boolean> {
 	private final Tile start;
 

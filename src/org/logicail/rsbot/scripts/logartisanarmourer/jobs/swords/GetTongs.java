@@ -28,8 +28,8 @@ public class GetTongs extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean activate() {
-		return super.activate()
+	public boolean isValid() {
+		return super.isValid()
 				&& !ctx.backpack.isFull()
 				&& ctx.backpack.select().id(MakeSword.TONGS).isEmpty();
 	}
@@ -48,7 +48,7 @@ public class GetTongs extends ArtisanArmourerTask {
 			}
 		}
 
-		for (GameObject workbench : ctx.objects.select().id(TONGS_WORKBENCH).nearest().first()) {
+		for (GameObject workbench : ctx.objects.select().id(TONGS_WORKBENCH).nearest().limit(3).shuffle().first()) {
 			if (ctx.camera.prepare(workbench) && workbench.interact("Take", "Workbench")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override

@@ -17,8 +17,8 @@ import java.util.concurrent.Callable;
  * Time: 16:16
  */
 public abstract class NodePath extends LogGildedAltarTask {
-	private final Path path;
 	protected final LocationAttribute locationAttribute;
+	private final Path path;
 
 	public NodePath(LogGildedAltar script, Path path) {
 		super(script);
@@ -33,6 +33,16 @@ public abstract class NodePath extends LogGildedAltarTask {
 	@Override
 	public String toString() {
 		return path.getName();
+	}
+
+	public List<BankRequiredItem> getItemsNeededFromBank() {
+		return new ArrayList<BankRequiredItem>();
+	}
+
+	@Override
+	public boolean isValid() {
+		return !path.getLocation().isInSmallArea(ctx)
+				&& (path.getLocation().isInLargeArea(ctx) || getItemsNeededFromBank().isEmpty());
 	}
 
 	@Override
@@ -55,16 +65,6 @@ public abstract class NodePath extends LogGildedAltarTask {
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean activate() {
-		return !path.getLocation().isInSmallArea(ctx)
-				&& (path.getLocation().isInLargeArea(ctx) || getItemsNeededFromBank().isEmpty());
-	}
-
-	public List<BankRequiredItem> getItemsNeededFromBank() {
-		return new ArrayList<BankRequiredItem>();
 	}
 
 	protected abstract boolean doLarge();

@@ -61,6 +61,22 @@ public enum Sword {
 		return false;
 	}
 
+	int getCurrent(LogicailMethodContext ctx) {
+		try {
+			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
+		} catch (Exception e) {
+			return -1;
+		}
+	}
+
+	int getTarget(LogicailMethodContext ctx) {
+		try {
+			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
+		} catch (Exception e) {
+			return -1;
+		}
+	}
+
 	public HitType getRequiredHitType(LogicailMethodContext ctx, MakeSword makeSword) {
 		final int hitsNeeded = getHitsNeeded(ctx);
 		if (hitsNeeded <= 0) {
@@ -100,22 +116,6 @@ public enum Sword {
 
 	boolean validate(LogicailMethodContext ctx) {
 		return getTarget(ctx) > getCurrent(ctx);
-	}
-
-	int getCurrent(LogicailMethodContext ctx) {
-		try {
-			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
-		} catch (Exception e) {
-			return -1;
-		}
-	}
-
-	int getTarget(LogicailMethodContext ctx) {
-		try {
-			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
-		} catch (Exception e) {
-			return -1;
-		}
 	}
 
     /*

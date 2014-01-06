@@ -5,11 +5,10 @@ import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.BankingTask;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.HouseHandler;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.HouseTask;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.SummoningTask;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleLodestone;
 import org.logicail.rsbot.util.LinkedProperties;
 import org.logicail.rsbot.util.LogicailArea;
@@ -17,6 +16,7 @@ import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
 
@@ -47,19 +47,46 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public BankingTask bankingTask = new BankingTask(this);
 	public HouseTask houseTask = new HouseTask(this);
 	public HousePortal housePortal = new HousePortal(this);
+	public RoomStorage roomStorage;
+	public LeaveHouse leaveHouse;
 
 	public YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
+	public AltarTask altarTask;
 
 	public void createTree(LinkedList<Task> houseNodes, LinkedList<Task> bankNodes) {
+		roomStorage = new RoomStorage(ctx);
+
 		submit(new AnimationMonitor<LogGildedAltar>(this));
 		submit(new AntiBan<LogGildedAltar>(this));
+
+		// v4
+		/*
+		new StopLevel(),
+				new StatisticsPostback(),
+				new LeaveHouse(),
+				new WidgetCloser(),
+				new LogoutIdle(),
+				new WorldThirtyOne(),
+				new PickupBones(),
+				new ActivateAura(),
+				new SummoningDelegation(),
+				bankingDelegation,
+				new HouseDelegation(houseNodes),
+				new RenewFamiliar(),
+				new AltarDelegation(),
+		*/
+
+
+		tree.add(leaveHouse = new LeaveHouse(this));
+
+		tree.add(altarTask = new AltarTask(this));
 	}
 
 	@Override
 	public LinkedProperties getPaintInfo() {
 		final LinkedProperties properties = new LinkedProperties();
 
-		properties.put("", "");
+		properties.put("Random", Random.nextGaussian(4000, 6000, 1000));
 
 		return properties;
 	}
@@ -84,11 +111,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							@Override
 							public void run() {
 								//ActivateAura.activatedAura(); // TODO
-							}
-
-							@Override
-							public boolean activate() {
-								return false;
 							}
 						});
 					}
@@ -131,11 +153,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 										}
 									}
 								}
-
-								@Override
-								public boolean activate() {
-									return true;
-								}
 							});
 						}
 					} else if (options.useAura && message.startsWith("Currently recharging.")) {
@@ -168,11 +185,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 								ctx.stop("Can't enter friends house anymore");
 							}
 						}
-
-						@Override
-						public boolean activate() {
-							return true;
-						}
 					});
 				}
 				break;
@@ -200,11 +212,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						}
 					}
 				});
-			}
-
-			@Override
-			public boolean activate() {
-				return true;
 			}
 		});
 	}

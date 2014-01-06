@@ -53,24 +53,26 @@ public class MyEquipment extends Equipment {
 
 	public boolean unequip(final int... ids) {
 		// Disable when bank open
-		if(ctx.bank.isOpen()) {
+		if (ctx.bank.isOpen()) {
 			return false;
 		}
 
-		for (Item item : ctx.equipment.select().id(ids).first()) {
-			if (!ctx.hud.isVisible(Hud.Window.BACKPACK) && ctx.hud.view(Hud.Window.BACKPACK)) {
-				sleep(200, 800);
-			}
-			if (item.isValid() && item.interact("remove")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return select().id(ids).isEmpty();
-					}
-				});
+		if (ctx.hud.view(Hud.Window.WORN_EQUIPMENT)) {
+			final Item item = ctx.equipment.select().id(ids).poll();
+			if (item.isValid()) {
+				if (item.interact("Remove")) {
+					return Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return !ctx.equipment.select().id(ids).poll().isValid();
+						}
+					});
+				}
+			} else {
+				return true;
 			}
 		}
 
-		return select().id(ids).isEmpty();
+		return false;
 	}
 }

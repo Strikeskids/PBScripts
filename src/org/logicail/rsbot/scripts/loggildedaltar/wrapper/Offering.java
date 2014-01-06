@@ -37,8 +37,8 @@ public enum Offering {
 		return id;
 	}
 
-	public int getNotedId() {
-		return id + 1;
+	public double getXp() {
+		return xp;
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public enum Offering {
 		return name;
 	}
 
-	public double getXp() {
-		return xp;
+	public int getNotedId() {
+		return id + 1;
 	}
 }
 

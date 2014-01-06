@@ -21,8 +21,8 @@ public class HouseTablet extends MagicTablet {
 	}
 
 	@Override
-	public boolean activate() {
-		return super.activate()
+	public boolean isValid() {
+		return super.isValid()
 				&& script.housePortal.getPortalLocation() == null;
 	}
 
@@ -55,7 +55,5 @@ public class HouseTablet extends MagicTablet {
 				});
 			}
 		}
-
-
 	}
 }

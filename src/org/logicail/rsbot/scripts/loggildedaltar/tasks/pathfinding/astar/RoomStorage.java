@@ -18,6 +18,8 @@ public class RoomStorage extends LogicailMethodProvider {
 
 	public RoomStorage(LogicailMethodContext context) {
 		super(context);
+
+		// Create the rooms
 		for (int x = 16; x <= 80; x += 8) {
 			for (int y = 16; y <= 80; y += 8) {
 				final Room r = new Room(context, this, x, y);
@@ -35,7 +37,7 @@ public class RoomStorage extends LogicailMethodProvider {
 		}
 
 		// Joined by doors
-		for (GameObject door : ctx.objects.select().id(Room.DOOR)) {
+		for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED_LEFT, Room.DOOR_OPEN_LEFT)) {
 			final Room room = getRoom(door);
 
 			for (Room destination : getPossibleNeighbours(room)) {
@@ -110,7 +112,6 @@ public class RoomStorage extends LogicailMethodProvider {
 		return list;
 	}
 
-
 	public Room getRoom(Locatable locatable) {
 		return getRoom(getIndex(locatable));
 	}
@@ -122,6 +123,10 @@ public class RoomStorage extends LogicailMethodProvider {
 	 * @return
 	 */
 	public int getIndex(Locatable locatable) {
+		if (locatable == null) {
+			return -1;
+		}
+
 		final Tile location = locatable.getLocation();
 		final Tile mapBase = ctx.game.getMapBase();
 
@@ -140,5 +145,9 @@ public class RoomStorage extends LogicailMethodProvider {
 			return rooms[index];
 		}
 		return null;
+	}
+
+	public int getLength() {
+		return rooms.length;
 	}
 }

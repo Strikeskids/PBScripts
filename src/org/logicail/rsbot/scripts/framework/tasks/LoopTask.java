@@ -20,11 +20,6 @@ public abstract class LoopTask<T extends LogicailScript<T>> extends Task<T> {
 	}
 
 	@Override
-	public boolean activate() {
-		return true; // Not used for LoopTasks
-	}
-
-	@Override
 	public void run() {
 		while (!ctx.isShutdown()) {
 			if (ctx.isPaused()) {

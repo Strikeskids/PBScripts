@@ -20,10 +20,8 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.LayTracks;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.TakeIngots;
-import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.logicail.rsbot.util.LinkedProperties;
-import org.powerbot.client.AbstractModel;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
@@ -31,11 +29,9 @@ import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.SkillData;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Area;
-import org.powerbot.script.wrappers.GameObject;
 import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
-import java.awt.*;
 
 @Manifest(
 		name = "Log Artisan Workshop",
@@ -303,28 +299,29 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 		}
 	}
 
-	@Override
-	public void repaint(Graphics g) {
-		super.repaint(g);
-
-		// Debug incase repairing pipes doeesn't work (Haven't been able to test yet)
-		if (options.mode != Mode.REPAIR_TRACK && options.respectRepairPipes) {
-			for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
-				if (pipe.isOnScreen()) {
-					final AbstractModel abstractModel = pipe.getInternal().getModel();
-					if (abstractModel == null) {
-						continue;
-					}
-					final Point point = pipe.getCenterPoint();
-					final String s = String.format("Pipe: %d", BrokenPipes.getNumFaces(abstractModel));
-					g.setColor(Color.BLACK);
-					g.drawString(s, point.x + 1, point.y + 1);
-					g.setColor(Color.WHITE);
-					g.drawString(s, point.x, point.y);
-				}
-			}
-		}
-	}
+//	@Override
+//	public void repaint(Graphics g) {
+//		super.repaint(g);
+//
+//		// Changed to using settings
+//		// Debug incase repairing pipes doeesn't work (Haven't been able to test yet)
+////		if (options.mode != Mode.REPAIR_TRACK && options.respectRepairPipes) {
+////			for (GameObject pipe : ctx.objects.select().id(BrokenPipes.BROKEN_PIPE)) {
+////				if (pipe.isOnScreen()) {
+////					final AbstractModel abstractModel = pipe.getInternal().getModel();
+////					if (abstractModel == null) {
+////						continue;
+////					}
+////					final Point point = pipe.getCenterPoint();
+////					final String s = String.format("Pipe: %d", BrokenPipes.getNumFaces(abstractModel));
+////					g.setColor(Color.BLACK);
+////					g.drawString(s, point.x + 1, point.y + 1);
+////					g.setColor(Color.WHITE);
+////					g.drawString(s, point.x, point.y);
+////				}
+////			}
+////		}
+//	}
 
 	@Override
 	public void start() {
@@ -343,11 +340,6 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 						}
 					}
 				});
-			}
-
-			@Override
-			public boolean activate() {
-				return true;
 			}
 		});
 

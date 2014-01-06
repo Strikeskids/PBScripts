@@ -36,24 +36,42 @@ public class LogicailMethodContext extends MethodContext {
 	public MySummoning summoning;
 	public MyChat chat;
 	public Lodestones lodestones;
+	public MyMovement movement;
+	public Magic magic;
+
+	// SK
+	public SkKeyboard keyboard;
+	public ActionBar actionBar;
+	public Combat combat;
+	// SK
+
 	// Concurrent task executor
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AbstractScript script;
 	private volatile boolean shutdown;
 	private volatile boolean paused;
-	// SK
-	public SkKeyboard keyboard;
-	public ActionBar actionBar;
-	public Combat combat;
-	// !SK
 
 	private final String useragent;
-	public Magic magic;
 
 	public LogicailMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext.getBot());
 		this.script = script;
 		log = script.log;
+
+		skillingInterface = new SkillingInterface(this);
+		backpack = new MyBackPack(this);
+		camera = new MyCamera(this);
+		equipment = new MyEquipment(this);
+		summoning = new MySummoning(this);
+		chat = new MyChat(this);
+		lodestones = new Lodestones(this);
+
+		super.keyboard = this.keyboard = new SkKeyboard(this);
+		actionBar = new ActionBar(this);
+		combat = new Combat(this);
+
+		magic = new Magic(this);
+		movement = new MyMovement(this);
 
 		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
 
@@ -86,25 +104,6 @@ public class LogicailMethodContext extends MethodContext {
 
 	public final boolean isShutdown() {
 		return shutdown;
-	}
-
-	@Override
-	public void init(MethodContext context) {
-		super.init(context);
-
-		skillingInterface = new SkillingInterface(this);
-		backpack = new MyBackPack(this);
-		camera = new MyCamera(this);
-		equipment = new MyEquipment(this);
-		summoning = new MySummoning(this);
-		chat = new MyChat(this);
-		lodestones = new Lodestones(this);
-
-		super.keyboard = this.keyboard = new SkKeyboard(this);
-		actionBar = new ActionBar(this);
-		combat = new Combat(this);
-
-		magic = new Magic(this);
 	}
 
 	public void stop(final String reason) {

@@ -24,8 +24,8 @@ public class MakeIngots extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean activate() {
-		return super.activate()
+	public boolean isValid() {
+		return super.isValid()
 				&& !ctx.widgets.get(13).isValid() // Bank pin
 				&& (ctx.skillingInterface.getAction().equals("Smelt") && !ctx.skillingInterface.select().id(MakeSword.HEATED_INGOTS[0]).isEmpty())
 				|| (!ctx.backpack.isFull() && (ctx.backpack.select().id(options.getIngotId()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));

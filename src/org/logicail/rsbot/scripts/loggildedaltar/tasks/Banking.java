@@ -41,12 +41,23 @@ public class Banking extends LogGildedAltarTask {
 		super(script);
 	}
 
-	public void setBanking(boolean state) {
-		options.banking = state;
-		if (state) {
-			beastOfBurdenWithdraws = 0;
-			withdrawnDelegation = false;
-			beastOfBurdenCount = 0;
+	int getBeastOfBurdenCount() {
+		return beastOfBurdenCount;
+	}
+
+	@Override
+	public String toString() {
+		return cachedString;
+	}
+
+	// TODO: Check this
+	private void createSpaceInInventory(int min, int max) {
+		if (isSpace(min)) {
+			if (!ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max))) {
+				sleep(200, 800);
+				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
+			}
+			sleep(200, 800);
 		}
 	}
 
@@ -58,65 +69,9 @@ public class Banking extends LogGildedAltarTask {
 		return 28 - ctx.backpack.select().count();
 	}
 
-	int getBeastOfBurdenCount() {
-		return beastOfBurdenCount;
-	}
-
 	@Override
-	public String toString() {
-		return cachedString;
-	}
-
-	private void cacheString() {
-		final StringBuilder state = new StringBuilder("Banking [").append(getState()).append("]");
-		if (options.lightBurners) {
-			state.append(" Marrentil(Inventory=").append(ctx.backpack.select().id(ID_MARRENTIL).count());
-			if (ctx.bank.isOpen()) {
-				state.append(" Bank=").append(ctx.bank.select().id(ID_MARRENTIL).count(true));
-			}
-			state.append(")");
-		}
-
-		state.append(" Bones(Inventory=").append(ctx.backpack.select().id(options.offering.getId()).count());
-		if (ctx.bank.isOpen()) {
-			state.append(" Bank=").append(ctx.bank.select().id(options.offering.getId()).count(true));
-		}
-
-		cachedString = state.append(")").toString();
-	}
-
-	@Override
-	public boolean activate() {
+	public boolean isValid() {
 		return script.bankingTask.inBank();
-	}
-
-	State getState() {
-		//if (Players.getLocal().isMoving()) {
-		//	return State.WALKING;
-		//}
-
-		if (options.useBOB) {
-			if (!options.bobonce || (options.bobonce && beastOfBurdenWithdraws == 0)) {
-				if (options.beastOfBurden.getBoBSpace() > 0 && ctx.summoning.isFamiliarSummoned() && ctx.summoning.getTimeLeft() >= 180 && ctx.backpack.isFull() && !ctx.backpack.select().id(options.offering.getId()).isEmpty()) {
-					if (getBeastOfBurdenCount() < options.beastOfBurden.getBoBSpace()) {
-						if (ctx.summoning.isOpen()) {
-							return State.DEPOSIT_BOB;
-						}
-						return State.OPEN_BOB;
-					}
-				}
-			}
-		}
-
-		if (ctx.summoning.isOpen()) {
-			return State.CLOSE_BOB;
-		}
-
-		if (!ctx.bank.isOpen()) {
-			return State.OPEN_BANK;
-		}
-
-		return State.WITHDRAWING;
 	}
 
 	@Override
@@ -130,7 +85,7 @@ public class Banking extends LogGildedAltarTask {
 			timer.reset();
 		}
 
-		if (script.summoningTask.activate()) {
+		if (script.summoningTask.isValid()) {
 			return;
 		}
 
@@ -370,7 +325,7 @@ public class Banking extends LogGildedAltarTask {
 					}
 				}
 
-				if (!ctx.backpack.select().id(options.offering.getId()).isEmpty() && (!options.lightBurners || (options.lightBurners && ctx.backpack.select().id(ID_MARRENTIL).count() >= 2))) {
+				if (!getBackpackOffering().isEmpty() && (!options.lightBurners || (options.lightBurners && ctx.backpack.select().id(ID_MARRENTIL).count() >= 2))) {
 					fail = 0;
 					ctx.bank.close();
 					options.status = "Finished banking";
@@ -389,9 +344,10 @@ public class Banking extends LogGildedAltarTask {
 				}*/
 
 				if (!ctx.summoning.open()) {
-					// Todo improve this, random tile > 2 tiles away that canReach, note castle wars - don't walk otherside of wall
 					final Tile start = ctx.players.local().getLocation();
-					if (ctx.movement.findPath(start.randomize(-2, 0, -1, 1)).traverse()) {
+					final Tile destination = start.randomize(-3, 0, -2, 2);
+					final double distance = destination.distanceTo(start);
+					if (distance > 1 && distance < 6 && ctx.movement.findPath(destination).traverse()) {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
@@ -424,8 +380,26 @@ public class Banking extends LogGildedAltarTask {
 		sleep(100, 250);
 	}
 
+	private void cacheString() {
+		final StringBuilder state = new StringBuilder("Banking [").append(getState()).append("]");
+		if (options.lightBurners) {
+			state.append(" Marrentil(Inventory=").append(ctx.backpack.select().id(ID_MARRENTIL).count());
+			if (ctx.bank.isOpen()) {
+				state.append(" Bank=").append(ctx.bank.select().id(ID_MARRENTIL).count(true));
+			}
+			state.append(")");
+		}
+
+		state.append(" Bones(Inventory=").append(getBackpackOffering().count());
+		if (ctx.bank.isOpen()) {
+			state.append(" Bank=").append(ctx.bank.select().id(options.offering.getId()).count(true));
+		}
+
+		cachedString = state.append(")").toString();
+	}
+
 	private String getBonesError() {
-		int bones = ctx.backpack.select().id(options.offering.getId()).count();
+		int bones = getBackpackOffering().count();
 		int bonesBank = ctx.backpack.select().id(options.offering.getId()).count(true);
 
 		if (bones + bonesBank < 28) {
@@ -446,8 +420,46 @@ public class Banking extends LogGildedAltarTask {
 		return null;
 	}
 
+	State getState() {
+		//if (Players.getLocal().isMoving()) {
+		//	return State.WALKING;
+		//}
+
+		if (options.useBOB) {
+			if (!options.bobonce || (options.bobonce && beastOfBurdenWithdraws == 0)) {
+				if (options.beastOfBurden.getBoBSpace() > 0 && ctx.summoning.isFamiliarSummoned() && ctx.summoning.getTimeLeft() >= 180 && ctx.backpack.isFull() && !getBackpackOffering().isEmpty()) {
+					if (getBeastOfBurdenCount() < options.beastOfBurden.getBoBSpace()) {
+						if (ctx.summoning.isOpen()) {
+							return State.DEPOSIT_BOB;
+						}
+						return State.OPEN_BOB;
+					}
+				}
+			}
+		}
+
+		if (ctx.summoning.isOpen()) {
+			return State.CLOSE_BOB;
+		}
+
+		if (!ctx.bank.isOpen()) {
+			return State.OPEN_BANK;
+		}
+
+		return State.WITHDRAWING;
+	}
+
+	public void setBanking(boolean state) {
+		options.banking = state;
+		if (state) {
+			beastOfBurdenWithdraws = 0;
+			withdrawnDelegation = false;
+			beastOfBurdenCount = 0;
+		}
+	}
+
 	private void withdrawRequiredItems(Branch delegation) {
-		for (Object node : delegation.getTasks()) {
+		for (Object node : delegation.getNodes()) {
 			if (script.getController().isStopping() || script.getController().isSuspended()) {
 				return;
 			}
@@ -494,17 +506,6 @@ public class Banking extends LogGildedAltarTask {
 
 	private void createSpaceInInventory(int min) {
 		createSpaceInInventory(min, min);
-	}
-
-	// TODO: Check this
-	private void createSpaceInInventory(int min, int max) {
-		if (isSpace(min)) {
-			if (!ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max))) {
-				sleep(200, 800);
-				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
-			}
-			sleep(200, 800);
-		}
 	}
 
 	enum State {

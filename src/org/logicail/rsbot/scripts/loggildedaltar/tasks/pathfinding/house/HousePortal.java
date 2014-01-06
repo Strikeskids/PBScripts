@@ -28,21 +28,36 @@ import java.util.concurrent.Callable;
  */
 // implements MessageListener
 public class HousePortal extends NodePath/* implements MessageListener*/ {
-	private static final LocationAttribute[] PORTAL_LOCATION_ATTRIBUTES = {LocationAttribute.YANILLE_HOUSE, LocationAttribute.RIMMINGTON_HOUSE, LocationAttribute.TAVERLEY_HOUSE, LocationAttribute.POLLNIVNEACH_HOUSE, LocationAttribute.RELLEKKA_HOUSE, LocationAttribute.BRIMHAVEN_HOUSE};
 	public static final int ID_ENTER_PORTAL = 15531;
+	private static final LocationAttribute[] PORTAL_LOCATION_ATTRIBUTES = {LocationAttribute.YANILLE_HOUSE, LocationAttribute.RIMMINGTON_HOUSE, LocationAttribute.TAVERLEY_HOUSE, LocationAttribute.POLLNIVNEACH_HOUSE, LocationAttribute.RELLEKKA_HOUSE, LocationAttribute.BRIMHAVEN_HOUSE};
 
 	public HousePortal(LogGildedAltar script) {
 		super(script, Path.HOME_PORTAL);
 	}
 
 	@Override
-	public boolean activate() {
-		return getPortalLocation() != null;
+	public boolean doLarge() {
+		return false;
 	}
 
 	@Override
-	public boolean doLarge() {
-		return false;
+	public List<BankRequiredItem> getItemsNeededFromBank() {
+		return new ArrayList<BankRequiredItem>();
+	}
+
+	@Override
+	public boolean isValid() {
+		return getPortalLocation() != null;
+	}
+
+	public LocationAttribute getPortalLocation() {
+		for (LocationAttribute locationAttribute : PORTAL_LOCATION_ATTRIBUTES) {
+			if (locationAttribute.isInSmallArea(ctx)) {
+				return locationAttribute;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -188,22 +203,6 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 
 		return false;
 	}
-
-	public LocationAttribute getPortalLocation() {
-		for (LocationAttribute locationAttribute : PORTAL_LOCATION_ATTRIBUTES) {
-			if (locationAttribute.isInSmallArea(ctx)) {
-				return locationAttribute;
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public List<BankRequiredItem> getItemsNeededFromBank() {
-		return new ArrayList<BankRequiredItem>();
-	}
-
 
 	/*@Override
 	public void messaged(MessageEvent messageEvent) {

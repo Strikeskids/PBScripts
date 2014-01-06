@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
-import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
 
@@ -10,7 +10,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
  * Date: 22/06/12
  * Time: 10:32
  */
-public abstract class ArtisanArmourerTask extends Task<LogArtisanWorkshop> {
+public abstract class ArtisanArmourerTask extends Node<LogArtisanWorkshop> {
 	protected final LogArtisanWorkshopOptions options;
 
 	public ArtisanArmourerTask(LogArtisanWorkshop script) {
@@ -19,7 +19,7 @@ public abstract class ArtisanArmourerTask extends Task<LogArtisanWorkshop> {
 	}
 
 	@Override
-	public boolean activate() {
+	public boolean isValid() {
 		return options.getAreaSmall().contains(ctx.players.local());
 	}
 }

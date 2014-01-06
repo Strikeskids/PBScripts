@@ -15,14 +15,14 @@ public abstract class Branch<T extends LogicailScript<T>> extends Tree<T> {
 		super(script);
 	}
 
+	public void addNode(Node<T>... tasks) {
+		Collections.addAll(this.tasks, tasks);
+	}
+
 	@Override
-	public final boolean activate() {
-		return branch() && super.activate();
+	public final boolean isValid() {
+		return branch() && super.isValid();
 	}
 
 	public abstract boolean branch();
-
-	public void addTask(Task<T>... tasks) {
-		Collections.addAll(this.tasks, tasks);
-	}
 }

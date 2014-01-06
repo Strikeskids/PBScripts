@@ -23,11 +23,6 @@ public class LodestoneTeleport extends NodePath {
 	}
 
 	@Override
-	public List<BankRequiredItem> getItemsNeededFromBank() {
-		return new ArrayList<BankRequiredItem>();
-	}
-
-	@Override
 	protected boolean doLarge() {
 		if (ctx.lodestones.teleport(lodestone)) {
 			timeLastTeleport = System.currentTimeMillis();
@@ -37,7 +32,12 @@ public class LodestoneTeleport extends NodePath {
 	}
 
 	@Override
-	public boolean activate() {
+	public List<BankRequiredItem> getItemsNeededFromBank() {
+		return new ArrayList<BankRequiredItem>();
+	}
+
+	@Override
+	public boolean isValid() {
 		return !locationAttribute.isInSmallArea(ctx) && (locationAttribute.isInLargeArea(ctx) || (ctx.lodestones.canUse(lodestone) && System.currentTimeMillis() - timeLastTeleport > 15000));
 	}
 }

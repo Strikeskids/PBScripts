@@ -16,20 +16,20 @@ import java.util.concurrent.atomic.AtomicReference;
  * Date: 07/12/13
  * Time: 21:15
  */
-public class Tree<T extends LogicailScript> extends Task<T> {
-	protected final Queue<Task<T>> tasks = new ConcurrentLinkedQueue<Task<T>>();
-	protected final AtomicReference<Task<T>> currentTask = new AtomicReference<Task<T>>();
+public class Tree<T extends LogicailScript> extends Node<T> {
+	protected final Queue<Node<T>> tasks = new ConcurrentLinkedQueue<Node<T>>();
+	protected final AtomicReference<Node<T>> currentTask = new AtomicReference<Node<T>>();
 
 	public Tree(T script) {
 		super(script);
 	}
 
-	public Tree(T script, Task<T>[] tasks) {
+	public Tree(T script, Node<T>[] tasks) {
 		this(script);
 		this.tasks.addAll(Arrays.asList(tasks));
 	}
 
-	public void add(Task<T>... task) {
+	public void add(Node<T>... task) {
 		Collections.addAll(tasks, task);
 	}
 
@@ -41,9 +41,13 @@ public class Tree<T extends LogicailScript> extends Task<T> {
 		tasks.clear();
 	}
 
+	public Queue<Node<T>> getNodes() {
+		return tasks;
+	}
+
 	@Override
 	public void run() {
-		if (activate()) {
+		if (isValid()) {
 			Task task = get();
 			if (task != null) {
 				ctx.log.info("Run: " + task);
@@ -52,9 +56,13 @@ public class Tree<T extends LogicailScript> extends Task<T> {
 		}
 	}
 
+	public final Task<T> get() {
+		return currentTask.get();
+	}
+
 	@Override
-	public boolean activate() {
-		Task<T> state = state();
+	public boolean isValid() {
+		Node<T> state = state();
 		if (state != null) {
 			set(state);
 			return true;
@@ -62,33 +70,25 @@ public class Tree<T extends LogicailScript> extends Task<T> {
 		return false;
 	}
 
-	public final void set(Task<T> node) {
+	public final void set(Node<T> node) {
 		currentTask.set(node);
 	}
 
-	public final synchronized Task<T> state() {
+	public final synchronized Node<T> state() {
 		/*Task current = currentTask.get();
-		if (current != null && current.activate()) {
-			if (current.activate()) {
+		if (current != null && current.isValid()) {
+			if (current.isValid()) {
 				// Don't loop previous is still valid
 				return current;
 			}
 		}*/
 
-		for (Task<T> next : tasks) {
-			if (next != null && next.activate()) {
+		for (Node<T> next : tasks) {
+			if (next != null && next.isValid()) {
 				return next;
 			}
 		}
 
 		return null;
-	}
-
-	public final Task<T> get() {
-		return currentTask.get();
-	}
-
-	public Queue<Task<T>> getTasks() {
-		return tasks;
 	}
 }

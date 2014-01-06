@@ -23,14 +23,20 @@ import java.util.concurrent.Callable;
  * Time: 23:15
  */
 public class HouseTeleportStaff extends NodePath {
+	private static final int AIR_RUNE = 556;
+	private static final int LAW_RUNE = 563;
+
+	final int[] staff;
+
 	public HouseTeleportStaff(LogGildedAltar script, Path path, int... staffids) {
 		super(script, path);
 		staff = staffids;
 	}
 
-	final int[] staff;
-	private static final int AIR_RUNE = 556;
-	private static final int LAW_RUNE = 563;
+	@Override
+	public boolean doLarge() {
+		return false;
+	}
 
 	@Override
 	public List<BankRequiredItem> getItemsNeededFromBank() {
@@ -52,12 +58,7 @@ public class HouseTeleportStaff extends NodePath {
 	}
 
 	@Override
-	public boolean doLarge() {
-		return false;
-	}
-
-	@Override
-	public boolean activate() {
+	public boolean isValid() {
 		return script.housePortal.getPortalLocation() == null
 				&& getItemsNeededFromBank().isEmpty()
 				&& Spellbook.STANDARD.isOpen(ctx);

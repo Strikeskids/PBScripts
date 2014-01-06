@@ -29,8 +29,8 @@ public class GetPlan extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean activate() {
-		return super.activate()
+	public boolean isValid() {
+		return super.isValid()
 				&& options.finishedSword || !options.gotPlan;
 	}
 
@@ -51,7 +51,7 @@ public class GetPlan extends ArtisanArmourerTask {
 
 		final int xp = ctx.skills.getExperience(Skills.SMITHING);
 
-		for (Npc egil : ctx.npcs.select().id(EGIL_ABEL).nearest().first()) {
+		for (Npc egil : ctx.npcs.select().id(EGIL_ABEL).nearest().limit(3).shuffle().first()) {
 			if (ctx.camera.prepare(egil) && egil.click(false) && ctx.menu.isOpen()) {
 				final String[] actions = egil.getActions();
 				sleep(250, 1000);

@@ -57,6 +57,16 @@ public class HouseHandler implements MessageListener {
 		ignoreHouses.add("galtar");
 	}
 
+	public void currentHouseFailed() {
+		OpenHouse current = current_house.get();
+		if (current != null) {
+			current.setSkipping();
+			//GildedAltar.get().getLogHandler().print("Ignoring house at \"" + current.getPlayerName() + "\" for a while", Color.RED);
+			current_house.set(null);
+		}
+		houseValid = false;
+	}
+
 	public OpenHouse getCurrentHouse() {
 		return current_house.get();
 	}
@@ -145,7 +155,7 @@ public class HouseHandler implements MessageListener {
 
 	@Override
 	public void messaged(MessageEvent messageEvent) {
-		if (messageEvent.getId() == 0) { // TODO
+		if (messageEvent.getId() == 0) { // TODO find friends chat
 			parseHouses(messageEvent.getMessage());
 		}
 	}
@@ -207,26 +217,5 @@ public class HouseHandler implements MessageListener {
 		}
 
 		return checkedNames.put(underscoreName, false);
-	}
-
-	public void noAltar() {
-	    /*OpenHouse current = current_house.get();
-		if (current != null) {
-			openHouses.remove(current);
-			ignoreHouses.add(current.getPlayerName());
-			current_house.set(null);
-		}
-		houseValid = false;*/
-		currentHouseFailed();
-	}
-
-	public void currentHouseFailed() {
-		OpenHouse current = current_house.get();
-		if (current != null) {
-			current.setSkipping();
-			//GildedAltar.get().getLogHandler().print("Ignoring house at \"" + current.getPlayerName() + "\" for a while", Color.RED);
-			current_house.set(null);
-		}
-		houseValid = false;
 	}
 }

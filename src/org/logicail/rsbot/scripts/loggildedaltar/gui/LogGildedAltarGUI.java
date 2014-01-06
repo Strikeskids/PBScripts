@@ -36,13 +36,13 @@ import java.util.Properties;
  * Time: 12:49
  */
 public class LogGildedAltarGUI extends JFrame {
+	// Variable declaration
+	public boolean startPressed;
 	private final SortedListModel<Path> houseDisabledModel = new SortedListModel<Path>();
 	private final DefaultListModel<Path> houseEnabledModel = new DefaultListModel<Path>();
 	private final SortedListModel<Path> bankDisabledModel = new SortedListModel<Path>();
 	private final DefaultListModel<Path> bankEnabledModel = new DefaultListModel<Path>();
 	private final LogGildedAltar script;
-	// Variable declaration
-	public boolean startPressed;
 	private JTabbedPane tabbedPane;
 	private JComponent generalTab;
 	private JComponent houseTab;
@@ -120,126 +120,6 @@ public class LogGildedAltarGUI extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
-	private JComponent getTopPanel() {
-		JPanel inner = new JPanel(new BorderLayout());
-		inner.setBorder(new CompoundBorder(new EtchedBorder(), new EmptyBorder(5, 5, 5, 5)));
-
-		JLabel title = new JLabel(getTitle(), SwingConstants.CENTER);
-		title.setFont(new Font("Tahoma", Font.BOLD, 24));
-
-		inner.add(title, BorderLayout.CENTER);
-
-		JButton forumButton = new JButton("Forum");
-		forumButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				/*try {
-					Desktop.getDesktop().browse(new URI(GildedAltar.class.getAnnotation(Manifest.class).website()));
-				} catch (Exception exception) {
-					exception.printStackTrace();
-				}*/
-
-			}
-		});
-		inner.add(forumButton, BorderLayout.EAST);
-
-		return inner;
-	}
-
-	private JComponent getCenterPanel() {
-		JPanel inner = new JPanel(new BorderLayout());
-		inner.setBorder(new EmptyBorder(10, 0, 10, 0));
-
-		tabbedPane.addTab("General", generalTab);
-		tabbedPane.addTab("House", houseTab);
-		tabbedPane.addTab("Banking", bankTab);
-		tabbedPane.addTab("Summoning", getSummoningTab());
-		tabbedPane.addTab("Other", getOtherTab());
-
-		inner.add(tabbedPane, BorderLayout.CENTER);
-		return inner;
-	}
-
-	private JComponent getGeneralTab() {
-		JPanel generalPane = new JPanel(new GridBagLayout());
-		GridBagConstraints generalPaneConstraints = new GridBagConstraints();
-		generalPaneConstraints.fill = GridBagConstraints.HORIZONTAL;
-		generalPaneConstraints.anchor = GridBagConstraints.NORTH;
-		generalPaneConstraints.weightx = 1;
-		generalPaneConstraints.gridx = 0;
-		generalPaneConstraints.gridy = 0;
-		{
-			JPanel houseModePane = new JPanel(new GridBagLayout());
-			houseModePane.setBorder(new CompoundBorder(new TitledBorder("House Mode"), new EmptyBorder(5, 5, 5, 5)));
-			GridBagConstraints constraints = new GridBagConstraints();
-			constraints.fill = GridBagConstraints.HORIZONTAL;
-			constraints.gridx = 0;
-			constraints.gridy = 0;
-			constraints.weightx = 0.1;
-
-			{
-				houseModePane.add(new JLabel("Mode:"), constraints);
-				constraints.gridx++;
-				constraints.weightx = 1;
-				houseModePane.add(comboBoxHouseMode, constraints);
-			}
-
-			constraints.insets = new Insets(5, 0, 0, 0);
-			constraints.gridx = 0;
-			constraints.gridy++;
-			constraints.weightx = 0.1;
-			{
-				houseModePane.add(new JLabel("Friends name:"), constraints);
-				constraints.gridx++;
-				constraints.weightx = 1;
-				houseModePane.add(friendName, constraints);
-			}
-
-			constraints.gridx = 0;
-			constraints.gridy++;
-			constraints.weightx = 0.1;
-			{
-				houseModePane.add(new JLabel("Ignore:"), constraints);
-				constraints.gridx++;
-				constraints.weightx = 1;
-				houseModePane.add(ignoredPlayers, constraints);
-			}
-
-			constraints.gridx = 0;
-			constraints.weightx = 0.1;
-			constraints.gridy++;
-			{
-				constraints.gridwidth = 2;
-				houseModePane.add(lightBurners, constraints);
-			}
-
-			generalPane.add(houseModePane, generalPaneConstraints);
-		}
-
-		generalPaneConstraints.weighty = 0.1;
-		generalPaneConstraints.gridy++;
-		{
-			JPanel offeringPane = new JPanel(new GridBagLayout());
-			offeringPane.setBorder(new CompoundBorder(new TitledBorder("Offering"), new EmptyBorder(5, 5, 5, 5)));
-			GridBagConstraints constraints = new GridBagConstraints();
-			constraints.fill = GridBagConstraints.HORIZONTAL;
-			constraints.gridx = 0;
-			constraints.gridy = 0;
-			constraints.weightx = 0.1;
-
-			{
-				offeringPane.add(new JLabel("Bone Type:"), constraints);
-				constraints.gridx++;
-				constraints.weightx = 1;
-				offeringPane.add(comboBoxOffering, constraints);
-			}
-
-			generalPane.add(offeringPane, generalPaneConstraints);
-		}
-
-		return generalPane;
-	}
-
 	private JComponent getBottomPanel() {
 		JPanel inner = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -266,111 +146,349 @@ public class LogGildedAltarGUI extends JFrame {
 		return inner;
 	}
 
-	JComponent getHouseTab() {
+	private JComponent getCenterPanel() {
+		JPanel inner = new JPanel(new BorderLayout());
+		inner.setBorder(new EmptyBorder(10, 0, 10, 0));
+
+		tabbedPane.addTab("General", generalTab);
+		tabbedPane.addTab("House", houseTab);
+		tabbedPane.addTab("Banking", bankTab);
+		tabbedPane.addTab("Summoning", getSummoningTab());
+		tabbedPane.addTab("Other", getOtherTab());
+
+		inner.add(tabbedPane, BorderLayout.CENTER);
+		return inner;
+	}
+
+	JComponent getOtherTab() {
 		JPanel inner = new JPanel(new GridBagLayout());
-		GridBagConstraints innerConstraints = new GridBagConstraints();
-		innerConstraints.fill = GridBagConstraints.BOTH;
-		innerConstraints.gridx = 0;
-		innerConstraints.gridy = 0;
-		innerConstraints.weightx = 1;
-		innerConstraints.weighty = 1;
-
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.weightx = 1;
+		constraints.gridy = 0;
 		{
-			JPanel disabledTitle = new JPanel(new BorderLayout());
-			disabledTitle.setBorder(new CompoundBorder(new TitledBorder("Disabled Methods"), new EmptyBorder(5, 5, 5, 5)));
+			/*
+			{
+				JPanel mouse = new JPanel(new GridBagLayout());
+				mouse.setBorder(new CompoundBorder(new TitledBorder("Mouse Speed"), new EmptyBorder(5, 5, 5, 5)));
+				GridBagConstraints mouseConstraints = new GridBagConstraints();
+				mouseConstraints.fill = GridBagConstraints.HORIZONTAL;
+				mouseConstraints.weightx = 1;
+				mouseConstraints.gridx = 0;
+				mouseConstraints.gridy = 0;
+				{
+					mouse.add(mouseSpeedCheckBox, mouseConstraints);
+				}
 
-			JScrollPane scrollPane = new JScrollPane(disabledHouse);
-			disabledTitle.setPreferredSize(new Dimension(50, 50));
-			disabledTitle.add(scrollPane);
-			inner.add(disabledTitle, innerConstraints);
+				mouseConstraints.gridy++;
+				{
+					mouse.add(mouseSpeedSlider, mouseConstraints);
+				}
+				inner.add(mouse, constraints);
+			}*/
+
+			/*constraints.gridy++;
+			{
+				JPanel panel = new JPanel(new GridBagLayout());
+				panel.setBorder(new CompoundBorder(new TitledBorder("Aura"), new EmptyBorder(5, 5, 5, 5)));
+				GridBagConstraints panelConstraints = new GridBagConstraints();
+				panelConstraints.fill = GridBagConstraints.HORIZONTAL;
+				panelConstraints.weightx = 1;
+				panelConstraints.gridx = 0;
+				panelConstraints.gridy = 0;
+				panelConstraints.gridwidth = 1;
+
+				panel.add(enableAura, panelConstraints);
+				panelConstraints.weightx = 0.5;
+				panelConstraints.gridx++;
+				//panel.add(comboBoxAura, panelConstraints);
+
+				inner.add(panel, constraints);
+			}*/
+/*
+			constraints.gridy++;
+			{
+				JPanel screenshots = new JPanel(new GridBagLayout());
+				screenshots.setBorder(new CompoundBorder(new TitledBorder("Screenshots"), new EmptyBorder(5, 5, 5, 5)));
+				GridBagConstraints screenshotConstraints = new GridBagConstraints();
+				screenshotConstraints.fill = GridBagConstraints.HORIZONTAL;
+				screenshotConstraints.weightx = 1;
+				screenshotConstraints.weighty = 1;
+				screenshotConstraints.gridx = 0;
+				screenshotConstraints.gridy = 0;
+				{
+					screenshots.add(screenshotCheckbox, screenshotConstraints);
+					screenshotConstraints.gridx++;
+					screenshotConstraints.weightx = 0.25;
+					screenshots.add(screenshotFolderButton, screenshotConstraints);
+				}
+
+				inner.add(screenshots, constraints);
+			}
+*/
+			constraints.gridy++;
+			{
+				JPanel panel = new JPanel(new GridBagLayout());
+				panel.setBorder(new CompoundBorder(new TitledBorder("Burners not lit"), new EmptyBorder(5, 5, 5, 5)));
+				GridBagConstraints screenshotConstraints = new GridBagConstraints();
+				screenshotConstraints.fill = GridBagConstraints.HORIZONTAL;
+				screenshotConstraints.weightx = 1;
+				screenshotConstraints.weighty = 1;
+				screenshotConstraints.gridx = 0;
+				screenshotConstraints.gridy = 0;
+				{
+					panel.add(stopOfferingCheckbox, screenshotConstraints);
+				}
+
+				inner.add(panel, constraints);
+			}
+
+			constraints.weighty = 1;
+			constraints.gridy++;
+			{
+				JPanel panel = new JPanel(new GridBagLayout());
+				panel.setBorder(new CompoundBorder(new TitledBorder("Stop at level"), new EmptyBorder(5, 5, 5, 5)));
+				GridBagConstraints stopConstraints = new GridBagConstraints();
+				stopConstraints.fill = GridBagConstraints.HORIZONTAL;
+				stopConstraints.weightx = 1;
+				stopConstraints.weighty = 1;
+				stopConstraints.gridx = 0;
+				stopConstraints.gridy = 0;
+				{
+					panel.add(stopLevelCheckbox, stopConstraints);
+					stopConstraints.gridx++;
+					stopConstraints.weightx = 0.25;
+					panel.add(stopLevelSpinner, stopConstraints);
+				}
+
+				inner.add(panel, constraints);
+			}
 		}
+		return inner;
+	}
 
-		innerConstraints.gridx++;
-		innerConstraints.weightx = 0;
+	JComponent getSummoningTab() {
+		JPanel inner = new JPanel(new GridBagLayout());
+		inner.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.weightx = 1;
+		constraints.weighty = 1;
 		{
-			JPanel centerPane = new JPanel(new GridBagLayout());
-			GridBagConstraints centerConstraints = new GridBagConstraints();
-			centerConstraints.fill = GridBagConstraints.HORIZONTAL;
+			JPanel panel = new JPanel(new GridBagLayout());
+			panel.setBorder(new CompoundBorder(new TitledBorder(""), new EmptyBorder(5, 5, 5, 5)));
+			GridBagConstraints panelConstraints = new GridBagConstraints();
+			panelConstraints.fill = GridBagConstraints.HORIZONTAL;
+			panelConstraints.weightx = 0.1;
+			panelConstraints.gridx = 0;
+			panelConstraints.gridy = 0;
+			panelConstraints.gridwidth = 2;
 
-			centerConstraints.gridy = 0;
-			centerPane.add(addHouse, centerConstraints);
+			panel.add(enableSummoning, panelConstraints);
+			panelConstraints.gridy++;
+			panel.add(houseRechargeCheckbox, panelConstraints);
+			panelConstraints.gridy++;
+			panel.add(bobOnceCheckbox, panelConstraints);
+			panelConstraints.gridy++;
 
-			centerConstraints.gridy = 1;
-			centerPane.add(removeHouse, centerConstraints);
+			panelConstraints.gridwidth = 1;
+			panel.add(new JLabel("Familiar:"), panelConstraints);
+			panelConstraints.weightx = 1;
+			panelConstraints.gridx++;
+			panel.add(comboBoxBOB, panelConstraints);
 
-			inner.add(centerPane, innerConstraints);
+			inner.add(panel, constraints);
 		}
+		return inner;
+	}
 
-		innerConstraints.gridx++;
-		innerConstraints.weightx = 1;
-		{
-			JPanel enabledTitle = new JPanel(new BorderLayout());
-			enabledTitle.setBorder(new CompoundBorder(new TitledBorder("Enabled Methods"), new EmptyBorder(5, 5, 5, 5)));
+	private JComponent getTopPanel() {
+		JPanel inner = new JPanel(new BorderLayout());
+		inner.setBorder(new CompoundBorder(new EtchedBorder(), new EmptyBorder(5, 5, 5, 5)));
 
-			enabledHouse.setVisibleRowCount(-1);
-			enabledHouse.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			enabledHouse.setTransferHandler(new TransferHandler() {
-				@Override
-				public boolean canImport(TransferSupport support) {
-					if (!support.isDrop()) {
-						return false;
-					}
+		JLabel title = new JLabel(getTitle(), SwingConstants.CENTER);
+		title.setFont(new Font("Tahoma", Font.BOLD, 24));
 
-					support.setShowDropLocation(true);
+		inner.add(title, BorderLayout.CENTER);
 
-					JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-					return dl.getIndex() >= 0 && dl.getIndex() <= enabledHouse.getModel().getSize();
-				}
-
-				@Override
-				public boolean importData(TransferSupport support) {
-					if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-						return false;
-					}
-
-					JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-					DefaultListModel listModel = (DefaultListModel) enabledHouse.getModel();
-					int index = dl.getIndex();
-
-					java.util.List list = enabledHouse.getSelectedValuesList();
-					for (int i = list.size() - 1; i >= 0; i--) {
-						Object object = list.get(i);
-						if (index > listModel.indexOf(object)) {
-							index--;
-						}
-						listModel.removeElement(object);
-						listModel.insertElementAt(object, index);
-						index = listModel.indexOf(object);
-					}
-
-					return true;
-				}
-
-				@Override
-				public int getSourceActions(JComponent c) {
-					return MOVE;
-				}
-
-				@Override
-				protected Transferable createTransferable(JComponent c) {
-					return new StringSelection("");
-				}
-			});
-
-			enabledHouse.setDropMode(DropMode.INSERT);
-			enabledHouse.setDragEnabled(true);
-
-			JScrollPane scrollPane = new JScrollPane(enabledHouse);
-			enabledTitle.setPreferredSize(new Dimension(50, 50));
-
-			enabledTitle.add(scrollPane, BorderLayout.CENTER);
-
-			enabledTitle.add(new JLabel("Drag to set priority (highest at top)", JLabel.CENTER), BorderLayout.SOUTH);
-
-			inner.add(enabledTitle, innerConstraints);
-		}
+		JButton forumButton = new JButton("Forum");
+		forumButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				/*try {
+					Desktop.getDesktop().browse(new URI(GildedAltar.class.getAnnotation(Manifest.class).website()));
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}*/
+			}
+		});
+		inner.add(forumButton, BorderLayout.EAST);
 
 		return inner;
+	}
+
+	private void initComponents() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				if (!startPressed && !script.ctx.isShutdown()) {
+					script.getController().stop();
+				}
+			}
+		});
+		// General
+		comboBoxHouseMode = new JComboBox<String>(new String[]{
+				"Use own altar",
+				"Use friends altar",
+				"Detect open houses (w31, yanille)"}
+		);
+		comboBoxHouseMode.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				friendName.setEnabled(comboBoxHouseMode.getSelectedIndex() == 1);
+				int selected = comboBoxHouseMode.getSelectedIndex();
+				if (selected > 1) {
+					lightBurners.setSelected(false);
+				}
+				ignoredPlayers.setEnabled(selected == 2);
+			}
+		});
+
+		friendName = new JTextField("friend1,friend2");
+		friendName.setEnabled(false);
+		ignoredPlayers = new JTextField("name1, name2");
+		ignoredPlayers.setEnabled(false);
+		lightBurners = new JCheckBox("Light incense burners (2 clean marrentil per trip, won't offer bones unless 2 burners are lit)", true);
+
+		comboBoxOffering = new JComboBox<Offering>(Offering.values());
+
+		// House
+		disabledHouse = new JList<Path>(houseDisabledModel);
+		enabledHouse = new JList<Path>(houseEnabledModel);
+		addHouse = new JButton(">");
+		addHouse.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				add(disabledHouse, houseDisabledModel, houseEnabledModel);
+			}
+		});
+		removeHouse = new JButton("<");
+		removeHouse.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				remove(enabledHouse, houseDisabledModel, houseEnabledModel);
+			}
+		});
+
+		// Banking
+		disabledBank = new JList<Path>(bankDisabledModel);
+		enabledBank = new JList<Path>(bankEnabledModel);
+		addBank = new JButton(">");
+		addBank.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				add(disabledBank, bankDisabledModel, bankEnabledModel);
+			}
+		});
+		removeBank = new JButton("<");
+		removeBank.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				remove(enabledBank, bankDisabledModel, bankEnabledModel);
+			}
+		});
+		disabledBank.setCellRenderer(new ListRenderer());
+		enabledBank.setCellRenderer(new ListRenderer());
+
+		// Summoning
+		enableSummoning = new JCheckBox("Enable summoning");
+		houseRechargeCheckbox = new JCheckBox("Only recharge summoning points at house obelisk");
+		bobOnceCheckbox = new JCheckBox("Only fill beast of burden once (fast banking for yak)");
+		comboBoxBOB = new JComboBox<String>(new String[]{"Bull ant (40)",
+				"Spirit terrorbird (52)",
+				"War tortoise (67)",
+				"Pack Yak (96)",
+				"Clan avatar"});
+
+		/*
+		screenshotCheckbox = new JCheckBox("Save screenshot when script stops");
+		screenshotFolderButton = new JButton("Open Folder");
+		screenshotFolderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Desktop.getDesktop().open(Environment.getStorageDirectory());
+				} catch (IOException ignored) {
+				}
+			}
+		});
+		*/
+		stopOfferingCheckbox = new JCheckBox("Stop offering bones if burners go out", true);
+/*
+		comboBoxAura = new JComboBox<>(new MyAuras.Aura[]{
+				MyAuras.Aura.CORRUPTION,
+				MyAuras.Aura.HARMONY,
+				MyAuras.Aura.SALVATION,
+				MyAuras.Aura.GREATER_CORRUPTION,
+				MyAuras.Aura.GREATER_HARMONY,
+				MyAuras.Aura.GREATER_SALVATION,
+				MyAuras.Aura.MASTER_CORRUPTION,
+				MyAuras.Aura.MASTER_HARMONY,
+				MyAuras.Aura.MASTER_SALVATION,
+				MyAuras.Aura.SUPREME_CORRUPTION,
+				MyAuras.Aura.SUPREME_HARMONY,
+				MyAuras.Aura.SUPREME_SALVATION
+		});
+*/
+		//enableAura = new JCheckBox("Enable Aura");
+
+		stopLevelCheckbox = new JCheckBox("Stop at level", false);
+
+		stopLevelSpinner = new JSpinner(new SpinnerNumberModel(/*Math.min(Math.max(1, Skills.getLevel(Skills.PRAYER)) + 1, 99)*/99, 1, 99, 1));
+
+		// Bottom
+		startButton = new JButton("Start Script");
+		startButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startButtonActionPerformed();
+			}
+		});
+		loadButton = new JButton("Load Settings");
+		loadButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadActionPerformed();
+			}
+		});
+		saveButton = new JButton("Save Settings");
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveActionPerformed();
+			}
+		});
+
+		tabbedPane = new JTabbedPane();
+		generalTab = getGeneralTab();
+		houseTab = getHouseTab();
+		bankTab = getBankingTab();
+	}
+
+	private void add(JList<Path> listDisabled, SortedListModel<Path> disabledModel, DefaultListModel<Path> enabledModel) {
+		int index = listDisabled.getSelectedIndex();
+		if (index > -1) {
+			Path selectedValue = listDisabled.getSelectedValue();
+			enabledModel.addElement(selectedValue);
+			disabledModel.removeElement(selectedValue);
+			if (index > 0 && index >= disabledModel.getSize())
+				listDisabled.setSelectedIndex(index - 1);
+			else
+				listDisabled.setSelectedIndex(index);
+		}
 	}
 
 	JComponent getBankingTab() {
@@ -499,151 +617,236 @@ public class LogGildedAltarGUI extends JFrame {
 		return inner;
 	}
 
-	JComponent getSummoningTab() {
-		JPanel inner = new JPanel(new GridBagLayout());
-		inner.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.NORTH;
-		constraints.weightx = 1;
-		constraints.weighty = 1;
+	private JComponent getGeneralTab() {
+		JPanel generalPane = new JPanel(new GridBagLayout());
+		GridBagConstraints generalPaneConstraints = new GridBagConstraints();
+		generalPaneConstraints.fill = GridBagConstraints.HORIZONTAL;
+		generalPaneConstraints.anchor = GridBagConstraints.NORTH;
+		generalPaneConstraints.weightx = 1;
+		generalPaneConstraints.gridx = 0;
+		generalPaneConstraints.gridy = 0;
 		{
-			JPanel panel = new JPanel(new GridBagLayout());
-			panel.setBorder(new CompoundBorder(new TitledBorder(""), new EmptyBorder(5, 5, 5, 5)));
-			GridBagConstraints panelConstraints = new GridBagConstraints();
-			panelConstraints.fill = GridBagConstraints.HORIZONTAL;
-			panelConstraints.weightx = 0.1;
-			panelConstraints.gridx = 0;
-			panelConstraints.gridy = 0;
-			panelConstraints.gridwidth = 2;
+			JPanel houseModePane = new JPanel(new GridBagLayout());
+			houseModePane.setBorder(new CompoundBorder(new TitledBorder("House Mode"), new EmptyBorder(5, 5, 5, 5)));
+			GridBagConstraints constraints = new GridBagConstraints();
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			constraints.gridx = 0;
+			constraints.gridy = 0;
+			constraints.weightx = 0.1;
 
-			panel.add(enableSummoning, panelConstraints);
-			panelConstraints.gridy++;
-			panel.add(houseRechargeCheckbox, panelConstraints);
-			panelConstraints.gridy++;
-			panel.add(bobOnceCheckbox, panelConstraints);
-			panelConstraints.gridy++;
+			{
+				houseModePane.add(new JLabel("Mode:"), constraints);
+				constraints.gridx++;
+				constraints.weightx = 1;
+				houseModePane.add(comboBoxHouseMode, constraints);
+			}
 
-			panelConstraints.gridwidth = 1;
-			panel.add(new JLabel("Familiar:"), panelConstraints);
-			panelConstraints.weightx = 1;
-			panelConstraints.gridx++;
-			panel.add(comboBoxBOB, panelConstraints);
+			constraints.insets = new Insets(5, 0, 0, 0);
+			constraints.gridx = 0;
+			constraints.gridy++;
+			constraints.weightx = 0.1;
+			{
+				houseModePane.add(new JLabel("Friends name:"), constraints);
+				constraints.gridx++;
+				constraints.weightx = 1;
+				houseModePane.add(friendName, constraints);
+			}
 
-			inner.add(panel, constraints);
+			constraints.gridx = 0;
+			constraints.gridy++;
+			constraints.weightx = 0.1;
+			{
+				houseModePane.add(new JLabel("Ignore:"), constraints);
+				constraints.gridx++;
+				constraints.weightx = 1;
+				houseModePane.add(ignoredPlayers, constraints);
+			}
+
+			constraints.gridx = 0;
+			constraints.weightx = 0.1;
+			constraints.gridy++;
+			{
+				constraints.gridwidth = 2;
+				houseModePane.add(lightBurners, constraints);
+			}
+
+			generalPane.add(houseModePane, generalPaneConstraints);
 		}
+
+		generalPaneConstraints.weighty = 0.1;
+		generalPaneConstraints.gridy++;
+		{
+			JPanel offeringPane = new JPanel(new GridBagLayout());
+			offeringPane.setBorder(new CompoundBorder(new TitledBorder("Offering"), new EmptyBorder(5, 5, 5, 5)));
+			GridBagConstraints constraints = new GridBagConstraints();
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			constraints.gridx = 0;
+			constraints.gridy = 0;
+			constraints.weightx = 0.1;
+
+			{
+				offeringPane.add(new JLabel("Bone Type:"), constraints);
+				constraints.gridx++;
+				constraints.weightx = 1;
+				offeringPane.add(comboBoxOffering, constraints);
+			}
+
+			generalPane.add(offeringPane, generalPaneConstraints);
+		}
+
+		return generalPane;
+	}
+
+	JComponent getHouseTab() {
+		JPanel inner = new JPanel(new GridBagLayout());
+		GridBagConstraints innerConstraints = new GridBagConstraints();
+		innerConstraints.fill = GridBagConstraints.BOTH;
+		innerConstraints.gridx = 0;
+		innerConstraints.gridy = 0;
+		innerConstraints.weightx = 1;
+		innerConstraints.weighty = 1;
+
+		{
+			JPanel disabledTitle = new JPanel(new BorderLayout());
+			disabledTitle.setBorder(new CompoundBorder(new TitledBorder("Disabled Methods"), new EmptyBorder(5, 5, 5, 5)));
+
+			JScrollPane scrollPane = new JScrollPane(disabledHouse);
+			disabledTitle.setPreferredSize(new Dimension(50, 50));
+			disabledTitle.add(scrollPane);
+			inner.add(disabledTitle, innerConstraints);
+		}
+
+		innerConstraints.gridx++;
+		innerConstraints.weightx = 0;
+		{
+			JPanel centerPane = new JPanel(new GridBagLayout());
+			GridBagConstraints centerConstraints = new GridBagConstraints();
+			centerConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+			centerConstraints.gridy = 0;
+			centerPane.add(addHouse, centerConstraints);
+
+			centerConstraints.gridy = 1;
+			centerPane.add(removeHouse, centerConstraints);
+
+			inner.add(centerPane, innerConstraints);
+		}
+
+		innerConstraints.gridx++;
+		innerConstraints.weightx = 1;
+		{
+			JPanel enabledTitle = new JPanel(new BorderLayout());
+			enabledTitle.setBorder(new CompoundBorder(new TitledBorder("Enabled Methods"), new EmptyBorder(5, 5, 5, 5)));
+
+			enabledHouse.setVisibleRowCount(-1);
+			enabledHouse.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			enabledHouse.setTransferHandler(new TransferHandler() {
+				@Override
+				public boolean canImport(TransferSupport support) {
+					if (!support.isDrop()) {
+						return false;
+					}
+
+					support.setShowDropLocation(true);
+
+					JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
+					return dl.getIndex() >= 0 && dl.getIndex() <= enabledHouse.getModel().getSize();
+				}
+
+				@Override
+				public boolean importData(TransferSupport support) {
+					if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+						return false;
+					}
+
+					JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
+					DefaultListModel listModel = (DefaultListModel) enabledHouse.getModel();
+					int index = dl.getIndex();
+
+					java.util.List list = enabledHouse.getSelectedValuesList();
+					for (int i = list.size() - 1; i >= 0; i--) {
+						Object object = list.get(i);
+						if (index > listModel.indexOf(object)) {
+							index--;
+						}
+						listModel.removeElement(object);
+						listModel.insertElementAt(object, index);
+						index = listModel.indexOf(object);
+					}
+
+					return true;
+				}
+
+				@Override
+				public int getSourceActions(JComponent c) {
+					return MOVE;
+				}
+
+				@Override
+				protected Transferable createTransferable(JComponent c) {
+					return new StringSelection("");
+				}
+			});
+
+			enabledHouse.setDropMode(DropMode.INSERT);
+			enabledHouse.setDragEnabled(true);
+
+			JScrollPane scrollPane = new JScrollPane(enabledHouse);
+			enabledTitle.setPreferredSize(new Dimension(50, 50));
+
+			enabledTitle.add(scrollPane, BorderLayout.CENTER);
+
+			enabledTitle.add(new JLabel("Drag to set priority (highest at top)", JLabel.CENTER), BorderLayout.SOUTH);
+
+			inner.add(enabledTitle, innerConstraints);
+		}
+
 		return inner;
 	}
 
-	JComponent getOtherTab() {
-		JPanel inner = new JPanel(new GridBagLayout());
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.NORTH;
-		constraints.weightx = 1;
-		constraints.gridy = 0;
-		{
-			/*
-			{
-				JPanel mouse = new JPanel(new GridBagLayout());
-				mouse.setBorder(new CompoundBorder(new TitledBorder("Mouse Speed"), new EmptyBorder(5, 5, 5, 5)));
-				GridBagConstraints mouseConstraints = new GridBagConstraints();
-				mouseConstraints.fill = GridBagConstraints.HORIZONTAL;
-				mouseConstraints.weightx = 1;
-				mouseConstraints.gridx = 0;
-				mouseConstraints.gridy = 0;
-				{
-					mouse.add(mouseSpeedCheckBox, mouseConstraints);
-				}
-
-				mouseConstraints.gridy++;
-				{
-					mouse.add(mouseSpeedSlider, mouseConstraints);
-				}
-				inner.add(mouse, constraints);
-			}*/
-
-			/*constraints.gridy++;
-			{
-				JPanel panel = new JPanel(new GridBagLayout());
-				panel.setBorder(new CompoundBorder(new TitledBorder("Aura"), new EmptyBorder(5, 5, 5, 5)));
-				GridBagConstraints panelConstraints = new GridBagConstraints();
-				panelConstraints.fill = GridBagConstraints.HORIZONTAL;
-				panelConstraints.weightx = 1;
-				panelConstraints.gridx = 0;
-				panelConstraints.gridy = 0;
-				panelConstraints.gridwidth = 1;
-
-				panel.add(enableAura, panelConstraints);
-				panelConstraints.weightx = 0.5;
-				panelConstraints.gridx++;
-				//panel.add(comboBoxAura, panelConstraints);
-
-				inner.add(panel, constraints);
-			}*/
-/*
-			constraints.gridy++;
-			{
-				JPanel screenshots = new JPanel(new GridBagLayout());
-				screenshots.setBorder(new CompoundBorder(new TitledBorder("Screenshots"), new EmptyBorder(5, 5, 5, 5)));
-				GridBagConstraints screenshotConstraints = new GridBagConstraints();
-				screenshotConstraints.fill = GridBagConstraints.HORIZONTAL;
-				screenshotConstraints.weightx = 1;
-				screenshotConstraints.weighty = 1;
-				screenshotConstraints.gridx = 0;
-				screenshotConstraints.gridy = 0;
-				{
-					screenshots.add(screenshotCheckbox, screenshotConstraints);
-					screenshotConstraints.gridx++;
-					screenshotConstraints.weightx = 0.25;
-					screenshots.add(screenshotFolderButton, screenshotConstraints);
-				}
-
-				inner.add(screenshots, constraints);
-			}
-*/
-			constraints.gridy++;
-			{
-				JPanel panel = new JPanel(new GridBagLayout());
-				panel.setBorder(new CompoundBorder(new TitledBorder("Burners not lit"), new EmptyBorder(5, 5, 5, 5)));
-				GridBagConstraints screenshotConstraints = new GridBagConstraints();
-				screenshotConstraints.fill = GridBagConstraints.HORIZONTAL;
-				screenshotConstraints.weightx = 1;
-				screenshotConstraints.weighty = 1;
-				screenshotConstraints.gridx = 0;
-				screenshotConstraints.gridy = 0;
-				{
-					panel.add(stopOfferingCheckbox, screenshotConstraints);
-				}
-
-				inner.add(panel, constraints);
-			}
-
-			constraints.weighty = 1;
-			constraints.gridy++;
-			{
-				JPanel panel = new JPanel(new GridBagLayout());
-				panel.setBorder(new CompoundBorder(new TitledBorder("Stop at level"), new EmptyBorder(5, 5, 5, 5)));
-				GridBagConstraints stopConstraints = new GridBagConstraints();
-				stopConstraints.fill = GridBagConstraints.HORIZONTAL;
-				stopConstraints.weightx = 1;
-				stopConstraints.weighty = 1;
-				stopConstraints.gridx = 0;
-				stopConstraints.gridy = 0;
-				{
-					panel.add(stopLevelCheckbox, stopConstraints);
-					stopConstraints.gridx++;
-					stopConstraints.weightx = 0.25;
-					panel.add(stopLevelSpinner, stopConstraints);
-				}
-
-				inner.add(panel, constraints);
-			}
-
-
+	private void remove(JList<Path> listEnabled, SortedListModel<Path> disabledModel, DefaultListModel<Path> enabledModel) {
+		int index = listEnabled.getSelectedIndex();
+		if (listEnabled.getSelectedIndex() > -1) {
+			Path selectedValue = listEnabled.getSelectedValue();
+			disabledModel.add(selectedValue);
+			enabledModel.removeElement(selectedValue);
+			if (index > 0 && index >= enabledModel.getSize())
+				listEnabled.setSelectedIndex(index - 1);
+			else
+				listEnabled.setSelectedIndex(index);
 		}
-		return inner;
+	}
+
+	private void saveActionPerformed() {
+		final Properties settings = new Properties();
+		settings.setProperty("offering", comboBoxOffering.getSelectedItem().toString());
+		settings.setProperty("mode", comboBoxHouseMode.getSelectedItem().toString());
+		settings.setProperty("friendname", friendName.getText());
+		settings.setProperty("ignorename", ignoredPlayers.getText());
+		settings.setProperty("lightburners", String.valueOf(lightBurners.isSelected()));
+		settings.setProperty("summoning", String.valueOf(enableSummoning.isSelected()));
+		settings.setProperty("bob", comboBoxBOB.getSelectedItem().toString());
+
+		settings.setProperty("banks", joinModel(bankEnabledModel));
+		settings.setProperty("house", joinModel(houseEnabledModel));
+
+		//settings.setProperty("enablemousespeed", String.valueOf(mouseSpeedCheckBox.isSelected()));
+		//settings.setProperty("mousespeed", String.valueOf(mouseSpeedSlider.getValue()));
+
+		//settings.setProperty("screenshots", String.valueOf(screenshotCheckbox.isSelected()));
+		settings.setProperty("onlyhouseobelisk", String.valueOf(houseRechargeCheckbox.isSelected()));
+
+		settings.setProperty("bobonce", String.valueOf(bobOnceCheckbox.isSelected()));
+
+		//settings.setProperty("enableaura", String.valueOf(enableAura.isSelected()));
+		//settings.setProperty("aura", String.valueOf(comboBoxAura.getSelectedItem()));
+
+		settings.setProperty("stop_offering", String.valueOf(stopOfferingCheckbox.isSelected()));
+
+		settings.setProperty("stoplevelselected", String.valueOf(stopLevelCheckbox.isSelected()));
+		settings.setProperty("stoplevel", String.valueOf(stopLevelSpinner.getValue()));
+
+		options.save(settings);
 	}
 
 	private String joinModel(DefaultListModel<Path> model) {
@@ -659,38 +862,6 @@ public class LogGildedAltarGUI extends JFrame {
 			joined.deleteCharAt(joined.length() - 1);
 
 		return joined.toString();
-	}
-
-	private String[] splitModel(String joinedString) {
-		if (joinedString.contains("~"))
-			return joinedString.split("~");
-		return new String[]{joinedString};
-	}
-
-	private void add(JList<Path> listDisabled, SortedListModel<Path> disabledModel, DefaultListModel<Path> enabledModel) {
-		int index = listDisabled.getSelectedIndex();
-		if (index > -1) {
-			Path selectedValue = listDisabled.getSelectedValue();
-			enabledModel.addElement(selectedValue);
-			disabledModel.removeElement(selectedValue);
-			if (index > 0 && index >= disabledModel.getSize())
-				listDisabled.setSelectedIndex(index - 1);
-			else
-				listDisabled.setSelectedIndex(index);
-		}
-	}
-
-	private void remove(JList<Path> listEnabled, SortedListModel<Path> disabledModel, DefaultListModel<Path> enabledModel) {
-		int index = listEnabled.getSelectedIndex();
-		if (listEnabled.getSelectedIndex() > -1) {
-			Path selectedValue = listEnabled.getSelectedValue();
-			disabledModel.add(selectedValue);
-			enabledModel.removeElement(selectedValue);
-			if (index > 0 && index >= enabledModel.getSize())
-				listEnabled.setSelectedIndex(index - 1);
-			else
-				listEnabled.setSelectedIndex(index);
-		}
 	}
 
 	private void startButtonActionPerformed() {
@@ -877,12 +1048,6 @@ public class LogGildedAltarGUI extends JFrame {
 
 				options.setupFinished = true;
 				options.TimeLastOffering = System.currentTimeMillis();
-
-			}
-
-			@Override
-			public boolean activate() {
-				return false;
 			}
 		});
 
@@ -891,11 +1056,6 @@ public class LogGildedAltarGUI extends JFrame {
 				@Override
 				public void run() {
 					script.houseHandler.addOpenHouses();
-				}
-
-				@Override
-				public boolean activate() {
-					return true;
 				}
 			});
 		}
@@ -1002,184 +1162,10 @@ public class LogGildedAltarGUI extends JFrame {
 		}
 	}
 
-	private void saveActionPerformed() {
-		final Properties settings = new Properties();
-		settings.setProperty("offering", comboBoxOffering.getSelectedItem().toString());
-		settings.setProperty("mode", comboBoxHouseMode.getSelectedItem().toString());
-		settings.setProperty("friendname", friendName.getText());
-		settings.setProperty("ignorename", ignoredPlayers.getText());
-		settings.setProperty("lightburners", String.valueOf(lightBurners.isSelected()));
-		settings.setProperty("summoning", String.valueOf(enableSummoning.isSelected()));
-		settings.setProperty("bob", comboBoxBOB.getSelectedItem().toString());
-
-		settings.setProperty("banks", joinModel(bankEnabledModel));
-		settings.setProperty("house", joinModel(houseEnabledModel));
-
-		//settings.setProperty("enablemousespeed", String.valueOf(mouseSpeedCheckBox.isSelected()));
-		//settings.setProperty("mousespeed", String.valueOf(mouseSpeedSlider.getValue()));
-
-		//settings.setProperty("screenshots", String.valueOf(screenshotCheckbox.isSelected()));
-		settings.setProperty("onlyhouseobelisk", String.valueOf(houseRechargeCheckbox.isSelected()));
-
-		settings.setProperty("bobonce", String.valueOf(bobOnceCheckbox.isSelected()));
-
-		//settings.setProperty("enableaura", String.valueOf(enableAura.isSelected()));
-		//settings.setProperty("aura", String.valueOf(comboBoxAura.getSelectedItem()));
-
-		settings.setProperty("stop_offering", String.valueOf(stopOfferingCheckbox.isSelected()));
-
-		settings.setProperty("stoplevelselected", String.valueOf(stopLevelCheckbox.isSelected()));
-		settings.setProperty("stoplevel", String.valueOf(stopLevelSpinner.getValue()));
-
-		options.save(settings);
-	}
-
-	private void initComponents() {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				if (!startPressed && !script.ctx.isShutdown()) {
-					script.getController().stop();
-				}
-			}
-		});
-		// General
-		comboBoxHouseMode = new JComboBox<String>(new String[]{
-				"Use own altar",
-				"Use friends altar",
-				"Detect open houses (w31, yanille)"}
-		);
-		comboBoxHouseMode.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				friendName.setEnabled(comboBoxHouseMode.getSelectedIndex() == 1);
-				int selected = comboBoxHouseMode.getSelectedIndex();
-				if (selected > 1) {
-					lightBurners.setSelected(false);
-				}
-				ignoredPlayers.setEnabled(selected == 2);
-			}
-		});
-
-		friendName = new JTextField("friend1,friend2");
-		friendName.setEnabled(false);
-		ignoredPlayers = new JTextField("name1, name2");
-		ignoredPlayers.setEnabled(false);
-		lightBurners = new JCheckBox("Light incense burners (2 clean marrentil per trip, won't offer bones unless 2 burners are lit)", true);
-
-		comboBoxOffering = new JComboBox<Offering>(Offering.values());
-
-		// House
-		disabledHouse = new JList<Path>(houseDisabledModel);
-		enabledHouse = new JList<Path>(houseEnabledModel);
-		addHouse = new JButton(">");
-		addHouse.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				add(disabledHouse, houseDisabledModel, houseEnabledModel);
-			}
-		});
-		removeHouse = new JButton("<");
-		removeHouse.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				remove(enabledHouse, houseDisabledModel, houseEnabledModel);
-			}
-		});
-
-		// Banking
-		disabledBank = new JList<Path>(bankDisabledModel);
-		enabledBank = new JList<Path>(bankEnabledModel);
-		addBank = new JButton(">");
-		addBank.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				add(disabledBank, bankDisabledModel, bankEnabledModel);
-			}
-		});
-		removeBank = new JButton("<");
-		removeBank.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				remove(enabledBank, bankDisabledModel, bankEnabledModel);
-			}
-		});
-		disabledBank.setCellRenderer(new ListRenderer());
-		enabledBank.setCellRenderer(new ListRenderer());
-
-		// Summoning
-		enableSummoning = new JCheckBox("Enable summoning");
-		houseRechargeCheckbox = new JCheckBox("Only recharge summoning points at house obelisk");
-		bobOnceCheckbox = new JCheckBox("Only fill beast of burden once (fast banking for yak)");
-		comboBoxBOB = new JComboBox<String>(new String[]{"Bull ant (40)",
-				"Spirit terrorbird (52)",
-				"War tortoise (67)",
-				"Pack Yak (96)",
-				"Clan avatar"});
-
-		/*
-		screenshotCheckbox = new JCheckBox("Save screenshot when script stops");
-		screenshotFolderButton = new JButton("Open Folder");
-		screenshotFolderButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Desktop.getDesktop().open(Environment.getStorageDirectory());
-				} catch (IOException ignored) {
-				}
-			}
-		});
-		*/
-		stopOfferingCheckbox = new JCheckBox("Stop offering bones if burners go out", true);
-/*
-		comboBoxAura = new JComboBox<>(new MyAuras.Aura[]{
-				MyAuras.Aura.CORRUPTION,
-				MyAuras.Aura.HARMONY,
-				MyAuras.Aura.SALVATION,
-				MyAuras.Aura.GREATER_CORRUPTION,
-				MyAuras.Aura.GREATER_HARMONY,
-				MyAuras.Aura.GREATER_SALVATION,
-				MyAuras.Aura.MASTER_CORRUPTION,
-				MyAuras.Aura.MASTER_HARMONY,
-				MyAuras.Aura.MASTER_SALVATION,
-				MyAuras.Aura.SUPREME_CORRUPTION,
-				MyAuras.Aura.SUPREME_HARMONY,
-				MyAuras.Aura.SUPREME_SALVATION
-		});
-*/
-		//enableAura = new JCheckBox("Enable Aura");
-
-		stopLevelCheckbox = new JCheckBox("Stop at level", false);
-
-		stopLevelSpinner = new JSpinner(new SpinnerNumberModel(/*Math.min(Math.max(1, Skills.getLevel(Skills.PRAYER)) + 1, 99)*/99, 1, 99, 1));
-
-		// Bottom
-		startButton = new JButton("Start Script");
-		startButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startButtonActionPerformed();
-			}
-		});
-		loadButton = new JButton("Load Settings");
-		loadButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadActionPerformed();
-			}
-		});
-		saveButton = new JButton("Save Settings");
-		saveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveActionPerformed();
-			}
-		});
-
-		tabbedPane = new JTabbedPane();
-		generalTab = getGeneralTab();
-		houseTab = getHouseTab();
-		bankTab = getBankingTab();
+	private String[] splitModel(String joinedString) {
+		if (joinedString.contains("~"))
+			return joinedString.split("~");
+		return new String[]{joinedString};
 	}
 }
 

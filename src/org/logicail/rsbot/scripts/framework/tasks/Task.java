@@ -11,10 +11,9 @@ import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
  */
 public abstract class Task<T extends LogicailScript> extends LogicailMethodProvider implements Runnable {
 	public T script;
+
 	public Task(T script) {
 		super(script.ctx);
 		this.script = script;
 	}
-
-	public abstract boolean activate();
 }

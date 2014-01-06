@@ -18,6 +18,7 @@ public class RunicStaff extends HouseTeleportStaff {
 	public RunicStaff(LogGildedAltar script) {
 		super(script, Path.HOME_TELEPORT_RUNIC_STAFF, 24200, 24203);
 	}
+
 	// Runic, 24198 no spell, 24199 no charge, 24200 charged
 
 	@Override

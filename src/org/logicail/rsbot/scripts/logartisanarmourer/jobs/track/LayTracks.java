@@ -26,8 +26,8 @@ public class LayTracks extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean activate() {
-		return super.activate()
+	public boolean isValid() {
+		return super.isValid()
 				&& !ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty()
 				&& (ctx.backpack.select().id(SmithTrack.TRACK_80).isEmpty() || ctx.backpack.select().id(SmithTrack.TIE).isEmpty());
 	}

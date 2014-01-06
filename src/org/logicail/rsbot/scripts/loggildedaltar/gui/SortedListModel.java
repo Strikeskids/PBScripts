@@ -10,7 +10,6 @@ import java.util.*;
  * Time: 15:35
  */
 public class SortedListModel<T> extends AbstractListModel {
-
 	// Define a SortedSet
 	final SortedSet<T> model;
 
@@ -20,22 +19,17 @@ public class SortedListModel<T> extends AbstractListModel {
 		model = new TreeSet<T>();
 	}
 
-	// ListModel methods
-	public int getSize() {
-		// Return the model size
-		return model.size();
-	}
-
-	public Object getElementAt(int index) {
-		// Return the appropriate element
-		return model.toArray()[index];
-	}
-
 	// Other methods
 	public void add(T element) {
 		if (model.add(element)) {
 			fireContentsChanged(this, 0, getSize());
 		}
+	}
+
+	// ListModel methods
+	public int getSize() {
+		// Return the model size
+		return model.size();
 	}
 
 	public void addAll(T elements[]) {
@@ -58,6 +52,15 @@ public class SortedListModel<T> extends AbstractListModel {
 		return model.first();
 	}
 
+	public Object getElementAt(int index) {
+		// Return the appropriate element
+		return model.toArray()[index];
+	}
+
+	public boolean isEmpty() {
+		return model.isEmpty();
+	}
+
 	public Iterator iterator() {
 		return model.iterator();
 	}
@@ -73,10 +76,6 @@ public class SortedListModel<T> extends AbstractListModel {
 			fireContentsChanged(this, 0, getSize());
 		}
 		return removed;
-	}
-
-	public boolean isEmpty() {
-		return model.isEmpty();
 	}
 
 	public Object[] toArray() {

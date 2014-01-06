@@ -13,6 +13,8 @@ import org.powerbot.script.wrappers.Item;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -32,6 +34,14 @@ public class ItemTeleport extends NodePath {
 		this.ids = ids;
 		this.destination = destination;
 		this.slot = slot;
+	}
+
+	@Override
+	public String toString() {
+		return "ItemTeleport{" +
+				"ids=" + Arrays.toString(ids) +
+				", destination='" + destination + '\'' +
+				'}';
 	}
 
 	@Override
@@ -112,6 +122,17 @@ public class ItemTeleport extends NodePath {
 		List<BankRequiredItem> list = new ArrayList<BankRequiredItem>();
 
 		if (ctx.equipment.select().id(ids).isEmpty() && ctx.backpack.select().id(ids).isEmpty()) {
+			if (ctx.bank.isOpen()) {
+				for (Item item : ctx.bank.select().id(ids).sort(new Comparator<Item>() {
+					@Override
+					public int compare(Item o1, Item o2) {
+						return Integer.compare(o1.getId(), o2.getId());
+					}
+				}).reverse().first()) {
+					list.add(new BankRequiredItem(1, true, slot, item.getId()));
+					return list;
+				}
+			}
 			list.add(new BankRequiredItem(1, true, slot, ids));
 		}
 

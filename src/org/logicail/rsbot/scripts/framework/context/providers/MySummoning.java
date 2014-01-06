@@ -18,22 +18,47 @@ import java.util.concurrent.Callable;
  * Time: 17:00
  */
 public class MySummoning extends Summoning {
+	// TODO
+	public static final int WIDGET_STORE = 671;
+	public static final int WIDGET_STORE_CLOSE_BUTTON = 13;
+	public static final int WIDGET_ORB = 1430;
+	public static final int WIDGET_ORB_BUTTON = 5;
+
 	protected LogicailMethodContext ctx;
+
+	private final MySummoningHelper store;
+
 	public MySummoning(LogicailMethodContext context) {
 		super(context);
 		ctx = context;
 		store = new MySummoningHelper(context);
 	}
 
-	private final MySummoningHelper store;
-
 	public MySummoningHelper getStore() {
 		return store;
 	}
 
-	// TODO
-	public static final int WIDGET_STORE = 671;
-	public static final int WIDGET_STORE_CLOSE_BUTTON = 13;
+	public boolean canSummon(Familiar familiar) {
+		return !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
+	}
+
+	public boolean close() {
+		if (!isOpen()) {
+			return true;
+		}
+
+		final Component button = getCloseButton();
+		return button.interact("Close") && Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return !isOpen();
+			}
+		});
+	}
+
+	public Component getCloseButton() {
+		return ctx.widgets.get(WIDGET_STORE, WIDGET_STORE_CLOSE_BUTTON);
+	}
 
 	/**
 	 * Is Beast of burden interface open
@@ -42,43 +67,6 @@ public class MySummoning extends Summoning {
 	 */
 	public boolean isOpen() {
 		return getCloseButton().isValid();
-	}
-
-	public Component getCloseButton() {
-		return ctx.widgets.get(WIDGET_STORE, WIDGET_STORE_CLOSE_BUTTON);
-	}
-
-	public boolean open() {
-		if (isOpen()) {
-			return true;
-		}
-
-		if (isFamiliarSummoned() && select(Option.INTERACT)) {
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return !ctx.chat.select().text("Store").isEmpty();
-				}
-			});
-
-			for (ChatOption option : ctx.chat.select().text("Store")) {
-				sleep(100, 800);
-				if (option.select(Random.nextBoolean())) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return isOpen();
-						}
-					});
-				}
-			}
-		}
-
-		return isOpen();
-	}
-
-	public boolean canSummon(Familiar familiar) {
-		return !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
 	}
 
 	public boolean deposit(final int id, int amount) {
@@ -125,21 +113,41 @@ public class MySummoning extends Summoning {
 		return false;
 	}
 
-	public boolean close() {
-		if (!isOpen()) {
+	public boolean open() {
+		if (isOpen()) {
 			return true;
 		}
 
-		final Component button = getCloseButton();
-		if (button.interact("Close")) {
-			return Condition.wait(new Callable<Boolean>() {
+		if (isFamiliarSummoned() && interactOrb("Store")) {
+			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return !isOpen();
+					return !ctx.chat.select().text("Store").isEmpty();
 				}
-			});
+			})) {
+				for (ChatOption option : ctx.chat.select().text("Store")) {
+					sleep(100, 800);
+					if (option.select(Random.nextBoolean())) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return isOpen();
+							}
+						});
+					}
+				}
+			}
 		}
 
-		return false;
+		return isOpen();
+	}
+
+	public boolean interactOrb(String action) {
+		final Component orb = getOrb();
+		return orb.isValid() && orb.isVisible() && orb.interact(action);
+	}
+
+	public Component getOrb() {
+		return ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
 	}
 }

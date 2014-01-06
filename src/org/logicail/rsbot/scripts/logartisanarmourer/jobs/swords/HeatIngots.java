@@ -29,8 +29,8 @@ public class HeatIngots extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean activate() {
-		return super.activate()
+	public boolean isValid() {
+		return super.isValid()
 				&& !ctx.backpack.select().id(INGOT_IDS_IV).isEmpty()
 				&& !makeSword.isOpen()
 				&& !ctx.backpack.select().id(MakeSword.TONGS).isEmpty();

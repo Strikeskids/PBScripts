@@ -35,11 +35,6 @@ public class YanilleBankWalk extends NodePath {
 	}
 
 	@Override
-	public boolean activate() {
-		return !locationAttribute.isInSmallArea(ctx) && (locationAttribute.isInLargeArea(ctx) || script.houseTask.isInHouse());
-	}
-
-	@Override
 	public boolean doLarge() {
 		if (!options.useOtherHouse && script.houseTask.getHouseLocation() != HouseTask.HouseLocation.YANILLE) {
 			ctx.log.info("House not in yanille");
@@ -74,5 +69,10 @@ public class YanilleBankWalk extends NodePath {
 
 			return new TilePath(ctx, PATH_TO_BANK).randomize(2, 2).traverse();
 		}
+	}
+
+	@Override
+	public boolean isValid() {
+		return !locationAttribute.isInSmallArea(ctx) && (locationAttribute.isInLargeArea(ctx) || script.houseTask.isInHouse());
 	}
 }

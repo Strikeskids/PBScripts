@@ -118,16 +118,6 @@ public enum LocationAttribute {
 		return largeArea.contains(ctx.players.local());
 	}
 
-	public boolean isInObeliskArea(LogicailMethodContext ctx) {
-		waitUntilMapReady(ctx);
-		return obeliskArea != null && obeliskArea.contains(ctx.players.local());
-	}
-
-	public boolean isInSmallArea(LogicailMethodContext ctx) {
-		waitUntilMapReady(ctx);
-		return smallArea.contains(ctx.players.local());
-	}
-
 	private void waitUntilMapReady(LogicailMethodContext ctx) {
 		if (ctx.game.getClientState() != Game.INDEX_MAP_LOADED) {
 			Timer t = new Timer(2000);
@@ -138,5 +128,15 @@ public enum LocationAttribute {
 				ctx.game.sleep(100, 200);
 			}
 		}
+	}
+
+	public boolean isInObeliskArea(LogicailMethodContext ctx) {
+		waitUntilMapReady(ctx);
+		return obeliskArea != null && obeliskArea.contains(ctx.players.local());
+	}
+
+	public boolean isInSmallArea(LogicailMethodContext ctx) {
+		waitUntilMapReady(ctx);
+		return smallArea.contains(ctx.players.local());
 	}
 }

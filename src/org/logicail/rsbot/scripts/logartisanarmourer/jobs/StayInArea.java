@@ -19,7 +19,7 @@ public class StayInArea extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean activate() {
+	public boolean isValid() {
 		final Player local = ctx.players.local();
 		return local.isIdle()
 				&& !options.getAreaSmall().contains(local);

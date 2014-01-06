@@ -5,19 +5,25 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Astar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePath;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HouseTablet;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HouseTeleportStaff;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.RunicStaff;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleLodestone;
+import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
+import org.logicail.rsbot.util.DoorOpener;
+import org.powerbot.script.lang.Filter;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Widget;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.powerbot.script.util.Random;
+import org.powerbot.script.wrappers.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -108,6 +114,90 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		return ctx.widgets.get(WIDGET_HOUSE_OPTIONS);
 	}
 
+	public void leaveHouse() {
+		for (GameObject portal : ctx.objects.select().id(13405).nearest().first()) {
+			ctx.log.info("Leaving house");
+
+			List<Tile> portalBounds = getTilesAround(portal);
+
+			if (portalBounds.isEmpty()) {
+				return;
+			}
+
+			final Tile destination = portalBounds.get(Random.nextInt(0, portalBounds.size()));
+
+			if (script.roomStorage.getIndex(ctx.players.local()) != script.roomStorage.getIndex(portal)) {
+				final HousePath pathToPortal = new Astar(script).findRoute(portal);
+
+				if (pathToPortal != null && !pathToPortal.traverse(destination)) {
+					if (!destination.getMatrix(ctx).isReachable()) {
+						ctx.log.info("Failed to get to portal - trying failsafe");
+						final Room current = script.roomStorage.getRoom(ctx.players.local());
+						final Room end = script.roomStorage.getRoom(portal);
+						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(current, end)).shuffle().first()) {
+							if (DoorOpener.open(ctx, door)) {
+								sleep(100, 600);
+							}
+						}
+					}
+
+					if (ctx.movement.findPath(destination).traverse()) {
+						sleep(150, 500);
+					}
+
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							final Tile dest = ctx.movement.getDestination();
+							return dest == null || !dest.getMatrix(ctx).isOnMap() || dest.distanceTo(ctx.players.local()) <= 4;
+						}
+					}, 600, 8);
+				}
+			}
+
+			if (destination.distanceTo(ctx.players.local()) < 20) {
+				if (ctx.camera.prepare(portal) && (destination.getMatrix(ctx).isReachable() || script.roomStorage.getIndex(ctx.players.local()) == script.roomStorage.getIndex(portal)) && portal.interact("Enter", "Portal")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return !script.houseTask.isInHouse();
+						}
+					});
+				}
+			}
+		}
+	}
+
+	private List<Tile> getTilesAround(GameObject object) {
+		List<Tile> tiles = new ArrayList<Tile>();
+
+		Area objectArea = object.getArea();
+		if (objectArea == null) {
+			objectArea = new Area(object.getLocation().derive(-1, 1), object.getLocation().derive(1, -1));
+		}
+
+		final Room room = script.roomStorage.getRoom(object);
+		if (room != null) {
+			final Filter<GameObject> filter = new Filter<GameObject>() {
+				@Override
+				public boolean accept(GameObject gameObject) {
+					final GameObject.Type type = gameObject.getType();
+					return type == GameObject.Type.BOUNDARY || type == GameObject.Type.INTERACTIVE;
+				}
+			};
+			for (Tile tile : room.getArea().getTileArray()) {
+				if (!objectArea.contains(tile)/* || tile.getMatrix(ctx).isReachable()*/) {
+					if (ctx.movement.getDistance(object, tile) < 6) {
+						if (ctx.objects.select().at(tile).select(filter).isEmpty()) {
+							tiles.add(tile);
+						}
+					}
+				}
+			}
+		}
+		return tiles;
+	}
+
 	public void setHouseTeleportMode() {
 		if (options.useOtherHouse) {
 			if (script.houseTask.isTeleportInHouse()) {
@@ -142,6 +232,14 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		return !isOpen();
 	}
 
+	public boolean isOpen() {
+		return ctx.widgets.get(WIDGET_HOUSE_OPTIONS).isValid();
+	}
+
+	public boolean isTeleportInHouse() {
+		return ctx.settings.get(SETTING_HOUSE_LOCATION, 29, 1) == 0;
+	}
+
 	public boolean openHouseOptions() {
 		if (isOpen()) {
 			return true;
@@ -165,10 +263,6 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		return isOpen();
 	}
 
-	public boolean isOpen() {
-		return ctx.widgets.get(WIDGET_HOUSE_OPTIONS).isValid();
-	}
-
 	public boolean setTeleportHouse() {
 		if (isOpen()) {
 			Component houseButton = getWidget().getComponent(WIDGET_BUTTON_ARRIVE_HOUSE);
@@ -185,10 +279,6 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		return isTeleportInHouse();
 	}
 
-	public boolean isTeleportInHouse() {
-		return ctx.settings.get(SETTING_HOUSE_LOCATION, 29, 1) == 0;
-	}
-
 	public boolean setTeleportPortal() {
 		if (isOpen()) {
 			Component houseButton = getWidget().getComponent(WIDGET_BUTTON_ARRIVE_PORTAL);
@@ -202,74 +292,6 @@ public class HouseTask extends Branch<LogGildedAltar> {
 			}
 		}
 		return !isTeleportInHouse();
-	}
-
-	public void leaveHouse() {
-		for (GameObject portal : ctx.objects.select().id(13405).nearest().first()) {
-			/*ctx.log.info("Leaving house");
-
-			Tile[] portalBounds = getTilesAroundPortal(portal);
-
-			if (portalBounds.length == 0) {
-				return;
-			}
-
-			final Tile destination = portalBounds[Random.nextInt(0, portalBounds.length)];
-
-			if (HousePath.getIndex(Players.getLocal()) != HousePath.getIndex(portal)) {
-				final HousePath pathToPortal = new HousePath(portal);
-
-				if (!pathToPortal.traverse(destination)) {
-					if (!destination.canReach()) {
-						GildedAltar.get().getLogHandler().print("Failed to get to portal - trying failsafe", Color.RED);
-						SceneObject closestDoor = SceneEntities.getNearest(new Filter<SceneObject>() {
-							final Area areaStart = pathToPortal.getCurrentRoom().getWallArea();
-							final Area areaEnd = pathToPortal.getEnd().getWallArea();
-
-							@Override
-							public boolean accept(SceneObject sceneObject) {
-								return sceneObject != null
-										&& Arrays.binarySearch(HousePath.DOOR_CLOSED, sceneObject.getId()) >= 0
-										&& areaStart.contains(sceneObject)
-										&& areaEnd.contains(sceneObject);
-							}
-						});
-
-						if (closestDoor != null) {
-							if (Util.openDoor(closestDoor, Random.nextInt(4000, 6000))) {
-								Task.sleep(50, 300);
-							}
-						}
-					}
-
-					if (Walking.findPath(destination).traverse()) {
-						Task.sleep(150, 400);
-					}
-
-					Waiting.waitFor(5000, new Condition() {
-						@Override
-						public boolean validate() {
-							Tile dest = Walking.getDestination();
-							return !dest.validate() || Calculations.distanceTo(destination) <= 3;
-						}
-					});
-				}
-			}
-
-			if (Calculations.distanceTo(destination) < 20) {
-				if (Util.turnTo(portal) && (destination.canReach() || HousePath.getIndex(Players.getLocal()) == HousePath.getIndex(portal)) && portal.interact("Enter", "Portal")) {
-					Timer t = new Timer(4000);
-					while (t.isRunning()) {
-						if (Game.getClientState() == Game.INDEX_MAP_LOADED && !House.isInHouse()) {
-							Task.sleep(100, 350);
-							break;
-						}
-						sleep(40, 80);
-					}
-				}
-			}*/
-			throw new NotImplementedException();
-		}
 	}
 
 	public static enum HouseLocation {

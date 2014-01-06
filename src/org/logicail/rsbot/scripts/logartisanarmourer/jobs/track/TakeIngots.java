@@ -3,7 +3,6 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
-import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -30,17 +29,6 @@ public class TakeIngots extends ArtisanArmourerTask {
 		return "Take Ingots";
 	}
 
-	@Override
-	public boolean activate() {
-		return super.activate()
-				//&& (!Inventory.isFull() && (!Inventory.contains(SmithTrackOld.RAILS) || !Inventory.contains(SmithTrackOld.BASE_PLATE)))
-				&& AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > SmithTrack.animationTimelimit
-				&& ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty()
-				&& !ctx.backpack.isFull()
-				//&& !Inventory.contains(getIngotId())
-				&& !getTrough().isEmpty();
-	}
-
 	private BasicNamedQuery<GameObject> getTrough() {
 		switch (options.ingotType) {
 			case BRONZE:
@@ -50,6 +38,17 @@ public class TakeIngots extends ArtisanArmourerTask {
 			default:
 				return ctx.objects.select().id(STEEL_TROUGH).nearest().first();
 		}
+	}
+
+	@Override
+	public boolean isValid() {
+		return super.isValid()
+				//&& (!Inventory.isFull() && (!Inventory.contains(SmithTrackOld.RAILS) || !Inventory.contains(SmithTrackOld.BASE_PLATE)))
+				&& AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > SmithTrack.animationTimelimit
+				&& ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty()
+				&& !ctx.backpack.isFull()
+				//&& !Inventory.contains(getIngotId())
+				&& !getTrough().isEmpty();
 	}
 
 	@Override
@@ -81,9 +80,6 @@ public class TakeIngots extends ArtisanArmourerTask {
 		}
 
 		for (final GameObject trough : ctx.objects.first()) {
-			if (SmithAnvil.anvilLocation == null) {
-				SmithAnvil.anvilLocation = trough.getLocation();
-			}
 			if (ctx.camera.prepare(trough) && trough.interact("Take-ingots", trough.getName())) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override

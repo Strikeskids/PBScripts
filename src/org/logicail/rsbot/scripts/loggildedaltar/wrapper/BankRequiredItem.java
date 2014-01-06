@@ -29,11 +29,11 @@ public class BankRequiredItem {
 		return quantity;
 	}
 
-	public boolean equip() {
-		return equip;
-	}
-
 	public Equipment.Slot getSlot() {
 		return slot;
+	}
+
+	public boolean equip() {
+		return equip;
 	}
 }

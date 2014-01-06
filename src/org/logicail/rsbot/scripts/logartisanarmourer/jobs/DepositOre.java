@@ -32,8 +32,8 @@ public class DepositOre extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean activate() {
-		return super.activate()
+	public boolean isValid() {
+		return super.isValid()
 				&& !ctx.skillingInterface.isOpen()
 				&& (remainingIron() < nextDeposit[0] && !ctx.backpack.select().id(ID_IRON_NOTED).isEmpty())
 				|| (remainingMithril() < nextDeposit[0] && !ctx.backpack.select().id(ID_MITHRIL_NOTED).isEmpty())

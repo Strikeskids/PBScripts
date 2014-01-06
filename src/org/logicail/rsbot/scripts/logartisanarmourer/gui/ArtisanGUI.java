@@ -345,11 +345,6 @@ public class ArtisanGUI extends JFrame {
 			options.ingotType = (IngotType) trackIngotType.getSelectedItem();
 			script.submit(new Task<LogArtisanWorkshop>(script) {
 				@Override
-				public boolean activate() {
-					return true;
-				}
-
-				@Override
 				public void run() {
 					if (!ctx.backpack.select().isEmpty()) {
 						EventQueue.invokeLater(new Runnable() {

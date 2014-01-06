@@ -54,28 +54,12 @@ public enum Path {
 		this.options = options;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public LocationAttribute getLocation() {
 		return location;
 	}
 
-	public boolean isEnabledInList() {
-		return options.contains(PathSetting.ENABLE_LIST);
-	}
-
-	public boolean isEnabledByDefault() {
-		return options.contains(PathSetting.ENABLE_DEFAULT);
-	}
-
-	public boolean isFailsafe() {
-		return options.contains(PathSetting.IS_FAILSAFE);
-	}
-
-	public boolean isFailsafeRequired() {
-		return options.contains(PathSetting.REQUIRE_FAILSAFE);
+	public String getName() {
+		return name;
 	}
 
 	public PathType getPathType() {
@@ -88,6 +72,22 @@ public enum Path {
 			return String.format("[F] %s", getName());
 		}
 		return getName();
+	}
+
+	public boolean isFailsafe() {
+		return options.contains(PathSetting.IS_FAILSAFE);
+	}
+
+	public boolean isEnabledByDefault() {
+		return options.contains(PathSetting.ENABLE_DEFAULT);
+	}
+
+	public boolean isEnabledInList() {
+		return options.contains(PathSetting.ENABLE_LIST);
+	}
+
+	public boolean isFailsafeRequired() {
+		return options.contains(PathSetting.REQUIRE_FAILSAFE);
 	}
 
 	public enum PathType {

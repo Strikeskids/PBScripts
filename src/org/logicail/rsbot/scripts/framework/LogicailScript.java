@@ -22,13 +22,13 @@ import java.awt.*;
 public abstract class LogicailScript<T extends LogicailScript> extends PollingScript implements PaintListener {
 	public final LogicailMethodContext ctx;
 	protected final Tree<T> tree;
-	private final Painter paint;
 	protected JFrame gui;
+	private final Painter paint;
 
 	protected LogicailScript() {
 		this.ctx = new LogicailMethodContext(super.ctx, this);
 		this.ctx.init(super.ctx);
-		tree = new Tree<T>((T)this);
+		tree = new Tree<T>((T) this);
 		paint = new Painter(ctx, this);
 
 		getExecQueue(State.STOP).add(new Runnable() {

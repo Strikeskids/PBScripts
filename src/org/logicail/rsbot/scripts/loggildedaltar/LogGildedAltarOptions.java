@@ -14,12 +14,7 @@ import java.util.Properties;
  * Time: 21:58
  */
 public class LogGildedAltarOptions {
-	private File settingsFile;
 	public long TimeLastOffering;
-
-	public LogGildedAltarOptions(AbstractScript script) {
-		settingsFile = new File(script.getStorageDirectory(), "loggildedaltar.ini");
-	}
 
 	/* Settings */
 	public boolean setupFinished = false;
@@ -40,26 +35,13 @@ public class LogGildedAltarOptions {
 	public boolean bobonce = false;
 	public boolean stopLevelEnabled = false;
 	public int stopLevel;
-	private final String FILENAME = "settings.ini";
 	public String status;
 	public int bonesOffered;
+	private File settingsFile;
+	private final String FILENAME = "settings.ini";
 
-	public void save(Properties properties) {
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(settingsFile);
-			properties.store(fw, "Settings for LogGildedaltar");
-		} catch (Exception ignored) {
-		} finally {
-			if (fw != null) {
-				try {
-					fw.flush();
-					fw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	public LogGildedAltarOptions(AbstractScript script) {
+		settingsFile = new File(script.getStorageDirectory(), "loggildedaltar.ini");
 	}
 
 	public Properties load() {
@@ -82,5 +64,23 @@ public class LogGildedAltarOptions {
 		}
 
 		return settings;
+	}
+
+	public void save(Properties properties) {
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(settingsFile);
+			properties.store(fw, "Settings for LogGildedaltar");
+		} catch (Exception ignored) {
+		} finally {
+			if (fw != null) {
+				try {
+					fw.flush();
+					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

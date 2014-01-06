@@ -16,8 +16,13 @@ import java.util.concurrent.Callable;
 public class MyChat extends Chat {
 	public static final int WIDGET_INPUT = 752;
 	public static final int WIDGET_INPUT_TEXT_CHILD = 5;
+
 	public MyChat(LogicailMethodContext context) {
 		super(context);
+	}
+
+	public Component getInputTextBox() {
+		return ctx.widgets.get(WIDGET_INPUT, WIDGET_INPUT_TEXT_CHILD);
 	}
 
 	public boolean waitForInputWidget() {
@@ -31,9 +36,5 @@ public class MyChat extends Chat {
 
 	public boolean isInputWidgetOpen() {
 		return getInputTextBox().isOnScreen();
-	}
-
-	public Component getInputTextBox() {
-		return ctx.widgets.get(WIDGET_INPUT, WIDGET_INPUT_TEXT_CHILD);
 	}
 }

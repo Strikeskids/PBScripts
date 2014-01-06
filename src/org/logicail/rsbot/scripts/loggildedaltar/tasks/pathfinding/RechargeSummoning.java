@@ -25,10 +25,15 @@ public class RechargeSummoning extends NodePath {
 	public RechargeSummoning(LogGildedAltar script, final Path path, Tile... pathBankToObelisk) {
 		super(script, path);
 
-		if(pathBankToObelisk != null) {
+		if (pathBankToObelisk != null) {
 			this.pathToObelisk = new TilePath(ctx, pathBankToObelisk);
 			this.pathToSmall = pathToObelisk.reverse();
 		}
+	}
+
+	@Override
+	public boolean isValid() {
+		return locationAttribute.isInLargeArea(ctx)/* || getItemsNeededFromBank() == null*/;
 	}
 
 	@Override
@@ -49,6 +54,21 @@ public class RechargeSummoning extends NodePath {
 		}
 
 		sleep(200, 600);
+	}
+
+	@Override
+	protected boolean doLarge() {
+		return false;
+	}
+
+	@Override
+	protected boolean doSmall() {
+		if (pathToObelisk == null) {
+			return ctx.movement.findPath(locationAttribute.getObeliskRandom(ctx)).traverse();
+		} else {
+			pathToObelisk.randomize(2, 2);
+			return pathToObelisk.traverse() || ctx.movement.findPath(locationAttribute.getObeliskRandom(ctx)).traverse();
+		}
 	}
 
 	protected boolean renewPoints() {
@@ -79,25 +99,5 @@ public class RechargeSummoning extends NodePath {
 		}
 
 		return false;
-	}
-
-	@Override
-	protected boolean doLarge() {
-		return false;
-	}
-
-	@Override
-	protected boolean doSmall() {
-		if (pathToObelisk == null) {
-			return ctx.movement.findPath(locationAttribute.getObeliskRandom(ctx)).traverse();
-		} else {
-			pathToObelisk.randomize(2, 2);
-			return pathToObelisk.traverse() || ctx.movement.findPath(locationAttribute.getObeliskRandom(ctx)).traverse();
-		}
-	}
-
-	@Override
-	public boolean activate() {
-		return locationAttribute.isInLargeArea(ctx)/* || getItemsNeededFromBank() == null*/;
 	}
 }

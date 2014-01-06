@@ -10,6 +10,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTele
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.burthorpe.BurthorpeLodestone;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.canifis.KharyrllPortalRoom;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.daemonheim.DaemonheimKinship;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity.FightCavesBank;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleBankWalk;
 import org.powerbot.script.methods.Equipment;
 
@@ -20,8 +23,8 @@ import org.powerbot.script.methods.Equipment;
  * Time: 16:14
  */
 public class BankingTask extends Branch<LogGildedAltar> {
-	protected final LogGildedAltarOptions options;
 	public final Banking banking;
+	protected final LogGildedAltarOptions options;
 
 	public BankingTask(LogGildedAltar script) {
 		super(script);
@@ -29,20 +32,10 @@ public class BankingTask extends Branch<LogGildedAltar> {
 		banking = new Banking(script);
 	}
 
-	public boolean inBank() {
-		for (Task node : tasks) {
-			if (node != null && node instanceof NodePath && ((NodePath) node).getPath().getLocation().isInSmallArea(ctx)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public boolean branch() {
 		return options.banking
-				//&& Util.isReady()
-				&& !script.summoningTask.activate();
+				&& !script.summoningTask.isValid();
 	}
 
 	public NodePath createPath(Path path) {
@@ -56,20 +49,29 @@ public class BankingTask extends Branch<LogGildedAltar> {
 			case BURTHORPE_LODESTONE:
 				return new BurthorpeLodestone(script);
 			case DAEMONHEIM_RING_OF_KINSHIP:
-				//return new DaemonheimKinship(script);
+				return new DaemonheimKinship(script);
 			case YANILLE_BANK_WALK:
 				return new YanilleBankWalk(script);
 			case EDGEVILLE_AMULET_OF_GLORY:
 				return new ItemTeleport(script, path, "Edgeville", Equipment.Slot.NECK, 1706, 1708, 1710, 1712);
 			case FIGHT_CAVES:
-				//return new FightCavesBank(script);
+				return new FightCavesBank(script);
 			case EDGEVILLE_LODESTONE:
 				return new LodestoneTeleport(script, path, Lodestones.Lodestone.EDGEVILLE);
 			case CANIFIS:
-				//return new KharyrllPortalRoom(script);
+				return new KharyrllPortalRoom(script);
 			case BURTHORPE_TROLL_INVASION:
 				return new ItemTeleport(script, path, "Troll Invasion", Equipment.Slot.NECK, 3867, 3865, 3863, 3861, 3859, 3857, 3855, 3853);
 		}
 		return null;
+	}
+
+	public boolean inBank() {
+		for (Task node : tasks) {
+			if (node != null && node instanceof NodePath && ((NodePath) node).getPath().getLocation().isInSmallArea(ctx)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

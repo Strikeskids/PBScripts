@@ -7,7 +7,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.RechargeSummoning;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.burthorpe.BurthorpeRecharge;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.canifis.CanifisRecharge;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.castlewars.CastleWarsRecharge;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity.MainPlazaRecharge;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleRecharge;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Tile;
@@ -26,7 +28,7 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 
 		boolean edgeville = false;
 
-		for (Task<LogGildedAltar> node : script.bankingTask.getTasks()) {
+		for (Task<LogGildedAltar> node : script.bankingTask.getNodes()) {
 			if (!(node instanceof NodePath)) {
 				continue;
 			}
@@ -58,10 +60,10 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 					add(new YanilleRecharge(script));
 					break;
 				case FIGHT_CAVES:
-					//add(new MainPlazaRecharge());
+					add(new MainPlazaRecharge(script));
 					break;
 				case CANIFIS:
-					//add(new CanifisRecharge());
+					add(new CanifisRecharge(script));
 					break;
 			}
 		}

@@ -17,6 +17,7 @@ import java.util.List;
 public class MySummoningHelper extends ItemQuery<Item> {
 	public static final int WIDGET_STORE = 671;
 	public static final int WIDGET_STORE_ITEMS = 27;
+
 	public MySummoningHelper(LogicailMethodContext context) {
 		super(context);
 	}

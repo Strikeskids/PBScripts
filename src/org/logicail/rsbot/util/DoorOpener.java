@@ -21,9 +21,13 @@ public class DoorOpener extends LogicailMethodProvider implements ChainingIterat
 
 	@Override
 	public boolean next(int i, final GameObject door) {
-		if(ctx.camera.prepare(door)) {
-			if(door.interact("Open")) {
-				if(Condition.wait(new Callable<Boolean>() {
+		return open(ctx, door);
+	}
+
+	public static boolean open(LogicailMethodContext ctx, final GameObject door) {
+		if (ctx.camera.prepare(door)) {
+			if (door.interact("Open")) {
+				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return !door.isValid();

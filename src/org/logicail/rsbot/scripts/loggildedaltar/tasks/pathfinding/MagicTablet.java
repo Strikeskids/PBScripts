@@ -37,7 +37,7 @@ public abstract class MagicTablet extends NodePath {
 	}
 
 	@Override
-	public boolean activate() {
+	public boolean isValid() {
 		return getItemsNeededFromBank().isEmpty();
 	}
 }

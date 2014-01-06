@@ -2,7 +2,9 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
-import org.powerbot.script.wrappers.Area;
+import org.logicail.rsbot.util.LogicailArea;
+import org.powerbot.script.lang.BasicNamedQuery;
+import org.powerbot.script.wrappers.GameObject;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.HashSet;
@@ -31,6 +33,15 @@ public class Room extends LogicailMethodProvider {
 			13107, 13108, 13109, 13110,
 			13118, 13119, 13120, 13121,
 			36590, 36625, 36639, 36649};
+	public static final int[] DOOR_OPEN_LEFT = {
+			13008,
+			13017,
+			13096,
+			13102,
+			13108,
+			13120,
+			36639
+	};
 	public static final int[] DOOR_CLOSED_LEFT = {
 			13006, // Whitewashed stone
 			13015, // Tropical
@@ -47,27 +58,72 @@ public class Room extends LogicailMethodProvider {
 			13109, // Fremennick
 			13119, // Fancy stone
 			36625};
+	public double travelTime = 1; // Always room to room on grid
 	private final RoomStorage roomStorage;
-	private final int x;
-	private final int y;
+	private final int localX;
+	private final int localY;
 	private final int index;
-	public double travelTime;
 	private Set<Room> neighbours = new HashSet<Room>();
 
+	public Room(LogicailMethodContext context, RoomStorage roomStorage, int localX, int localY) {
+		super(context);
+		this.roomStorage = roomStorage;
+		this.localX = localX;
+		this.localY = localY;
+		this.index = roomStorage.getIndex(getLocation()) - 9;
+	}
+
+	public Tile getLocation() {
+		final Tile mapBase = ctx.game.getMapBase();
+		return new Tile(mapBase.x + localX, mapBase.y + localY, mapBase.getPlane());
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
 	public int getLocalX() {
-		return x;
+		return localX;
 	}
 
 	public int getLocalY() {
-		return y;
+		return localY;
 	}
 
-	public Room(LogicailMethodContext context, RoomStorage roomStorage, int x, int y) {
-		super(context);
-		this.roomStorage = roomStorage;
-		this.x = x;
-		this.y = y;
-		this.index = roomStorage.getIndex(getLocation()) - 9;
+	public Set<Room> getNeighbours() {
+		return neighbours;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Room room = (Room) o;
+
+		if (index != room.index) return false;
+		if (localX != room.localX) return false;
+		if (localY != room.localY) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = localX;
+		result = 31 * result + localY;
+		result = 31 * result + index;
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Room{" +
+				"index=" + index +
+				", localX=" + localX +
+				", localY=" + localY +
+				", neighbours=" + neighbours.size() +
+				'}';
 	}
 
 	public void addNeighbour(Room room) {
@@ -77,30 +133,25 @@ public class Room extends LogicailMethodProvider {
 		}
 	}
 
-	public Set<Room> getNeighbours() {
-		return neighbours;
-	}
-
-	public Tile getLocation() {
-		return new Tile(x, y);
-	}
-
-	public Area getWallArea() {
-		final Tile location = getLocation();
-		return new Area(location.derive(-1, 1), location.derive(9, -10));
-	}
-
-
-	@Override
-	public String toString() {
-		return String.format("Room {index = %d, neighbours = %d]", index, neighbours.size());
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
 	public void clearNeighbours() {
 		neighbours.clear();
+	}
+
+	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int... ids) {
+		return ctx.objects.select().id(ids).within(getArea());
+	}
+
+	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int[] ids, int... ids2) {
+		return ctx.objects.select().id(ids, ids2).within(getArea());
+	}
+
+	public LogicailArea getArea() {
+		final Tile location = getLocation();
+		return new LogicailArea(location, location.derive(8, -8));
+	}
+
+	public LogicailArea getWallArea() {
+		final Tile location = getLocation();
+		return new LogicailArea(location.derive(-1, 1), location.derive(9, -10));
 	}
 }

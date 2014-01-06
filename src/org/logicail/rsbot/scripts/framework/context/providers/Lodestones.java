@@ -27,34 +27,8 @@ public class Lodestones extends LogicailMethodProvider {
 		super(context);
 	}
 
-	public Component getButton() {
-		return ctx.widgets.get(OPEN_TELEPORT_INTERFACE, OPEN_TELEPORT_INTERFACE_CHILD);
-	}
-
-	public boolean isOpen() {
-		return getLodestoneInterface().isValid();
-	}
-
 	private Component getLodestoneInterface() {
 		return ctx.widgets.get(TELEPORT_INTERFACE, TELEPORT_INTERFACE_CHILD);
-	}
-
-	public boolean canUse(Lodestone lodestone) {
-		return ctx.settings.get(lodestone.getSetting(), lodestone.getShift(), lodestone.getMask()) == 1;
-	}
-
-	public boolean isPreviousDestination(Lodestone lodestone) {
-		return ctx.settings.get(SETTING_LODESTONES, 26, 0x1f) == lodestone.ordinal();
-	}
-
-	private boolean waitForTeleport(final Lodestone lodestone) {
-		return Condition.wait(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				final Player local = ctx.players.local();
-				return local != null && local.getAnimation() == -1 && ctx.movement.getDistance(local, lodestone.getLocation()) < 10;
-			}
-		});
 	}
 
 	public boolean teleport(Lodestone lodestone) {
@@ -64,7 +38,7 @@ public class Lodestones extends LogicailMethodProvider {
 			return true;
 		}
 
-		if(!canUse(lodestone)) {
+		if (!canUse(lodestone)) {
 			ctx.log.info("Can't use lodestone " + lodestone);
 			return false;
 		}
@@ -97,6 +71,32 @@ public class Lodestones extends LogicailMethodProvider {
 		}
 
 		return false;
+	}
+
+	public boolean canUse(Lodestone lodestone) {
+		return ctx.settings.get(lodestone.getSetting(), lodestone.getShift(), lodestone.getMask()) == 1;
+	}
+
+	public Component getButton() {
+		return ctx.widgets.get(OPEN_TELEPORT_INTERFACE, OPEN_TELEPORT_INTERFACE_CHILD);
+	}
+
+	public boolean isOpen() {
+		return getLodestoneInterface().isValid();
+	}
+
+	public boolean isPreviousDestination(Lodestone lodestone) {
+		return ctx.settings.get(SETTING_LODESTONES, 26, 0x1f) == lodestone.ordinal();
+	}
+
+	private boolean waitForTeleport(final Lodestone lodestone) {
+		return Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				final Player local = ctx.players.local();
+				return local != null && local.getAnimation() == -1 && ctx.movement.getDistance(local, lodestone.getLocation()) < 10;
+			}
+		});
 	}
 
 	public static enum Lodestone {
