@@ -141,7 +141,6 @@ public class HousePath extends LogicailMethodProvider {
 	public BasicNamedQuery<GameObject> getNextDoor() {
 		final List<Room> roomPath = getPath();
 		if (!roomPath.isEmpty()) {
-			final boolean left = Random.nextBoolean();
 			for (int i = 0; i < roomPath.size() - 1; i++) {
 				final Room current = roomPath.get(i);
 				final Room next = roomPath.get(i + 1);

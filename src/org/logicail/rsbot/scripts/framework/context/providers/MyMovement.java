@@ -5,6 +5,7 @@ import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.methods.Movement;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
 import org.powerbot.script.wrappers.Locatable;
 import org.powerbot.script.wrappers.Tile;
@@ -40,7 +41,7 @@ public class MyMovement extends Movement {
 		};
 
 		for (Tile tile : area.getTileArray()) {
-			if (!tile.equals(locatable.getLocation()) && getDistance(locatable, tile) <= maxDistance) {
+			if ((!tile.equals(locatable.getLocation()) || tile.getMatrix(ctx).isReachable()) && getDistance(locatable, tile) <= maxDistance) {
 				if (ctx.objects.select().at(tile).select(filter).isEmpty()) {
 					tiles.add(tile);
 				}
@@ -52,14 +53,15 @@ public class MyMovement extends Movement {
 		return tiles;
 	}
 
-	public void walk(final Tile destination) {
-		if (ctx.movement.findPath(destination).traverse()) {
+	public void walk(final Locatable locatable) {
+		final Tile tile = locatable.getLocation();
+		if (ctx.movement.findPath(locatable).traverse()) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return destination.getMatrix(ctx).isOnScreen() || destination.distanceTo(ctx.players.local()) < 5;
+					return tile.getMatrix(ctx).isOnScreen() || tile.distanceTo(ctx.players.local()) < 5;
 				}
-			}, 600, 6);
+			}, Random.nextInt(150, 250), Random.nextInt(10, 15));
 		}
 	}
 }
