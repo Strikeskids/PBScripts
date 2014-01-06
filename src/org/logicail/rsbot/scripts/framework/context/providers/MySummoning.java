@@ -77,23 +77,21 @@ public class MySummoning extends Summoning {
 			}
 
 			// TODO: Check might be like bank seperate
-			if (!ctx.hud.isVisible(Hud.Window.BACKPACK) && ctx.hud.view(Hud.Window.BACKPACK)) {
-				sleep(200, 800);
-			}
-
-			for (Item item : ctx.backpack.select().id(id).first()) {
-				String action = "Store-" + amount;
-				final int backpackCount = ctx.backpack.select().id(id).count();
-				if (backpackCount < amount || amount == 0 || backpackCount < spaceLeft) {
-					action = "Store-All";
-				}
-				if (hasAction(item, action)) {
-					if (!item.interact(action)) {
-						return false;
+			if (ctx.hud.view(Hud.Window.BACKPACK)) {
+				for (Item item : ctx.backpack.select().id(id).first()) {
+					String action = "Store-" + amount;
+					final int backpackCount = ctx.backpack.select().id(id).count();
+					if (backpackCount < amount || amount == 0 || backpackCount < spaceLeft) {
+						action = "Store-All";
 					}
-				} else if (item.interact("Store-X") && ctx.chat.waitForInputWidget()) {
-					sleep(200, 800);
-					ctx.keyboard.sendln(String.valueOf(amount));
+					if (hasAction(item, action)) {
+						if (item.interact(action)) {
+							return true;
+						}
+					} else if (item.interact("Store-X") && ctx.chat.waitForInputWidget()) {
+						sleep(200, 800);
+						ctx.keyboard.sendln(String.valueOf(amount));
+					}
 				}
 			}
 		}
@@ -133,7 +131,7 @@ public class MySummoning extends Summoning {
 							public Boolean call() throws Exception {
 								return isOpen();
 							}
-						});
+						}, Random.nextInt(550, 650), Random.nextInt(4, 12));
 					}
 				}
 			}

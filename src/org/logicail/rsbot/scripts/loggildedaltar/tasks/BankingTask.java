@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.ItemTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
@@ -16,6 +17,8 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity.Fi
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleBankWalk;
 import org.powerbot.script.methods.Equipment;
 
+import java.util.Enumeration;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -23,13 +26,21 @@ import org.powerbot.script.methods.Equipment;
  * Time: 16:14
  */
 public class BankingTask extends Branch<LogGildedAltar> {
-	public final Banking banking;
 	protected final LogGildedAltarOptions options;
+	private Banking banking;
 
-	public BankingTask(LogGildedAltar script) {
+	public BankingTask(LogGildedAltar script, Enumeration<Path> enabledPaths) {
 		super(script);
 		options = script.options;
-		banking = new Banking(script);
+		// Always add banking (activate if in bank)
+		add(banking = new Banking(script));
+		while (enabledPaths.hasMoreElements()) {
+			add(createPath(enabledPaths.nextElement()));
+		}
+	}
+
+	public void setBanking(boolean state) {
+		banking.setBanking(state);
 	}
 
 	@Override
@@ -38,7 +49,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 				&& !script.summoningTask.isValid();
 	}
 
-	public NodePath createPath(Path path) {
+	private NodePath createPath(Path path) {
 		switch (path) {
 			case EDGEVILLE_MOUNTED_AMULET_OF_GLORY:
 				//return new HouseGlory(script);

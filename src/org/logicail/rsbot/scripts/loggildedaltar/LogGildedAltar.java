@@ -6,6 +6,7 @@ import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
@@ -15,15 +16,17 @@ import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
+import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
+import org.powerbot.script.util.SkillData;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -42,10 +45,10 @@ import java.util.concurrent.Callable;
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	public LogGildedAltarOptions options = new LogGildedAltarOptions(this);
-	public SummoningTask summoningTask = new SummoningTask(this);
+	public SummoningTask summoningTask;
 	public HouseHandler houseHandler = new HouseHandler(this);
-	public BankingTask bankingTask = new BankingTask(this);
-	public HouseTask houseTask = new HouseTask(this);
+	public BankingTask bankingTask;
+	public HouseTask houseTask;
 	public HousePortal housePortal = new HousePortal(this);
 	public RoomStorage roomStorage;
 	public LeaveHouse leaveHouse;
@@ -53,7 +56,11 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
 	public AltarTask altarTask;
 
-	public void createTree(LinkedList<Task> houseNodes, LinkedList<Task> bankNodes) {
+	private SkillData skillData = null;
+	private int currentLevel = -1;
+	private int startLevel = -1;
+
+	public void createTree(Enumeration<Path> houseNodes, Enumeration<Path> bankNodes) {
 		roomStorage = new RoomStorage(ctx);
 
 		submit(new AnimationMonitor<LogGildedAltar>(this));
@@ -61,23 +68,27 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 		// v4
 		/*
-		new StopLevel(),
 				new StatisticsPostback(),
-				new LeaveHouse(),
+				// LEAVE HOUSE
 				new WidgetCloser(),
 				new LogoutIdle(),
 				new WorldThirtyOne(),
 				new PickupBones(),
 				new ActivateAura(),
-				new SummoningDelegation(),
-				bankingDelegation,
-				new HouseDelegation(houseNodes),
-				new RenewFamiliar(),
-				new AltarDelegation(),
+				// BANKING
 		*/
 
+		if (options.stopLevelEnabled) {
+			tree.add(new StopLevel<LogGildedAltar>(this, Skills.PRAYER, options.stopLevel));
+		}
 
 		tree.add(leaveHouse = new LeaveHouse(this));
+		bankingTask = new BankingTask(this, bankNodes);
+		tree.add(summoningTask = new SummoningTask(this));
+		tree.add(bankingTask);
+		tree.add(houseTask = new HouseTask(this, houseNodes));
+
+		tree.add(new RenewFamiliar(this));
 
 		tree.add(altarTask = new AltarTask(this));
 	}
@@ -85,6 +96,35 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	@Override
 	public LinkedProperties getPaintInfo() {
 		final LinkedProperties properties = new LinkedProperties();
+
+		if (ctx.game.isLoggedIn()) {
+			if (skillData == null) {
+				skillData = new SkillData(ctx);
+			}
+			currentLevel = ctx.skills.getLevel(Skills.PRAYER);
+			if (startLevel == -1) {
+				startLevel = currentLevel;
+			}
+		}
+
+		final long runtime = getRuntime();
+
+		properties.put("Status", options.status);
+		properties.put("Time Running", org.powerbot.script.util.Timer.format(runtime));
+
+		if (skillData != null) {
+			properties.put("TTL", org.powerbot.script.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
+			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
+			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.PRAYER)));
+			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.PRAYER)));
+		}
+
+		final float time = runtime / 3600000f;
+		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered, (int) (options.bonesOffered / time)));
+
+//		if (currentLevel < 99) {
+//			properties.put("XP to level " + currentLevel + 1, String.format("%,d", .getExperienceToLevel(Skills.PRAYER, level + 1)), 575, 30, new Color(0, 0, 0, 64), Color.WHITE);
+//		}
 
 		properties.put("Random", Random.nextGaussian(4000, 6000, 1000));
 

@@ -27,7 +27,7 @@ public class MySummoningHelper extends ItemQuery<Item> {
 		List<Item> items = new LinkedList<Item>();
 
 		for (Component component : ctx.widgets.get(WIDGET_STORE, WIDGET_STORE_ITEMS).getChildren()) {
-			if (component.getItemId() != -1) {
+			if (component.isValid() && component.getItemId() != -1) {
 				items.add(new Item(ctx, component));
 			}
 		}

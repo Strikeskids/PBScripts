@@ -6,7 +6,7 @@ import org.powerbot.script.wrappers.Tile;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,19 +16,26 @@ import java.util.List;
  * Time: 12:01
  */
 public class LogicailArea extends org.powerbot.script.wrappers.Area {
+	final int plane;
+
+	private Tile[] tiles = null;
+
 	public LogicailArea(Tile... tile) {
 		super(tile);
+		plane = tile[0].plane;
 	}
 
 	public LogicailArea(Tile tile, Tile tile2) {
 		super(tile, tile2);
+		plane = tile.plane;
 	}
 
 	public Tile getRandomReachable(MethodContext ctx, double distanceFromCenter) {
 		final Tile centralTile = getCentralTile();
 		List<Tile> reachable = new ArrayList<Tile>();
-		for (Tile tile : getTileArray()) {
-			if (centralTile.distanceTo(tile) <= distanceFromCenter && tile.getMatrix(ctx).isReachable()) {
+		final Tile[] tileArray = getTileArray();
+		for (Tile tile : tileArray) {
+			if (tile.distanceTo(centralTile) <= distanceFromCenter && tile.getMatrix(ctx).isReachable()) {
 				reachable.add(tile);
 			}
 		}
@@ -41,25 +48,29 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 	}
 
 	public Tile[] getTileArray() {
-		List<Tile> list = new LinkedList<Tile>();
-
-		int plane = getCentralTile().plane;
-
-		final Rectangle bounds = getPolygon().getBounds();
-		int minx = (int) bounds.getMinX();
-		int maxx = (int) bounds.getMaxX();
-		int miny = (int) bounds.getMinY();
-		int maxy = (int) bounds.getMaxY();
-
-		for (int x = minx; x <= maxx; ++x) {
-			for (int y = miny; y <= maxy; ++y) {
-				Tile tile = new Tile(x, y, plane);
-				if (contains(tile)) {
-					list.add(tile);
-				}
-			}
+		if (tiles != null) {
+			return tiles;
 		}
 
-		return list.toArray(new Tile[list.size()]);
+		final Polygon polygon = getPolygon();
+		final Rectangle bounds = polygon.getBounds();
+		final Tile[] array = new Tile[bounds.width * bounds.height];
+		int numberOfTiles = 0;
+
+		int x = 0;
+		while (x < bounds.width) {
+			int y = 0;
+			while (y < bounds.height) {
+				final int tempX = bounds.x + x;
+				final int tempY = bounds.y + y;
+				if (polygon.contains(tempX, tempY)) {
+					array[++numberOfTiles] = new Tile(tempX, tempY, plane);
+				}
+				++y;
+			}
+			++x;
+		}
+		this.tiles = Arrays.copyOf(array, numberOfTiles);
+		return tiles;
 	}
 }

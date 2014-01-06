@@ -3,7 +3,6 @@ package org.logicail.rsbot.scripts.framework.tasks;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,8 +28,11 @@ public class Tree<T extends LogicailScript> extends Node<T> {
 		this.tasks.addAll(Arrays.asList(tasks));
 	}
 
-	public void add(Node<T>... task) {
-		Collections.addAll(tasks, task);
+	public void add(Node<T>... nodes) {
+		for (Node<T> node : nodes) {
+			if(node == null) continue;
+			tasks.add(node);
+		}
 	}
 
 	public boolean any() {

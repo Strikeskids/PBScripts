@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners;
 
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.Banking;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.powerbot.script.lang.BasicNamedQuery;

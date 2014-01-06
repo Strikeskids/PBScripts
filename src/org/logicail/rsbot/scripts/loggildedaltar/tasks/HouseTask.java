@@ -23,6 +23,7 @@ import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.*;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -49,9 +50,13 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	private static final int SETTING_HOUSE_LOCATION = 481;
 	protected final LogGildedAltarOptions options;
 
-	public HouseTask(LogGildedAltar script) {
+	public HouseTask(LogGildedAltar script, Enumeration<Path> houseNodes) {
 		super(script);
 		options = script.options;
+
+		while (houseNodes.hasMoreElements()) {
+			add(createPath(houseNodes.nextElement()));
+		}
 	}
 
 	@Override
@@ -69,7 +74,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		return ctx.widgets.get(WIDGET_LOADING_HOUSE).isValid();
 	}
 
-	public NodePath createPath(Path path) {
+	private NodePath createPath(Path path) {
 		switch (path) {
 			case HOME_TABLET:
 				return new HouseTablet(script, 8013);

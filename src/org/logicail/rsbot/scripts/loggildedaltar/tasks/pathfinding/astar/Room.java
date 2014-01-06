@@ -103,9 +103,8 @@ public class Room extends LogicailMethodProvider {
 
 		if (index != room.index) return false;
 		if (localX != room.localX) return false;
-		if (localY != room.localY) return false;
+		return localY == room.localY;
 
-		return true;
 	}
 
 	@Override

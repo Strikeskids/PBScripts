@@ -3,11 +3,9 @@ package org.logicail.rsbot.scripts.loggildedaltar.gui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.OpenHouse;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
 import org.powerbot.script.methods.Summoning;
 
@@ -25,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -991,30 +988,6 @@ public class LogGildedAltarGUI extends JFrame {
 		options.stopLevelEnabled = stopLevelCheckbox.isSelected();
 		options.stopLevel = Integer.parseInt(String.valueOf(stopLevelSpinner.getValue()));
 
-		// House
-		final LinkedList<Task> houseNodes = new LinkedList<Task>();
-		houseNodes.add(new HousePortal(script));
-		for (Object object : houseEnabledModel.toArray()) {
-			if (object != null && object instanceof Path) {
-				NodePath node = script.houseTask.createPath((Path) object);
-				if (node != null) {
-					houseNodes.add(node);
-				}
-			}
-		}
-
-		// Banking
-		final LinkedList<Task> bankNodes = new LinkedList<Task>();
-		bankNodes.add(script.bankingTask.banking);
-		for (Object object : bankEnabledModel.toArray()) {
-			if (object != null && object instanceof Path) {
-				NodePath node = script.bankingTask.createPath((Path) object);
-				if (node != null) {
-					bankNodes.add(node);
-				}
-			}
-		}
-
 		// Summoning
 		options.useBOB = enableSummoning.isSelected();
 		Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
@@ -1029,10 +1002,10 @@ public class LogGildedAltarGUI extends JFrame {
 
 				if (ctx.game.isLoggedIn() && ctx.players.local() != null) {
 					if (options.lightBurners && !(ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
-						script.bankingTask.banking.setBanking(true);
+						script.bankingTask.setBanking(true);
 					}
 				} else {
-					script.bankingTask.banking.setBanking(true);
+					script.bankingTask.setBanking(true);
 				}
 
 				/*if (options.useBOB) {
@@ -1044,7 +1017,7 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 				}*/
 
-				script.createTree(houseNodes, bankNodes);
+				script.createTree(houseEnabledModel.elements(), bankEnabledModel.elements());
 
 				options.setupFinished = true;
 				options.TimeLastOffering = System.currentTimeMillis();

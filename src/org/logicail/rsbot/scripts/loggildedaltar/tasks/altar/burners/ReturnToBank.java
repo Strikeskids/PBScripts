@@ -26,6 +26,6 @@ public class ReturnToBank extends BurnerAbstract {
 	@Override
 	public void run() {
 		options.status = "Burners can't be lit";
-		script.bankingTask.banking.setBanking(true);
+		script.bankingTask.setBanking(true);
 	}
 }
