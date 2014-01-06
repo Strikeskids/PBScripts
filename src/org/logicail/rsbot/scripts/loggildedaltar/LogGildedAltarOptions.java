@@ -35,13 +35,13 @@ public class LogGildedAltarOptions {
 	public boolean bobonce = false;
 	public boolean stopLevelEnabled = false;
 	public int stopLevel;
-	public String status;
+	public String status = "";
 	public int bonesOffered;
 	private File settingsFile;
 	private final String FILENAME = "settings.ini";
 
 	public LogGildedAltarOptions(AbstractScript script) {
-		settingsFile = new File(script.getStorageDirectory(), "loggildedaltar.ini");
+		settingsFile = new File(script.getStorageDirectory(), FILENAME);
 	}
 
 	public Properties load() {

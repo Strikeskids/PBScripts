@@ -48,6 +48,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	private static final int SETTING_HOUSE = 1189;
 	private static final int SETTING_BUILD = 483;
 	private static final int SETTING_HOUSE_LOCATION = 481;
+	private static final int EXIT_PORTAL = 13405;
 	protected final LogGildedAltarOptions options;
 
 	public HouseTask(LogGildedAltar script, Enumeration<Path> houseNodes) {
@@ -67,7 +68,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	}
 
 	public boolean isInHouse() {
-		return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.game.isLoggedIn() && (isLoadingHouse() || !ctx.objects.select().id(13405).isEmpty());
+		return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.game.isLoggedIn() && (isLoadingHouse() || !ctx.objects.select().id(EXIT_PORTAL).isEmpty());
 	}
 
 	public boolean isLoadingHouse() {

@@ -21,7 +21,7 @@ import java.awt.*;
  */
 public abstract class LogicailScript<T extends LogicailScript> extends PollingScript implements PaintListener {
 	public final LogicailMethodContext ctx;
-	protected final Tree<T> tree;
+	public final Tree<T> tree;
 	protected JFrame gui;
 	private final Painter paint;
 

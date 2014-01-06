@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.wrappers.*;
 
 import java.util.ArrayList;
@@ -15,25 +15,33 @@ import java.util.List;
  */
 public class RoomStorage extends LogicailMethodProvider {
 	private final Room[] rooms = new Room[81];
+	private final LogGildedAltar script;
 
-	public RoomStorage(LogicailMethodContext context) {
-		super(context);
+	public RoomStorage(LogGildedAltar script) {
+		super(script.ctx);
+		this.script = script;
 
 		// Create the rooms
 		for (int x = 16; x <= 80; x += 8) {
 			for (int y = 16; y <= 80; y += 8) {
-				final Room r = new Room(context, this, x, y);
+				final Room r = new Room(ctx, this, x, y);
 				rooms[r.getIndex()] = r;
 			}
 		}
 
 		// Find neighbours
-		findNeighbours();
+		if (script.houseTask.isInHouse()) {
+			findNeighbours();
+		}
 	}
 
 	public void findNeighbours() {
 		for (Room room : rooms) {
 			room.clearNeighbours();
+		}
+
+		if (!script.houseTask.isInHouse()) {
+			return;
 		}
 
 		// Joined by doors

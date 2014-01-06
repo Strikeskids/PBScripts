@@ -1,12 +1,17 @@
 package org.logicail.rsbot.scripts.loggildedaltar.gui;
 
 import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
+import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.OpenHouse;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
+import org.powerbot.script.methods.Skills;
 import org.powerbot.script.methods.Summoning;
 
 import javax.swing.*;
@@ -22,9 +27,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -74,6 +78,8 @@ public class LogGildedAltarGUI extends JFrame {
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
 	private final LogGildedAltarOptions options;
+	private Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
+	private Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
 	public LogGildedAltarGUI(LogGildedAltar script) {
 		this.script = script;
@@ -311,20 +317,23 @@ public class LogGildedAltarGUI extends JFrame {
 
 		inner.add(title, BorderLayout.CENTER);
 
-		JButton forumButton = new JButton("Forum");
-		forumButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				/*try {
-					Desktop.getDesktop().browse(new URI(GildedAltar.class.getAnnotation(Manifest.class).website()));
-				} catch (Exception exception) {
-					exception.printStackTrace();
-				}*/
-			}
-		});
-		inner.add(forumButton, BorderLayout.EAST);
-
 		return inner;
+	}
+
+	private String prettyName(String value) {
+		if (value == null) {
+			return "null";
+		}
+
+		StringBuilder sb = new StringBuilder(value.length());
+		if (value.length() > 0) {
+			sb.append(Character.toUpperCase(value.charAt(0)));
+		}
+		if (value.length() > 1) {
+			sb.append(value.substring(1).toLowerCase());
+		}
+
+		return sb.toString().replace('_', ' ');
 	}
 
 	private void initComponents() {
@@ -336,6 +345,11 @@ public class LogGildedAltarGUI extends JFrame {
 				}
 			}
 		});
+
+		for (Summoning.Familiar familiar : familiars) {
+			familiarMap.put(String.format("%s (%d)", prettyName(familiar.name()), familiar.getRequiredLevel()), familiar);
+		}
+
 		// General
 		comboBoxHouseMode = new JComboBox<String>(new String[]{
 				"Use own altar",
@@ -404,11 +418,8 @@ public class LogGildedAltarGUI extends JFrame {
 		enableSummoning = new JCheckBox("Enable summoning");
 		houseRechargeCheckbox = new JCheckBox("Only recharge summoning points at house obelisk");
 		bobOnceCheckbox = new JCheckBox("Only fill beast of burden once (fast banking for yak)");
-		comboBoxBOB = new JComboBox<String>(new String[]{"Bull ant (40)",
-				"Spirit terrorbird (52)",
-				"War tortoise (67)",
-				"Pack Yak (96)",
-				"Clan avatar"});
+
+		comboBoxBOB = new JComboBox<String>(familiarMap.keySet().toArray(new String[familiarMap.size()]));
 
 		/*
 		screenshotCheckbox = new JCheckBox("Save screenshot when script stops");
@@ -990,7 +1001,6 @@ public class LogGildedAltarGUI extends JFrame {
 
 		// Summoning
 		options.useBOB = enableSummoning.isSelected();
-		Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
 		script.submit(new Task<LogGildedAltar>(script) {
@@ -998,14 +1008,6 @@ public class LogGildedAltarGUI extends JFrame {
 			public void run() {
 				if (options.detectHouses) {
 					ctx.properties.setProperty("login.world", Integer.toString(31));
-				}
-
-				if (ctx.game.isLoggedIn() && ctx.players.local() != null) {
-					if (options.lightBurners && !(ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
-						script.bankingTask.setBanking(true);
-					}
-				} else {
-					script.bankingTask.setBanking(true);
 				}
 
 				/*if (options.useBOB) {
@@ -1017,7 +1019,46 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 				}*/
 
-				script.createTree(houseEnabledModel.elements(), bankEnabledModel.elements());
+
+				script.roomStorage = new RoomStorage(script);
+
+				script.submit(new AnimationMonitor<LogGildedAltar>(script));
+				script.submit(new AntiBan<LogGildedAltar>(script));
+
+				// v4
+		/*
+				new StatisticsPostback(),
+				// LEAVE HOUSE
+				new WidgetCloser(),
+				new LogoutIdle(),
+				new WorldThirtyOne(),
+				new PickupBones(),
+				new ActivateAura(),
+				// BANKING
+		*/
+
+				if (options.stopLevelEnabled) {
+					script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel));
+				}
+
+				script.tree.add(script.leaveHouse = new LeaveHouse(script));
+				script.bankingTask = new BankingTask(script, bankEnabledModel.elements());
+
+				if (ctx.game.isLoggedIn() && ctx.players.local() != null) {
+					if (options.lightBurners && !(ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
+						script.bankingTask.setBanking(true);
+					}
+				} else {
+					script.bankingTask.setBanking(true);
+				}
+
+				script.tree.add(script.summoningTask = new SummoningTask(script));
+				script.tree.add(script.bankingTask);
+				script.tree.add(script.houseTask = new HouseTask(script, houseEnabledModel.elements()));
+
+				script.tree.add(new RenewFamiliar(script));
+
+				script.tree.add(script.altarTask = new AltarTask(script));
 
 				options.setupFinished = true;
 				options.TimeLastOffering = System.currentTimeMillis();

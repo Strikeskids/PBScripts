@@ -2,11 +2,8 @@ package org.logicail.rsbot.scripts.loggildedaltar;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
-import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
@@ -18,7 +15,6 @@ import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
 import org.powerbot.script.util.SkillData;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
@@ -26,7 +22,6 @@ import org.powerbot.script.wrappers.Tile;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -60,39 +55,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	private int currentLevel = -1;
 	private int startLevel = -1;
 
-	public void createTree(Enumeration<Path> houseNodes, Enumeration<Path> bankNodes) {
-		roomStorage = new RoomStorage(ctx);
-
-		submit(new AnimationMonitor<LogGildedAltar>(this));
-		submit(new AntiBan<LogGildedAltar>(this));
-
-		// v4
-		/*
-				new StatisticsPostback(),
-				// LEAVE HOUSE
-				new WidgetCloser(),
-				new LogoutIdle(),
-				new WorldThirtyOne(),
-				new PickupBones(),
-				new ActivateAura(),
-				// BANKING
-		*/
-
-		if (options.stopLevelEnabled) {
-			tree.add(new StopLevel<LogGildedAltar>(this, Skills.PRAYER, options.stopLevel));
-		}
-
-		tree.add(leaveHouse = new LeaveHouse(this));
-		bankingTask = new BankingTask(this, bankNodes);
-		tree.add(summoningTask = new SummoningTask(this));
-		tree.add(bankingTask);
-		tree.add(houseTask = new HouseTask(this, houseNodes));
-
-		tree.add(new RenewFamiliar(this));
-
-		tree.add(altarTask = new AltarTask(this));
-	}
-
 	@Override
 	public LinkedProperties getPaintInfo() {
 		final LinkedProperties properties = new LinkedProperties();
@@ -125,8 +87,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //		if (currentLevel < 99) {
 //			properties.put("XP to level " + currentLevel + 1, String.format("%,d", .getExperienceToLevel(Skills.PRAYER, level + 1)), 575, 30, new Color(0, 0, 0, 64), Color.WHITE);
 //		}
-
-		properties.put("Random", Random.nextGaussian(4000, 6000, 1000));
 
 		return properties;
 	}
