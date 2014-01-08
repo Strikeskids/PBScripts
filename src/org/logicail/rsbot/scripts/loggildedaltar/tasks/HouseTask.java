@@ -12,7 +12,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePo
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HouseTablet;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HouseTeleportStaff;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.RunicStaff;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.taverley.TaverleyLodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleLodestone;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanillePortalWalk;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
 import org.powerbot.script.lang.Filter;
@@ -60,6 +62,28 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		}
 	}
 
+	private NodePath createPath(Path path) {
+		switch (path) {
+			case HOME_TABLET:
+				return new HouseTablet(script, 8013);
+			case HOME_YANILLE_WALK:
+				return new YanillePortalWalk(script);
+			case HOME_PORTAL:
+				return new HousePortal(script);
+			case YANILLE_LODESTONE:
+				return new YanilleLodestone(script);
+			case HOME_TELEPORT:
+				return new HouseTeleportStaff(script, path, 1385, 1399, 1407, 3053, 3054, 6562, 6563);
+			case HOME_TELEPORT_RUNIC_STAFF:
+				return new RunicStaff(script);
+			case YANILLE_TABLET:
+				return new HouseTablet(script, 18814);
+			case TAVERLEY_LODESTONE:
+				return new TaverleyLodestone(script);
+		}
+		return null;
+	}
+
 	@Override
 	public boolean branch() {
 		return !options.banking
@@ -73,28 +97,6 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 	public boolean isLoadingHouse() {
 		return ctx.widgets.get(WIDGET_LOADING_HOUSE).isValid();
-	}
-
-	private NodePath createPath(Path path) {
-		switch (path) {
-			case HOME_TABLET:
-				return new HouseTablet(script, 8013);
-			case HOME_YANILLE_WALK:
-				//return new YanillePortalWalk();
-			case HOME_PORTAL:
-				return new HousePortal(script);
-			case YANILLE_LODESTONE:
-				return new YanilleLodestone(script);
-			case HOME_TELEPORT:
-				return new HouseTeleportStaff(script, path, 1385, 1399, 1407, 3053, 3054, 6562, 6563);
-			case HOME_TELEPORT_RUNIC_STAFF:
-				return new RunicStaff(script);
-			case YANILLE_TABLET:
-				return new HouseTablet(script, 18814);
-			case TAVERLEY_LODESTONE:
-				//return new TaverleyLodestone();
-		}
-		return null;
 	}
 
 	public HouseLocation getHouseLocation() {

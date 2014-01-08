@@ -13,6 +13,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.burthorpe.BurthorpeLodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.canifis.KharyrllPortalRoom;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.daemonheim.DaemonheimKinship;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.edgeville.HouseGlory;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity.FightCavesBank;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleBankWalk;
 import org.powerbot.script.methods.Equipment;
@@ -39,20 +40,10 @@ public class BankingTask extends Branch<LogGildedAltar> {
 		}
 	}
 
-	public void setBanking(boolean state) {
-		banking.setBanking(state);
-	}
-
-	@Override
-	public boolean branch() {
-		return options.banking
-				&& !script.summoningTask.isValid();
-	}
-
 	private NodePath createPath(Path path) {
 		switch (path) {
 			case EDGEVILLE_MOUNTED_AMULET_OF_GLORY:
-				//return new HouseGlory(script);
+				return new HouseGlory(script);
 			case CASTLE_WARS_RING_OF_DUELING:
 				return new ItemTeleport(script, path, "Castle Wars", Equipment.Slot.RING, 2566, 2564, 2562, 2560, 2558, 2556, 2554, 2552);
 			case LUNAR_ISLE_LODESTONE:
@@ -77,6 +68,12 @@ public class BankingTask extends Branch<LogGildedAltar> {
 		return null;
 	}
 
+	@Override
+	public boolean branch() {
+		return options.banking
+				&& !script.summoningTask.isValid();
+	}
+
 	public boolean inBank() {
 		for (Task node : tasks) {
 			if (node != null && node instanceof NodePath && ((NodePath) node).getPath().getLocation().isInSmallArea(ctx)) {
@@ -84,5 +81,9 @@ public class BankingTask extends Branch<LogGildedAltar> {
 			}
 		}
 		return false;
+	}
+
+	public void setBanking(boolean state) {
+		banking.setBanking(state);
 	}
 }

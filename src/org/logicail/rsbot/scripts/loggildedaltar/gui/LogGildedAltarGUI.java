@@ -27,8 +27,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
-import java.util.List;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -318,22 +320,6 @@ public class LogGildedAltarGUI extends JFrame {
 		inner.add(title, BorderLayout.CENTER);
 
 		return inner;
-	}
-
-	private String prettyName(String value) {
-		if (value == null) {
-			return "null";
-		}
-
-		StringBuilder sb = new StringBuilder(value.length());
-		if (value.length() > 0) {
-			sb.append(Character.toUpperCase(value.charAt(0)));
-		}
-		if (value.length() > 1) {
-			sb.append(value.substring(1).toLowerCase());
-		}
-
-		return sb.toString().replace('_', ' ');
 	}
 
 	private void initComponents() {
@@ -812,6 +798,22 @@ public class LogGildedAltarGUI extends JFrame {
 		return inner;
 	}
 
+	private String prettyName(String value) {
+		if (value == null) {
+			return "null";
+		}
+
+		StringBuilder sb = new StringBuilder(value.length());
+		if (value.length() > 0) {
+			sb.append(Character.toUpperCase(value.charAt(0)));
+		}
+		if (value.length() > 1) {
+			sb.append(value.substring(1).toLowerCase());
+		}
+
+		return sb.toString().replace('_', ' ');
+	}
+
 	private void remove(JList<Path> listEnabled, SortedListModel<Path> disabledModel, DefaultListModel<Path> enabledModel) {
 		int index = listEnabled.getSelectedIndex();
 		if (listEnabled.getSelectedIndex() > -1) {
@@ -859,15 +861,16 @@ public class LogGildedAltarGUI extends JFrame {
 
 	private String joinModel(DefaultListModel<Path> model) {
 		StringBuilder joined = new StringBuilder();
-		for (Object p : model.toArray()) {
-			if (p instanceof Path) {
-				joined.append(((Path) p).getName());
-				joined.append("~");
-			}
+		final Enumeration<Path> elements = model.elements();
+		while (elements.hasMoreElements()) {
+			final Path path = elements.nextElement();
+			joined.append(path.getName());
+			joined.append("~");
 		}
 
-		if (joined.length() > 0)
+		if (joined.length() > 0) {
 			joined.deleteCharAt(joined.length() - 1);
+		}
 
 		return joined.toString();
 	}
@@ -1148,24 +1151,27 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 				}
 
-				List list = Arrays.asList(bankDisabledModel.toArray());
-				for (String needle : splitModel(settings.getProperty("banks", ""))) {
-					for (Object p : list) {
-						if (((Path) p).getName().equals(needle)) {
-							disabledBank.setSelectedValue(p, true);
-							add(disabledBank, bankDisabledModel, bankEnabledModel);
-							break;
+
+				for (String name : settings.getProperty("banks", "").split("~")) {
+					for (int i = 0; i < bankDisabledModel.getSize(); i++) {
+						final Object element = bankDisabledModel.getElementAt(i);
+						if (element instanceof Path) {
+							if (((Path) element).getName().equals(name)) {
+								disabledBank.setSelectedIndex(i);
+								add(disabledBank, bankDisabledModel, bankEnabledModel);
+							}
 						}
 					}
 				}
 
-				list = Arrays.asList(houseDisabledModel.toArray());
-				for (String needle : splitModel(settings.getProperty("house", ""))) {
-					for (Object p : list) {
-						if (((Path) p).getName().equals(needle)) {
-							disabledHouse.setSelectedValue(p, true);
-							add(disabledHouse, houseDisabledModel, houseEnabledModel);
-							break;
+				for (String name : settings.getProperty("house", "").split("~")) {
+					for (int i = 0; i < houseDisabledModel.getSize(); i++) {
+						final Object element = houseDisabledModel.getElementAt(i);
+						if (element instanceof Path) {
+							if (((Path) element).getName().equals(name)) {
+								disabledHouse.setSelectedIndex(i);
+								add(disabledHouse, houseDisabledModel, houseEnabledModel);
+							}
 						}
 					}
 				}
@@ -1173,12 +1179,6 @@ public class LogGildedAltarGUI extends JFrame {
 			script.log.info("Settings Loaded");
 		} catch (Exception ignored) {
 		}
-	}
-
-	private String[] splitModel(String joinedString) {
-		if (joinedString.contains("~"))
-			return joinedString.split("~");
-		return new String[]{joinedString};
 	}
 }
 

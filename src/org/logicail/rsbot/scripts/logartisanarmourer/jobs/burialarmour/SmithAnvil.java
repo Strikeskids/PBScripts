@@ -74,7 +74,6 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	@Override
 	public void run() {
 		if (ctx.skillingInterface.getAction().equals("Smith")) {
-			//System.out.println("Make: " + getMakeNextId());
 			final String make = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
 			if (ctx.skillingInterface.select(getCategoryIndex(), getMakeNextId())) {
 				final int target = ctx.backpack.select().id(getMakeNextId()).count() + ctx.skillingInterface.getQuantity();

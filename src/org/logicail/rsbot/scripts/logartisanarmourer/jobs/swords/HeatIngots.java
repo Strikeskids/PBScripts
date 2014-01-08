@@ -38,7 +38,6 @@ public class HeatIngots extends ArtisanArmourerTask {
 
 	@Override
 	public void run() {
-		//System.out.println("[" + SkillingInterface.getCategory() + "]");
 		if (ctx.skillingInterface.getCategory().equalsIgnoreCase("heat ingots")) {
 			ctx.skillingInterface.start();
 			Condition.wait(new Callable<Boolean>() {

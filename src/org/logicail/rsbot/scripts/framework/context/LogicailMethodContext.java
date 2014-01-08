@@ -43,6 +43,8 @@ public class LogicailMethodContext extends MethodContext {
 	public SkKeyboard keyboard;
 	public ActionBar actionBar;
 	public Combat combat;
+
+	public final String useragent;
 	// SK
 
 	// Concurrent task executor
@@ -50,8 +52,6 @@ public class LogicailMethodContext extends MethodContext {
 	private final AbstractScript script;
 	private volatile boolean shutdown;
 	private volatile boolean paused;
-
-	public final String useragent;
 
 	public LogicailMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext);
@@ -90,7 +90,8 @@ public class LogicailMethodContext extends MethodContext {
 		chat = new MyChat(this);
 		lodestones = new Lodestones(this);
 
-		/*super.keyboard =*/ this.keyboard = new SkKeyboard(this);
+		/*super.keyboard =*/
+		this.keyboard = new SkKeyboard(this);
 		actionBar = new ActionBar(this);
 		combat = new Combat(this);
 

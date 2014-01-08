@@ -102,9 +102,7 @@ public class Room extends LogicailMethodProvider {
 		Room room = (Room) o;
 
 		if (index != room.index) return false;
-		if (localX != room.localX) return false;
-		return localY == room.localY;
-
+		return localX == room.localX && localY == room.localY;
 	}
 
 	@Override
@@ -140,13 +138,13 @@ public class Room extends LogicailMethodProvider {
 		return ctx.objects.select().id(ids).within(getArea());
 	}
 
-	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int[] ids, int... ids2) {
-		return ctx.objects.select().id(ids, ids2).within(getArea());
-	}
-
 	public LogicailArea getArea() {
 		final Tile location = getLocation();
 		return new LogicailArea(location, location.derive(8, -8));
+	}
+
+	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int[] ids, int... ids2) {
+		return ctx.objects.select().id(ids, ids2).within(getArea());
 	}
 
 	public LogicailArea getWallArea() {

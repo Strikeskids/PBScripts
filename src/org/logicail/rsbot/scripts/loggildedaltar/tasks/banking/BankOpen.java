@@ -18,6 +18,7 @@ public class BankOpen extends BankingAbstract {
 	public String toString() {
 		return "Banking: Open";
 	}
+
 	@Override
 	public boolean isValid() {
 		return !ctx.bank.isOpen();

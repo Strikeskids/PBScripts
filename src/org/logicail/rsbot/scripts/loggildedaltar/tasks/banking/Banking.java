@@ -38,15 +38,6 @@ public class Banking extends Branch<LogGildedAltar> {
 		add(new BankWithdraw(this));
 	}
 
-	public void setBanking(boolean state) {
-		options.banking = state;
-		if (state) {
-			beastOfBurdenWithdraws = 0;
-			withdrawnDelegation = false;
-			beastOfBurdenCount = 0;
-		}
-	}
-
 	@Override
 	public boolean branch() {
 		final Locatable nearest = ctx.bank.getNearest();
@@ -109,5 +100,14 @@ public class Banking extends Branch<LogGildedAltar> {
 		}
 
 		return null;
+	}
+
+	public void setBanking(boolean state) {
+		options.banking = state;
+		if (state) {
+			beastOfBurdenWithdraws = 0;
+			withdrawnDelegation = false;
+			beastOfBurdenCount = 0;
+		}
 	}
 }

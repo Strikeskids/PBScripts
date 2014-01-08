@@ -203,7 +203,6 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 
 	public boolean select(final int categoryIndex, final int itemId) {
 		//ctx.log.info(String.format("SkillingInterface %d %d", categoryIndex, itemId));
-		//System.out.println("Select " + category + " " + itemId);
 		if (!isOpen()) {
 			return false;
 		}
@@ -358,7 +357,6 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 					if (!isOpen()) {
 						break;
 					}
-					//System.out.println("Q%: " + getQuantityPercent());
 					if (getQuantityPercent() >= 100) {
 						return true;
 					}

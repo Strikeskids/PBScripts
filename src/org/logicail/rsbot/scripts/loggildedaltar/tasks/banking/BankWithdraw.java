@@ -33,6 +33,25 @@ public class BankWithdraw extends BankingAbstract {
 		return "Banking: Withdraw";
 	}
 
+	// TODO: Check this
+	private void createSpaceInInventory(int min, int max) {
+		if (isSpace(min)) {
+			if (!ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max))) {
+				sleep(200, 800);
+				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
+			}
+			sleep(200, 800);
+		}
+	}
+
+	private boolean isSpace(int space) {
+		return getSpace() < space;
+	}
+
+	private int getSpace() {
+		return 28 - ctx.backpack.select().count();
+	}
+
 	@Override
 	public boolean isValid() {
 		return true;
@@ -279,27 +298,7 @@ public class BankWithdraw extends BankingAbstract {
 		}
 	}
 
-
 	private void createSpaceInInventory(int min) {
 		createSpaceInInventory(min, min);
-	}
-
-	// TODO: Check this
-	private void createSpaceInInventory(int min, int max) {
-		if (isSpace(min)) {
-			if (!ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max))) {
-				sleep(200, 800);
-				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
-			}
-			sleep(200, 800);
-		}
-	}
-
-	private boolean isSpace(int space) {
-		return getSpace() < space;
-	}
-
-	private int getSpace() {
-		return 28 - ctx.backpack.select().count();
 	}
 }

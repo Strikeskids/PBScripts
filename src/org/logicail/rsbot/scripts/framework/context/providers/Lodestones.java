@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
@@ -29,6 +30,10 @@ public class Lodestones extends LogicailMethodProvider {
 	}
 
 	public boolean teleport(Lodestone lodestone) {
+		return teleport(lodestone, false);
+	}
+
+	public boolean teleport(Lodestone lodestone, boolean interruptible) {
 		final Tile location = lodestone.getLocation();
 		if (location.distanceTo(ctx.players.local()) < 10) {
 			ctx.movement.stepTowards(location.randomize(2, 2));
@@ -40,6 +45,8 @@ public class Lodestones extends LogicailMethodProvider {
 			return false;
 		}
 
+		boolean interacted = false;
+
 		if (!isOpen()) {
 			final Component button = getButton();
 			if (!button.isValid()) {
@@ -48,7 +55,7 @@ public class Lodestones extends LogicailMethodProvider {
 
 			if (isPreviousDestination(lodestone)) {
 				if (button.interact("Previous-destination")) {
-					return waitForTeleport(lodestone);
+					interacted = true;
 				}
 			} else if (button.interact("Home-teleport")) {
 				Condition.wait(new Callable<Boolean>() {
@@ -63,9 +70,14 @@ public class Lodestones extends LogicailMethodProvider {
 		if (isOpen()) {
 			final Component component = lodestone.getComponent(ctx);
 			if (component.isValid() && component.interact("Teleport")) {
-				return waitForTeleport(lodestone);
+				interacted = true;
 			}
 		}
+
+		if (interacted) {
+			return interruptible || waitForTeleport(lodestone);
+		}
+
 
 		return false;
 	}
@@ -83,13 +95,7 @@ public class Lodestones extends LogicailMethodProvider {
 	}
 
 	private boolean waitForTeleport(final Lodestone lodestone) {
-		return Condition.wait(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				final Player local = ctx.players.local();
-				return local != null && local.getAnimation() == -1 && ctx.movement.getDistance(local, lodestone.getLocation()) < 10;
-			}
-		});
+		return Condition.wait(new TeleportCondition(ctx, lodestone), Random.nextInt(120, 160), 100);
 	}
 
 	public static enum Lodestone {
@@ -153,6 +159,21 @@ public class Lodestones extends LogicailMethodProvider {
 
 		public boolean isUnlocked(MethodContext ctx) {
 			return ctx.settings.get(setting, shift, mask) == unlockedValue;
+		}
+	}
+
+	class TeleportCondition extends LogicailMethodProvider implements Callable<Boolean> {
+		private final Lodestone lodestone;
+
+		TeleportCondition(LogicailMethodContext ctx, Lodestone lodestone) {
+			super(ctx);
+			this.lodestone = lodestone;
+		}
+
+		@Override
+		public Boolean call() throws Exception {
+			final Player local = ctx.players.local();
+			return local != null && local.getAnimation() == -1 && ctx.movement.getDistance(local, lodestone.getLocation()) < 10;
 		}
 	}
 }

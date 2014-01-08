@@ -20,16 +20,16 @@ public class StopLevel<T extends LogicailScript> extends Node<T> {
 	}
 
 	@Override
-	public void run() {
-		ctx.stop("Stopping because level is " + level, "Stopping", false);
-	}
-
-	@Override
 	public boolean isValid() {
 		try {
 			return ctx.skills.getLevel(skill) >= level;
 		} catch (Exception ignored) {
 		}
 		return false;
+	}
+
+	@Override
+	public void run() {
+		ctx.stop("Stopping because level is " + level, "Stopping", false);
 	}
 }

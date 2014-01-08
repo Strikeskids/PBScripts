@@ -64,15 +64,6 @@ public class MakeSword extends ArtisanArmourerTask {
 		} else {
 			final Sword[] parts = getSwordPartsByDistance();
 			if (parts != null && parts.length > 0) {
-/*
-                System.out.println("----");
-
-				for (Sword part : parts) {
-					System.out.println(part.getRequiredHitType());
-				}
-
-				System.out.println("----");
-*/
 				hitPart = parts[Random.nextInt(0, parts.length)];
 			}
 		}
