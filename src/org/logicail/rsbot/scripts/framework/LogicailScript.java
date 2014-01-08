@@ -27,7 +27,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 
 	protected LogicailScript() {
 		this.ctx = new LogicailMethodContext(super.ctx, this);
-		this.ctx.init(super.ctx);
+
 		tree = new Tree<T>((T) this);
 		paint = new Painter(ctx, this);
 

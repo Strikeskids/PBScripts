@@ -51,27 +51,12 @@ public class LogicailMethodContext extends MethodContext {
 	private volatile boolean shutdown;
 	private volatile boolean paused;
 
-	private final String useragent;
+	public final String useragent;
 
 	public LogicailMethodContext(final MethodContext originalContext, AbstractScript script) {
-		super(originalContext.getBot());
+		super(originalContext);
 		this.script = script;
 		log = script.log;
-
-		skillingInterface = new SkillingInterface(this);
-		backpack = new MyBackPack(this);
-		camera = new MyCamera(this);
-		equipment = new MyEquipment(this);
-		summoning = new MySummoning(this);
-		chat = new MyChat(this);
-		lodestones = new Lodestones(this);
-
-		super.keyboard = this.keyboard = new SkKeyboard(this);
-		actionBar = new ActionBar(this);
-		combat = new Combat(this);
-
-		magic = new Magic(this);
-		movement = new MyMovement(this);
 
 		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
 
@@ -96,6 +81,21 @@ public class LogicailMethodContext extends MethodContext {
 				executor.shutdown();
 			}
 		});
+
+		skillingInterface = new SkillingInterface(this);
+		backpack = new MyBackPack(this);
+		camera = new MyCamera(this);
+		equipment = new MyEquipment(this);
+		summoning = new MySummoning(this);
+		chat = new MyChat(this);
+		lodestones = new Lodestones(this);
+
+		/*super.keyboard =*/ this.keyboard = new SkKeyboard(this);
+		actionBar = new ActionBar(this);
+		combat = new Combat(this);
+
+		magic = new Magic(this);
+		movement = new MyMovement(this);
 	}
 
 	public final boolean isPaused() {

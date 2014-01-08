@@ -1,5 +1,9 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
@@ -17,7 +21,7 @@ import java.util.regex.Pattern;
  * Date: 07/12/13
  * Time: 21:41
  */
-public class HouseHandler implements MessageListener {
+public class HouseHandler extends LogicailMethodProvider implements MessageListener {
 	private static final Pattern[] ADVERT_PATTERNS = {
 			//Pattern.compile(".*>([\\d\\w\\s-]+)<.*altar.*"), //>name<  altar
 			//Pattern.compile(".*altar.*>([\\d\\w\\s-]+)<.*"), //altar >name<
@@ -35,9 +39,9 @@ public class HouseHandler implements MessageListener {
 			Pattern.compile("([a-zA-Z\\d\\s-]+) for.*altar.*"), //name for altar
 			Pattern.compile(".*altar.*@([a-zA-Z\\d\\s-]+)") //altar@name
 	};
+	private static final String URL_GET_HOUSES = "http://logicail.co.uk/get_houses.php";
 	public final PriorityQueue<OpenHouse> openHouses = new PriorityQueue<OpenHouse>();
 	public final Set<String> ignoreHouses = new HashSet<String>();
-	public boolean houseValid;
 	private final AtomicReference<OpenHouse> current_house = new AtomicReference<OpenHouse>();
 	private final LogGildedAltar script;
 	private final HashMap<String, Boolean> checkedNames = new HashMap<String, Boolean>();
@@ -46,6 +50,7 @@ public class HouseHandler implements MessageListener {
 	private long nextCheckForhouses = 0;
 
 	public HouseHandler(LogGildedAltar script) {
+		super(script.ctx);
 		this.script = script;
 		ignoreHouses.add("lit g altar");
 		ignoreHouses.add("altar");
@@ -61,10 +66,9 @@ public class HouseHandler implements MessageListener {
 		OpenHouse current = current_house.get();
 		if (current != null) {
 			current.setSkipping();
-			//GildedAltar.get().getLogHandler().print("Ignoring house at \"" + current.getPlayerName() + "\" for a while", Color.RED);
+			script.log.info("Ignoring house at \"" + current.getPlayerName() + "\" for a while");
 			current_house.set(null);
 		}
-		houseValid = false;
 	}
 
 	public OpenHouse getCurrentHouse() {
@@ -89,7 +93,6 @@ public class HouseHandler implements MessageListener {
 			} else {
 				if (!house.isSkipping()) {
 					current_house.set(house);
-					houseValid = false;
 					return house;
 				}
 			}
@@ -108,49 +111,30 @@ public class HouseHandler implements MessageListener {
 	 */
 	public void addOpenHouses() {
 		nextCheckForhouses = System.currentTimeMillis() + 600000; // 10 minutes
-		/*HttpURLConnection connection = null;
+		final String json = script.downloadString(URL_GET_HOUSES);
 
 		try {
-			connection = (HttpURLConnection) (new URL("http://logicail.co.uk/get_houses.php")).openConnection();
-			connection.addRequestProperty("User-Agent", script.useragent);
-			connection.addRequestProperty("Connection", "close");
-			connection.setRequestMethod("GET");
-			connection.setConnectTimeout(15000);
-			connection.setReadTimeout(15000);
-
-			JSONParser parser = new JSONParser();
-			ContainerFactory containerFactory = new ContainerFactory() {
-				public List createArrayContainer() {
-					return new LinkedList();
-				}
-
-				public Map createObjectContainer() {
-					return new LinkedHashMap();
-				}
-			};
-
-			Map parsed = (Map) parser.parse(new InputStreamReader(connection.getInputStream()), containerFactory);
-
-			if (parsed.containsKey("open_houses") && parsed.get("open_houses") instanceof LinkedList) {
-				LinkedList<String> houses = (LinkedList) parsed.get("open_houses");
-				for (String playername : houses) {
-					if (!ignoreHouses.contains(playername)) {
-						final OpenHouse house = new OpenHouse(playername);
-						if (!openHouses.contains(house)) {
-							openHouses.add(house);
-							GildedAltar.get().getLogHandler().print("Added house at \"" + playername + "\"");
+			JsonObject jsonObject = JsonObject.readFrom(json);
+			final JsonValue open_houses = jsonObject.get("open_houses");
+			if (open_houses != null && open_houses.isArray()) {
+				final JsonArray houses = open_houses.asArray();
+				for (JsonValue house : houses) {
+					if (house.isString()) {
+						final String playername = house.asString();
+						if (!ignoreHouses.contains(playername)) {
+							final OpenHouse openHouse = new OpenHouse(script, playername);
+							if (!openHouses.contains(openHouse)) {
+								openHouses.add(openHouse);
+								script.log.info("Added house at \"" + playername + "\"");
+							}
 						}
+						checkedNames.put(playername, true);
 					}
-					checkedNames.put(playername, true);
 				}
 			}
-		} catch (Exception ignored) {
-			ignored.printStackTrace();
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
-		}*/
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -188,7 +172,7 @@ public class HouseHandler implements MessageListener {
 					if (!openHouses.contains(house)) {
 						if (validatePlayer(player)) {
 							openHouses.add(house);
-							//GildedAltar.get().getLogHandler().print("Added house at \"" + player + "\"");
+							script.log.info("Added house at \"" + player + "\"");
 						}
 					}
 					break;
@@ -200,8 +184,8 @@ public class HouseHandler implements MessageListener {
 	boolean validatePlayer(String name) {
 		String underscoreName = name.replaceAll(" ", "_");
 
-		if (checkedNames.containsKey(underscoreName)) {
-			return checkedNames.get(underscoreName);
+		if (checkedNames.containsKey(name)) {
+			return checkedNames.get(name);
 		}
 
 		if (System.currentTimeMillis() < waitUntil) {
@@ -212,10 +196,10 @@ public class HouseHandler implements MessageListener {
 
 		try {
 			Hiscores lookup = Hiscores.getProfile(underscoreName);
-			return checkedNames.put(underscoreName, lookup != null);
+			return checkedNames.put(name, lookup != null);
 		} catch (Exception ignored) {
 		}
 
-		return checkedNames.put(underscoreName, false);
+		return checkedNames.put(name, false);
 	}
 }

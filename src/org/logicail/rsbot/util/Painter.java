@@ -14,7 +14,7 @@ public class Painter extends LogicailMethodProvider implements PaintListener {
 	public static Font FONT_TITLE = new Font("Arial", Font.BOLD, 14);
 	public static Font FONT_SMALL = new Font("Arial", Font.BOLD, 12);
 
-	private static final Color COLOUR_BACKGROUND = new Color(0, 0, 0, 64);
+	private static final Color COLOUR_BACKGROUND = new Color(0, 0, 0, 128);
 	private static final Color COLOUR_BORDER = new Color(255, 255, 255, 192);
 	private LinkedProperties properties;
 	private final BasicStroke mouseStroke = new BasicStroke(2f);

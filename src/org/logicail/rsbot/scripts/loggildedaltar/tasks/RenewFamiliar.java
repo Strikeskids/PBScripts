@@ -24,7 +24,7 @@ public class RenewFamiliar extends LogGildedAltarTask {
 	@Override
 	public boolean isValid() {
 		if (System.currentTimeMillis() > nextRun) {
-			if (options.useBOB && options.beastOfBurden.getBoBSpace() > 0 && options.setupFinished && ctx.players.local().isIdle() && !ctx.bank.isOpen()) {
+			if (options.useBOB && options.beastOfBurden.getBoBSpace() > 0 && ctx.players.local().isIdle() && !ctx.bank.isOpen()) {
 				if (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned()) {
 					if (ctx.summoning.canSummon(options.beastOfBurden)) {
 						return true;

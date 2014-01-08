@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
+import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
@@ -88,6 +89,15 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //			properties.put("XP to level " + currentLevel + 1, String.format("%,d", .getExperienceToLevel(Skills.PRAYER, level + 1)), 575, 30, new Color(0, 0, 0, 64), Color.WHITE);
 //		}
 
+//		properties.put("ELDER_TREE_SETTING", ctx.settings.get(3881));
+//		for (int i = 0; i < 10; i++) {
+//			properties.put("ELDER_TREE_" + i, ctx.settings.get(3881, i, 0x1) == 0x1);
+//		}
+
+		for (Lodestones.Lodestone lodestone : Lodestones.Lodestone.values()) {
+			properties.put(lodestone.name(), lodestone.isUnlocked(ctx));
+		}
+
 		return properties;
 	}
 
@@ -106,14 +116,14 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				} else if (message.equals("Your beast of burden has no more items.")) {
 					options.usedBOB = true;
 				} else if (message.equals("You cannot turn off an aura. It must deplete in its own time.")) {
-					if (options.useAura) {
+					/*if (options.useAura) {
 						submit(new Task<LogGildedAltar>(this) {
 							@Override
 							public void run() {
 								//ActivateAura.activatedAura(); // TODO
 							}
 						});
-					}
+					}*/
 				} else {
 					if (message.startsWith("Your familiar is too large to fit into the area you are standing in")) {
 						final Player local = ctx.players.local();
@@ -209,6 +219,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							gui = new LogGildedAltarGUI(LogGildedAltar.this);
 						} catch (Exception exception) {
 							exception.printStackTrace();
+							getController().stop();
 						}
 					}
 				});

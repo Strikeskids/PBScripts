@@ -173,7 +173,6 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 					options.status = "Entered house";
 					if (options.useOtherHouse && openHouse != null) {
 						openHouse.setEntered();
-						script.houseHandler.houseValid = true;
 					}
 				}
 

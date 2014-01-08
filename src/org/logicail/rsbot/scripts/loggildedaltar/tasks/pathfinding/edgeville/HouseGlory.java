@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.edgeville;
 
-import com.sk.util.Condition;
 import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
@@ -8,9 +7,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Astar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
-import org.powerbot.script.methods.Players;
-import org.powerbot.script.util.Calculations;
+import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
+import org.powerbot.script.wrappers.ChatOption;
 import org.powerbot.script.wrappers.GameObject;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
@@ -39,7 +38,7 @@ public class HouseGlory extends NodePath {
 	@Override
 	public boolean isValid() {
 		return !locationAttribute.isInSmallArea(ctx)
-				&& (locationAttribute.isInLargeArea(ctx) || (script.houseTask.isInHouse() && !ctx.objects.select().id(MOUNTED_GLORY).isEmpty()) || ctx.lodestones.canUse(Lodestones.Lodestone.EDGEVILLE));
+				&& (locationAttribute.isInLargeArea(ctx) || (script.houseTask.isInHouse() && !ctx.objects.select().id(MOUNTED_GLORY).isEmpty()) || Lodestones.Lodestone.EDGEVILLE.isUnlocked(ctx));
 	}
 
 	@Override
@@ -91,61 +90,47 @@ public class HouseGlory extends NodePath {
 					}
 
 					if (!mountedGlory.isOnScreen()) {
-						if (Walking.findPath(destination).traverse()) {
-							Waiting.waitFor(1250, 2500, new Condition() {
+						if (ctx.movement.findPath(destination).traverse()) {
+							org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
 								@Override
-								public boolean validate() {
-									return Interact.isOnScreen(mountedGlory) || Calculations.distanceTo(mountedGlory) < 5;
+								public Boolean call() throws Exception {
+									return mountedGlory.isOnScreen() || mountedGlory.getLocation().distanceTo(ctx.players.local()) < 5;
 								}
-							});
+							}, Random.nextInt(125, 250), 10);
 						}
-						if (!Interact.isOnScreen(mountedGlory)) {
-							Camera.turnTo(mountedGlory, 8);
+						if (!mountedGlory.isOnScreen()) {
+							ctx.camera.turnTo(mountedGlory, Random.nextInt(0, 8));
 						}
 					}
 
 					if (mountedGlory.isOnScreen() && mountedGlory.interact("Rub", "Amulet of Glory")) {
-						Waiting.waitFor(12000, 16000, new Condition() {
+						if (org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
 							@Override
-							public boolean validate() {
-								return ChatOptions.getOption("Edgeville") != null;
+							public Boolean call() throws Exception {
+								return !ctx.chat.select().text("Edgeville").isEmpty();
 							}
-						});
-
-						final ChatOption chatOption = ChatOptions.getOption("Edgeville");
-						if (chatOption != null) {
-							Task.sleep(80, 800);
-							if (chatOption.select(true) > -1) {
-								if (Waiting.waitFor(12000, 16000, new Condition() {
-									@Override
-									public boolean validate() {
-										return getPath().getLocation().inLargeArea()
-												&& Game.getClientState() == Game.INDEX_MAP_LOADED
-												&& Players.getLocal().getAnimation() == -1;
-									}
-								})) {
-									sleep(50, 600);
+						})) {
+							for (ChatOption option : ctx.chat.first()) {
+								sleep(80, 800);
+								if (option.select(Random.nextBoolean())) {
+									org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
+										@Override
+										public Boolean call() throws Exception {
+											return locationAttribute.isInLargeArea(ctx) && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1;
+										}
+									}, Random.nextInt(120, 160), 100);
+									sleep(100, 800);
 								}
 							}
 						}
 					} else {
-						if (Calculations.distanceTo(destination) > 4) {
-							if (Walking.findPath(destination).traverse()) {
-								Waiting.waitFor(2000, new Condition() {
-									@Override
-									public boolean validate() {
-										return destination.distanceTo() < 4;
-									}
-								});
-							}
-						}
+						ctx.camera.prepare(destination);
 					}
 				}
-
 			}
 		} else {
 			if (!locationAttribute.isInLargeArea(ctx)) {
-				if (ctx.lodestones.canUse(Lodestones.Lodestone.EDGEVILLE)) {
+				if (Lodestones.Lodestone.EDGEVILLE.isUnlocked(ctx)) {
 					ctx.lodestones.teleport(Lodestones.Lodestone.EDGEVILLE);
 				}
 			} else if (!locationAttribute.isInSmallArea(ctx)) {

@@ -17,7 +17,6 @@ public class LogGildedAltarOptions {
 	public long TimeLastOffering;
 
 	/* Settings */
-	public boolean setupFinished = false;
 	public boolean lightBurners = true;
 	public boolean useBOB = false;
 	public boolean usedBOB = false; // Used BOB this trip
