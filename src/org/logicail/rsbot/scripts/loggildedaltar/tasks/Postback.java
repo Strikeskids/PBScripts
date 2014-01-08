@@ -105,7 +105,7 @@ public class Postback extends LogGildedAltarTask {
 		postback();
 	}
 
-	public void postback() {
+	public synchronized void postback() {
 		if (cipher == null) {
 			return;
 		}

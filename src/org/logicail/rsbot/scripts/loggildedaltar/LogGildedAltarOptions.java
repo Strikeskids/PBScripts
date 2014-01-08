@@ -14,31 +14,31 @@ import java.util.Properties;
  * Time: 21:58
  */
 public class LogGildedAltarOptions {
-	public long TimeLastOffering;
+	public volatile long TimeLastOffering;
 
 	/* Settings */
 	public boolean lightBurners = true;
 	public boolean useBOB = false;
-	public boolean usedBOB = false; // Used BOB this trip
+	public volatile boolean usedBOB = false; // Used BOB this trip
 	public Summoning.Familiar beastOfBurden = Summoning.Familiar.BULL_ANT;
 	public Offering offering = Offering.IMPIOUS_ASHES;
 	public boolean useOtherHouse = false;
 	public boolean detectHouses = false;
-	//public boolean screenshots = false;
+	//public volatile boolean screenshots = false;
 	public boolean stopOffering = true;
 	public boolean onlyHouseObelisk = false;
-	public boolean useAura = false;
+	//public boolean useAura = false;
 	//public static MyAuras.Aura aura = MyAuras.Aura.CORRUPTION;
 	/* Move to bank delegation */
-	public boolean banking = false;
+	public volatile boolean banking = false;
 	public boolean bobonce = false;
 	public boolean stopLevelEnabled = false;
 	public int stopLevel;
-	public String status = "";
-	public int bonesOffered;
-	private File settingsFile;
+	public volatile String status = "";
+	public volatile int bonesOffered;
+	public volatile boolean newVersionAvailable = true;
+	private  File settingsFile;
 	private final String FILENAME = "settings.ini";
-	public boolean newVersionAvailable;
 
 	public LogGildedAltarOptions(AbstractScript script) {
 		settingsFile = new File(script.getStorageDirectory(), FILENAME);

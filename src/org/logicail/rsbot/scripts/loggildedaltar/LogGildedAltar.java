@@ -21,6 +21,7 @@ import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.concurrent.Callable;
 		authors = {"Logicail"}
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
+	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
 	public LogGildedAltarOptions options = new LogGildedAltarOptions(this);
 	public SummoningTask summoningTask;
 	public HouseHandler houseHandler = new HouseHandler(this);
@@ -175,7 +177,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 								}
 							});
 						}
-					} else if (options.useAura && message.startsWith("Currently recharging.")) {
+					}/* else if (options.useAura && message.startsWith("Currently recharging.")) {
 						try {
 							int start = message.indexOf("<col=ff0000>") + 12;
 							String timeString = message.substring(start, message.indexOf(" ", start));
@@ -184,7 +186,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							//ActivateAura.setTimeNextAura(System.currentTimeMillis() + Random.nextInt(seconds * 1000, seconds * 1020)); // TODO
 						} catch (Exception ignored) {
 						}
-					}
+					}*/
 				}
 				break;
 			case 2:
@@ -214,6 +216,22 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				} else if (message.contains("your offering.")) {
 					++options.bonesOffered;
 				}
+		}
+	}
+
+
+	@Override
+	public void repaint(Graphics g) {
+		super.repaint(g);
+
+		if (options.newVersionAvailable) {
+			final Point point = ctx.mouse.getLocation();
+			int x = point.x + 10;
+			int y = point.y + 6;
+			g.setColor(Color.BLACK);
+			g.drawString(NEW_VERSION_STRING, x + 1, y + 1);
+			g.setColor(Color.RED);
+			g.drawString(NEW_VERSION_STRING, x, y);
 		}
 	}
 
