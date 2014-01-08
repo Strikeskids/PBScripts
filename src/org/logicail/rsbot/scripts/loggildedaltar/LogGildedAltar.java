@@ -93,6 +93,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //		for (int i = 0; i < 10; i++) {
 //			properties.put("ELDER_TREE_" + i, ctx.settings.get(3881, i, 0x1) == 0x1);
 //		}
+		final Lodestones.Lodestone previousDestination = ctx.lodestones.getPreviousDestination();
+		properties.put("Previous Lodestone", previousDestination == null ? "null" : previousDestination.name());
 
 		for (Lodestones.Lodestone lodestone : Lodestones.Lodestone.values()) {
 			properties.put(lodestone.name(), lodestone.isUnlocked(ctx));

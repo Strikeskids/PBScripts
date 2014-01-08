@@ -90,6 +90,12 @@ public class Lodestones extends LogicailMethodProvider {
 		return ctx.widgets.get(TELEPORT_INTERFACE, TELEPORT_INTERFACE_CHILD).isValid();
 	}
 
+	public Lodestone getPreviousDestination() {
+		final int i = ctx.settings.get(SETTING_LODESTONES, 26, 0x1f);
+		final Lodestone[] lodestones = Lodestone.values();
+		return lodestones.length < i ? lodestones[i] : null;
+	}
+
 	public boolean isPreviousDestination(Lodestone lodestone) {
 		return ctx.settings.get(SETTING_LODESTONES, 26, 0x1f) == lodestone.ordinal();
 	}
