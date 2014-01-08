@@ -21,6 +21,8 @@ public enum InnerAbilityTab implements Window {
 
 	CONSTITUTION_ABILITY(MainWindow.DEFENCE_ABILITIES, 1, "Constitution", 28);
 
+	private static final int TAB_SETTING = 3705;
+
 	private final String openAction;
 	private final MainWindow superWindow;
 	private final int component;
@@ -49,6 +51,4 @@ public enum InnerAbilityTab implements Window {
 	public boolean isOpen(LogicailMethodContext ctx) {
 		return superWindow.isOpen(ctx) && (ctx.settings.get(TAB_SETTING) >> shift & 0xf) == component;
 	}
-
-	private static final int TAB_SETTING = 3705;
 }

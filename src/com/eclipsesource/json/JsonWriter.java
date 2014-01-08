@@ -15,7 +15,6 @@ import java.io.Writer;
 
 
 class JsonWriter {
-
   private static final int CONTROL_CHARACTERS_START = 0x0000;
   private static final int CONTROL_CHARACTERS_END = 0x001f;
 
@@ -39,6 +38,62 @@ class JsonWriter {
 
   void write( String string ) throws IOException {
     writer.write( string );
+  }
+
+  protected void writeArray( JsonArray array ) throws IOException {
+    writeBeginArray();
+    boolean first = true;
+    for( JsonValue value : array ) {
+      if( !first ) {
+        writeArrayValueSeparator();
+      }
+      value.write( this );
+      first = false;
+    }
+    writeEndArray();
+  }
+
+  protected void writeArrayValueSeparator() throws IOException {
+    writer.write( ',' );
+  }
+
+  protected void writeBeginArray() throws IOException {
+    writer.write( '[' );
+  }
+
+  protected void writeEndArray() throws IOException {
+    writer.write( ']' );
+  }
+
+  protected void writeObject( JsonObject object ) throws IOException {
+    writeBeginObject();
+    boolean first = true;
+    for( JsonObject.Member member : object ) {
+      if( !first ) {
+        writeObjectValueSeparator();
+      }
+      writeString( member.getName() );
+      writeNameValueSeparator();
+      member.getValue().write( this );
+      first = false;
+    }
+    writeEndObject();
+  }
+
+  protected void writeBeginObject() throws IOException {
+    writer.write( '{' );
+  }
+
+  protected void writeEndObject() throws IOException {
+    writer.write( '}' );
+  }
+
+  protected void writeNameValueSeparator() throws IOException {
+    writer.write( ':' );
+  }
+
+  protected void writeObjectValueSeparator() throws IOException {
+    writer.write( ',' );
   }
 
   void writeString( String string ) throws IOException {
@@ -82,61 +137,4 @@ class JsonWriter {
     }
     return replacement;
   }
-
-  protected void writeObject( JsonObject object ) throws IOException {
-    writeBeginObject();
-    boolean first = true;
-    for( JsonObject.Member member : object ) {
-      if( !first ) {
-        writeObjectValueSeparator();
-      }
-      writeString( member.getName() );
-      writeNameValueSeparator();
-      member.getValue().write( this );
-      first = false;
-    }
-    writeEndObject();
-  }
-
-  protected void writeBeginObject() throws IOException {
-    writer.write( '{' );
-  }
-
-  protected void writeEndObject() throws IOException {
-    writer.write( '}' );
-  }
-
-  protected void writeNameValueSeparator() throws IOException {
-    writer.write( ':' );
-  }
-
-  protected void writeObjectValueSeparator() throws IOException {
-    writer.write( ',' );
-  }
-
-  protected void writeArray( JsonArray array ) throws IOException {
-    writeBeginArray();
-    boolean first = true;
-    for( JsonValue value : array ) {
-      if( !first ) {
-        writeArrayValueSeparator();
-      }
-      value.write( this );
-      first = false;
-    }
-    writeEndArray();
-  }
-
-  protected void writeBeginArray() throws IOException {
-    writer.write( '[' );
-  }
-
-  protected void writeEndArray() throws IOException {
-    writer.write( ']' );
-  }
-
-  protected void writeArrayValueSeparator() throws IOException {
-    writer.write( ',' );
-  }
-
 }

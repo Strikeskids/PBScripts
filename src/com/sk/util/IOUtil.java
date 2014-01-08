@@ -7,7 +7,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class IOUtil {
-
 	public static String read(String url) {
 		try {
 			return read(new URL(url));
@@ -30,5 +29,4 @@ public class IOUtil {
 			return null;
 		}
 	}
-
 }

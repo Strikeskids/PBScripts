@@ -37,7 +37,7 @@ public class LogGildedAltarOptions {
 	public volatile String status = "";
 	public volatile int bonesOffered;
 	public volatile boolean newVersionAvailable = true;
-	private  File settingsFile;
+	private File settingsFile;
 	private final String FILENAME = "settings.ini";
 
 	public LogGildedAltarOptions(AbstractScript script) {

@@ -21,6 +21,11 @@ public enum AttackAbility implements Ability {
 	MASSACRE(AbilityLevel.ULTIMATE, 11, 14217, 66, 177, 60, 0),
 	METEOR_STRIKE(AbilityLevel.ULTIMATE, 12, 14218, 81, 193, 60, 0), ;
 
+	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
+	private final Window window;
+	private final AbilityStyle style;
+	private final AbilityLevel abilityLevel;
+
 	private AttackAbility(AbilityLevel level, int a, int b, int c, int id, int cd, int ch) {
 		this.abilityLevel = level;
 		this.childIndex = a;
@@ -32,15 +37,17 @@ public enum AttackAbility implements Ability {
 		this.skill = Skills.ATTACK;
 		this.window = InnerAbilityTab.ATTACK_ABILITY;
 		this.style = AbilityStyle.ATTACK;
-
-		
-		
 	}
 
-	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
-	private final Window window;
-	private final AbilityStyle style;
-	private final AbilityLevel abilityLevel;
+	@Override
+	public AbilityLevel getAbilityLevel() {
+		return abilityLevel;
+	}
+
+	@Override
+	public int getChanneled() {
+		return channeled;
+	}
 
 	@Override
 	public int getChildIndex() {
@@ -53,28 +60,8 @@ public enum AttackAbility implements Ability {
 	}
 
 	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	@Override
-	public int getSkill() {
-		return skill;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
+	public int getCooldown() {
+		return cooldown;
 	}
 
 	@Override
@@ -83,23 +70,28 @@ public enum AttackAbility implements Ability {
 	}
 
 	@Override
+	public int getSkill() {
+		return skill;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return skillLevel;
+	}
+
+	@Override
 	public AbilityStyle getStyle() {
 		return style;
 	}
 
 	@Override
-	public AbilityLevel getAbilityLevel() {
-		return abilityLevel;
+	public Window getWindow() {
+		return window;
 	}
 
 	@Override
-	public int getCooldown() {
-		return cooldown;
-	}
-
-	@Override
-	public int getChanneled() {
-		return channeled;
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
@@ -110,5 +102,10 @@ public enum AttackAbility implements Ability {
 	@Override
 	public int getWidget() {
 		return getStyle().getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }

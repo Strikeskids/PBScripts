@@ -1,7 +1,6 @@
 package com.sk.util.time;
 
 public class TimedWaitable implements PreparedWaitable {
-
 	private final Waitable wait;
 	private final long time, iterationDelay;
 

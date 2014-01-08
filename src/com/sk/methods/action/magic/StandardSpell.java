@@ -45,6 +45,10 @@ LVL6_ENCHANT(InnerAbilityTab.SKILLING_SPELL, 1238, 87, 77, 14387, new Rune(RuneT
 ENCHANT_CROSSBOW_BOLT(InnerAbilityTab.SKILLING_SPELL, 2502, 4, 156, 14370),
 ;
 
+	private final Rune[] runes;
+	private final int childIndex, childTexture, level, id;
+	private final Window window;
+
 	private StandardSpell(Window t, int id, int l, int ci, int ct, Rune... r) {
 		this.window = t;
 		this.id = id;
@@ -53,10 +57,6 @@ ENCHANT_CROSSBOW_BOLT(InnerAbilityTab.SKILLING_SPELL, 2502, 4, 156, 14370),
 		this.childTexture = ct;
 		this.runes = r;
 	}
-
-	private final Rune[] runes;
-	private final int childIndex, childTexture, level, id;
-	private final Window window;
 
 	@Override
 	public int getChildIndex() {
@@ -69,43 +69,8 @@ ENCHANT_CROSSBOW_BOLT(InnerAbilityTab.SKILLING_SPELL, 2502, 4, 156, 14370),
 	}
 
 	@Override
-	public Component getCooldownComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
-	}
-
-	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return level;
-	}
-
-	@Override
-	public int getSkill() {
-		return Skills.MAGIC;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
-	}
-
-	@Override
 	public int getId() {
 		return id;
-	}
-
-	@Override
-	public Spellbook getSpellbook() {
-		return Spellbook.ALL;
 	}
 
 	@Override
@@ -114,8 +79,43 @@ ENCHANT_CROSSBOW_BOLT(InnerAbilityTab.SKILLING_SPELL, 2502, 4, 156, 14370),
 	}
 
 	@Override
+	public Window getWindow() {
+		return window;
+	}
+
+	@Override
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
+	}
+
+	@Override
+	public Component getCooldownComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
+	}
+
+	@Override
+	public int getSkill() {
+		return Skills.MAGIC;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return level;
+	}
+
+	@Override
+	public Spellbook getSpellbook() {
+		return Spellbook.ALL;
+	}
+
+	@Override
 	public int getWidget() {
 		return AbilityStyle.MAGIC.getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }
 

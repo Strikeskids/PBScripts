@@ -52,36 +52,7 @@ import java.util.List;
 @SuppressWarnings( "serial" )
 // use default serial UID
 public class JsonArray extends JsonValue implements Iterable<JsonValue> {
-
   private final List<JsonValue> values;
-
-  /**
-   * Creates a new empty JsonArray.
-   */
-  public JsonArray() {
-    values = new ArrayList<JsonValue>();
-  }
-
-  /**
-   * Creates a new JsonArray with the contents of the specified JSON array.
-   *
-   * @param array
-   *          the JsonArray to get the initial contents from, must not be <code>null</code>
-   */
-  public JsonArray( JsonArray array ) {
-    this( array, false );
-  }
-
-  private JsonArray( JsonArray array, boolean unmodifiable ) {
-    if( array == null ) {
-      throw new NullPointerException( "array is null" );
-    }
-    if( unmodifiable ) {
-      values = Collections.unmodifiableList( array.values );
-    } else {
-      values = new ArrayList<JsonValue>( array.values );
-    }
-  }
 
   /**
    * Reads a JSON array from the given reader.
@@ -134,6 +105,54 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    */
   public static JsonArray unmodifiableArray( JsonArray array ) {
     return new JsonArray( array, true );
+  }
+
+  /**
+   * Creates a new empty JsonArray.
+   */
+  public JsonArray() {
+    values = new ArrayList<JsonValue>();
+  }
+
+  /**
+   * Creates a new JsonArray with the contents of the specified JSON array.
+   *
+   * @param array
+   *          the JsonArray to get the initial contents from, must not be <code>null</code>
+   */
+  public JsonArray( JsonArray array ) {
+    this( array, false );
+  }
+
+  private JsonArray( JsonArray array, boolean unmodifiable ) {
+    if( array == null ) {
+      throw new NullPointerException( "array is null" );
+    }
+    if( unmodifiable ) {
+      values = Collections.unmodifiableList( array.values );
+    } else {
+      values = new ArrayList<JsonValue>( array.values );
+    }
+  }
+
+  @Override
+  public boolean equals( Object object ) {
+    if( this == object ) {
+      return true;
+    }
+    if( object == null ) {
+      return false;
+    }
+    if( getClass() != object.getClass() ) {
+      return false;
+    }
+    JsonArray other = (JsonArray)object;
+    return values.equals( other.values );
+  }
+
+  @Override
+  public int hashCode() {
+    return values.hashCode();
   }
 
   /**
@@ -225,6 +244,77 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
       throw new NullPointerException( "value is null" );
     }
     values.add( value );
+    return this;
+  }
+
+  @Override
+  public JsonArray asArray() {
+    return this;
+  }
+
+  /**
+   * Returns the value of the element at the specified position in this array.
+   *
+   * @param index
+   *          the index of the array element to return
+   * @return the value of the element at the specified position
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
+   */
+  public JsonValue get( int index ) {
+    return values.get( index );
+  }
+
+  @Override
+  public boolean isArray() {
+    return true;
+  }
+
+  /**
+   * Returns <code>true</code> if this array contains no elements.
+   *
+   * @return <code>true</code> if this array contains no elements
+   */
+  public boolean isEmpty() {
+    return values.isEmpty();
+  }
+
+  /**
+   * Returns an iterator over the values of this array in document order. The returned iterator
+   * cannot be used to modify this array.
+   *
+   * @return an iterator over the values of this array
+   */
+  public Iterator<JsonValue> iterator() {
+    final Iterator<JsonValue> iterator = values.iterator();
+    return new Iterator<JsonValue>() {
+      public boolean hasNext() {
+        return iterator.hasNext();
+      }
+
+      public JsonValue next() {
+        return iterator.next();
+      }
+
+      public void remove() {
+        throw new UnsupportedOperationException();
+      }
+    };
+  }
+
+  /**
+   * Removes the element at the specified index from this array.
+   *
+   * @param index
+   *          the index of the element to remove
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
+   */
+  public JsonArray remove( int index ) {
+    values.remove( index );
     return this;
   }
 
@@ -357,50 +447,12 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Removes the element at the specified index from this array.
-   *
-   * @param index
-   *          the index of the element to remove
-   * @return the array itself, to enable method chaining
-   * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
-   *           <code>index &gt;= size</code>
-   */
-  public JsonArray remove( int index ) {
-    values.remove( index );
-    return this;
-  }
-
-  /**
    * Returns the number of elements in this array.
    *
    * @return the number of elements in this array
    */
   public int size() {
     return values.size();
-  }
-
-  /**
-   * Returns <code>true</code> if this array contains no elements.
-   *
-   * @return <code>true</code> if this array contains no elements
-   */
-  public boolean isEmpty() {
-    return values.isEmpty();
-  }
-
-  /**
-   * Returns the value of the element at the specified position in this array.
-   *
-   * @param index
-   *          the index of the array element to return
-   * @return the value of the element at the specified position
-   * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
-   *           <code>index &gt;= size</code>
-   */
-  public JsonValue get( int index ) {
-    return values.get( index );
   }
 
   /**
@@ -414,63 +466,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
     return Collections.unmodifiableList( values );
   }
 
-  /**
-   * Returns an iterator over the values of this array in document order. The returned iterator
-   * cannot be used to modify this array.
-   *
-   * @return an iterator over the values of this array
-   */
-  public Iterator<JsonValue> iterator() {
-    final Iterator<JsonValue> iterator = values.iterator();
-    return new Iterator<JsonValue>() {
-
-      public boolean hasNext() {
-        return iterator.hasNext();
-      }
-
-      public JsonValue next() {
-        return iterator.next();
-      }
-
-      public void remove() {
-        throw new UnsupportedOperationException();
-      }
-    };
-  }
-
   @Override
   protected void write( JsonWriter writer ) throws IOException {
     writer.writeArray( this );
   }
-
-  @Override
-  public boolean isArray() {
-    return true;
-  }
-
-  @Override
-  public JsonArray asArray() {
-    return this;
-  }
-
-  @Override
-  public int hashCode() {
-    return values.hashCode();
-  }
-
-  @Override
-  public boolean equals( Object object ) {
-    if( this == object ) {
-      return true;
-    }
-    if( object == null ) {
-      return false;
-    }
-    if( getClass() != object.getClass() ) {
-      return false;
-    }
-    JsonArray other = (JsonArray)object;
-    return values.equals( other.values );
-  }
-
 }

@@ -1,7 +1,6 @@
 package com.sk.util.time;
 
 public class MultiWaitable implements PreparedWaitable {
-
 	private PreparedWaitable[] waitables;
 
 	public MultiWaitable(PreparedWaitable... order) {
@@ -15,5 +14,4 @@ public class MultiWaitable implements PreparedWaitable {
 				return false;
 		return true;
 	}
-
 }

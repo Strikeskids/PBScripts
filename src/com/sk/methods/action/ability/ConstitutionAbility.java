@@ -15,6 +15,11 @@ INCITE(AbilityLevel.BASIC, 2, 14268, 24, 36, 0, 0),
 SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),
 ;
 
+	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
+	private final Window window;
+	private final AbilityStyle style;
+	private final AbilityLevel abilityLevel;
+
 	private ConstitutionAbility(AbilityLevel level, int a, int b, int c, int id, int cd, int ch) {
 		this.abilityLevel = level;
 		this.childIndex = a;
@@ -26,13 +31,17 @@ SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),
 		this.skill = Skills.CONSTITUTION;
 		this.window = InnerAbilityTab.CONSTITUTION_ABILITY;
 		this.style = AbilityStyle.CONSTITUTION;
-
 	}
 
-	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
-	private final Window window;
-	private final AbilityStyle style;
-	private final AbilityLevel abilityLevel;
+	@Override
+	public AbilityLevel getAbilityLevel() {
+		return abilityLevel;
+	}
+
+	@Override
+	public int getChanneled() {
+		return channeled;
+	}
 
 	@Override
 	public int getChildIndex() {
@@ -45,28 +54,8 @@ SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),
 	}
 
 	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	@Override
-	public int getSkill() {
-		return skill;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
+	public int getCooldown() {
+		return cooldown;
 	}
 
 	@Override
@@ -75,23 +64,28 @@ SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),
 	}
 
 	@Override
+	public int getSkill() {
+		return skill;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return skillLevel;
+	}
+
+	@Override
 	public AbilityStyle getStyle() {
 		return style;
 	}
 
 	@Override
-	public AbilityLevel getAbilityLevel() {
-		return abilityLevel;
+	public Window getWindow() {
+		return window;
 	}
 
 	@Override
-	public int getCooldown() {
-		return cooldown;
-	}
-
-	@Override
-	public int getChanneled() {
-		return channeled;
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
@@ -102,6 +96,11 @@ SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),
 	@Override
 	public int getWidget() {
 		return getStyle().getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }
 

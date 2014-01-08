@@ -24,6 +24,11 @@ public enum RangedAbility implements Ability {
 	DAZING_SHOT(AbilityLevel.BASIC, 15, 9316, 8, 245, 5, 0),
 	NEEDLE_STRIKE(AbilityLevel.BASIC, 16, 9315, 12, 261, 5, 0), ;
 
+	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
+	private final Window window;
+	private final AbilityStyle style;
+	private final AbilityLevel abilityLevel;
+
 	private RangedAbility(AbilityLevel level, int a, int b, int c, int id, int cd, int ch) {
 		this.abilityLevel = level;
 		this.childIndex = a;
@@ -35,13 +40,17 @@ public enum RangedAbility implements Ability {
 		this.skill = Skills.RANGE;
 		this.window = InnerAbilityTab.RANGED_ABILITY;
 		this.style = AbilityStyle.RANGED;
-
 	}
 
-	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
-	private final Window window;
-	private final AbilityStyle style;
-	private final AbilityLevel abilityLevel;
+	@Override
+	public AbilityLevel getAbilityLevel() {
+		return abilityLevel;
+	}
+
+	@Override
+	public int getChanneled() {
+		return channeled;
+	}
 
 	@Override
 	public int getChildIndex() {
@@ -54,28 +63,8 @@ public enum RangedAbility implements Ability {
 	}
 
 	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	@Override
-	public int getSkill() {
-		return skill;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
+	public int getCooldown() {
+		return cooldown;
 	}
 
 	@Override
@@ -84,23 +73,28 @@ public enum RangedAbility implements Ability {
 	}
 
 	@Override
+	public int getSkill() {
+		return skill;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return skillLevel;
+	}
+
+	@Override
 	public AbilityStyle getStyle() {
 		return style;
 	}
 
 	@Override
-	public AbilityLevel getAbilityLevel() {
-		return abilityLevel;
+	public Window getWindow() {
+		return window;
 	}
 
 	@Override
-	public int getCooldown() {
-		return cooldown;
-	}
-
-	@Override
-	public int getChanneled() {
-		return channeled;
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
@@ -111,5 +105,10 @@ public enum RangedAbility implements Ability {
 	@Override
 	public int getWidget() {
 		return getStyle().getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }

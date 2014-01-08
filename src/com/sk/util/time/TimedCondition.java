@@ -5,7 +5,6 @@ import org.powerbot.script.util.Timer;
 import com.sk.util.Condition;
 
 public abstract class TimedCondition implements Condition, Waitable {
-
 	public TimedCondition() {
 	}
 
@@ -28,5 +27,4 @@ public abstract class TimedCondition implements Condition, Waitable {
 		}
 		return false;
 	}
-
 }

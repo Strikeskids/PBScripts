@@ -15,7 +15,6 @@ import java.io.IOException;
 
 @SuppressWarnings( "serial" ) // use default serial UID
 class JsonLiteral extends JsonValue {
-
   private final String value;
 
   JsonLiteral( String value ) {
@@ -23,8 +22,23 @@ class JsonLiteral extends JsonValue {
   }
 
   @Override
-  protected void write( JsonWriter writer ) throws IOException {
-    writer.write( value );
+  public boolean equals( Object object ) {
+    if( this == object ) {
+      return true;
+    }
+    if( object == null ) {
+      return false;
+    }
+    if( getClass() != object.getClass() ) {
+      return false;
+    }
+    JsonLiteral other = (JsonLiteral)object;
+    return value.equals( other.value );
+  }
+
+  @Override
+  public int hashCode() {
+    return value.hashCode();
   }
 
   @Override
@@ -35,11 +49,6 @@ class JsonLiteral extends JsonValue {
   @Override
   public boolean asBoolean() {
     return isBoolean() ? isTrue() : super.asBoolean();
-  }
-
-  @Override
-  public boolean isNull() {
-    return this == NULL;
   }
 
   @Override
@@ -58,23 +67,12 @@ class JsonLiteral extends JsonValue {
   }
 
   @Override
-  public int hashCode() {
-    return value.hashCode();
+  public boolean isNull() {
+    return this == NULL;
   }
 
   @Override
-  public boolean equals( Object object ) {
-    if( this == object ) {
-      return true;
-    }
-    if( object == null ) {
-      return false;
-    }
-    if( getClass() != object.getClass() ) {
-      return false;
-    }
-    JsonLiteral other = (JsonLiteral)object;
-    return value.equals( other.value );
+  protected void write( JsonWriter writer ) throws IOException {
+    writer.write( value );
   }
-
 }

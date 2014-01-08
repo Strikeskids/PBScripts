@@ -15,7 +15,6 @@ import java.io.IOException;
 
 @SuppressWarnings( "serial" ) // use default serial UID
 class JsonNumber extends JsonValue {
-
   private final String string;
 
   JsonNumber( String string ) {
@@ -23,46 +22,6 @@ class JsonNumber extends JsonValue {
       throw new NullPointerException( "string is null" );
     }
     this.string = string;
-  }
-
-  @Override
-  public String toString() {
-    return string;
-  }
-
-  @Override
-  protected void write( JsonWriter writer ) throws IOException {
-    writer.write( string );
-  }
-
-  @Override
-  public boolean isNumber() {
-    return true;
-  }
-
-  @Override
-  public int asInt() {
-    return Integer.parseInt( string, 10 );
-  }
-
-  @Override
-  public long asLong() {
-    return Long.parseLong( string, 10 );
-  }
-
-  @Override
-  public float asFloat() {
-    return Float.parseFloat( string );
-  }
-
-  @Override
-  public double asDouble() {
-    return Double.parseDouble( string );
-  }
-
-  @Override
-  public int hashCode() {
-    return string.hashCode();
   }
 
   @Override
@@ -80,4 +39,43 @@ class JsonNumber extends JsonValue {
     return string.equals( other.string );
   }
 
+  @Override
+  public int hashCode() {
+    return string.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return string;
+  }
+
+  @Override
+  public double asDouble() {
+    return Double.parseDouble( string );
+  }
+
+  @Override
+  public float asFloat() {
+    return Float.parseFloat( string );
+  }
+
+  @Override
+  public int asInt() {
+    return Integer.parseInt( string, 10 );
+  }
+
+  @Override
+  public long asLong() {
+    return Long.parseLong( string, 10 );
+  }
+
+  @Override
+  public boolean isNumber() {
+    return true;
+  }
+
+  @Override
+  protected void write( JsonWriter writer ) throws IOException {
+    writer.write( string );
+  }
 }

@@ -16,7 +16,6 @@ package com.eclipsesource.json;
  */
 @SuppressWarnings( "serial" ) // use default serial UID
 public class ParseException extends RuntimeException {
-
   private final int offset;
   private final int line;
   private final int column;
@@ -29,13 +28,13 @@ public class ParseException extends RuntimeException {
   }
 
   /**
-   * Returns the absolute index of the character at which the error occurred. The
-   * index of the first character of a document is 0.
+   * Returns the index of the character at which the error occurred, relative to the line. The
+   * index of the first character of a line is 0.
    *
-   * @return the character offset at which the error occurred, will be &gt;= 0
+   * @return the column in which the error occurred, will be &gt;= 0
    */
-  public int getOffset() {
-    return offset;
+  public int getColumn() {
+    return column;
   }
 
   /**
@@ -48,13 +47,12 @@ public class ParseException extends RuntimeException {
   }
 
   /**
-   * Returns the index of the character at which the error occurred, relative to the line. The
-   * index of the first character of a line is 0.
+   * Returns the absolute index of the character at which the error occurred. The
+   * index of the first character of a document is 0.
    *
-   * @return the column in which the error occurred, will be &gt;= 0
+   * @return the character offset at which the error occurred, will be &gt;= 0
    */
-  public int getColumn() {
-    return column;
+  public int getOffset() {
+    return offset;
   }
-
 }

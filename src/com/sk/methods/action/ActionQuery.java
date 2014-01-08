@@ -15,27 +15,11 @@ import java.util.EnumSet;
 
 public abstract class ActionQuery<T extends Action> extends AbstractQuery<ActionQuery<T>, T> implements
 		Identifiable.Query<ActionQuery<T>> {
-
 	public LogicailMethodContext ctx;
 
 	public ActionQuery(LogicailMethodContext ctx) {
 		super(ctx);
 		this.ctx = ctx;
-	}
-
-	public ActionQuery<T> icon(final BarIcon... icon) {
-		return select(new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				BarIcon v = t.getBarIcon();
-				if (!v.isValid())
-					return false;
-				for (BarIcon i : icon)
-					if (v.equals(i))
-						return true;
-				return false;
-			}
-		});
 	}
 
 	public ActionQuery<T> book(final EnumSet<Spellbook> book) {
@@ -53,59 +37,22 @@ public abstract class ActionQuery<T extends Action> extends AbstractQuery<Action
 		return book(search);
 	}
 
-	public ActionQuery<T> level(final EnumSet<AbilityLevel> levels) {
+	@Override
+	protected ActionQuery<T> getThis() {
+		return this;
+	}
+
+	public ActionQuery<T> icon(final BarIcon... icon) {
 		return select(new Filter<T>() {
 			@Override
 			public boolean accept(T t) {
-				return levels.contains(t.getAbility().getAbilityLevel());
-			}
-		});
-	}
-
-	public ActionQuery<T> level(final AbilityLevel... level) {
-		EnumSet<AbilityLevel> search = EnumSet.noneOf(AbilityLevel.class);
-		Collections.addAll(search, level);
-		return level(search);
-	}
-
-	public ActionQuery<T> style(final EnumSet<AbilityStyle> styles) {
-		return select(new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				return styles.contains(t.getAbility().getStyle());
-			}
-		});
-	}
-
-	public ActionQuery<T> style(final AbilityStyle... style) {
-		EnumSet<AbilityStyle> search = EnumSet.noneOf(AbilityStyle.class);
-		Collections.addAll(search, style);
-		return style(search);
-	}
-
-	public ActionQuery<T> validAbility() {
-		return select(new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				return t.getAbility().isValid();
-			}
-		});
-	}
-
-	public ActionQuery<T> ready() {
-		return select(new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				return t.isReady();
-			}
-		});
-	}
-
-	public ActionQuery<T> type(final Type type) {
-		return select(new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				return t.getType() == type;
+				BarIcon v = t.getBarIcon();
+				if (!v.isValid())
+					return false;
+				for (BarIcon i : icon)
+					if (v.equals(i))
+						return true;
+				return false;
 			}
 		});
 	}
@@ -143,9 +90,60 @@ public abstract class ActionQuery<T extends Action> extends AbstractQuery<Action
 		return select(new Identifiable.Matcher(ids));
 	}
 
-	@Override
-	protected ActionQuery<T> getThis() {
-		return this;
+	public ActionQuery<T> level(final EnumSet<AbilityLevel> levels) {
+		return select(new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return levels.contains(t.getAbility().getAbilityLevel());
+			}
+		});
 	}
 
+	public ActionQuery<T> level(final AbilityLevel... level) {
+		EnumSet<AbilityLevel> search = EnumSet.noneOf(AbilityLevel.class);
+		Collections.addAll(search, level);
+		return level(search);
+	}
+
+	public ActionQuery<T> ready() {
+		return select(new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return t.isReady();
+			}
+		});
+	}
+
+	public ActionQuery<T> style(final EnumSet<AbilityStyle> styles) {
+		return select(new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return styles.contains(t.getAbility().getStyle());
+			}
+		});
+	}
+
+	public ActionQuery<T> style(final AbilityStyle... style) {
+		EnumSet<AbilityStyle> search = EnumSet.noneOf(AbilityStyle.class);
+		Collections.addAll(search, style);
+		return style(search);
+	}
+
+	public ActionQuery<T> type(final Type type) {
+		return select(new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return t.getType() == type;
+			}
+		});
+	}
+
+	public ActionQuery<T> validAbility() {
+		return select(new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return t.getAbility().isValid();
+			}
+		});
+	}
 }

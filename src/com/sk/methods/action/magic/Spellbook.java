@@ -10,6 +10,8 @@ public enum Spellbook {
 		}
 	};
 
+	private static final int SPELLBOOK_SETTING = 4, MASK = 0x3;
+
 	private int id;
 
 	private Spellbook(int id) {
@@ -19,7 +21,4 @@ public enum Spellbook {
 	public boolean isOpen(MethodContext ctx) {
 		return (ctx.settings.get(SPELLBOOK_SETTING) & MASK) == id;
 	}
-
-	private static final int SPELLBOOK_SETTING = 4, MASK = 0x3;
-
 }

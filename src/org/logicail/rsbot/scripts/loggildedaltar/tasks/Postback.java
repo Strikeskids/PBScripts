@@ -25,7 +25,6 @@ import java.security.NoSuchAlgorithmException;
 public class Postback extends LogGildedAltarTask {
 	private static final int INTERVAL = 1200000; // 20 mins
 	private static final String POSTBACK_URL = "http://www.logicail.co.uk/data.php";
-	private long nextRun = System.currentTimeMillis() + INTERVAL;
 	private static Cipher cipher = null;
 	private static long previousTimeRunning;
 	private static int previousXPGained;
@@ -34,49 +33,7 @@ public class Postback extends LogGildedAltarTask {
 	private static final String SECRET_KEY = "WMsaZg3PmrhESxwB";
 	private static final IvParameterSpec IV_PARAMETER_SPEC = new IvParameterSpec(IV.getBytes());
 	private static final SecretKeySpec SECRET_KEY_SPEC = new SecretKeySpec(SECRET_KEY.getBytes(), "AES");
-
-	public Postback(LogGildedAltar script) {
-		super(script);
-
-		try {
-			cipher = Cipher.getInstance("AES/CBC/NoPadding");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static byte[] encrypt(String text) {
-		if (text == null || text.length() == 0)
-			return null;
-
-		byte[] encrypted = null;
-
-		try {
-			cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY_SPEC, IV_PARAMETER_SPEC);
-			encrypted = cipher.doFinal(padString(text).getBytes());
-		} catch (Exception ignored) {
-		}
-
-		return encrypted;
-	}
-
-	private static String bytesToHex(byte[] data) {
-		if (data == null) {
-			return null;
-		}
-
-		StringBuilder str = new StringBuilder();
-		for (byte aData : data) {
-			if ((aData & 0xFF) < 16)
-				str.append("0").append(Integer.toHexString(aData & 0xFF));
-			else
-				str.append(Integer.toHexString(aData & 0xFF));
-		}
-
-		return str.toString();
-	}
+	private long nextRun = System.currentTimeMillis() + INTERVAL;
 
 	private static String padString(String source) {
 		char paddingChar = ' ';
@@ -89,6 +46,18 @@ public class Postback extends LogGildedAltarTask {
 		}
 
 		return source;
+	}
+
+	public Postback(LogGildedAltar script) {
+		super(script);
+
+		try {
+			cipher = Cipher.getInstance("AES/CBC/NoPadding");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -149,7 +118,7 @@ public class Postback extends LogGildedAltarTask {
 
 			//Get Response
 			String read = IOUtil.read(connection.getInputStream(), 4096);
-			if(read != null) {
+			if (read != null) {
 				if (read.trim().equalsIgnoreCase("SHUTDOWN")) {
 					ctx.stop("Forced shutdown see thread on forum", false);
 				} else {
@@ -171,5 +140,36 @@ public class Postback extends LogGildedAltarTask {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static String bytesToHex(byte[] data) {
+		if (data == null) {
+			return null;
+		}
+
+		StringBuilder str = new StringBuilder();
+		for (byte aData : data) {
+			if ((aData & 0xFF) < 16)
+				str.append("0").append(Integer.toHexString(aData & 0xFF));
+			else
+				str.append(Integer.toHexString(aData & 0xFF));
+		}
+
+		return str.toString();
+	}
+
+	private static byte[] encrypt(String text) {
+		if (text == null || text.length() == 0)
+			return null;
+
+		byte[] encrypted = null;
+
+		try {
+			cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY_SPEC, IV_PARAMETER_SPEC);
+			encrypted = cipher.doFinal(padString(text).getBytes());
+		} catch (Exception ignored) {
+		}
+
+		return encrypted;
 	}
 }

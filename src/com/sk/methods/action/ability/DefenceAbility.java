@@ -23,6 +23,11 @@ PREPARATION(AbilityLevel.BASIC, 5, 14223, 67, 83, 5, 0),
 BARRICADE(AbilityLevel.ULTIMATE, 10, 14228, 81, 163, 60, 0),
 ;
 
+	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
+	private final Window window;
+	private final AbilityStyle style;
+	private final AbilityLevel abilityLevel;
+
 	private DefenceAbility(AbilityLevel level, int a, int b, int c, int id, int cd, int ch) {
 		this.abilityLevel = level;
 		this.childIndex = a;
@@ -34,13 +39,17 @@ BARRICADE(AbilityLevel.ULTIMATE, 10, 14228, 81, 163, 60, 0),
 		this.skill = Skills.DEFENSE;
 		this.window = InnerAbilityTab.DEFENCE_ABILITY;
 		this.style = AbilityStyle.DEFENCE;
-
 	}
 
-	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
-	private final Window window;
-	private final AbilityStyle style;
-	private final AbilityLevel abilityLevel;
+	@Override
+	public AbilityLevel getAbilityLevel() {
+		return abilityLevel;
+	}
+
+	@Override
+	public int getChanneled() {
+		return channeled;
+	}
 
 	@Override
 	public int getChildIndex() {
@@ -53,28 +62,8 @@ BARRICADE(AbilityLevel.ULTIMATE, 10, 14228, 81, 163, 60, 0),
 	}
 
 	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	@Override
-	public int getSkill() {
-		return skill;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
+	public int getCooldown() {
+		return cooldown;
 	}
 
 	@Override
@@ -83,23 +72,28 @@ BARRICADE(AbilityLevel.ULTIMATE, 10, 14228, 81, 163, 60, 0),
 	}
 
 	@Override
+	public int getSkill() {
+		return skill;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return skillLevel;
+	}
+
+	@Override
 	public AbilityStyle getStyle() {
 		return style;
 	}
 
 	@Override
-	public AbilityLevel getAbilityLevel() {
-		return abilityLevel;
+	public Window getWindow() {
+		return window;
 	}
 
 	@Override
-	public int getCooldown() {
-		return cooldown;
-	}
-
-	@Override
-	public int getChanneled() {
-		return channeled;
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
@@ -110,6 +104,11 @@ BARRICADE(AbilityLevel.ULTIMATE, 10, 14228, 81, 163, 60, 0),
 	@Override
 	public int getWidget() {
 		return getStyle().getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }
 

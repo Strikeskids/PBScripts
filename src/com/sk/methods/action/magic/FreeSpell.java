@@ -40,6 +40,10 @@ HIGH_LEVEL_ALCHEMY(InnerAbilityTab.SKILLING_SPELL, 758, 55, 47, 14379, new Rune(
 LVL4_ENCHANT(InnerAbilityTab.SKILLING_SPELL, 790, 57, 49, 14383, new Rune(RuneType.EARTH, 10), new Rune(RuneType.COSMIC, 1)),
 ;
 
+	private final Rune[] runes;
+	private final int childIndex, childTexture, level, id;
+	private final Window window;
+
 	private FreeSpell(Window t, int id, int l, int ci, int ct, Rune... r) {
 		this.window = t;
 		this.id = id;
@@ -48,10 +52,6 @@ LVL4_ENCHANT(InnerAbilityTab.SKILLING_SPELL, 790, 57, 49, 14383, new Rune(RuneTy
 		this.childTexture = ct;
 		this.runes = r;
 	}
-
-	private final Rune[] runes;
-	private final int childIndex, childTexture, level, id;
-	private final Window window;
 
 	@Override
 	public int getChildIndex() {
@@ -64,43 +64,8 @@ LVL4_ENCHANT(InnerAbilityTab.SKILLING_SPELL, 790, 57, 49, 14383, new Rune(RuneTy
 	}
 
 	@Override
-	public Component getCooldownComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
-	}
-
-	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return level;
-	}
-
-	@Override
-	public int getSkill() {
-		return Skills.MAGIC;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
-	}
-
-	@Override
 	public int getId() {
 		return id;
-	}
-
-	@Override
-	public Spellbook getSpellbook() {
-		return Spellbook.ALL;
 	}
 
 	@Override
@@ -109,8 +74,43 @@ LVL4_ENCHANT(InnerAbilityTab.SKILLING_SPELL, 790, 57, 49, 14383, new Rune(RuneTy
 	}
 
 	@Override
+	public Window getWindow() {
+		return window;
+	}
+
+	@Override
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
+	}
+
+	@Override
+	public Component getCooldownComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
+	}
+
+	@Override
+	public int getSkill() {
+		return Skills.MAGIC;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return level;
+	}
+
+	@Override
+	public Spellbook getSpellbook() {
+		return Spellbook.ALL;
+	}
+
+	@Override
 	public int getWidget() {
 		return AbilityStyle.MAGIC.getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }
 

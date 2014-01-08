@@ -51,7 +51,6 @@ import java.io.Writer;
  */
 @SuppressWarnings( "serial" ) // use default serial UID
 public abstract class JsonValue implements Serializable {
-
   /**
    * Represents the JSON literal <code>true</code>.
    */
@@ -66,10 +65,6 @@ public abstract class JsonValue implements Serializable {
    * The JSON literal <code>null</code>.
    */
   public static final JsonValue NULL = new JsonLiteral( "null" );
-
-  JsonValue() {
-    // prevent subclasses outside of this package
-  }
 
   /**
    * Reads a JSON value from the given reader.
@@ -145,6 +140,13 @@ public abstract class JsonValue implements Serializable {
     return new JsonNumber( cutOffPointZero( Float.toString( value ) ) );
   }
 
+  private static String cutOffPointZero( String string ) {
+    if( string.endsWith( ".0" ) ) {
+      return string.substring( 0, string.length() - 2 );
+    }
+    return string;
+  }
+
   /**
    * Returns a JsonValue instance that represents the given <code>double</code> value.
    *
@@ -181,94 +183,31 @@ public abstract class JsonValue implements Serializable {
     return value ? TRUE : FALSE;
   }
 
-  /**
-   * Detects whether this value represents a JSON object. If this is the case, this value is an
-   * instance of {@link JsonObject}.
-   *
-   * @return <code>true</code> if this value is an instance of JsonObject
-   */
-  public boolean isObject() {
-    return false;
+  JsonValue() {
+    // prevent subclasses outside of this package
   }
 
   /**
-   * Detects whether this value represents a JSON array. If this is the case, this value is an
-   * instance of {@link JsonArray}.
+   * Indicates whether some other object is "equal to" this one according to the contract specified
+   * in {@link Object#equals(Object)}.
+   * <p>
+   * Two JsonValues are considered equal if and only if they represent the same JSON text. As a
+   * consequence, two given JsonObjects may be different even though they contain the same set of
+   * names with the same values, but in a different order.
+   * </p>
    *
-   * @return <code>true</code> if this value is an instance of JsonArray
+   * @param object
+   *          the reference object with which to compare
+   * @return true if this object is the same as the object argument; false otherwise
    */
-  public boolean isArray() {
-    return false;
+  @Override
+  public boolean equals( Object object ) {
+    return super.equals( object );
   }
 
-  /**
-   * Detects whether this value represents a JSON number.
-   *
-   * @return <code>true</code> if this value represents a JSON number
-   */
-  public boolean isNumber() {
-    return false;
-  }
-
-  /**
-   * Detects whether this value represents a JSON string.
-   *
-   * @return <code>true</code> if this value represents a JSON string
-   */
-  public boolean isString() {
-    return false;
-  }
-
-  /**
-   * Detects whether this value represents a boolean value.
-   *
-   * @return <code>true</code> if this value represents either the JSON literal
-   *         <code>true</code> or <code>false</code>
-   */
-  public boolean isBoolean() {
-    return false;
-  }
-
-  /**
-   * Detects whether this value represents the JSON literal <code>true</code>.
-   *
-   * @return <code>true</code> if this value represents the JSON literal
-   *         <code>true</code>
-   */
-  public boolean isTrue() {
-    return false;
-  }
-
-  /**
-   * Detects whether this value represents the JSON literal <code>false</code>.
-   *
-   * @return <code>true</code> if this value represents the JSON literal
-   *         <code>false</code>
-   */
-  public boolean isFalse() {
-    return false;
-  }
-
-  /**
-   * Detects whether this value represents the JSON literal <code>null</code>.
-   *
-   * @return <code>true</code> if this value represents the JSON literal
-   *         <code>null</code>
-   */
-  public boolean isNull() {
-    return false;
-  }
-
-  /**
-   * Returns this JSON value as {@link JsonObject}, assuming that this value represents a JSON
-   * object. If this is not the case, an exception is thrown.
-   *
-   * @return a JSONObject for this value
-   * @throws UnsupportedOperationException
-   *           if this value is not a JSON object
-   */
-  public JsonObject asObject() {
-    throw new UnsupportedOperationException( "Not an object: " + toString() );
+  @Override
+  public int hashCode() {
+    return super.hashCode();
   }
 
   /**
@@ -281,6 +220,50 @@ public abstract class JsonValue implements Serializable {
    */
   public JsonArray asArray() {
     throw new UnsupportedOperationException( "Not an array: " + toString() );
+  }
+
+  /**
+   * Returns this JSON value as a <code>boolean</code> value, assuming that this value is either
+   * <code>true</code> or <code>false</code>. If this is not the case, an exception is thrown.
+   *
+   * @return this value as <code>boolean</code>
+   * @throws UnsupportedOperationException
+   *           if this value is neither <code>true</code> or <code>false</code>
+   */
+  public boolean asBoolean() {
+    throw new UnsupportedOperationException( "Not a boolean: " + toString() );
+  }
+
+  /**
+   * Returns this JSON value as a <code>double</code> value, assuming that this value represents a
+   * JSON number. If this is not the case, an exception is thrown.
+   * <p>
+   * If the JSON number is out of the <code>Double</code> range, {@link Double#POSITIVE_INFINITY} or
+   * {@link Double#NEGATIVE_INFINITY} is returned.
+   * </p>
+   *
+   * @return this value as <code>double</code>
+   * @throws UnsupportedOperationException
+   *           if this value is not a JSON number
+   */
+  public double asDouble() {
+    throw new UnsupportedOperationException( "Not a number: " + toString() );
+  }
+
+  /**
+   * Returns this JSON value as a <code>float</code> value, assuming that this value represents a
+   * JSON number. If this is not the case, an exception is thrown.
+   * <p>
+   * If the JSON number is out of the <code>Float</code> range, {@link Float#POSITIVE_INFINITY} or
+   * {@link Float#NEGATIVE_INFINITY} is returned.
+   * </p>
+   *
+   * @return this value as <code>float</code>
+   * @throws UnsupportedOperationException
+   *           if this value is not a JSON number
+   */
+  public float asFloat() {
+    throw new UnsupportedOperationException( "Not a number: " + toString() );
   }
 
   /**
@@ -322,76 +305,15 @@ public abstract class JsonValue implements Serializable {
   }
 
   /**
-   * Returns this JSON value as a <code>float</code> value, assuming that this value represents a
-   * JSON number. If this is not the case, an exception is thrown.
-   * <p>
-   * If the JSON number is out of the <code>Float</code> range, {@link Float#POSITIVE_INFINITY} or
-   * {@link Float#NEGATIVE_INFINITY} is returned.
-   * </p>
+   * Returns this JSON value as {@link JsonObject}, assuming that this value represents a JSON
+   * object. If this is not the case, an exception is thrown.
    *
-   * @return this value as <code>float</code>
+   * @return a JSONObject for this value
    * @throws UnsupportedOperationException
-   *           if this value is not a JSON number
+   *           if this value is not a JSON object
    */
-  public float asFloat() {
-    throw new UnsupportedOperationException( "Not a number: " + toString() );
-  }
-
-  /**
-   * Returns this JSON value as a <code>double</code> value, assuming that this value represents a
-   * JSON number. If this is not the case, an exception is thrown.
-   * <p>
-   * If the JSON number is out of the <code>Double</code> range, {@link Double#POSITIVE_INFINITY} or
-   * {@link Double#NEGATIVE_INFINITY} is returned.
-   * </p>
-   *
-   * @return this value as <code>double</code>
-   * @throws UnsupportedOperationException
-   *           if this value is not a JSON number
-   */
-  public double asDouble() {
-    throw new UnsupportedOperationException( "Not a number: " + toString() );
-  }
-
-  /**
-   * Returns this JSON value as String, assuming that this value represents a JSON string. If this
-   * is not the case, an exception is thrown.
-   *
-   * @return the string represented by this value
-   * @throws UnsupportedOperationException
-   *           if this value is not a JSON string
-   */
-  public String asString() {
-    throw new UnsupportedOperationException( "Not a string: " + toString() );
-  }
-
-  /**
-   * Returns this JSON value as a <code>boolean</code> value, assuming that this value is either
-   * <code>true</code> or <code>false</code>. If this is not the case, an exception is thrown.
-   *
-   * @return this value as <code>boolean</code>
-   * @throws UnsupportedOperationException
-   *           if this value is neither <code>true</code> or <code>false</code>
-   */
-  public boolean asBoolean() {
-    throw new UnsupportedOperationException( "Not a boolean: " + toString() );
-  }
-
-  /**
-   * Writes the JSON representation for this object to the given writer.
-   * <p>
-   * Single elements are passed directly to the given writer. Therefore, if the writer is not
-   * buffered, wrapping it in a {@link java.io.BufferedWriter BufferedWriter} can drastically
-   * improve writing performance.
-   * </p>
-   *
-   * @param writer
-   *          the writer to write this value to
-   * @throws IOException
-   *           if an I/O error occurs in the writer
-   */
-  public void writeTo( Writer writer ) throws IOException {
-    write( new JsonWriter( writer ) );
+  public JsonObject asObject() {
+    throw new UnsupportedOperationException( "Not an object: " + toString() );
   }
 
   /**
@@ -415,35 +337,111 @@ public abstract class JsonValue implements Serializable {
   }
 
   /**
-   * Indicates whether some other object is "equal to" this one according to the contract specified
-   * in {@link Object#equals(Object)}.
-   * <p>
-   * Two JsonValues are considered equal if and only if they represent the same JSON text. As a
-   * consequence, two given JsonObjects may be different even though they contain the same set of
-   * names with the same values, but in a different order.
-   * </p>
+   * Returns this JSON value as String, assuming that this value represents a JSON string. If this
+   * is not the case, an exception is thrown.
    *
-   * @param object
-   *          the reference object with which to compare
-   * @return true if this object is the same as the object argument; false otherwise
+   * @return the string represented by this value
+   * @throws UnsupportedOperationException
+   *           if this value is not a JSON string
    */
-  @Override
-  public boolean equals( Object object ) {
-    return super.equals( object );
+  public String asString() {
+    throw new UnsupportedOperationException( "Not a string: " + toString() );
   }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
+  /**
+   * Detects whether this value represents a JSON array. If this is the case, this value is an
+   * instance of {@link JsonArray}.
+   *
+   * @return <code>true</code> if this value is an instance of JsonArray
+   */
+  public boolean isArray() {
+    return false;
+  }
+
+  /**
+   * Detects whether this value represents a boolean value.
+   *
+   * @return <code>true</code> if this value represents either the JSON literal
+   *         <code>true</code> or <code>false</code>
+   */
+  public boolean isBoolean() {
+    return false;
+  }
+
+  /**
+   * Detects whether this value represents the JSON literal <code>false</code>.
+   *
+   * @return <code>true</code> if this value represents the JSON literal
+   *         <code>false</code>
+   */
+  public boolean isFalse() {
+    return false;
+  }
+
+  /**
+   * Detects whether this value represents the JSON literal <code>null</code>.
+   *
+   * @return <code>true</code> if this value represents the JSON literal
+   *         <code>null</code>
+   */
+  public boolean isNull() {
+    return false;
+  }
+
+  /**
+   * Detects whether this value represents a JSON number.
+   *
+   * @return <code>true</code> if this value represents a JSON number
+   */
+  public boolean isNumber() {
+    return false;
+  }
+
+  /**
+   * Detects whether this value represents a JSON object. If this is the case, this value is an
+   * instance of {@link JsonObject}.
+   *
+   * @return <code>true</code> if this value is an instance of JsonObject
+   */
+  public boolean isObject() {
+    return false;
+  }
+
+  /**
+   * Detects whether this value represents a JSON string.
+   *
+   * @return <code>true</code> if this value represents a JSON string
+   */
+  public boolean isString() {
+    return false;
+  }
+
+  /**
+   * Detects whether this value represents the JSON literal <code>true</code>.
+   *
+   * @return <code>true</code> if this value represents the JSON literal
+   *         <code>true</code>
+   */
+  public boolean isTrue() {
+    return false;
+  }
+
+  /**
+   * Writes the JSON representation for this object to the given writer.
+   * <p>
+   * Single elements are passed directly to the given writer. Therefore, if the writer is not
+   * buffered, wrapping it in a {@link java.io.BufferedWriter BufferedWriter} can drastically
+   * improve writing performance.
+   * </p>
+   *
+   * @param writer
+   *          the writer to write this value to
+   * @throws IOException
+   *           if an I/O error occurs in the writer
+   */
+  public void writeTo( Writer writer ) throws IOException {
+    write( new JsonWriter( writer ) );
   }
 
   protected abstract void write( JsonWriter writer ) throws IOException;
-
-  private static String cutOffPointZero( String string ) {
-    if( string.endsWith( ".0" ) ) {
-      return string.substring( 0, string.length() - 2 );
-    }
-    return string;
-  }
-
 }

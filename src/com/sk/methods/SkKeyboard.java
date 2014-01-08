@@ -6,17 +6,41 @@ import org.powerbot.script.methods.MethodContext;
 import java.util.*;
 
 public class SkKeyboard extends Keyboard {
+	private static final Set<String> valid = new HashSet<String>();
+	private static final Map<String, String> keyNames = new HashMap<String, String>();
+
+	static {
+		for (char c = 'A'; c <= 'Z'; ++c)
+			valid.add(Character.toString(c));
+		for (char c = '0'; c <= '9'; ++c)
+			valid.add(Character.toString(c));
+		for (int i = 1; i <= 24; ++i)
+			valid.add("F" + i);
+		valid.addAll(Arrays.asList("LEFT", "RIGHT", "UP", "DOWN"));
+		keyNames.put("-", "MINUS");
+		keyNames.put("=", "EQUALS");
+		keyNames.put("\n", "ENTER");
+		keyNames.put(".", "PERIOD");
+		keyNames.put(",", "COMMA");
+		keyNames.put(";", "SEMICOLON");
+		keyNames.put("'", "QUOTE");
+		keyNames.put("[", "OPEN_BRACKET");
+		keyNames.put("]", "CLOSE_BRACKET");
+		keyNames.put("\\", "BACKSLASH");
+		keyNames.put("`", "BACK_QUOTE");
+		keyNames.put("/", "SLASH");
+	}
 
 	public SkKeyboard(MethodContext ctx) {
 		super(ctx);
 	}
 
-	public boolean release(String key) {
-		return key(key, 2);
-	}
-
 	public boolean press(String key) {
 		return key(key, 1);
+	}
+
+	public boolean release(String key) {
+		return key(key, 2);
 	}
 
 	public boolean key(String key, int type) {
@@ -48,30 +72,5 @@ public class SkKeyboard extends Keyboard {
 		if (keyNames.containsKey(key))
 			return keyNames.get(key);
 		throw new IllegalArgumentException();
-	}
-
-	private static final Set<String> valid = new HashSet<String>();
-	private static final Map<String, String> keyNames = new HashMap<String, String>();
-
-	static {
-		for (char c = 'A'; c <= 'Z'; ++c)
-			valid.add(Character.toString(c));
-		for (char c = '0'; c <= '9'; ++c)
-			valid.add(Character.toString(c));
-		for (int i = 1; i <= 24; ++i)
-			valid.add("F" + i);
-		valid.addAll(Arrays.asList("LEFT", "RIGHT", "UP", "DOWN"));
-		keyNames.put("-", "MINUS");
-		keyNames.put("=", "EQUALS");
-		keyNames.put("\n", "ENTER");
-		keyNames.put(".", "PERIOD");
-		keyNames.put(",", "COMMA");
-		keyNames.put(";", "SEMICOLON");
-		keyNames.put("'", "QUOTE");
-		keyNames.put("[", "OPEN_BRACKET");
-		keyNames.put("]", "CLOSE_BRACKET");
-		keyNames.put("\\", "BACKSLASH");
-		keyNames.put("`", "BACK_QUOTE");
-		keyNames.put("/", "SLASH");
 	}
 }

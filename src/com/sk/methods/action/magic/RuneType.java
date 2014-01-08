@@ -21,6 +21,42 @@ public enum RuneType {
 	}
 
 	/**
+	 * Gets the abyss portal id for
+	 * 
+	 * @return the abyss portal id or <tt>-1</tt> if no such portal exists
+	 */
+	public int getAbyssPortalId() {
+		return abyssPortalId;
+	}
+
+	/**
+	 * Gets the id for the altar that this rune would be crafted on
+	 * 
+	 * @return the id of the altar or <tt>-1</tt> if this rune cannot be crafted on an altar
+	 */
+	public int getAltarId() {
+		return altarId;
+	}
+
+	/**
+	 * Gets the runecrafting level required to craft this rune
+	 * 
+	 * @return the runecrafting level required
+	 */
+	public int getCraftingLevel() {
+		return craftingLevel;
+	}
+
+	/**
+	 * Gets the item id for this rune
+	 * 
+	 * @return the item id
+	 */
+	public int getItemId() {
+		return itemId;
+	}
+
+	/**
 	 * Returns whether this rune can be crafted through the abyss
 	 * 
 	 * @return <tt>true</tt> if this rune can be crafted through the abyss
@@ -36,42 +72,6 @@ public enum RuneType {
 	 */
 	public boolean canCraftOnAltar() {
 		return altarId > 0;
-	}
-
-	/**
-	 * Gets the id for the altar that this rune would be crafted on
-	 * 
-	 * @return the id of the altar or <tt>-1</tt> if this rune cannot be crafted on an altar
-	 */
-	public int getAltarId() {
-		return altarId;
-	}
-
-	/**
-	 * Gets the item id for this rune
-	 * 
-	 * @return the item id
-	 */
-	public int getItemId() {
-		return itemId;
-	}
-
-	/**
-	 * Gets the abyss portal id for
-	 * 
-	 * @return the abyss portal id or <tt>-1</tt> if no such portal exists
-	 */
-	public int getAbyssPortalId() {
-		return abyssPortalId;
-	}
-
-	/**
-	 * Gets the runecrafting level required to craft this rune
-	 * 
-	 * @return the runecrafting level required
-	 */
-	public int getCraftingLevel() {
-		return craftingLevel;
 	}
 
 	/**

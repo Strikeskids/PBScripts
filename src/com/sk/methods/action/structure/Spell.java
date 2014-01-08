@@ -7,9 +7,6 @@ import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
 import org.powerbot.script.wrappers.Component;
 
 public interface Spell extends BookIcon {
-	public Spellbook getSpellbook();
-	public Rune[] getRunes();
-
 	public static final Spell NIL = new Spell() {
 		@Override
 		public int getChildIndex() {
@@ -71,4 +68,6 @@ public interface Spell extends BookIcon {
 			return 0;
 		}
 	};
+	public Rune[] getRunes();
+	public Spellbook getSpellbook();
 }

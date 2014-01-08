@@ -23,6 +23,11 @@ PULVERISE(AbilityLevel.ULTIMATE, 12, 14266, 81, 194, 60, 0),
 FRENZY(AbilityLevel.ULTIMATE, 11, 14265, 86, 178, 60, 10000),
 ;
 
+	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
+	private final Window window;
+	private final AbilityStyle style;
+	private final AbilityLevel abilityLevel;
+
 	private StrengthAbility(AbilityLevel level, int a, int b, int c, int id, int cd, int ch) {
 		this.abilityLevel = level;
 		this.childIndex = a;
@@ -34,13 +39,17 @@ FRENZY(AbilityLevel.ULTIMATE, 11, 14265, 86, 178, 60, 10000),
 		this.skill = Skills.STRENGTH;
 		this.window = InnerAbilityTab.STRENGTH_ABILITY;
 		this.style = AbilityStyle.STRENGTH;
-
 	}
 
-	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
-	private final Window window;
-	private final AbilityStyle style;
-	private final AbilityLevel abilityLevel;
+	@Override
+	public AbilityLevel getAbilityLevel() {
+		return abilityLevel;
+	}
+
+	@Override
+	public int getChanneled() {
+		return channeled;
+	}
 
 	@Override
 	public int getChildIndex() {
@@ -53,28 +62,8 @@ FRENZY(AbilityLevel.ULTIMATE, 11, 14265, 86, 178, 60, 10000),
 	}
 
 	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	@Override
-	public int getSkill() {
-		return skill;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
+	public int getCooldown() {
+		return cooldown;
 	}
 
 	@Override
@@ -83,23 +72,28 @@ FRENZY(AbilityLevel.ULTIMATE, 11, 14265, 86, 178, 60, 10000),
 	}
 
 	@Override
+	public int getSkill() {
+		return skill;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return skillLevel;
+	}
+
+	@Override
 	public AbilityStyle getStyle() {
 		return style;
 	}
 
 	@Override
-	public AbilityLevel getAbilityLevel() {
-		return abilityLevel;
+	public Window getWindow() {
+		return window;
 	}
 
 	@Override
-	public int getCooldown() {
-		return cooldown;
-	}
-
-	@Override
-	public int getChanneled() {
-		return channeled;
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
@@ -110,6 +104,11 @@ FRENZY(AbilityLevel.ULTIMATE, 11, 14265, 86, 178, 60, 10000),
 	@Override
 	public int getWidget() {
 		return getStyle().getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }
 

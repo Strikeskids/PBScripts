@@ -36,9 +36,8 @@ public enum MainWindow implements Window {
 		return ctx.hud.close(wind);
 	}
 
-	@Override
-	public boolean open(LogicailMethodContext ctx) {
-		return ctx.hud.view(wind);
+	public Hud.Window getSource() {
+		return wind;
 	}
 
 	@Override
@@ -46,8 +45,8 @@ public enum MainWindow implements Window {
 		return ctx.hud.isVisible(wind);
 	}
 
-	public Hud.Window getSource() {
-		return wind;
+	@Override
+	public boolean open(LogicailMethodContext ctx) {
+		return ctx.hud.view(wind);
 	}
-
 }

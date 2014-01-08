@@ -60,6 +60,5 @@ public class AltarWalkToAltar extends AltarAbstract {
 				ctx.movement.walk(destination);
 			}
 		}
-
 	}
 }

@@ -219,7 +219,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		}
 	}
 
-
 	@Override
 	public void repaint(Graphics g) {
 		super.repaint(g);

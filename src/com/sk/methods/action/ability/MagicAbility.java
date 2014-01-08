@@ -25,6 +25,11 @@ SONIC_WAVE(AbilityLevel.BASIC, 165, 9314, 8, 2646, 5, 0),
 CONCENTRATED_BLAST(AbilityLevel.BASIC, 166, 8684, 12, 2662, 5, 0),
 ;
 
+	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
+	private final Window window;
+	private final AbilityStyle style;
+	private final AbilityLevel abilityLevel;
+
 	private MagicAbility(AbilityLevel level, int a, int b, int c, int id, int cd, int ch) {
 		this.abilityLevel = level;
 		this.childIndex = a;
@@ -36,13 +41,17 @@ CONCENTRATED_BLAST(AbilityLevel.BASIC, 166, 8684, 12, 2662, 5, 0),
 		this.skill = Skills.MAGIC;
 		this.window = InnerAbilityTab.MAGIC_ABILITY;
 		this.style = AbilityStyle.MAGIC;
-
 	}
 
-	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
-	private final Window window;
-	private final AbilityStyle style;
-	private final AbilityLevel abilityLevel;
+	@Override
+	public AbilityLevel getAbilityLevel() {
+		return abilityLevel;
+	}
+
+	@Override
+	public int getChanneled() {
+		return channeled;
+	}
 
 	@Override
 	public int getChildIndex() {
@@ -55,28 +64,8 @@ CONCENTRATED_BLAST(AbilityLevel.BASIC, 166, 8684, 12, 2662, 5, 0),
 	}
 
 	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return skillLevel;
-	}
-
-	@Override
-	public int getSkill() {
-		return skill;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
+	public int getCooldown() {
+		return cooldown;
 	}
 
 	@Override
@@ -85,23 +74,28 @@ CONCENTRATED_BLAST(AbilityLevel.BASIC, 166, 8684, 12, 2662, 5, 0),
 	}
 
 	@Override
+	public int getSkill() {
+		return skill;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return skillLevel;
+	}
+
+	@Override
 	public AbilityStyle getStyle() {
 		return style;
 	}
 
 	@Override
-	public AbilityLevel getAbilityLevel() {
-		return abilityLevel;
+	public Window getWindow() {
+		return window;
 	}
 
 	@Override
-	public int getCooldown() {
-		return cooldown;
-	}
-
-	@Override
-	public int getChanneled() {
-		return channeled;
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
@@ -112,6 +106,11 @@ CONCENTRATED_BLAST(AbilityLevel.BASIC, 166, 8684, 12, 2662, 5, 0),
 	@Override
 	public int getWidget() {
 		return getStyle().getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }
 

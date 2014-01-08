@@ -29,6 +29,12 @@ public class Lodestones extends LogicailMethodProvider {
 		super(context);
 	}
 
+	public Lodestone getPreviousDestination() {
+		final int i = ctx.settings.get(SETTING_LODESTONES, 26, 0x1f);
+		final Lodestone[] lodestones = Lodestone.values();
+		return lodestones.length < i ? lodestones[i] : null;
+	}
+
 	public boolean teleport(Lodestone lodestone) {
 		return teleport(lodestone, false);
 	}
@@ -88,12 +94,6 @@ public class Lodestones extends LogicailMethodProvider {
 
 	public boolean isOpen() {
 		return ctx.widgets.get(TELEPORT_INTERFACE, TELEPORT_INTERFACE_CHILD).isValid();
-	}
-
-	public Lodestone getPreviousDestination() {
-		final int i = ctx.settings.get(SETTING_LODESTONES, 26, 0x1f);
-		final Lodestone[] lodestones = Lodestone.values();
-		return lodestones.length < i ? lodestones[i] : null;
 	}
 
 	public boolean isPreviousDestination(Lodestone lodestone) {

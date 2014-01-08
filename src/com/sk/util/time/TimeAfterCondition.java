@@ -5,16 +5,8 @@ import org.powerbot.script.util.Timer;
 import com.sk.util.Condition;
 
 public abstract class TimeAfterCondition extends Timer implements Condition, Waitable {
-
 	public TimeAfterCondition(long repeat) {
 		super(repeat);
-	}
-
-	@Override
-	public boolean isRunning() {
-		if (check())
-			reset();
-		return super.isRunning();
 	}
 
 	@Override
@@ -27,6 +19,13 @@ public abstract class TimeAfterCondition extends Timer implements Condition, Wai
 	}
 
 	@Override
+	public boolean isRunning() {
+		if (check())
+			reset();
+		return super.isRunning();
+	}
+
+	@Override
 	public boolean waitFor(long maxTime, long delay) {
 		reset();
 		boolean ret = false;
@@ -34,5 +33,4 @@ public abstract class TimeAfterCondition extends Timer implements Condition, Wai
 			;
 		return ret;
 	}
-
 }

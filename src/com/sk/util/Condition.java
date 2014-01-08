@@ -17,7 +17,6 @@ public interface Condition {
 	public boolean check();
 
 	public static class Builder {
-
 		private final boolean and;
 		private List<Condition> blocks = new ArrayList<Condition>();
 
@@ -98,6 +97,5 @@ public interface Condition {
 				return src.isValid();
 			}
 		}
-
 	}
 }

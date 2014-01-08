@@ -62,7 +62,7 @@ public class AltarObelisk extends AltarAbstract {
 
 		try {
 			final GameObject obelisk = altarTask.getMiniObelisk();
-			if(!obelisk.isValid()) return;
+			if (!obelisk.isValid()) return;
 
 			Room startRoom = script.roomStorage.getRoom(ctx.players.local());
 			Room endRoom = script.roomStorage.getRoom(obelisk);

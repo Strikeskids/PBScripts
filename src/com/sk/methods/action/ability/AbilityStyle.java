@@ -33,21 +33,21 @@ public enum AbilityStyle {
 	}
 
 	/**
-	 * Gets {@link InnerAbilityTab} of abilities that is used for this style
-	 * 
-	 * @return the tab of abilities for this style
-	 */
-	public Window getTab() {
-		return tab;
-	}
-
-	/**
 	 * Gets the skill id for the skill for this style of ability
 	 * 
 	 * @return the skill id
 	 */
 	public int getSkillId() {
 		return skillId;
+	}
+
+	/**
+	 * Gets {@link InnerAbilityTab} of abilities that is used for this style
+	 * 
+	 * @return the tab of abilities for this style
+	 */
+	public Window getTab() {
+		return tab;
 	}
 
 	public int getWidgetId() {

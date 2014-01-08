@@ -6,8 +6,7 @@ import org.powerbot.script.wrappers.Identifiable;
 import org.powerbot.script.wrappers.Validatable;
 
 public interface BarIcon extends Validatable, Identifiable {
+	public static final BarIcon NIL = Ability.NIL;
 
 	public Component getComponent(LogicailMethodContext ctx);
-
-	public static final BarIcon NIL = Ability.NIL;
 }

@@ -14,6 +14,10 @@ public enum AllSpell implements Spell {
 HOME_TELEPORT(InnerAbilityTab.TELEPORT_SPELL, 2491, 0, 155, 14333),
 ;
 
+	private final Rune[] runes;
+	private final int childIndex, childTexture, level, id;
+	private final Window window;
+
 	private AllSpell(Window t, int id, int l, int ci, int ct, Rune... r) {
 		this.window = t;
 		this.id = id;
@@ -22,10 +26,6 @@ HOME_TELEPORT(InnerAbilityTab.TELEPORT_SPELL, 2491, 0, 155, 14333),
 		this.childTexture = ct;
 		this.runes = r;
 	}
-
-	private final Rune[] runes;
-	private final int childIndex, childTexture, level, id;
-	private final Window window;
 
 	@Override
 	public int getChildIndex() {
@@ -38,43 +38,8 @@ HOME_TELEPORT(InnerAbilityTab.TELEPORT_SPELL, 2491, 0, 155, 14333),
 	}
 
 	@Override
-	public Component getCooldownComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
-	}
-
-	@Override
-	public Window getWindow() {
-		return window;
-	}
-
-	@Override
-	public int getSkillLevel() {
-		return level;
-	}
-
-	@Override
-	public int getSkill() {
-		return Skills.MAGIC;
-	}
-
-	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
-	}
-
-	@Override
-	public boolean isValid() {
-		return true;
-	}
-
-	@Override
 	public int getId() {
 		return id;
-	}
-
-	@Override
-	public Spellbook getSpellbook() {
-		return Spellbook.ALL;
 	}
 
 	@Override
@@ -83,8 +48,43 @@ HOME_TELEPORT(InnerAbilityTab.TELEPORT_SPELL, 2491, 0, 155, 14333),
 	}
 
 	@Override
+	public Window getWindow() {
+		return window;
+	}
+
+	@Override
+	public Component getComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
+	}
+
+	@Override
+	public Component getCooldownComponent(LogicailMethodContext ctx) {
+		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
+	}
+
+	@Override
+	public int getSkill() {
+		return Skills.MAGIC;
+	}
+
+	@Override
+	public int getSkillLevel() {
+		return level;
+	}
+
+	@Override
+	public Spellbook getSpellbook() {
+		return Spellbook.ALL;
+	}
+
+	@Override
 	public int getWidget() {
 		return AbilityStyle.MAGIC.getWidgetId();
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }
 

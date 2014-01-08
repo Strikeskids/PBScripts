@@ -10,6 +10,15 @@ public class Rune {
 	private final int amount;
 
 	/**
+	 * Constructor that has the default (<tt>1</tt>) amount and allows the {@link RuneType} to be specified
+	 *
+	 * @param t The {@linkplain RuneType} of this rune
+	 */
+	public Rune(final RuneType t) {
+		this(t, 1);
+	}
+
+	/**
 	 * Constructor that allows the amount and the {@link RuneType} to be specified
 	 *
 	 * @param t    The {@linkplain RuneType} of this rune
@@ -18,15 +27,6 @@ public class Rune {
 	public Rune(final RuneType t, final int amnt) {
 		this.type = t;
 		this.amount = amnt;
-	}
-
-	/**
-	 * Constructor that has the default (<tt>1</tt>) amount and allows the {@link RuneType} to be specified
-	 *
-	 * @param t The {@linkplain RuneType} of this rune
-	 */
-	public Rune(final RuneType t) {
-		this(t, 1);
 	}
 
 	/**

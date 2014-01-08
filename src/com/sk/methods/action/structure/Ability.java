@@ -8,14 +8,6 @@ import com.sk.methods.action.ability.AbilityStyle;
 import com.sk.windows.Window;
 
 public interface Ability extends BookIcon {
-	public AbilityStyle getStyle();
-
-	public AbilityLevel getAbilityLevel();
-
-	public int getCooldown();
-
-	public int getChanneled();
-
 	public static Ability NIL = new Ability() {
 		@Override
 		public AbilityStyle getStyle() {
@@ -87,4 +79,11 @@ public interface Ability extends BookIcon {
 			return 0;
 		}
 	};
+
+	public AbilityLevel getAbilityLevel();
+
+	public int getChanneled();
+
+	public int getCooldown();
+	public AbilityStyle getStyle();
 }
