@@ -39,27 +39,27 @@ public class AltarWalkToAltar extends AltarAbstract {
 	public void run() {
 		options.status = "Goin' to the chapel...";
 
-		for (GameObject altar : altarTask.getAltar()) {
-			final Room currentRoom = script.roomStorage.getRoom(ctx.players.local());
-			final Room altarRoom = script.roomStorage.getRoom(altar);
-			final HousePath path = new Astar(script).findRoute(altarRoom);
-			if (path != null) {
-				final Tile location = altarRoom.getLocation();
-				final List<Tile> tilesNear = ctx.movement.getTilesNear(new LogicailArea(location.derive(2, -2), location.derive(6, -6)), altar, 4);
-				if (tilesNear.isEmpty()) continue;
-				final Tile destination = tilesNear.get(0);
-				if (!path.traverse(destination)) {
-					if (!destination.getMatrix(ctx).isReachable()) {
-						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(altarRoom, currentRoom)).first()) {
-							if (DoorOpener.open(ctx, door)) {
-								sleep(100, 600);
-							}
+		final GameObject altar = altarTask.getAltar();
+		final Room currentRoom = script.roomStorage.getRoom(ctx.players.local());
+		final Room altarRoom = script.roomStorage.getRoom(altar);
+		final HousePath path = new Astar(script).findRoute(altarRoom);
+		if (path != null) {
+			final Tile location = altarRoom.getLocation();
+			final List<Tile> tilesNear = ctx.movement.getTilesNear(new LogicailArea(location.derive(2, -2), location.derive(6, -6)), altar, 4);
+			if (tilesNear.isEmpty()) return;
+			final Tile destination = tilesNear.get(0);
+			if (!path.traverse(destination)) {
+				if (!destination.getMatrix(ctx).isReachable()) {
+					for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(altarRoom, currentRoom)).first()) {
+						if (DoorOpener.open(ctx, door)) {
+							sleep(100, 600);
 						}
 					}
-
-					ctx.movement.walk(destination);
 				}
+
+				ctx.movement.walk(destination);
 			}
 		}
+
 	}
 }

@@ -13,7 +13,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
 public abstract class ArtisanArmourerTask extends Node<LogArtisanWorkshop> {
 	protected final LogArtisanWorkshopOptions options;
 
-	public ArtisanArmourerTask(LogArtisanWorkshop script) {
+	protected ArtisanArmourerTask(LogArtisanWorkshop script) {
 		super(script);
 		this.options = script.options;
 	}

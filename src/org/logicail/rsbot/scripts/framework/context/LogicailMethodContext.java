@@ -121,7 +121,7 @@ public class LogicailMethodContext extends MethodContext {
 				@Override
 				public void run() {
 					try {
-						new ErrorDialog(null, title, reason);
+						new ErrorDialog(title, reason);
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}

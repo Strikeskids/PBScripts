@@ -5,7 +5,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
-import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.wrappers.GameObject;
 
 import java.util.Comparator;
@@ -18,7 +17,7 @@ import java.util.Comparator;
  */
 public class AltarTask extends Branch<LogGildedAltar> {
 	public static final int[] ALTAR = {13197, 13198, 13199/*, 13188, 13191*/};
-	protected final LogGildedAltarOptions options;
+	private final LogGildedAltarOptions options;
 
 	public AltarTask(LogGildedAltar script) {
 		super(script);
@@ -44,7 +43,7 @@ public class AltarTask extends Branch<LogGildedAltar> {
 		return !options.banking && script.houseTask.isInHouse();
 	}
 
-	public BasicNamedQuery<GameObject> getAltar() {
+	public GameObject getAltar() {
 		return ctx.objects.select().id(ALTAR).sort(new Comparator<GameObject>() {
 			@Override
 			public int compare(GameObject lhs, GameObject rhs) {
@@ -52,10 +51,10 @@ public class AltarTask extends Branch<LogGildedAltar> {
 				Room rhsRoom = script.roomStorage.getRoom(rhs);
 				return Integer.compare(lhsRoom.getGameObjectsInRoom(AltarLightBurnersTask.LIT_LANTERN, AltarLightBurnersTask.UNLIT_LANTERN).size(), rhsRoom.getGameObjectsInRoom(AltarLightBurnersTask.LIT_LANTERN, AltarLightBurnersTask.UNLIT_LANTERN).size());
 			}
-		}).first();
+		}).poll();
 	}
 
-	public BasicNamedQuery<GameObject> getMiniObelisk() {
-		return ctx.objects.select().id(AltarObelisk.MINI_OBELISK).nearest().first();
+	public GameObject getMiniObelisk() {
+		return ctx.objects.select().id(AltarObelisk.MINI_OBELISK).nearest().poll();
 	}
 }

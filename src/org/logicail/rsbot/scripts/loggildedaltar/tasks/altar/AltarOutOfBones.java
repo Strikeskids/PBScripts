@@ -53,7 +53,7 @@ public class AltarOutOfBones extends AltarAbstract {
 		} else if (getBackpackOffering().isEmpty()) {
 			options.status = ("Out of bones banking");
 			ctx.log.info(options.status);
-			script.bankingTask.setBanking(true);
+			script.bankingTask.setBanking();
 		}
 	}
 }

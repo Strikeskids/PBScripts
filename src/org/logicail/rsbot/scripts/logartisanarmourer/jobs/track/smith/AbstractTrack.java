@@ -10,10 +10,10 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
  * Date: 01/01/14
  * Time: 17:18
  */
-public abstract class AbstractTrack extends ArtisanArmourerTask {
-	protected final SmithTrack smithTrack;
+abstract class AbstractTrack extends ArtisanArmourerTask {
+	final SmithTrack smithTrack;
 
-	public AbstractTrack(LogArtisanWorkshop script, SmithTrack smithTrack) {
+	AbstractTrack(LogArtisanWorkshop script, SmithTrack smithTrack) {
 		super(script);
 		this.smithTrack = smithTrack;
 	}

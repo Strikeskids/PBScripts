@@ -40,6 +40,6 @@ public class AltarNoAltar extends AltarAbstract {
 
 	@Override
 	public boolean isValid() {
-		return altarTask.getAltar().isEmpty();
+		return !altarTask.getAltar().isValid();
 	}
 }

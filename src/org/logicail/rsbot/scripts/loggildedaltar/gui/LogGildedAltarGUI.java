@@ -11,6 +11,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
+import org.powerbot.script.Script;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.methods.Summoning;
 
@@ -1030,15 +1031,31 @@ public class LogGildedAltarGUI extends JFrame {
 
 				// v4
 		/*
-				new StatisticsPostback(),
+				// POSTBACK
 				// LEAVE HOUSE
 				new WidgetCloser(),
-				new LogoutIdle(),
+				// LogoutIdle
 				new WorldThirtyOne(),
-				new PickupBones(),
+				// PickupBones
 				new ActivateAura(),
 				// BANKING
 		*/
+
+				script.tree.add(new LogoutIdle(script));
+
+//				if (options.useBOB) {
+//					script.tree.add(new PickupBones(script));
+//				}
+
+				final Postback postback = new Postback(script);
+				script.getExecQueue(Script.State.STOP).add(new Runnable() {
+					@Override
+					public void run() {
+						postback.postback();
+					}
+				});
+
+				script.tree.add(postback);
 
 				if (options.stopLevelEnabled) {
 					script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel));
@@ -1049,10 +1066,10 @@ public class LogGildedAltarGUI extends JFrame {
 
 				if (ctx.game.isLoggedIn() && ctx.players.local() != null) {
 					if (options.lightBurners && !(ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
-						script.bankingTask.setBanking(true);
+						script.bankingTask.setBanking();
 					}
 				} else {
-					script.bankingTask.setBanking(true);
+					script.bankingTask.setBanking();
 				}
 
 				script.tree.add(script.summoningTask = new SummoningTask(script));

@@ -12,15 +12,9 @@ import java.awt.event.ActionListener;
  * Time: 15:57
  */
 public class ErrorDialog extends JDialog implements ActionListener {
-	public ErrorDialog(JFrame parent, String title, String message) {
-		super(parent, title, true);
-		if (parent != null) {
-			Dimension parentSize = parent.getSize();
-			Point p = parent.getLocation();
-			setLocation(p.x + parentSize.width / 4, p.y + parentSize.height / 4);
-		} else {
-			setLocationRelativeTo(null);
-		}
+	public ErrorDialog(String title, String message) {
+		super((JFrame) null, title, true);
+		setLocationRelativeTo(null);
 		JPanel messagePane = new JPanel();
 		messagePane.add(new JLabel(message));
 		getContentPane().add(messagePane);

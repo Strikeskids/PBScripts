@@ -38,6 +38,7 @@ public class LogGildedAltarOptions {
 	public int bonesOffered;
 	private File settingsFile;
 	private final String FILENAME = "settings.ini";
+	public boolean newVersionAvailable;
 
 	public LogGildedAltarOptions(AbstractScript script) {
 		settingsFile = new File(script.getStorageDirectory(), FILENAME);

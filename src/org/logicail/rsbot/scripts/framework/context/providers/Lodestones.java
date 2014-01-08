@@ -22,7 +22,7 @@ public class Lodestones extends LogicailMethodProvider {
 	private final static int TELEPORT_INTERFACE_CHILD = 38;
 	private final static int OPEN_TELEPORT_INTERFACE = 1465;
 	private final static int OPEN_TELEPORT_INTERFACE_CHILD = 10;
-	private final static int[] TELEPORT_ANIMATIONS = {16385, 16386, 16393};
+	//private final static int[] TELEPORT_ANIMATIONS = {16385, 16386, 16393};
 	private final static int SETTING_LODESTONES = 3;
 
 	public Lodestones(LogicailMethodContext context) {

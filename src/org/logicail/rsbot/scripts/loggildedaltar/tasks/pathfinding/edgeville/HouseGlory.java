@@ -44,7 +44,7 @@ public class HouseGlory extends NodePath {
 	@Override
 	public void run() {
 		if (script.houseTask.isInHouse()) {
-			final GameObject altar = script.altarTask.getAltar().poll();
+			final GameObject altar = script.altarTask.getAltar();
 			final Player local = ctx.players.local();
 			for (final GameObject mountedGlory : ctx.objects.select().id(MOUNTED_GLORY).nearest(altar.isValid() ? altar : local).first()) {
 				final Room gloryRoom = script.roomStorage.getRoom(mountedGlory);

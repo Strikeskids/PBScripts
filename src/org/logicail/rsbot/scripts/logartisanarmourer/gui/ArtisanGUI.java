@@ -26,7 +26,7 @@ import java.awt.event.WindowEvent;
  * Time: 12:20
  */
 public class ArtisanGUI extends JFrame {
-	public boolean startPressed;
+	private boolean startPressed;
 	private final LogArtisanWorkshop script;
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
@@ -351,7 +351,7 @@ public class ArtisanGUI extends JFrame {
 							@Override
 							public void run() {
 								try {
-									new ErrorDialog(null, "Backpack not empty", "It is recommended to start the script with an empty backpack, if the script messes up restart with an empty backpack");
+									new ErrorDialog("Backpack not empty", "It is recommended to start the script with an empty backpack, if the script messes up restart with an empty backpack");
 								} catch (Exception ignored) {
 								}
 							}

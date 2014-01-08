@@ -11,9 +11,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
  * Time: 16:44
  */
 public abstract class AltarAbstract extends LogGildedAltarTask {
-	protected final AltarTask altarTask;
+	final AltarTask altarTask;
 
-	public AltarAbstract(LogGildedAltar script) {
+	protected AltarAbstract(LogGildedAltar script) {
 		super(script);
 		altarTask = script.altarTask;
 	}

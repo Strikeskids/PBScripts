@@ -33,7 +33,7 @@ import java.util.concurrent.Callable;
  * Time: 20:49
  */
 @Manifest(
-		name = "LogGildedAltar",
+		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
 		version = 6,
 		hidden = true,
@@ -78,7 +78,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		if (skillData != null) {
 			properties.put("TTL", org.powerbot.script.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
 			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
-			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.PRAYER)));
+			properties.put("XP Gained", String.format("%,d", experience()));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.PRAYER)));
 		}
 
@@ -101,6 +101,14 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		}
 
 		return properties;
+	}
+
+	public int experience() {
+		try {
+			return skillData.experience(Skills.PRAYER);
+		} catch (Exception ignored) {
+		}
+		return (int) (options.bonesOffered * options.offering.getXp());
 	}
 
 	@Override

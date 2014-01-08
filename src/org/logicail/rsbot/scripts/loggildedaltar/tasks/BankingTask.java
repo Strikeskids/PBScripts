@@ -83,7 +83,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 		return false;
 	}
 
-	public void setBanking(boolean state) {
-		banking.setBanking(state);
+	public void setBanking() {
+		banking.setBanking(true);
 	}
 }

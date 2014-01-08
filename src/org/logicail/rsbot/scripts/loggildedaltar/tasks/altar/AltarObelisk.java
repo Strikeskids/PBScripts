@@ -47,7 +47,8 @@ public class AltarObelisk extends AltarAbstract {
 						&& (ctx.backpack.isFull() || getBackpackOffering().isEmpty())
 				) {
 			Room startRoom = script.roomStorage.getRoom(ctx.players.local());
-			for (GameObject obelisk : altarTask.getMiniObelisk()) {
+			final GameObject obelisk = altarTask.getMiniObelisk();
+			if (obelisk.isValid()) {
 				Room endRoom = script.roomStorage.getRoom(obelisk);
 				return endRoom.equals(startRoom) || ((pathToObelisk = new Astar(script).findRoute(obelisk)) != null);
 			}
@@ -60,60 +61,61 @@ public class AltarObelisk extends AltarAbstract {
 		ctx.log.info("Finding path to obelisk");
 
 		try {
-			for (GameObject obelisk : altarTask.getMiniObelisk()) {
-				Room startRoom = script.roomStorage.getRoom(ctx.players.local());
-				Room endRoom = script.roomStorage.getRoom(obelisk);
-				if (startRoom == null || endRoom == null) continue;
+			final GameObject obelisk = altarTask.getMiniObelisk();
+			if(!obelisk.isValid()) return;
 
-				final List<Tile> tilesNear = ctx.movement.getTilesNear(endRoom.getArea(), obelisk, 3);
-				final Tile destination = tilesNear.isEmpty() ? obelisk.getLocation() : tilesNear.get(0);
+			Room startRoom = script.roomStorage.getRoom(ctx.players.local());
+			Room endRoom = script.roomStorage.getRoom(obelisk);
+			if (startRoom == null || endRoom == null) return;
 
-				if (!startRoom.equals(endRoom)) {
-					if (!pathToObelisk.traverse(destination)) {
-						if (!destination.getMatrix(ctx).isReachable()) {
-							// Find closed door
-							for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, endRoom)).shuffle().first()) {
-								if (DoorOpener.open(ctx, door)) {
-									sleep(100, 500);
-								}
+			final List<Tile> tilesNear = ctx.movement.getTilesNear(endRoom.getArea(), obelisk, 3);
+			final Tile destination = tilesNear.isEmpty() ? obelisk.getLocation() : tilesNear.get(0);
+
+			if (!startRoom.equals(endRoom)) {
+				if (!pathToObelisk.traverse(destination)) {
+					if (!destination.getMatrix(ctx).isReachable()) {
+						// Find closed door
+						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, endRoom)).shuffle().first()) {
+							if (DoorOpener.open(ctx, door)) {
+								sleep(100, 500);
 							}
 						}
 					}
-
-					ctx.movement.walk(destination);
 				}
 
-				if (destination.getMatrix(ctx).isReachable() || endRoom.equals(script.roomStorage.getRoom(ctx.players.local()))) {
-					if (destination.distanceTo(ctx.players.local()) < 10) {
-						final int points = ctx.summoning.getSummoningPoints();
-						options.status = "Clicking on obelisk";
+				ctx.movement.walk(destination);
+			}
 
-						if (ctx.camera.prepare(obelisk) && obelisk.interact("Renew-points", "Small obelisk")) {
-							Timer t = new Timer(10000);
-							while (t.isRunning()) {
-								if (ctx.players.local().isInMotion()) {
-									t.reset();
-								}
+			if (destination.getMatrix(ctx).isReachable() || endRoom.equals(script.roomStorage.getRoom(ctx.players.local()))) {
+				if (destination.distanceTo(ctx.players.local()) < 10) {
+					final int points = ctx.summoning.getSummoningPoints();
+					options.status = "Clicking on obelisk";
 
-								if (ctx.camera.getPitch() < 80) {
-									ctx.camera.setPitch(Random.nextInt(80, 101));
-								}
-
-								if (ctx.summoning.getSummoningPoints() > points && ctx.players.local().getAnimation() == -1) {
-									options.status = "Recharged at house obelisk";
-									ctx.log.info(options.status);
-									script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.getRequiredPoints() * 1.5), (int) (options.beastOfBurden.getRequiredPoints() * 2.33));
-									resetNextPoints();
-									sleep(600, 1400);
-									break;
-								}
-
-								sleep(400, 800);
+					if (ctx.camera.prepare(obelisk) && obelisk.interact("Renew-points", "Small obelisk")) {
+						Timer t = new Timer(10000);
+						while (t.isRunning()) {
+							if (ctx.players.local().isInMotion()) {
+								t.reset();
 							}
+
+							if (ctx.camera.getPitch() < 80) {
+								ctx.camera.setPitch(Random.nextInt(80, 101));
+							}
+
+							if (ctx.summoning.getSummoningPoints() > points && ctx.players.local().getAnimation() == -1) {
+								options.status = "Recharged at house obelisk";
+								ctx.log.info(options.status);
+								script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.getRequiredPoints() * 1.5), (int) (options.beastOfBurden.getRequiredPoints() * 2.33));
+								resetNextPoints();
+								sleep(600, 1400);
+								break;
+							}
+
+							sleep(400, 800);
 						}
-					} else {
-						ctx.movement.walk(destination);
 					}
+				} else {
+					ctx.movement.walk(destination);
 				}
 			}
 		} finally {

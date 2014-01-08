@@ -35,7 +35,8 @@ public class AltarLightBurnersTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public boolean branch() {
-		for (GameObject altar : script.altarTask.getAltar()) {
+		final GameObject altar = script.altarTask.getAltar();
+		if (altar.isValid()) {
 			return !script.roomStorage.getRoom(altar).getGameObjectsInRoom(UNLIT_LANTERN).isEmpty();
 		}
 

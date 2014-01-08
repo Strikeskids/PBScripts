@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * Time: 19:17
  */
 public class AltarOfferBones extends AltarAbstract {
-	public static final int ANIMATION_OFFERING = 3705;
+	private static final int ANIMATION_OFFERING = 3705;
 	private int nextOfferingTime = Random.nextInt(4000, 6000);
 
 	public AltarOfferBones(LogGildedAltar script) {
@@ -47,7 +47,7 @@ public class AltarOfferBones extends AltarAbstract {
 		if (options.useOtherHouse && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
 			OpenHouse currentHouse = script.houseHandler.getCurrentHouse();
 			if (currentHouse != null) {
-				currentHouse.setHasObelisk(!script.altarTask.getMiniObelisk().isEmpty());
+				currentHouse.setHasObelisk(script.altarTask.getMiniObelisk().isValid());
 			}
 		}
 
@@ -76,27 +76,26 @@ public class AltarOfferBones extends AltarAbstract {
 		options.status = "Use bones on altar";
 		ctx.log.info(options.status);
 
-		for (GameObject altar : altarTask.getAltar()) {
-			if (selectBone()) {
-				Item selectedItem = ctx.backpack.getSelectedItem();
-				if (!altar.isOnScreen()) {
-					ctx.camera.turnTo(altar);
-				}
-				if (selectedItem.getId() == options.offering.getId() && altar.interact("Use", selectedItem.getName() + " -> Altar")) {
-					if (Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
-						}
-					})) {
-						AnimationMonitor.put(ANIMATION_OFFERING);
+		final GameObject altar = altarTask.getAltar();
+		if (selectBone()) {
+			Item selectedItem = ctx.backpack.getSelectedItem();
+			if (altar.isValid() && !altar.isOnScreen()) {
+				ctx.camera.turnTo(altar);
+			}
+			if (selectedItem.getId() == options.offering.getId() && altar.interact("Use", selectedItem.getName() + " -> Altar")) {
+				if (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
 					}
+				})) {
+					AnimationMonitor.put(ANIMATION_OFFERING);
 				}
 			}
 		}
 	}
 
-	public boolean selectBone() {
+	boolean selectBone() {
 		if (ctx.backpack.getSelectedItem().getId() != options.offering.getId()) {
 			if (ctx.backpack.isItemSelected() && ctx.menu.click(Menu.filter("Cancel"))) {
 				Condition.wait(new Callable<Boolean>() {

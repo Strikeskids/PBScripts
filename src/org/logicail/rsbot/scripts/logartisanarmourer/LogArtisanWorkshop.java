@@ -130,7 +130,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 					@Override
 					public void run() {
 						try {
-							new ErrorDialog(null, "Error", "You do not have the required level (" + getRequiredLevel() + ")");
+							new ErrorDialog("Error", "You do not have the required level (" + getRequiredLevel() + ")");
 						} catch (Exception exception) {
 							exception.printStackTrace();
 						}
