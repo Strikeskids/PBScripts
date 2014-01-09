@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.wrapper;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
@@ -42,7 +42,7 @@ public enum Sword {
 		this.buttonWidgetId = buttonWidgetId;
 	}
 
-	public boolean clickButton(final LogicailMethodContext ctx, final MakeSword makeSword) {
+	public boolean clickButton(final IMethodContext ctx, final MakeSword makeSword) {
 		final int cooldown = makeSword.getCooldown();
 		final int current = getCurrent(ctx);
 		if (getTarget(ctx) > getCurrent(ctx)) {
@@ -61,7 +61,7 @@ public enum Sword {
 		return false;
 	}
 
-	int getCurrent(LogicailMethodContext ctx) {
+	int getCurrent(IMethodContext ctx) {
 		try {
 			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
 		} catch (Exception e) {
@@ -69,7 +69,7 @@ public enum Sword {
 		}
 	}
 
-	int getTarget(LogicailMethodContext ctx) {
+	int getTarget(IMethodContext ctx) {
 		try {
 			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
 		} catch (Exception e) {
@@ -77,7 +77,7 @@ public enum Sword {
 		}
 	}
 
-	public HitType getRequiredHitType(LogicailMethodContext ctx, MakeSword makeSword) {
+	public HitType getRequiredHitType(IMethodContext ctx, MakeSword makeSword) {
 		final int hitsNeeded = getHitsNeeded(ctx);
 		if (hitsNeeded <= 0) {
 			return null;
@@ -107,14 +107,14 @@ public enum Sword {
 		}
 	}
 
-	public int getHitsNeeded(LogicailMethodContext ctx) {
+	public int getHitsNeeded(IMethodContext ctx) {
 		if (!validate(ctx)) {
 			return 0;
 		}
 		return getTarget(ctx) - getCurrent(ctx);
 	}
 
-	boolean validate(LogicailMethodContext ctx) {
+	boolean validate(IMethodContext ctx) {
 		return getTarget(ctx) > getCurrent(ctx);
 	}
 
@@ -133,7 +133,7 @@ public enum Sword {
 	 *
 	 * @return
 	 */
-	private static int getSwordPartsRemaining(LogicailMethodContext ctx) {
+	private static int getSwordPartsRemaining(IMethodContext ctx) {
 		int hits = 0;
 		for (Sword sword : Sword.values()) {
 			if (sword.validate(ctx)) {

@@ -4,7 +4,7 @@ import com.sk.methods.action.ability.AbilityLevel;
 import com.sk.methods.action.ability.AbilityStyle;
 import com.sk.methods.action.magic.Spellbook;
 import com.sk.methods.action.structure.BarIcon;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.lang.AbstractQuery;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.wrappers.Action.Type;
@@ -15,9 +15,9 @@ import java.util.EnumSet;
 
 public abstract class ActionQuery<T extends Action> extends AbstractQuery<ActionQuery<T>, T> implements
 		Identifiable.Query<ActionQuery<T>> {
-	public LogicailMethodContext ctx;
+	public IMethodContext ctx;
 
-	public ActionQuery(LogicailMethodContext ctx) {
+	public ActionQuery(IMethodContext ctx) {
 		super(ctx);
 		this.ctx = ctx;
 	}

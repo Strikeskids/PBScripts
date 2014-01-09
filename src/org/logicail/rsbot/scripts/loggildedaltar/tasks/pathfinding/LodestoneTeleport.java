@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 
@@ -14,10 +14,10 @@ import java.util.List;
  * Time: 19:28
  */
 public class LodestoneTeleport extends NodePath {
-	protected final Lodestones.Lodestone lodestone;
+	protected final ILodestone.Lodestone lodestone;
 	protected long timeLastTeleport = 0;
 
-	public LodestoneTeleport(LogGildedAltar script, Path path, Lodestones.Lodestone lodestone) {
+	public LodestoneTeleport(LogGildedAltar script, Path path, ILodestone.Lodestone lodestone) {
 		super(script, path);
 		this.lodestone = lodestone;
 	}

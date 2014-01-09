@@ -1,8 +1,8 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
 import com.sk.methods.action.structure.Spell;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.powerbot.script.wrappers.Component;
 
 /**
@@ -11,8 +11,8 @@ import org.powerbot.script.wrappers.Component;
  * Date: 04/01/14
  * Time: 17:29
  */
-public class Magic extends LogicailMethodProvider {
-	public Magic(LogicailMethodContext context) {
+public class IMagic extends IMethodProvider {
+	public IMagic(IMethodContext context) {
 		super(context);
 	}
 

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.methods.Summoning;
 import org.powerbot.script.util.Condition;
@@ -17,24 +17,24 @@ import java.util.concurrent.Callable;
  * Date: 03/01/14
  * Time: 17:00
  */
-public class MySummoning extends Summoning {
+public class ISummoning extends Summoning {
 	// TODO
 	public static final int WIDGET_STORE = 671;
 	public static final int WIDGET_STORE_CLOSE_BUTTON = 13;
 	public static final int WIDGET_ORB = 1430;
 	public static final int WIDGET_ORB_BUTTON = 5;
 
-	protected LogicailMethodContext ctx;
+	protected IMethodContext ctx;
 
-	private final MySummoningHelper store;
+	private final ISummoningStore store;
 
-	public MySummoning(LogicailMethodContext context) {
+	public ISummoning(IMethodContext context) {
 		super(context);
 		ctx = context;
-		store = new MySummoningHelper(context);
+		store = new ISummoningStore(context);
 	}
 
-	public MySummoningHelper getStore() {
+	public ISummoningStore getStore() {
 		return store;
 	}
 

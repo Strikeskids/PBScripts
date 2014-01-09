@@ -1,7 +1,7 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.AbstractScript;
 
@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Enumeration;
 
-public class Painter extends LogicailMethodProvider implements PaintListener {
+public class Painter extends IMethodProvider implements PaintListener {
 	// Public encase want to load custom font
 	public static Font FONT_TITLE = new Font("Arial", Font.BOLD, 14);
 	public static Font FONT_SMALL = new Font("Arial", Font.BOLD, 12);
@@ -23,7 +23,7 @@ public class Painter extends LogicailMethodProvider implements PaintListener {
 	private Point location = new Point(50, 200);
 	private Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
 
-	public Painter(LogicailMethodContext context, AbstractScript script) {
+	public Painter(IMethodContext context, AbstractScript script) {
 		super(context);
 		title = String.format("%s v%s", script.getName(), script.getVersion());
 	}

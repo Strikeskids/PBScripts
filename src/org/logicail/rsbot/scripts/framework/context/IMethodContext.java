@@ -23,21 +23,21 @@ import java.util.logging.Logger;
  * Date: 07/12/13
  * Time: 20:53
  */
-public class LogicailMethodContext extends MethodContext {
+public class IMethodContext extends MethodContext {
 	public final Logger log;
 
 	public boolean debug;
 
 	// Providers
-	public SkillingInterface skillingInterface;
-	public MyBackPack backpack;
-	public MyCamera camera;
-	public MyEquipment equipment;
-	public MySummoning summoning;
-	public MyChat chat;
-	public Lodestones lodestones;
-	public MyMovement movement;
-	public Magic magic;
+	public ISkillingInterface skillingInterface;
+	public IBackpack backpack;
+	public ICamera camera;
+	public IEquipment equipment;
+	public ISummoning summoning;
+	public IChat chat;
+	public ILodestone lodestones;
+	public IMovement movement;
+	public IMagic magic;
 
 	// SK
 	public SkKeyboard keyboard;
@@ -53,7 +53,7 @@ public class LogicailMethodContext extends MethodContext {
 	private volatile boolean shutdown;
 	private volatile boolean paused;
 
-	public LogicailMethodContext(final MethodContext originalContext, AbstractScript script) {
+	public IMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext);
 		this.script = script;
 		log = script.log;
@@ -82,21 +82,21 @@ public class LogicailMethodContext extends MethodContext {
 			}
 		});
 
-		skillingInterface = new SkillingInterface(this);
-		backpack = new MyBackPack(this);
-		camera = new MyCamera(this);
-		equipment = new MyEquipment(this);
-		summoning = new MySummoning(this);
-		chat = new MyChat(this);
-		lodestones = new Lodestones(this);
+		skillingInterface = new ISkillingInterface(this);
+		backpack = new IBackpack(this);
+		camera = new ICamera(this);
+		equipment = new IEquipment(this);
+		summoning = new ISummoning(this);
+		chat = new IChat(this);
+		lodestones = new ILodestone(this);
 
 		/*super.keyboard =*/
 		this.keyboard = new SkKeyboard(this);
 		actionBar = new ActionBar(this);
 		combat = new Combat(this);
 
-		magic = new Magic(this);
-		movement = new MyMovement(this);
+		magic = new IMagic(this);
+		movement = new IMovement(this);
 	}
 
 	public final boolean isPaused() {

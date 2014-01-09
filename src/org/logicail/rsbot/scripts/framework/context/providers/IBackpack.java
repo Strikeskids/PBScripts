@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Backpack;
 
 /**
@@ -9,8 +9,8 @@ import org.powerbot.script.methods.Backpack;
  * Date: 24/12/13
  * Time: 21:58
  */
-public class MyBackPack extends Backpack {
-	public MyBackPack(LogicailMethodContext context) {
+public class IBackpack extends Backpack {
+	public IBackpack(IMethodContext context) {
 		super(context);
 	}
 

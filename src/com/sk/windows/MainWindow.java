@@ -1,6 +1,6 @@
 package com.sk.windows;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Hud;
 
 public enum MainWindow implements Window {
@@ -32,7 +32,7 @@ public enum MainWindow implements Window {
 		this.wind = w;
 	}
 
-	public boolean close(LogicailMethodContext ctx) {
+	public boolean close(IMethodContext ctx) {
 		return ctx.hud.close(wind);
 	}
 
@@ -41,12 +41,12 @@ public enum MainWindow implements Window {
 	}
 
 	@Override
-	public boolean isOpen(LogicailMethodContext ctx) {
+	public boolean isOpen(IMethodContext ctx) {
 		return ctx.hud.isVisible(wind);
 	}
 
 	@Override
-	public boolean open(LogicailMethodContext ctx) {
+	public boolean open(IMethodContext ctx) {
 		return ctx.hud.view(wind);
 	}
 }

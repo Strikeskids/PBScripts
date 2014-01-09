@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.methods.Movement;
@@ -21,10 +21,10 @@ import java.util.concurrent.Callable;
  * Date: 05/01/14
  * Time: 12:57
  */
-public class MyMovement extends Movement {
-	private LogicailMethodContext ctx;
+public class IMovement extends Movement {
+	private IMethodContext ctx;
 
-	public MyMovement(LogicailMethodContext context) {
+	public IMovement(IMethodContext context) {
 		super(context);
 		this.ctx = context;
 	}

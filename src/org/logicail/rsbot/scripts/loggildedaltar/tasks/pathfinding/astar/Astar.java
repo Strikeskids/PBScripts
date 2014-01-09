@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.wrappers.Locatable;
 
@@ -14,7 +14,7 @@ import java.util.Set;
  * Date: 04/01/14
  * Time: 21:07
  */
-public class Astar extends LogicailMethodProvider {
+public class Astar extends IMethodProvider {
 	private final LogGildedAltar script;
 
 	public Astar(LogGildedAltar script) {

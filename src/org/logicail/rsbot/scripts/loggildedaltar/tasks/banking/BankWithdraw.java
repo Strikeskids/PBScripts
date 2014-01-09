@@ -181,7 +181,7 @@ public class BankWithdraw extends BankingAbstract {
 							Task.sleep(50, 500);
 						}
 						if (Inventory.contains(Settings.aura.getId())) {
-							if (MyEquipment.equip(Settings.aura.getId())) {
+							if (IEquipment.equip(Settings.aura.getId())) {
 								Task.sleep(50, 500);
 							}
 						}

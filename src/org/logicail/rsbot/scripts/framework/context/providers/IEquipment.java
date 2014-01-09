@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Equipment;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
@@ -14,8 +14,8 @@ import java.util.concurrent.Callable;
  * Date: 03/01/14
  * Time: 16:45
  */
-public class MyEquipment extends Equipment {
-	public MyEquipment(LogicailMethodContext context) {
+public class IEquipment extends Equipment {
+	public IEquipment(IMethodContext context) {
 		super(context);
 	}
 

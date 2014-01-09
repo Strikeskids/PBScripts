@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.wrapper;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Component;
@@ -21,7 +21,7 @@ public enum HitType {
 
 	private final int widgetButton;
 
-	public static boolean setHitType(final LogicailMethodContext ctx, final HitType hitType) {
+	public static boolean setHitType(final IMethodContext ctx, final HitType hitType) {
 		if (getCurrentHitType(ctx) == hitType) {
 			return true;
 		}
@@ -41,11 +41,11 @@ public enum HitType {
 		return getCurrentHitType(ctx) == hitType;
 	}
 
-	Component getButtonWidget(LogicailMethodContext ctx) {
+	Component getButtonWidget(IMethodContext ctx) {
 		return ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, widgetButton);
 	}
 
-	public static HitType getCurrentHitType(LogicailMethodContext ctx) {
+	public static HitType getCurrentHitType(IMethodContext ctx) {
 		return HitType.values()[ctx.settings.get(132, 16, 3)];
 	}
 

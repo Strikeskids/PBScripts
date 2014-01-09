@@ -8,10 +8,10 @@ import org.powerbot.script.methods.MethodProvider;
  * Date: 07/12/13
  * Time: 20:52
  */
-public class LogicailMethodProvider extends MethodProvider {
-	protected final LogicailMethodContext ctx;
+public class IMethodProvider extends MethodProvider {
+	protected final IMethodContext ctx;
 
-	public LogicailMethodProvider(LogicailMethodContext context) {
+	public IMethodProvider(IMethodContext context) {
 		super(context);
 		this.ctx = context;
 	}

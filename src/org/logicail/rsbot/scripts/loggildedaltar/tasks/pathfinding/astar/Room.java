@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.wrappers.GameObject;
@@ -16,7 +16,7 @@ import java.util.Set;
  * Date: 04/01/14
  * Time: 21:09
  */
-public class Room extends LogicailMethodProvider {
+public class Room extends IMethodProvider {
 	public static final int[] DOOR_CLOSED = {
 			13006, 13007, // Whitewashed stone
 			13015, 13016, // Tropical
@@ -65,7 +65,7 @@ public class Room extends LogicailMethodProvider {
 	private final int index;
 	private Set<Room> neighbours = new HashSet<Room>();
 
-	public Room(LogicailMethodContext context, RoomStorage roomStorage, int localX, int localY) {
+	public Room(IMethodContext context, RoomStorage roomStorage, int localX, int localY) {
 		super(context);
 		this.roomStorage = roomStorage;
 		this.localX = localX;

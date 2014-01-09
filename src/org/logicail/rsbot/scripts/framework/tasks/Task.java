@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.framework.tasks;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +9,7 @@ import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
  * Date: 07/12/13
  * Time: 20:58
  */
-public abstract class Task<T extends LogicailScript> extends LogicailMethodProvider implements Runnable {
+public abstract class Task<T extends LogicailScript> extends IMethodProvider implements Runnable {
 	public T script;
 
 	public Task(T script) {

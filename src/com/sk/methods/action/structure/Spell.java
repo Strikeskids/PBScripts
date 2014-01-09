@@ -3,7 +3,7 @@ package com.sk.methods.action.structure;
 import com.sk.methods.action.magic.Rune;
 import com.sk.methods.action.magic.Spellbook;
 import com.sk.windows.Window;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.wrappers.Component;
 
 public interface Spell extends BookIcon {
@@ -34,7 +34,7 @@ public interface Spell extends BookIcon {
 		}
 
 		@Override
-		public Component getComponent(LogicailMethodContext ctx) {
+		public Component getComponent(IMethodContext ctx) {
 			return ctx.widgets.get(0, 0);
 		}
 
@@ -54,7 +54,7 @@ public interface Spell extends BookIcon {
 		}
 
 		@Override
-		public Component getCooldownComponent(LogicailMethodContext ctx) {
+		public Component getCooldownComponent(IMethodContext ctx) {
 			return getComponent(ctx);
 		}
 

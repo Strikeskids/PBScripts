@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
@@ -145,8 +145,8 @@ public class MakeSword extends ArtisanArmourerTask {
 		return ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).isValid();
 	}
 
-	static class SwordComparator extends LogicailMethodProvider implements Comparator<Sword> {
-		SwordComparator(LogicailMethodContext context) {
+	static class SwordComparator extends IMethodProvider implements Comparator<Sword> {
+		SwordComparator(IMethodContext context) {
 			super(context);
 		}
 

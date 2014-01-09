@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille;
 
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
@@ -26,7 +26,7 @@ public class YanilleLodestone extends LodestoneTeleport {
 	private static final Area DOOR_AREA = new Area(new Tile(2530, 3094, 0), new Tile(2540, 3089, 0));
 
 	public YanilleLodestone(LogGildedAltar script) {
-		super(script, Path.YANILLE_LODESTONE, Lodestones.Lodestone.YANILlE);
+		super(script, Path.YANILLE_LODESTONE, ILodestone.Lodestone.YANILlE);
 	}
 
 	@Override

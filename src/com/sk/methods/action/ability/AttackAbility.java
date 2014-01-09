@@ -3,7 +3,7 @@ package com.sk.methods.action.ability;
 import com.sk.methods.action.structure.Ability;
 import com.sk.windows.InnerAbilityTab;
 import com.sk.windows.Window;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.wrappers.Component;
 
@@ -90,12 +90,12 @@ public enum AttackAbility implements Ability {
 	}
 
 	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
+	public Component getComponent(IMethodContext ctx) {
 		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
-	public Component getCooldownComponent(LogicailMethodContext ctx) {
+	public Component getCooldownComponent(IMethodContext ctx) {
 		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(childIndex);
 	}
 

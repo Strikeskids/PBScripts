@@ -3,7 +3,7 @@ package com.sk.methods.action;
 import com.sk.methods.action.ability.*;
 import com.sk.methods.action.structure.BarIcon;
 import com.sk.util.time.TimedCondition;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.wrappers.Action.Type;
 import org.powerbot.script.wrappers.Component;
@@ -43,13 +43,13 @@ public class ActionBar extends ActionQuery<Action> {
 
 	private static final int ADRENALINE_SETTING = 679, MAXIMUM_ADRENALINE = 1000;
 
-	public LogicailMethodContext ctx;
+	public IMethodContext ctx;
 	public MethodContext octx;
 	public Logger log = Logger.getLogger(getClass().getSimpleName());
 
 	private Map<Integer, BarIcon> icons = new HashMap<Integer, BarIcon>();
 
-	public ActionBar(LogicailMethodContext ctx) {
+	public ActionBar(IMethodContext ctx) {
 		super(ctx);
 		this.ctx = ctx;
 		this.octx = ctx;

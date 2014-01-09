@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.methods.Camera;
 import org.powerbot.script.util.Condition;
@@ -19,10 +19,10 @@ import java.util.concurrent.Callable;
  * Date: 26/12/13
  * Time: 16:05
  */
-public class MyCamera extends Camera {
-	private LogicailMethodContext ctx;
+public class ICamera extends Camera {
+	private IMethodContext ctx;
 
-	public MyCamera(LogicailMethodContext context) {
+	public ICamera(IMethodContext context) {
 		super(context);
 		ctx = context;
 	}
@@ -37,7 +37,7 @@ public class MyCamera extends Camera {
 	 */
 	public boolean prepare(final Locatable locatable) {
 		if (!(locatable instanceof Interactive)) {
-			ctx.log.severe("MyCamera.prepare: Not an instance of interactive");
+			ctx.log.severe("ICamera.prepare: Not an instance of interactive");
 			return false;
 		}
 

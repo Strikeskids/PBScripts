@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.lang.ItemQuery;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Item;
@@ -14,11 +14,11 @@ import java.util.List;
  * Date: 03/01/14
  * Time: 17:58
  */
-public class MySummoningHelper extends ItemQuery<Item> {
+public class ISummoningStore extends ItemQuery<Item> {
 	public static final int WIDGET_STORE = 671;
 	public static final int WIDGET_STORE_ITEMS = 27;
 
-	public MySummoningHelper(LogicailMethodContext context) {
+	public ISummoningStore(IMethodContext context) {
 		super(context);
 	}
 

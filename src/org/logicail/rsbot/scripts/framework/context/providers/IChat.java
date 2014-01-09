@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Chat;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Component;
@@ -13,11 +13,11 @@ import java.util.concurrent.Callable;
  * Date: 03/01/14
  * Time: 18:18
  */
-public class MyChat extends Chat {
+public class IChat extends Chat {
 	public static final int WIDGET_INPUT = 752;
 	public static final int WIDGET_INPUT_TEXT_CHILD = 5;
 
-	public MyChat(LogicailMethodContext context) {
+	public IChat(IMethodContext context) {
 		super(context);
 	}
 

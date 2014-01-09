@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.lang.ItemQuery;
@@ -62,7 +62,7 @@ public class ItemTeleport extends NodePath {
 	 * @param ids
 	 * @return
 	 */
-	public static boolean useItemTeleport(LogicailMethodContext ctx, String destination, int tries, int... ids) {
+	public static boolean useItemTeleport(IMethodContext ctx, String destination, int tries, int... ids) {
 		// TODO Check action bar
 
 		if (ctx.hud.isVisible(Hud.Window.WORN_EQUIPMENT)) {
@@ -74,7 +74,7 @@ public class ItemTeleport extends NodePath {
 				|| itemTeleport(ctx, ctx.equipment.select().id(ids), Hud.Window.WORN_EQUIPMENT, destination, tries);
 	}
 
-	private static boolean itemTeleport(final LogicailMethodContext ctx, ItemQuery<Item> query, Hud.Window window, String destination, int tries) {
+	private static boolean itemTeleport(final IMethodContext ctx, ItemQuery<Item> query, Hud.Window window, String destination, int tries) {
 		for (Item item : query.first()) {
 			destination = destination.toLowerCase();
 

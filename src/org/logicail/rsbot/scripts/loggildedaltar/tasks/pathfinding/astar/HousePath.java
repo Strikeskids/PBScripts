@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * Date: 04/01/14
  * Time: 21:09
  */
-public class HousePath extends LogicailMethodProvider {
+public class HousePath extends IMethodProvider {
 	public double cost;
 	public double estimate;
 	private final LogGildedAltar script;

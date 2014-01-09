@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.burthorpe;
 
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
@@ -19,7 +19,7 @@ public class BurthorpeLodestone extends LodestoneTeleport {
 			new Tile(2891, 3527, 0)});
 
 	public BurthorpeLodestone(LogGildedAltar script) {
-		super(script, Path.BURTHORPE_LODESTONE, Lodestones.Lodestone.BURTHORPE);
+		super(script, Path.BURTHORPE_LODESTONE, ILodestone.Lodestone.BURTHORPE);
 	}
 
 	@Override

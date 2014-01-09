@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
@@ -95,10 +95,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //		for (int i = 0; i < 10; i++) {
 //			properties.put("ELDER_TREE_" + i, ctx.settings.get(3881, i, 0x1) == 0x1);
 //		}
-		final Lodestones.Lodestone previousDestination = ctx.lodestones.getPreviousDestination();
+		final ILodestone.Lodestone previousDestination = ctx.lodestones.getPreviousDestination();
 		properties.put("Previous Lodestone", previousDestination == null ? "null" : previousDestination.name());
 
-		for (Lodestones.Lodestone lodestone : Lodestones.Lodestone.values()) {
+		for (ILodestone.Lodestone lodestone : ILodestone.Lodestone.values()) {
 			properties.put(lodestone.name(), lodestone.isUnlocked(ctx));
 		}
 

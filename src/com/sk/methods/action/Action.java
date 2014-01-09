@@ -3,7 +3,7 @@ package com.sk.methods.action;
 import com.sk.methods.action.structure.Ability;
 import com.sk.methods.action.structure.BarIcon;
 import com.sk.methods.action.structure.Spell;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Widget;
 
@@ -13,11 +13,11 @@ public class Action extends org.powerbot.script.wrappers.Action {
 	private static final int AVAILABILITY_CHILD = 96;
 	private static final int AVAILABLE_TEXT_COLOR = 0xFFFFFF;
 
-	protected LogicailMethodContext ctx;
+	protected IMethodContext ctx;
 	private BarIcon icon;
 	private final int slot;
 
-	public Action(LogicailMethodContext ctx, int slot, Type type, int id, BarIcon ico) {
+	public Action(IMethodContext ctx, int slot, Type type, int id, BarIcon ico) {
 		super(ctx, slot, type, id);
 		this.ctx = ctx;
 		this.icon = ico;

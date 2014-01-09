@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.Tree;
 import org.logicail.rsbot.util.LinkedProperties;
@@ -20,13 +20,13 @@ import java.awt.*;
  * Time: 21:07
  */
 public abstract class LogicailScript<T extends LogicailScript> extends PollingScript implements PaintListener {
-	public final LogicailMethodContext ctx;
+	public final IMethodContext ctx;
 	public final Tree<T> tree;
 	protected JFrame gui;
 	private final Painter paint;
 
 	protected LogicailScript() {
-		this.ctx = new LogicailMethodContext(super.ctx, this);
+		this.ctx = new IMethodContext(super.ctx, this);
 
 		tree = new Tree<T>((T) this);
 		paint = new Painter(ctx, this);

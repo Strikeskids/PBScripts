@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.taverley;
 
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  */
 public class TaverleyLodestone extends LodestoneTeleport {
 	public TaverleyLodestone(LogGildedAltar script) {
-		super(script, Path.TAVERLEY_LODESTONE, Lodestones.Lodestone.TAVERLEY);
+		super(script, Path.TAVERLEY_LODESTONE, ILodestone.Lodestone.TAVERLEY);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.burthorpe;
 
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.RechargeSummoning;
@@ -26,14 +26,14 @@ public class BurthorpeRecharge extends RechargeSummoning {
 
 	@Override
 	public boolean isValid() {
-		return locationAttribute.isInLargeArea(ctx) || Lodestones.Lodestone.BURTHORPE.isUnlocked(ctx);
+		return locationAttribute.isInLargeArea(ctx) || ILodestone.Lodestone.BURTHORPE.isUnlocked(ctx);
 	}
 
 	@Override
 	public void run() {
 		options.status = "Burthorpe rechange summoning";
 		if (!locationAttribute.isInLargeArea(ctx)) {
-			ctx.lodestones.teleport(Lodestones.Lodestone.BURTHORPE);
+			ctx.lodestones.teleport(ILodestone.Lodestone.BURTHORPE);
 		} else {
 			if (!locationAttribute.isInObeliskArea(ctx)) {
 				if (doSmall()) {

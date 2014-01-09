@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.edgeville;
 
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
@@ -38,7 +38,7 @@ public class HouseGlory extends NodePath {
 	@Override
 	public boolean isValid() {
 		return !locationAttribute.isInSmallArea(ctx)
-				&& (locationAttribute.isInLargeArea(ctx) || (script.houseTask.isInHouse() && !ctx.objects.select().id(MOUNTED_GLORY).isEmpty()) || Lodestones.Lodestone.EDGEVILLE.isUnlocked(ctx));
+				&& (locationAttribute.isInLargeArea(ctx) || (script.houseTask.isInHouse() && !ctx.objects.select().id(MOUNTED_GLORY).isEmpty()) || ILodestone.Lodestone.EDGEVILLE.isUnlocked(ctx));
 	}
 
 	@Override
@@ -130,8 +130,8 @@ public class HouseGlory extends NodePath {
 			}
 		} else {
 			if (!locationAttribute.isInLargeArea(ctx)) {
-				if (Lodestones.Lodestone.EDGEVILLE.isUnlocked(ctx)) {
-					ctx.lodestones.teleport(Lodestones.Lodestone.EDGEVILLE);
+				if (ILodestone.Lodestone.EDGEVILLE.isUnlocked(ctx)) {
+					ctx.lodestones.teleport(ILodestone.Lodestone.EDGEVILLE);
 				}
 			} else if (!locationAttribute.isInSmallArea(ctx)) {
 				doSmall();

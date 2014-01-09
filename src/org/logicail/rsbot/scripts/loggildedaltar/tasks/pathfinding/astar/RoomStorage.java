@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.wrappers.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * Date: 04/01/14
  * Time: 21:36
  */
-public class RoomStorage extends LogicailMethodProvider {
+public class RoomStorage extends IMethodProvider {
 	private final Room[] rooms = new Room[81];
 	private final LogGildedAltar script;
 

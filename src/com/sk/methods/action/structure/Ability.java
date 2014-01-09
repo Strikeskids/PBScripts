@@ -1,6 +1,6 @@
 package com.sk.methods.action.structure;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.wrappers.Component;
 
 import com.sk.methods.action.ability.AbilityLevel;
@@ -40,7 +40,7 @@ public interface Ability extends BookIcon {
 		}
 
 		@Override
-		public Component getComponent(LogicailMethodContext ctx) {
+		public Component getComponent(IMethodContext ctx) {
 			return ctx.widgets.get(0, 0);
 		}
 
@@ -70,7 +70,7 @@ public interface Ability extends BookIcon {
 		}
 
 		@Override
-		public Component getCooldownComponent(LogicailMethodContext ctx) {
+		public Component getCooldownComponent(IMethodContext ctx) {
 			return getComponent(ctx);
 		}
 

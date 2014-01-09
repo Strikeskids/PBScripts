@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  * Date: 03/01/14
  * Time: 19:29
  */
-public class Lodestones extends LogicailMethodProvider {
+public class ILodestone extends IMethodProvider {
 	private final static int TELEPORT_INTERFACE = 1092;
 	private final static int TELEPORT_INTERFACE_CHILD = 38;
 	private final static int OPEN_TELEPORT_INTERFACE = 1465;
@@ -25,7 +25,7 @@ public class Lodestones extends LogicailMethodProvider {
 	//private final static int[] TELEPORT_ANIMATIONS = {16385, 16386, 16393};
 	private final static int SETTING_LODESTONES = 3;
 
-	public Lodestones(LogicailMethodContext context) {
+	public ILodestone(IMethodContext context) {
 		super(context);
 	}
 
@@ -60,10 +60,10 @@ public class Lodestones extends LogicailMethodProvider {
 			}
 
 			if (isPreviousDestination(lodestone)) {
-				if (button.interact("Previous-destination")) {
+				if (button.interact("Previous Destination")) {
 					interacted = true;
 				}
-			} else if (button.interact("Home-teleport")) {
+			} else if (button.interact("Home Teleport")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -168,10 +168,10 @@ public class Lodestones extends LogicailMethodProvider {
 		}
 	}
 
-	class TeleportCondition extends LogicailMethodProvider implements Callable<Boolean> {
+	class TeleportCondition extends IMethodProvider implements Callable<Boolean> {
 		private final Lodestone lodestone;
 
-		TeleportCondition(LogicailMethodContext ctx, Lodestone lodestone) {
+		TeleportCondition(IMethodContext ctx, Lodestone lodestone) {
 			super(ctx);
 			this.lodestone = lodestone;
 		}

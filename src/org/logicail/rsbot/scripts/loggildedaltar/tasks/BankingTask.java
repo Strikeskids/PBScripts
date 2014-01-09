@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
-import org.logicail.rsbot.scripts.framework.context.providers.Lodestones;
+import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
@@ -47,7 +47,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 			case CASTLE_WARS_RING_OF_DUELING:
 				return new ItemTeleport(script, path, "Castle Wars", Equipment.Slot.RING, 2566, 2564, 2562, 2560, 2558, 2556, 2554, 2552);
 			case LUNAR_ISLE_LODESTONE:
-				return new LodestoneTeleport(script, Path.LUNAR_ISLE_LODESTONE, Lodestones.Lodestone.LUNAR_ISLE);
+				return new LodestoneTeleport(script, Path.LUNAR_ISLE_LODESTONE, ILodestone.Lodestone.LUNAR_ISLE);
 			case BURTHORPE_LODESTONE:
 				return new BurthorpeLodestone(script);
 			case DAEMONHEIM_RING_OF_KINSHIP:
@@ -59,7 +59,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 			case FIGHT_CAVES:
 				return new FightCavesBank(script);
 			case EDGEVILLE_LODESTONE:
-				return new LodestoneTeleport(script, path, Lodestones.Lodestone.EDGEVILLE);
+				return new LodestoneTeleport(script, path, ILodestone.Lodestone.EDGEVILLE);
 			case CANIFIS:
 				return new KharyrllPortalRoom(script);
 			case BURTHORPE_TROLL_INVASION:

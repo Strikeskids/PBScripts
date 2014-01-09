@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house;
 
-import org.logicail.rsbot.scripts.framework.context.providers.MyChat;
+import org.logicail.rsbot.scripts.framework.context.providers.IChat;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.OpenHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttribute;
@@ -123,7 +123,7 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 			if (ctx.chat.select().text("Go to a friend's house.").isEmpty()) {
 				if (options.useOtherHouse && ctx.chat.isInputWidgetOpen()) {
 					ctx.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
-					Component previous = ctx.widgets.get(MyChat.WIDGET_INPUT, 3).getChild(0);
+					Component previous = ctx.widgets.get(IChat.WIDGET_INPUT, 3).getChild(0);
 					if (previous.isValid() && previous.isOnScreen() && previous.getText().toLowerCase().equals("last name entered: " + openHouse.getPlayerName()) && previous.interact("Use:")) {
 						entering = true;
 					} else {

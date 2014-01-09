@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.util.TargetableRectangle;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.util.Condition;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * Date: 24/12/13
  * Time: 19:01
  */
-public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.powerbot.script.wrappers.Item> {
+public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.powerbot.script.wrappers.Item> {
 	private static final int WIDGET_MAIN = 1370;
 	private static final int WIDGET_MAIN_ACTION = 40;
 	private static final int WIDGET_MAIN_ACTION_TOOLTIP = 37;
@@ -39,10 +39,10 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 	private static final int WIDGET_PRODUCTION_MAIN = 1251;
 	private static final int WIDGET_PRODUCTION_PROGRESS = 33;
 	private static final int WIDGET_PRODUCTION_CANCEL = 48;
-	protected LogicailMethodContext ctx;
+	protected IMethodContext ctx;
 
 
-	public SkillingInterface(LogicailMethodContext context) {
+	public ISkillingInterface(IMethodContext context) {
 		super(context);
 		ctx = context;
 	}
@@ -202,7 +202,7 @@ public class SkillingInterface extends org.powerbot.script.lang.ItemQuery<org.po
 	}
 
 	public boolean select(final int categoryIndex, final int itemId) {
-		//ctx.log.info(String.format("SkillingInterface %d %d", categoryIndex, itemId));
+		//ctx.log.info(String.format("ISkillingInterface %d %d", categoryIndex, itemId));
 		if (!isOpen()) {
 			return false;
 		}

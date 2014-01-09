@@ -1,6 +1,6 @@
 package com.sk.methods.action.magic;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.wrappers.Component;
 
@@ -98,12 +98,12 @@ SPELLBOOK_SWAP(InnerAbilityTab.SKILLING_SPELL, 2470, 96, 154, 14441, new Rune(Ru
 	}
 
 	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
+	public Component getComponent(IMethodContext ctx) {
 		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
 	}
 
 	@Override
-	public Component getCooldownComponent(LogicailMethodContext ctx) {
+	public Component getCooldownComponent(IMethodContext ctx) {
 		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
 	}
 

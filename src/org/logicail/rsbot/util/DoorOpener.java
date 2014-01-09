@@ -1,7 +1,7 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.powerbot.script.lang.ChainingIterator;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.GameObject;
@@ -14,8 +14,8 @@ import java.util.concurrent.Callable;
  * Date: 03/01/14
  * Time: 21:23
  */
-public class DoorOpener extends LogicailMethodProvider implements ChainingIterator<GameObject> {
-	public DoorOpener(LogicailMethodContext context) {
+public class DoorOpener extends IMethodProvider implements ChainingIterator<GameObject> {
+	public DoorOpener(IMethodContext context) {
 		super(context);
 	}
 
@@ -24,7 +24,7 @@ public class DoorOpener extends LogicailMethodProvider implements ChainingIterat
 		return open(ctx, door);
 	}
 
-	public static boolean open(LogicailMethodContext ctx, final GameObject door) {
+	public static boolean open(IMethodContext ctx, final GameObject door) {
 		if (ctx.camera.prepare(door)) {
 			if (door.interact("Open")) {
 				if (Condition.wait(new Callable<Boolean>() {

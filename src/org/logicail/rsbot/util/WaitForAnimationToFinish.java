@@ -1,7 +1,7 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.powerbot.script.wrappers.Player;
 
@@ -13,11 +13,11 @@ import java.util.concurrent.Callable;
  * Date: 05/01/14
  * Time: 16:13
  */
-public class WaitForAnimationToFinish extends LogicailMethodProvider implements Callable<Boolean> {
+public class WaitForAnimationToFinish extends IMethodProvider implements Callable<Boolean> {
 	private final int animationId;
 	private boolean done = false;
 
-	public WaitForAnimationToFinish(LogicailMethodContext context, int animationId) {
+	public WaitForAnimationToFinish(IMethodContext context, int animationId) {
 		super(context);
 		this.animationId = animationId;
 	}

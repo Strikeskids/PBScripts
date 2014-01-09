@@ -1,6 +1,6 @@
 package com.sk.methods.action.ability;
 
-import org.logicail.rsbot.scripts.framework.context.LogicailMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.wrappers.Component;
 
@@ -84,12 +84,12 @@ SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),
 	}
 
 	@Override
-	public Component getComponent(LogicailMethodContext ctx) {
+	public Component getComponent(IMethodContext ctx) {
 		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
 	}
 
 	@Override
-	public Component getCooldownComponent(LogicailMethodContext ctx) {
+	public Component getCooldownComponent(IMethodContext ctx) {
 		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(childIndex);
 	}
 
