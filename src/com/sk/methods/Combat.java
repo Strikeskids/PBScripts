@@ -15,7 +15,7 @@ public class Combat extends MethodProvider {
 	public Combat(MethodContext ctx) {
 		super(ctx);
 	}
-	
+
 	public Actor getTarget() {
 		return target;
 	}

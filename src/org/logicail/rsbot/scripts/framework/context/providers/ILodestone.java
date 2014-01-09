@@ -2,13 +2,16 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.powerbot.script.methods.Menu;
 import org.powerbot.script.methods.MethodContext;
+import org.powerbot.script.methods.MethodProvider;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
 
+import java.awt.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -19,30 +22,29 @@ import java.util.concurrent.Callable;
  */
 public class ILodestone extends IMethodProvider {
 	private final static int TELEPORT_INTERFACE = 1092;
+	private final static int TELEPORT_INTERFACE_HOVERED = 61;
 	private final static int TELEPORT_INTERFACE_CHILD = 38;
 	private final static int OPEN_TELEPORT_INTERFACE = 1465;
 	private final static int OPEN_TELEPORT_INTERFACE_CHILD = 10;
+	private static final int SETTING_LODESTONES = 3;
 	//private final static int[] TELEPORT_ANIMATIONS = {16385, 16386, 16393};
-	private final static int SETTING_LODESTONES = 3;
 
 	public ILodestone(IMethodContext context) {
 		super(context);
-	}
-
-	public Lodestone getPreviousDestination() {
-		final int i = ctx.settings.get(SETTING_LODESTONES, 26, 0x1f);
-		final Lodestone[] lodestones = Lodestone.values();
-		return lodestones.length < i ? lodestones[i] : null;
 	}
 
 	public boolean teleport(Lodestone lodestone) {
 		return teleport(lodestone, false);
 	}
 
-	public boolean teleport(Lodestone lodestone, boolean interruptible) {
-		final Tile location = lodestone.getLocation();
-		if (location.distanceTo(ctx.players.local()) < 10) {
-			ctx.movement.stepTowards(location.randomize(2, 2));
+	public boolean teleport(final Lodestone lodestone, boolean interruptible) {
+		if (lodestone == null) {
+			return false;
+		}
+
+		final Tile lodestoneLocation = lodestone.getLocation();
+		if (lodestoneLocation.distanceTo(ctx.players.local()) < 10) {
+			ctx.movement.stepTowards(lodestoneLocation.randomize(2, 2));
 			return true;
 		}
 
@@ -54,57 +56,82 @@ public class ILodestone extends IMethodProvider {
 		boolean interacted = false;
 
 		if (!isOpen()) {
-			final Component button = getButton();
-			if (!button.isValid()) {
+			final Component mapButton = getMapButton();
+			if (!mapButton.isValid()) {
 				return false;
 			}
 
-			if (isPreviousDestination(lodestone)) {
-				if (button.interact("Previous Destination")) {
+			if (lodestone.isPreviousDestination(ctx)) {
+				if (mapButton.interact("Previous destination")) {
 					interacted = true;
 				}
-			} else if (button.interact("Home Teleport")) {
+			} else if (mapButton.interact("Teleport")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return isOpen();
 					}
-				});
+				}, Random.nextInt(200, 400), Random.nextInt(5, 10));
 			}
 		}
 
 		if (isOpen()) {
-			final Component component = lodestone.getComponent(ctx);
-			if (component.isValid() && component.interact("Teleport")) {
-				interacted = true;
+			final Component lodestoneComponent = lodestone.getComponent(ctx);
+			if (Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					if (!lodestoneComponent.isValid()) {
+						return false;
+					}
+					if (getHighlightedLodestone() != lodestone) {
+						lodestoneComponent.hover();
+						return getHighlightedLodestone() == lodestone;
+					}
+					return ctx.menu.indexOf(Menu.filter("Teleport")) > -1;
+				}
+			}, Random.nextInt(100, 200), Random.nextInt(5, 10))) {
+				sleep(100, 500);
+				if (ctx.menu.click(Menu.filter("Teleport"))) {
+					interacted = true;
+				}
 			}
 		}
 
-		if (interacted) {
-			return interruptible || waitForTeleport(lodestone);
-		}
-
-
-		return false;
+		return interacted && (interruptible || Condition.wait(new TeleportCondition(ctx, lodestone), Random.nextInt(400, 600), Random.nextInt(33, 40)));
 	}
 
-	public Component getButton() {
+	private Lodestone getHighlightedLodestone() {
+		final Component component = ctx.widgets.get(TELEPORT_INTERFACE, TELEPORT_INTERFACE_HOVERED);
+		if (isOpen() && component.isValid() && component.isVisible()) {
+			// Find nearest lodestone
+			final Point point = component.getAbsoluteLocation();
+			final int x = point.x + 5;
+			final int y = point.y + 5;
+			for (Lodestone lodestone : Lodestone.values()) {
+				final Point absoluteLocation = lodestone.getComponent(ctx).getAbsoluteLocation();
+				if (x == absoluteLocation.x && y == absoluteLocation.y) {
+					return lodestone;
+				}
+			}
+		}
+		return null;
+	}
+
+	private Component getMapButton() {
 		return ctx.widgets.get(OPEN_TELEPORT_INTERFACE, OPEN_TELEPORT_INTERFACE_CHILD);
 	}
 
-	public boolean isOpen() {
+	private boolean isOpen() {
 		return ctx.widgets.get(TELEPORT_INTERFACE, TELEPORT_INTERFACE_CHILD).isValid();
 	}
 
-	public boolean isPreviousDestination(Lodestone lodestone) {
-		return ctx.settings.get(SETTING_LODESTONES, 26, 0x1f) == lodestone.ordinal();
-	}
-
-	private boolean waitForTeleport(final Lodestone lodestone) {
-		return Condition.wait(new TeleportCondition(ctx, lodestone), Random.nextInt(120, 160), 100);
-	}
-
+	// Note order important for ordinal usage
 	public static enum Lodestone {
+		// Quest settings
+		BANDIT_CAMP(new Tile(3214, 2954, 0), 2151, 0, 0x7fff, 15, 7),
+		LUNAR_ISLE(new Tile(2085, 3914, 0), 2253, 0, 0xfffff, 190, 61),
+
+		// Setting 3
 		AL_KHARID(new Tile(3297, 3184, 0)),
 		ARDOUGNE(new Tile(2634, 3348, 0)),
 		BURTHORPE(new Tile(2899, 3544, 0)),
@@ -124,11 +151,7 @@ public class ILodestone extends IMethodProvider {
 		KARAMJA(new Tile(2761, 3148, 0)),
 		OOGLOG(new Tile(2533, 2871, 0)),
 		TIRANNWN(new Tile(2254, 3150, 0)),
-		WILDERNESS_VOLCANO(new Tile(3142, 3636, 0)),
-
-		// Quest settings
-		BANDIT_CAMP(new Tile(3214, 2954, 0), 2151, 0, 0x7fff, 15, 7),
-		LUNAR_ISLE(new Tile(2085, 3914, 0), 2253, 0, 0xfffff, 190, 61);
+		WILDERNESS_VOLCANO(new Tile(3142, 3636, 0));
 
 		private final Tile location;
 		private final int setting;
@@ -139,11 +162,11 @@ public class ILodestone extends IMethodProvider {
 
 		Lodestone(Tile location) {
 			this.location = location;
-			this.setting = 3;
+			this.setting = ILodestone.SETTING_LODESTONES;
 			this.shift = ordinal();
 			this.mask = 1;
-			this.component = 40 + ordinal();
-			unlockedValue = 1;
+			this.component = 38 + ordinal();
+			this.unlockedValue = 1;
 		}
 
 		Lodestone(Tile location, int setting, int shift, int mask, int unlockedValue, int component) {
@@ -155,7 +178,7 @@ public class ILodestone extends IMethodProvider {
 			this.unlockedValue = unlockedValue;
 		}
 
-		public Component getComponent(MethodContext ctx) {
+		Component getComponent(MethodContext ctx) {
 			return ctx.widgets.get(TELEPORT_INTERFACE, component);
 		}
 
@@ -166,12 +189,16 @@ public class ILodestone extends IMethodProvider {
 		public boolean isUnlocked(MethodContext ctx) {
 			return ctx.settings.get(setting, shift, mask) == unlockedValue;
 		}
+
+		boolean isPreviousDestination(MethodContext ctx) {
+			return ctx.settings.get(ILodestone.SETTING_LODESTONES, 26, 0x1f) == ordinal() + 1;
+		}
 	}
 
-	class TeleportCondition extends IMethodProvider implements Callable<Boolean> {
+	class TeleportCondition extends MethodProvider implements Callable<Boolean> {
 		private final Lodestone lodestone;
 
-		TeleportCondition(IMethodContext ctx, Lodestone lodestone) {
+		TeleportCondition(MethodContext ctx, Lodestone lodestone) {
 			super(ctx);
 			this.lodestone = lodestone;
 		}

@@ -1,27 +1,25 @@
 package com.sk.methods.action.ability;
 
+import com.sk.methods.action.structure.Ability;
+import com.sk.windows.InnerAbilityTab;
+import com.sk.windows.Window;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.wrappers.Component;
 
-import com.sk.methods.action.structure.Ability;
-import com.sk.windows.InnerAbilityTab;
-import com.sk.windows.Window;
-
 public enum DefenceAbility implements Ability {
 	ANTICIPATION(AbilityLevel.BASIC, 1, 14219, 3, 19, 25, 0),
-BASH(AbilityLevel.BASIC, 6, 14224, 8, 99, 15, 0),
-REVENGE(AbilityLevel.THRESHOLD, 9, 14227, 15, 147, 20, 0),
-PROVOKE(AbilityLevel.BASIC, 3, 14221, 24, 51, 10, 0),
-IMMORTALITY(AbilityLevel.ULTIMATE, 12, 14230, 29, 195, 120, 0),
-FREEDOM(AbilityLevel.BASIC, 2, 14220, 34, 35, 30, 0),
-REFLECT(AbilityLevel.THRESHOLD, 7, 14225, 34, 115, 15, 0),
-RESONANCE(AbilityLevel.BASIC, 4, 14222, 48, 67, 30, 0),
-REJUVENATE(AbilityLevel.ULTIMATE, 11, 14229, 52, 179, 60, 0),
-DEBILITATE(AbilityLevel.THRESHOLD, 8, 14226, 55, 131, 30, 0),
-PREPARATION(AbilityLevel.BASIC, 5, 14223, 67, 83, 5, 0),
-BARRICADE(AbilityLevel.ULTIMATE, 10, 14228, 81, 163, 60, 0),
-;
+	BASH(AbilityLevel.BASIC, 6, 14224, 8, 99, 15, 0),
+	REVENGE(AbilityLevel.THRESHOLD, 9, 14227, 15, 147, 20, 0),
+	PROVOKE(AbilityLevel.BASIC, 3, 14221, 24, 51, 10, 0),
+	IMMORTALITY(AbilityLevel.ULTIMATE, 12, 14230, 29, 195, 120, 0),
+	FREEDOM(AbilityLevel.BASIC, 2, 14220, 34, 35, 30, 0),
+	REFLECT(AbilityLevel.THRESHOLD, 7, 14225, 34, 115, 15, 0),
+	RESONANCE(AbilityLevel.BASIC, 4, 14222, 48, 67, 30, 0),
+	REJUVENATE(AbilityLevel.ULTIMATE, 11, 14229, 52, 179, 60, 0),
+	DEBILITATE(AbilityLevel.THRESHOLD, 8, 14226, 55, 131, 30, 0),
+	PREPARATION(AbilityLevel.BASIC, 5, 14223, 67, 83, 5, 0),
+	BARRICADE(AbilityLevel.ULTIMATE, 10, 14228, 81, 163, 60, 0),;
 
 	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
 	private final Window window;

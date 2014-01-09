@@ -1,19 +1,17 @@
 package com.sk.methods.action.ability;
 
+import com.sk.methods.action.structure.Ability;
+import com.sk.windows.InnerAbilityTab;
+import com.sk.windows.Window;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.wrappers.Component;
 
-import com.sk.methods.action.structure.Ability;
-import com.sk.windows.InnerAbilityTab;
-import com.sk.windows.Window;
-
 public enum ConstitutionAbility implements Ability {
 	MOMENTUM(AbilityLevel.ULTIMATE, 7, 14674, 10, 116, 0, 0),
-REGENERATE(AbilityLevel.BASIC, 1, 14267, 10, 20, 0, 0),
-INCITE(AbilityLevel.BASIC, 2, 14268, 24, 36, 0, 0),
-SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),
-;
+	REGENERATE(AbilityLevel.BASIC, 1, 14267, 10, 20, 0, 0),
+	INCITE(AbilityLevel.BASIC, 2, 14268, 24, 36, 0, 0),
+	SINGLE_WAY_WILDERNESS(AbilityLevel.BASIC, 8, 14269, 25, 132, 10, 0),;
 
 	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
 	private final Window window;

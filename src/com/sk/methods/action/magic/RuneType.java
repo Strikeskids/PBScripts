@@ -22,7 +22,7 @@ public enum RuneType {
 
 	/**
 	 * Gets the abyss portal id for
-	 * 
+	 *
 	 * @return the abyss portal id or <tt>-1</tt> if no such portal exists
 	 */
 	public int getAbyssPortalId() {
@@ -31,7 +31,7 @@ public enum RuneType {
 
 	/**
 	 * Gets the id for the altar that this rune would be crafted on
-	 * 
+	 *
 	 * @return the id of the altar or <tt>-1</tt> if this rune cannot be crafted on an altar
 	 */
 	public int getAltarId() {
@@ -40,7 +40,7 @@ public enum RuneType {
 
 	/**
 	 * Gets the runecrafting level required to craft this rune
-	 * 
+	 *
 	 * @return the runecrafting level required
 	 */
 	public int getCraftingLevel() {
@@ -49,7 +49,7 @@ public enum RuneType {
 
 	/**
 	 * Gets the item id for this rune
-	 * 
+	 *
 	 * @return the item id
 	 */
 	public int getItemId() {
@@ -58,7 +58,7 @@ public enum RuneType {
 
 	/**
 	 * Returns whether this rune can be crafted through the abyss
-	 * 
+	 *
 	 * @return <tt>true</tt> if this rune can be crafted through the abyss
 	 */
 	public boolean canCraftThroughAbyss() {
@@ -67,7 +67,7 @@ public enum RuneType {
 
 	/**
 	 * Returns whether this rune can be crafted on an altar
-	 * 
+	 *
 	 * @return <tt>true</tt> if this rune can be crafted on an altar
 	 */
 	public boolean canCraftOnAltar() {
@@ -76,7 +76,7 @@ public enum RuneType {
 
 	/**
 	 * Checks to see if this rune is an elemental rune
-	 * 
+	 *
 	 * @return <tt>true</tt> if this rune is elemental
 	 */
 	public boolean isElemental() {
@@ -85,7 +85,7 @@ public enum RuneType {
 
 	/**
 	 * Checks to see if this rune required pure essence to be crafted
-	 * 
+	 *
 	 * @return <tt>true</tt> if this rune cannot be crafted with a rune essence, only with a pure essence
 	 */
 	public boolean isPureEssence() {

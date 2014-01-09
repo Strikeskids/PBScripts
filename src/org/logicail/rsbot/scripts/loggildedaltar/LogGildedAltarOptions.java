@@ -36,7 +36,7 @@ public class LogGildedAltarOptions {
 	public int stopLevel;
 	public volatile String status = "";
 	public volatile int bonesOffered;
-	public volatile boolean newVersionAvailable = true;
+	public volatile boolean newVersionAvailable;
 	private File settingsFile;
 	private final String FILENAME = "settings.ini";
 

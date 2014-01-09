@@ -1,18 +1,16 @@
 package com.sk.methods.action.magic;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.wrappers.Component;
-
 import com.sk.methods.action.ability.AbilityStyle;
 import com.sk.methods.action.structure.Spell;
 import com.sk.windows.InnerAbilityTab;
 import com.sk.windows.Window;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.powerbot.script.methods.Skills;
+import org.powerbot.script.wrappers.Component;
 
 public enum AllSpell implements Spell {
 	POLYPORE_STRIKE(InnerAbilityTab.COMBAT_SPELL, 2598, 80, 162, 14396),
-HOME_TELEPORT(InnerAbilityTab.TELEPORT_SPELL, 2491, 0, 155, 14333),
-;
+	HOME_TELEPORT(InnerAbilityTab.TELEPORT_SPELL, 2491, 0, 155, 14333),;
 
 	private final Rune[] runes;
 	private final int childIndex, childTexture, level, id;

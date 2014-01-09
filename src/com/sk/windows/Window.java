@@ -14,6 +14,8 @@ public interface Window {
 			return false;
 		}
 	};
+
 	public boolean isOpen(final IMethodContext ctx);
+
 	public boolean open(final IMethodContext ctx);
 }

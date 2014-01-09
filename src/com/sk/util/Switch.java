@@ -20,12 +20,12 @@ public final class Switch implements Condition {
 		set(!value);
 	}
 
-	public void off() {
-		set(false);
-	}
-
 	public void set(boolean v) {
 		this.value = v;
+	}
+
+	public void off() {
+		set(false);
 	}
 
 	public void on() {

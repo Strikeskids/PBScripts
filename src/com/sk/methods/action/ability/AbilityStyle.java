@@ -1,13 +1,12 @@
 package com.sk.methods.action.ability;
 
-import org.powerbot.script.methods.Skills;
-
 import com.sk.windows.InnerAbilityTab;
 import com.sk.windows.Window;
+import org.powerbot.script.methods.Skills;
 
 /**
  * An enum of styles of ability. Corresponds to the skill requirement to use the ability
- * 
+ *
  * @author Strikeskids
  */
 public enum AbilityStyle {
@@ -34,7 +33,7 @@ public enum AbilityStyle {
 
 	/**
 	 * Gets the skill id for the skill for this style of ability
-	 * 
+	 *
 	 * @return the skill id
 	 */
 	public int getSkillId() {
@@ -43,7 +42,7 @@ public enum AbilityStyle {
 
 	/**
 	 * Gets {@link InnerAbilityTab} of abilities that is used for this style
-	 * 
+	 *
 	 * @return the tab of abilities for this style
 	 */
 	public Window getTab() {

@@ -68,6 +68,8 @@ public interface Spell extends BookIcon {
 			return 0;
 		}
 	};
+
 	public Rune[] getRunes();
+
 	public Spellbook getSpellbook();
 }

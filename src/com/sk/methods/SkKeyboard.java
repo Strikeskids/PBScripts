@@ -39,28 +39,24 @@ public class SkKeyboard extends Keyboard {
 		return key(key, 1);
 	}
 
-	public boolean release(String key) {
-		return key(key, 2);
-	}
-
 	public boolean key(String key, int type) {
 		if (key == null)
 			return false;
 		String act;
 		switch (type) {
-		case 0:
-			if (!key(key, 1))
-				return false;
-			sleep(100, 150);
-			return key(key, 2);
-		case 1:
-			act = "down";
-			break;
-		case 2:
-			act = "up";
-			break;
-		default:
-			throw new IllegalArgumentException("Type of interaction must be 0 (type) 1 (press) or 2 (release)");
+			case 0:
+				if (!key(key, 1))
+					return false;
+				sleep(100, 150);
+				return key(key, 2);
+			case 1:
+				act = "down";
+				break;
+			case 2:
+				act = "up";
+				break;
+			default:
+				throw new IllegalArgumentException("Type of interaction must be 0 (type) 1 (press) or 2 (release)");
 		}
 		return send("{VK_" + convert(key) + " " + act + "}");
 	}
@@ -72,5 +68,9 @@ public class SkKeyboard extends Keyboard {
 		if (keyNames.containsKey(key))
 			return keyNames.get(key);
 		throw new IllegalArgumentException();
+	}
+
+	public boolean release(String key) {
+		return key(key, 2);
 	}
 }

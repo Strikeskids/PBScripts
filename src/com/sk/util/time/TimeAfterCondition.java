@@ -1,8 +1,7 @@
 package com.sk.util.time;
 
-import org.powerbot.script.util.Timer;
-
 import com.sk.util.Condition;
+import org.powerbot.script.util.Timer;
 
 public abstract class TimeAfterCondition extends Timer implements Condition, Waitable {
 	public TimeAfterCondition(long repeat) {

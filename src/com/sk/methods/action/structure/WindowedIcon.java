@@ -8,5 +8,6 @@ public interface WindowedIcon extends BarIcon {
 	public int getSkill();
 
 	public int getSkillLevel();
+
 	public Window getWindow();
 }

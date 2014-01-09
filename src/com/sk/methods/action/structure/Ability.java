@@ -1,11 +1,10 @@
 package com.sk.methods.action.structure;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.wrappers.Component;
-
 import com.sk.methods.action.ability.AbilityLevel;
 import com.sk.methods.action.ability.AbilityStyle;
 import com.sk.windows.Window;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.powerbot.script.wrappers.Component;
 
 public interface Ability extends BookIcon {
 	public static Ability NIL = new Ability() {
@@ -85,5 +84,6 @@ public interface Ability extends BookIcon {
 	public int getChanneled();
 
 	public int getCooldown();
+
 	public AbilityStyle getStyle();
 }

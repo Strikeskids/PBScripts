@@ -7,5 +7,6 @@ public interface PreparedWaitable {
 			return true;
 		}
 	};
+
 	public abstract boolean waitFor();
 }

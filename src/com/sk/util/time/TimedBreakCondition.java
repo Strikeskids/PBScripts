@@ -7,7 +7,7 @@ public abstract class TimedBreakCondition extends TimedCondition {
 	}
 
 	public boolean waitFor(long maxTime) {
-		for (Timer end = new Timer(maxTime); end.isRunning();) {
+		for (Timer end = new Timer(maxTime); end.isRunning(); ) {
 			if (this.shouldBreak())
 				return false;
 			if (this.check())
@@ -20,7 +20,7 @@ public abstract class TimedBreakCondition extends TimedCondition {
 	public abstract boolean shouldBreak();
 
 	public boolean waitFor(long maxTime, long delay) {
-		for (Timer end = new Timer(maxTime); end.isRunning();) {
+		for (Timer end = new Timer(maxTime); end.isRunning(); ) {
 			if (this.shouldBreak())
 				return false;
 			if (this.check())

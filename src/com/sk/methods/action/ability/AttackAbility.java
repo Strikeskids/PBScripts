@@ -19,7 +19,7 @@ public enum AttackAbility implements Ability {
 	SEVER(AbilityLevel.BASIC, 3, 14209, 45, 49, 30, 0),
 	HURRICANE(AbilityLevel.THRESHOLD, 9, 14215, 55, 145, 20, 0),
 	MASSACRE(AbilityLevel.ULTIMATE, 11, 14217, 66, 177, 60, 0),
-	METEOR_STRIKE(AbilityLevel.ULTIMATE, 12, 14218, 81, 193, 60, 0), ;
+	METEOR_STRIKE(AbilityLevel.ULTIMATE, 12, 14218, 81, 193, 60, 0),;
 
 	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
 	private final Window window;

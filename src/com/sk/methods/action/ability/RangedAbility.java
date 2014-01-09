@@ -1,12 +1,11 @@
 package com.sk.methods.action.ability;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.wrappers.Component;
-
 import com.sk.methods.action.structure.Ability;
 import com.sk.windows.InnerAbilityTab;
 import com.sk.windows.Window;
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.powerbot.script.methods.Skills;
+import org.powerbot.script.wrappers.Component;
 
 public enum RangedAbility implements Ability {
 	PIERCING_SHOT(AbilityLevel.BASIC, 1, 14243, 1, 21, 5, 0),
@@ -22,7 +21,7 @@ public enum RangedAbility implements Ability {
 	INCENDIARY_SHOT(AbilityLevel.ULTIMATE, 10, 14252, 66, 165, 60, 0),
 	UNLOAD(AbilityLevel.ULTIMATE, 11, 14253, 81, 181, 60, 6000),
 	DAZING_SHOT(AbilityLevel.BASIC, 15, 9316, 8, 245, 5, 0),
-	NEEDLE_STRIKE(AbilityLevel.BASIC, 16, 9315, 12, 261, 5, 0), ;
+	NEEDLE_STRIKE(AbilityLevel.BASIC, 16, 9315, 12, 261, 5, 0),;
 
 	private final int childIndex, childTexture, skillLevel, skill, id, cooldown, channeled;
 	private final Window window;
