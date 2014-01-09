@@ -30,8 +30,8 @@ public enum Path {
 	HOME_PORTAL("Portal", PathType.HOME, LocationAttribute.ANYWHERE, EnumSet.of(PathSetting.IS_FAILSAFE)),
 	HOME_YANILLE_WALK("Yanille walk to house", PathType.HOME, LocationAttribute.YANILLE_HOUSE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.IS_FAILSAFE)),
 	TAVERLEY_LODESTONE("Taverley Lodestones", PathType.HOME, LocationAttribute.TAVERLEY_HOUSE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.IS_FAILSAFE)),
-	YANILLE_LODESTONE("Yanille Lodestones", PathType.HOME, LocationAttribute.YANILLE_HOUSE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.IS_FAILSAFE)),
-	YANILLE_TABLET("Yanille tablet", PathType.HOME, LocationAttribute.ANYWHERE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.ENABLE_DEFAULT, PathSetting.IS_FAILSAFE)),
+	YANILLE_LODESTONE("Yanille Lodestones", PathType.HOME, LocationAttribute.YANILLE_HOUSE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.ENABLE_DEFAULT, PathSetting.IS_FAILSAFE)),
+	YANILLE_TABLET("Yanille tablet", PathType.HOME, LocationAttribute.ANYWHERE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.IS_FAILSAFE)),
 
 	// Summoning
 	CASTLE_WARS_OBELISK("Castle Wars: Recharge Summoning", PathType.SUMMONING, LocationAttribute.CASTLE_WARS, EnumSet.of(PathSetting.IS_FAILSAFE)),

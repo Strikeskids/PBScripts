@@ -14,9 +14,11 @@ public class SortedListModel<T> extends AbstractListModel {
 	final SortedSet<T> model;
 
 	public SortedListModel() {
-		// Create a TreeSet
-		// Store it in SortedSet variable
 		model = new TreeSet<T>();
+	}
+
+	public SortedListModel(Comparator<T> comparator) {
+		model = new TreeSet<T>(comparator);
 	}
 
 	// Other methods

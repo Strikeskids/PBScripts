@@ -28,10 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,9 +39,15 @@ import java.util.Properties;
 public class LogGildedAltarGUI extends JFrame {
 	// Variable declaration
 	public boolean startPressed;
-	private final SortedListModel<Path> houseDisabledModel = new SortedListModel<Path>();
+	private final Comparator<Path> pathComparator = new Comparator<Path>() {
+		@Override
+		public int compare(Path o1, Path o2) {
+			return o1.getName().compareTo(o2.getName());
+		}
+	};
+	private final SortedListModel<Path> houseDisabledModel = new SortedListModel<Path>(pathComparator);
 	private final DefaultListModel<Path> houseEnabledModel = new DefaultListModel<Path>();
-	private final SortedListModel<Path> bankDisabledModel = new SortedListModel<Path>();
+	private final SortedListModel<Path> bankDisabledModel = new SortedListModel<Path>(pathComparator);
 	private final DefaultListModel<Path> bankEnabledModel = new DefaultListModel<Path>();
 	private final LogGildedAltar script;
 	private JTabbedPane tabbedPane;
@@ -110,6 +113,9 @@ public class LogGildedAltarGUI extends JFrame {
 				}
 			}
 		}
+
+		// Sort disabled models alphbetically
+
 
 		JPanel contentPane = (JPanel) getContentPane();
 		contentPane.setLayout(new BorderLayout());
