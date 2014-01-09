@@ -44,7 +44,6 @@ public class ILodestone extends IMethodProvider {
 
 		final Tile lodestoneLocation = lodestone.getLocation();
 		if (lodestoneLocation.distanceTo(ctx.players.local()) < 10) {
-			ctx.movement.stepTowards(lodestoneLocation.randomize(2, 2));
 			return true;
 		}
 
@@ -64,14 +63,17 @@ public class ILodestone extends IMethodProvider {
 			if (lodestone.isPreviousDestination(ctx)) {
 				if (mapButton.interact("Previous destination")) {
 					interacted = true;
+					sleep(100, 500);
 				}
 			} else if (mapButton.interact("Teleport")) {
-				Condition.wait(new Callable<Boolean>() {
+				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return isOpen();
 					}
-				}, Random.nextInt(200, 400), Random.nextInt(5, 10));
+				}, Random.nextInt(200, 400), Random.nextInt(5, 10))) {
+					sleep(100, 500);
+				}
 			}
 		}
 
@@ -80,9 +82,7 @@ public class ILodestone extends IMethodProvider {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					if (!lodestoneComponent.isValid()) {
-						return false;
-					}
+					// Avoid overlapping components
 					if (getHighlightedLodestone() != lodestone) {
 						lodestoneComponent.hover();
 						return getHighlightedLodestone() == lodestone;
