@@ -163,7 +163,7 @@ public class ILodestone extends IMethodProvider {
 		Lodestone(Tile location) {
 			this.location = location;
 			this.setting = ILodestone.SETTING_LODESTONES;
-			this.shift = ordinal();
+			this.shift = ordinal() - 2;
 			this.mask = 1;
 			this.component = 38 + ordinal();
 			this.unlockedValue = 1;
@@ -190,7 +190,7 @@ public class ILodestone extends IMethodProvider {
 			return ctx.settings.get(setting, shift, mask) == unlockedValue;
 		}
 
-		boolean isPreviousDestination(MethodContext ctx) {
+		public boolean isPreviousDestination(MethodContext ctx) {
 			return ctx.settings.get(ILodestone.SETTING_LODESTONES, 26, 0x1f) == ordinal() + 1;
 		}
 	}

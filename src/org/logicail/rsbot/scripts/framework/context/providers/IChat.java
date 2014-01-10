@@ -14,8 +14,8 @@ import java.util.concurrent.Callable;
  * Time: 18:18
  */
 public class IChat extends Chat {
-	public static final int WIDGET_INPUT = 752;
-	public static final int WIDGET_INPUT_TEXT_CHILD = 5;
+	public static final int WIDGET_INPUT = 1469;
+	public static final int WIDGET_INPUT_TEXT_CHILD = 3;
 
 	public IChat(IMethodContext context) {
 		super(context);

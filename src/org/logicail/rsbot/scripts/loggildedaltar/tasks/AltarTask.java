@@ -57,4 +57,9 @@ public class AltarTask extends Branch<LogGildedAltar> {
 	public GameObject getMiniObelisk() {
 		return ctx.objects.select().id(AltarObelisk.MINI_OBELISK).nearest().poll();
 	}
+
+	@Override
+	public String toString() {
+		return "AltarTask";
+	}
 }

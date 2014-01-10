@@ -12,6 +12,10 @@ import org.powerbot.script.util.Random;
 public class LogoutIdle extends LogGildedAltarTask {
 	private long nextCheck;
 
+	@Override
+	public String toString() {
+		return "LogoutIdle";
+	}
 	private int lastBonesBuried = -1;
 
 	public LogoutIdle(LogGildedAltar script) {

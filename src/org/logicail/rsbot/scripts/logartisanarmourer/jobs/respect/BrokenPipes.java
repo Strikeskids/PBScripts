@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
 
 import java.util.concurrent.Callable;
@@ -76,9 +77,9 @@ public class BrokenPipes extends RespectTask {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return pipe.needsFixing();
+							return !pipe.needsFixing();
 						}
-					});
+					}, Random.nextInt(600, 800), Random.nextInt(8, 13));
 
 					sleep(50, 500);
 				}

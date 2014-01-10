@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Astar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
@@ -19,7 +20,7 @@ import java.util.List;
  * Date: 05/01/14
  * Time: 17:01
  */
-public class AltarObelisk extends AltarAbstract {
+public class AltarObelisk extends LogGildedAltarTask {
 	public static final int[] MINI_OBELISK = {44837, 44838, 44839, 44840, 44841, 44842};
 	private int nextPoints;
 
@@ -47,7 +48,7 @@ public class AltarObelisk extends AltarAbstract {
 						&& (ctx.backpack.isFull() || getBackpackOffering().isEmpty())
 				) {
 			Room startRoom = script.roomStorage.getRoom(ctx.players.local());
-			final GameObject obelisk = altarTask.getMiniObelisk();
+			final GameObject obelisk = script.altarTask.getMiniObelisk();
 			if (obelisk.isValid()) {
 				Room endRoom = script.roomStorage.getRoom(obelisk);
 				return endRoom.equals(startRoom) || ((pathToObelisk = new Astar(script).findRoute(obelisk)) != null);
@@ -61,7 +62,7 @@ public class AltarObelisk extends AltarAbstract {
 		ctx.log.info("Finding path to obelisk");
 
 		try {
-			final GameObject obelisk = altarTask.getMiniObelisk();
+			final GameObject obelisk = script.altarTask.getMiniObelisk();
 			if (!obelisk.isValid()) return;
 
 			Room startRoom = script.roomStorage.getRoom(ctx.players.local());

@@ -1,17 +1,20 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.banking;
 
 import org.logicail.rsbot.scripts.framework.tasks.Branch;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.RenewFamiliar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.methods.Bank;
-import org.powerbot.script.methods.Hud;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.methods.Summoning;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
-import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Item;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -21,9 +24,6 @@ import java.util.concurrent.Callable;
  * Time: 20:17
  */
 public class BankWithdraw extends BankingAbstract {
-	private int pouchFailure;
-	private Timer pouchTimer;
-
 	public BankWithdraw(Banking banking) {
 		super(banking);
 	}
@@ -93,7 +93,7 @@ public class BankWithdraw extends BankingAbstract {
 				}
 			}
 
-                    /* Disable summoning if don't have level required */
+            /* Disable summoning if don't have level required */
 			if (options.beastOfBurden.getRequiredLevel() > ctx.skills.getRealLevel(Skills.SUMMONING)) {
 				ctx.log.info("Summoning level too low -> Disabling summoning");
 				options.useBOB = false;
@@ -115,59 +115,26 @@ public class BankWithdraw extends BankingAbstract {
 						}
 					}
 
-					if (ctx.summoning.canSummon(options.beastOfBurden)) {
-						if (ctx.summoning.isFamiliarSummoned()) {
-							if (ctx.summoning.renewFamiliar()) {
-								sleep(600, 1600);
-							}
-						} else {
-							if (ctx.bank.close()) {
-								sleep(1200, 2400);
-
-								if (pouchTimer != null) {
-									if (!pouchTimer.isRunning()) {
-										pouchTimer = null;
-										pouchFailure = 0;
-									}
-								}
-
-								if (pouchTimer == null) {
-									for (Item pouch : ctx.backpack.select().id(options.beastOfBurden.getPouchId()).first()) {
-										if (!ctx.hud.isVisible(Hud.Window.BACKPACK) && ctx.hud.view(Hud.Window.BACKPACK)) {
-											sleep(200, 800);
-										}
-										if (pouch.isValid() && pouch.interact("Summon")) {
-											if (!Condition.wait(new Callable<Boolean>() {
-												@Override
-												public Boolean call() throws Exception {
-													return ctx.summoning.isFamiliarSummoned();
-												}
-											}) && !ctx.backpack.select().id(options.beastOfBurden.getPouchId()).isEmpty()) {
-												pouchFailure++;
-												if (pouchFailure > 3) {
-													pouchTimer = new Timer(30000);
-												}
-											} else {
-												pouchFailure = 0;
-											}
-										}
-									}
-								}
-							}
-						}
+					if (script.nextSummon < System.currentTimeMillis() && ctx.summoning.canSummon(options.beastOfBurden)) {
+						RenewFamiliar.renew(script);
 					}
 				}
 			}
 		}
 
-		if (!bankingBranch.withdrawnDelegation) {
-			bankingBranch.withdrawnDelegation = true;
-			withdrawRequiredItems(script.bankingTask);
-			withdrawRequiredItems(script.houseTask);
 
-			if (!ctx.bank.isOpen()) {
-				return;
+		if (!bankingBranch.withdrawnDelegation) {
+			List<Branch> list = new ArrayList<Branch>(
+					Arrays.asList(new Branch[]{script.bankingTask, script.houseTask})
+			);
+			Collections.shuffle(list);
+			for (Branch branch : list) {
+				withdrawRequiredItems(branch);
+				if (!ctx.bank.isOpen()) {
+					return;
+				}
 			}
+			bankingBranch.withdrawnDelegation = true;
 		}
 
 		// Aura disabled for now
@@ -244,7 +211,8 @@ public class BankWithdraw extends BankingAbstract {
 			}
 		}
 
-		if (!getBackpackOffering().isEmpty() && (!options.lightBurners || (options.lightBurners && ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2))) {
+		if (!getBackpackOffering().isEmpty()
+				&& (!options.lightBurners || (options.lightBurners && ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2))) {
 			bankingBranch.fail = 0;
 			ctx.bank.close();
 			options.status = "Finished banking";

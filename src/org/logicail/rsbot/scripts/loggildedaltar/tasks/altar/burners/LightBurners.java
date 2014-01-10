@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
 
 import java.util.concurrent.Callable;
@@ -58,9 +59,9 @@ public class LightBurners extends BurnerAbstract {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return burner.isValid();
+						return !burner.isValid();
 					}
-				}, 400, 20);
+				}, Random.nextInt(400, 600), Random.nextInt(10, 20));
 			}
 		}
 	}

@@ -47,13 +47,13 @@ public enum StandardSpell implements Spell {
 	private final int childIndex, childTexture, level, id;
 	private final Window window;
 
-	private StandardSpell(Window t, int id, int l, int ci, int ct, Rune... r) {
-		this.window = t;
+	private StandardSpell(Window window, int id, int level, int childIndex, int childTexture, Rune... runes) {
+		this.window = window;
 		this.id = id;
-		this.level = l;
-		this.childIndex = ci;
-		this.childTexture = ct;
-		this.runes = r;
+		this.level = level;
+		this.childIndex = childIndex;
+		this.childTexture = childTexture;
+		this.runes = runes;
 	}
 
 	@Override

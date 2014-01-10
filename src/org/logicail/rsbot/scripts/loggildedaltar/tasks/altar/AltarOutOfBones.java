@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 
@@ -12,7 +13,7 @@ import java.util.concurrent.Callable;
  * Date: 05/01/14
  * Time: 19:51
  */
-public class AltarOutOfBones extends AltarAbstract {
+public class AltarOutOfBones extends LogGildedAltarTask {
 	private int nextTakeBoB = Random.nextInt(1, 8);
 
 	public AltarOutOfBones(LogGildedAltar script) {

@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * Date: 04/01/14
  * Time: 21:09
  */
-public class HousePath extends IMethodProvider {
+public class HousePath extends IMethodProvider implements Comparable<HousePath> {
 	public double cost;
 	public double estimate;
 	private final LogGildedAltar script;
@@ -193,5 +193,10 @@ public class HousePath extends IMethodProvider {
 		}
 
 		return list;
+	}
+
+	@Override
+	public int compareTo(HousePath o) {
+		return Double.compare(estimate, o.estimate);
 	}
 }

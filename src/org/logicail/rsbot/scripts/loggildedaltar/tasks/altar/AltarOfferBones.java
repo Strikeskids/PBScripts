@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.OpenHouse;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.methods.Hud;
@@ -19,7 +20,7 @@ import java.util.concurrent.Callable;
  * Date: 05/01/14
  * Time: 19:17
  */
-public class AltarOfferBones extends AltarAbstract {
+public class AltarOfferBones extends LogGildedAltarTask {
 	private static final int ANIMATION_OFFERING = 3705;
 	private int nextOfferingTime = Random.nextInt(4000, 6000);
 
@@ -76,7 +77,7 @@ public class AltarOfferBones extends AltarAbstract {
 		options.status = "Use bones on altar";
 		ctx.log.info(options.status);
 
-		final GameObject altar = altarTask.getAltar();
+		final GameObject altar = script.altarTask.getAltar();
 		if (selectBone()) {
 			Item selectedItem = ctx.backpack.getSelectedItem();
 			if (altar.isValid() && !altar.isOnScreen()) {

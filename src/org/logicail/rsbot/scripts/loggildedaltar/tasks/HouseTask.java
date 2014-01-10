@@ -37,18 +37,14 @@ import java.util.concurrent.Callable;
  */
 public class HouseTask extends Branch<LogGildedAltar> {
 	public static final int WIDGET_LOADING_HOUSE = 399; // There's no place like home...
-	public static final int WIDGET_HOUSE_OPTIONS = 398;
-	public static final int WIDGET_OPTIONS = 261;
-	public static final int WIDGET_OPTIONS_BUTTON = 25;
-	public static final int WIDGET_BUTTON_BUILDING_MODE_ON = 18;
-	public static final int WIDGET_BUTTON_BUILDING_MODE_OFF = 1;
-	// "Building mode on"
-	public static final int WIDGET_BUTTON_ARRIVE_HOUSE = 28;
-	public static final int WIDGET_BUTTON_ARRIVE_PORTAL = 27;
-	// "When teleporting, arrive at portal"
-	public static final int WIDGET_BUTTON_CLOSE = 21;
-	private static final int SETTING_HOUSE = 1189;
-	private static final int SETTING_BUILD = 483;
+	public static final int WIDGET_HOUSE_OPTIONS = 1443;
+	public static final int WIDGET_HOUSE_OPTIONS_HOUSE = 1;
+	public static final int WIDGET_HOUSE_OPTIONS_PORTAL = 3;
+
+	@Override
+	public String toString() {
+		return "HouseTask";
+	}
 	private static final int SETTING_HOUSE_LOCATION = 481;
 	private static final int EXIT_PORTAL = 13405;
 	protected final LogGildedAltarOptions options;
@@ -57,6 +53,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		super(script);
 		options = script.options;
 
+		add(script.housePortal);
 		while (houseNodes.hasMoreElements()) {
 			add(createPath(houseNodes.nextElement()));
 		}
@@ -207,99 +204,33 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	}
 
 	public void setHouseTeleportMode() {
-		if (options.useOtherHouse) {
-			if (script.houseTask.isTeleportInHouse()) {
-				if (script.houseTask.openHouseOptions()) {
-					script.houseTask.setTeleportPortal();
-				}
+		if((options.useOtherHouse && !isTeleportInHouse()) || (!options.useOtherHouse && !isTeleportInHouse())) {
+			return;
+		}
+
+		if(ctx.hud.open(Hud.Menu.OPTIONS)) {
+			final Component gameSettings = ctx.widgets.get(1433, 0);
+			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, options.useOtherHouse ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_PORTAL);
+			if(gameSettings.isVisible()) {
+				gameSettings.interact("Select");
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !gameSettings.isVisible() && component.isValid();
+					}
+				});
 			}
-		} else if (!script.houseTask.isTeleportInHouse()) {
-			if (script.houseTask.openHouseOptions()) {
-				script.houseTask.setTeleportHouse();
+
+			if(component.isValid() && component.interact("Select")) {
+				sleep(100, 600);
+				ctx.keyboard.send("{VK_ESCAPE down}");
+				ctx.keyboard.send("{VK_ESCAPE up}");
 			}
 		}
-
-		script.houseTask.closeHouseOptions();
-	}
-
-	public boolean closeHouseOptions() {
-		if (!isOpen()) {
-			return true;
-		}
-
-		Component closeButton = getWidget().getComponent(WIDGET_BUTTON_CLOSE);
-		if (closeButton.isValid() && closeButton.interact("Close")) {
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return !isOpen();
-				}
-			});
-		}
-
-		return !isOpen();
-	}
-
-	public boolean isOpen() {
-		return ctx.widgets.get(WIDGET_HOUSE_OPTIONS).isValid();
 	}
 
 	public boolean isTeleportInHouse() {
 		return ctx.settings.get(SETTING_HOUSE_LOCATION, 29, 1) == 0;
-	}
-
-	public boolean openHouseOptions() {
-		if (isOpen()) {
-			return true;
-		}
-
-		// TODO: Check / see Options.getwindows
-		if (ctx.hud.open(Hud.Menu.OPTIONS)) {
-			sleep(400, 600);
-		}
-
-		Component houseOptionsButton = ctx.widgets.get(WIDGET_OPTIONS, WIDGET_OPTIONS_BUTTON);
-		if (houseOptionsButton.isValid() && houseOptionsButton.interact("Open House Options")) {
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return isOpen();
-				}
-			});
-		}
-
-		return isOpen();
-	}
-
-	public boolean setTeleportHouse() {
-		if (isOpen()) {
-			Component houseButton = getWidget().getComponent(WIDGET_BUTTON_ARRIVE_HOUSE);
-			if (houseButton.isValid() && houseButton.interact("When teleporting, arrive in house")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return isTeleportInHouse();
-					}
-				});
-			}
-		}
-
-		return isTeleportInHouse();
-	}
-
-	public boolean setTeleportPortal() {
-		if (isOpen()) {
-			Component houseButton = getWidget().getComponent(WIDGET_BUTTON_ARRIVE_PORTAL);
-			if (houseButton.isValid() && houseButton.interact("When teleporting, arrive at portal")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !isTeleportInHouse();
-					}
-				});
-			}
-		}
-		return !isTeleportInHouse();
 	}
 
 	public static enum HouseLocation {

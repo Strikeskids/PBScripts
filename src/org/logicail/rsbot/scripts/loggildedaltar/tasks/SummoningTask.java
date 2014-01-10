@@ -23,6 +23,11 @@ import org.powerbot.script.wrappers.Tile;
 public class SummoningTask extends Branch<LogGildedAltar> {
 	public int nextPoints = -1;
 
+	@Override
+	public String toString() {
+		return "SummoningTask";
+	}
+
 	public SummoningTask(LogGildedAltar script) {
 		super(script);
 

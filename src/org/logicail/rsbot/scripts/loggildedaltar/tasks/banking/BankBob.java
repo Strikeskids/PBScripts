@@ -49,7 +49,7 @@ public class BankBob extends BankingAbstract {
 				if (ctx.summoning.isOpen()) {
 					int countBefore = bankingBranch.beastOfBurdenCount;
 					if (ctx.summoning.deposit(options.offering.getId(), 0)) {
-						bankingBranch.beastOfBurdenCount = ctx.summoning.getStore().select().count();
+						bankingBranch.beastOfBurdenCount = ctx.summoning.getFamiliarStore().select().count();
 					}
 					if (bankingBranch.beastOfBurdenCount != countBefore) {
 						bankingBranch.beastOfBurdenWithdraws++;

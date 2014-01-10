@@ -35,6 +35,11 @@ public class Postback extends LogGildedAltarTask {
 	private static final SecretKeySpec SECRET_KEY_SPEC = new SecretKeySpec(SECRET_KEY.getBytes(), "AES");
 	private long nextRun = System.currentTimeMillis() + INTERVAL;
 
+	@Override
+	public String toString() {
+		return "Postback";
+	}
+
 	private static String padString(String source) {
 		char paddingChar = ' ';
 		int size = 16;
@@ -97,6 +102,8 @@ public class Postback extends LogGildedAltarTask {
 			}
 		}
 
+		//ctx.log.info("Postback: " + json.toString());
+
 		final String data = "data=" + bytesToHex(encrypt(json.toString()));
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(POSTBACK_URL).openConnection();
@@ -117,22 +124,26 @@ public class Postback extends LogGildedAltarTask {
 			wr.close();
 
 			//Get Response
-			String read = IOUtil.read(connection.getInputStream(), 4096);
-			if (read != null) {
-				if (read.trim().equalsIgnoreCase("SHUTDOWN")) {
-					ctx.stop("Forced shutdown see thread on forum", false);
-				} else {
-					if (read.length() > 0) {
-						final JsonObject jsonObject = JsonObject.readFrom(read);
-						final JsonValue latest_version = jsonObject.get("latest_version");
-						if (latest_version != null && latest_version.isNumber()) {
-							final double latest_version_double = latest_version.asDouble();
-							if (latest_version_double > script.getVersion()) {
-								options.newVersionAvailable = true;
+			try {
+				String read = IOUtil.read(connection.getInputStream(), 4096);
+				ctx.log.info(read);
+				if (read != null) {
+					if (read.trim().equalsIgnoreCase("SHUTDOWN")) {
+						ctx.stop("Forced shutdown see thread on forum", false);
+					} else {
+						if (read.length() > 0) {
+							final JsonObject jsonObject = JsonObject.readFrom(read);
+							final JsonValue latest_version = jsonObject.get("latest_version");
+							if (latest_version != null && latest_version.isNumber()) {
+								final double latest_version_double = latest_version.asDouble();
+								if (latest_version_double > script.getVersion()) {
+									options.newVersionAvailable = true;
+								}
 							}
 						}
 					}
 				}
+			} catch (Exception ignored) {
 			}
 			previousTimeRunning = timeRunning;
 			previousXPGained = experience;

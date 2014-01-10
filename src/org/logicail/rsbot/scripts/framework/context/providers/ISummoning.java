@@ -20,23 +20,30 @@ import java.util.concurrent.Callable;
 public class ISummoning extends Summoning {
 	// TODO
 	public static final int WIDGET_STORE = 671;
-	public static final int WIDGET_STORE_CLOSE_BUTTON = 13;
+	public static final int WIDGET_STORE_CLOSE_BUTTON = 21;
+	public static final int WIDGET_STORE_CLOSE_BUTTON_CHILD = 1;
 	public static final int WIDGET_ORB = 1430;
 	public static final int WIDGET_ORB_BUTTON = 5;
 
 	protected IMethodContext ctx;
 
-	private final ISummoningStore store;
+	private final IItemStore familiar;
+	private final IItemStore backpack;
 
 	public ISummoning(IMethodContext context) {
 		super(context);
 		ctx = context;
-		store = new ISummoningStore(context);
+		familiar = new IItemStore(context, ctx.widgets.get(671, 25));
+		backpack = new IItemStore(context, ctx.widgets.get(671, 30));
 	}
 
-	public ISummoningStore getStore() {
-		return store;
+	public IItemStore getFamiliarStore() {
+		return familiar;
 	}
+
+	/*public IItemStore getBackpackStore() {
+		return backpack;
+	}*/
 
 	public boolean canSummon(Familiar familiar) {
 		return !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
@@ -57,7 +64,7 @@ public class ISummoning extends Summoning {
 	}
 
 	public Component getCloseButton() {
-		return ctx.widgets.get(WIDGET_STORE, WIDGET_STORE_CLOSE_BUTTON);
+		return ctx.widgets.get(WIDGET_STORE, WIDGET_STORE_CLOSE_BUTTON).getChild(WIDGET_STORE_CLOSE_BUTTON_CHILD);
 	}
 
 	/**
@@ -71,26 +78,32 @@ public class ISummoning extends Summoning {
 
 	public boolean deposit(final int id, int amount) {
 		if (open()) {
-			int spaceLeft = getFamiliar().getBoBSpace() - store.select().count();
+			int spaceLeft = getFamiliar().getBoBSpace() - familiar.select().count();
 			if (spaceLeft == 0) {
 				return false;
 			}
-
-			// TODO: Check might be like bank seperate
-			if (ctx.hud.view(Hud.Window.BACKPACK)) {
-				for (Item item : ctx.backpack.select().id(id).first()) {
-					String action = "Store-" + amount;
-					final int backpackCount = ctx.backpack.select().id(id).count();
-					if (backpackCount < amount || amount == 0 || backpackCount < spaceLeft) {
-						action = "Store-All";
+			final int backpackCount = backpack.select().id(id).count();
+			for (Item item : backpack.shuffle().first()) {
+				String action = "Store-" + amount;
+				if (backpackCount == 0) {
+					return false;
+				}
+				if (backpackCount < amount || amount == 0 || backpackCount < spaceLeft) {
+					action = "Store-All";
+				}
+				// TODO: Reenable
+				/*if (hasAction(item, action)) {
+					if (item.interact(action)) {
+						return true;
 					}
-					if (hasAction(item, action)) {
-						if (item.interact(action)) {
-							return true;
-						}
-					} else if (item.interact("Store-X") && ctx.chat.waitForInputWidget()) {
-						sleep(200, 800);
-						ctx.keyboard.sendln(String.valueOf(amount));
+				} else*/
+				if (item.interact("Store-X") && ctx.chat.waitForInputWidget()) {
+					sleep(800, 1200);
+					if (amount == 0) {
+						amount = Random.nextInt(backpackCount, backpackCount * Random.nextInt(2, 5));
+					}
+					if (ctx.chat.isInputWidgetOpen()) {
+						ctx.log.info("KB send " + amount + " == " + ctx.keyboard.sendln(amount + ""));
 					}
 				}
 			}
@@ -99,11 +112,54 @@ public class ISummoning extends Summoning {
 		return false;
 	}
 
+	private void closeBankIfInTheWay() {
+		final Component bank = ctx.bank.getWidget();
+		if (bank.isValid()) {
+			final Component orb = getOrb();
+			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
+				sleep(50, 250);
+				ctx.log.info("Bank interface in the way of orb closing bank");
+				ctx.bank.close();
+				sleep(200, 1000);
+			}
+		}
+	}
+
+	@Override
+	public boolean renewFamiliar() {
+		closeBankIfInTheWay();
+		return super.renewFamiliar();
+	}
+
+	public boolean summon(Familiar familiar) {
+		if (!canSummon(familiar)) {
+			return false;
+		}
+
+		// Close bank
+		if (ctx.bank.isOpen()) {
+			ctx.bank.close();
+			sleep(400, 1200);
+		}
+
+		final Item pouch = ctx.backpack.shuffle().poll();
+		if (ctx.hud.view(Hud.Window.BACKPACK)) {
+			sleep(200, 800);
+			return pouch.isValid() && pouch.interact("Summon") && Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.summoning.isFamiliarSummoned() && !pouch.isValid();
+				}
+			}, Random.nextInt(500, 700), Random.nextInt(4, 8));
+		}
+
+		return false;
+	}
+
 	public boolean hasAction(final Item item, final String action) {
-		final String[] actions = item.getActions();
-		if (actions != null) {
-			for (final String a : actions) {
-				if (a != null && a.matches("^" + action + "(<.*>)?$")) {
+		if (item.hover()) {
+			for (String a : ctx.menu.getItems()) {
+				if (a != null && a.matches("^" + action + "(<.*>)?")) {
 					return true;
 				}
 			}
@@ -116,7 +172,7 @@ public class ISummoning extends Summoning {
 			return true;
 		}
 
-		if (isFamiliarSummoned() && interactOrb("Store")) {
+		if (isFamiliarSummoned() && interactOrb("Interact")) {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
@@ -141,6 +197,9 @@ public class ISummoning extends Summoning {
 	}
 
 	public boolean interactOrb(String action) {
+		// Bank in the way of orb
+		closeBankIfInTheWay();
+
 		final Component orb = getOrb();
 		return orb.isValid() && orb.isVisible() && orb.interact(action);
 	}

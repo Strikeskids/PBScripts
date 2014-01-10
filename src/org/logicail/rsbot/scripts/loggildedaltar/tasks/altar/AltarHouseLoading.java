@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.powerbot.script.methods.Game;
 
 /**
@@ -9,7 +10,7 @@ import org.powerbot.script.methods.Game;
  * Date: 05/01/14
  * Time: 16:41
  */
-public class AltarHouseLoading extends AltarAbstract {
+public class AltarHouseLoading extends LogGildedAltarTask {
 	public AltarHouseLoading(LogGildedAltar script) {
 		super(script);
 	}

@@ -4,7 +4,6 @@ import com.sk.methods.Combat;
 import com.sk.methods.SkKeyboard;
 import com.sk.methods.action.ActionBar;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.AbstractScript;
 import org.powerbot.script.Script;
@@ -38,6 +37,7 @@ public class IMethodContext extends MethodContext {
 	public ILodestone lodestones;
 	public IMovement movement;
 	public IMagic magic;
+	public IBank bank;
 
 	// SK
 	public SkKeyboard keyboard;
@@ -97,6 +97,7 @@ public class IMethodContext extends MethodContext {
 
 		magic = new IMagic(this);
 		movement = new IMovement(this);
+		bank = new IBank(this);
 	}
 
 	public final boolean isPaused() {
@@ -147,7 +148,7 @@ public class IMethodContext extends MethodContext {
 		}
 	}
 
-	public final void submit(Task task) {
+	public final void submit(Runnable task) {
 		if (!isShutdown()) {
 			executor.submit(task);
 		}

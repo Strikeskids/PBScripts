@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.powerbot.script.methods.Game;
 
 /**
@@ -9,7 +10,7 @@ import org.powerbot.script.methods.Game;
  * Date: 05/01/14
  * Time: 16:43
  */
-public class AltarNoAltar extends AltarAbstract {
+public class AltarNoAltar extends LogGildedAltarTask {
 	public AltarNoAltar(LogGildedAltar script) {
 		super(script);
 	}
@@ -40,6 +41,6 @@ public class AltarNoAltar extends AltarAbstract {
 
 	@Override
 	public boolean isValid() {
-		return !altarTask.getAltar().isValid();
+		return !script.altarTask.getAltar().isValid();
 	}
 }

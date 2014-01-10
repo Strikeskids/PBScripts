@@ -1,9 +1,11 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
+import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.ArrayList;
@@ -41,28 +43,21 @@ public abstract class NodePath extends LogGildedAltarTask {
 
 	@Override
 	public boolean isValid() {
-		return !path.getLocation().isInSmallArea(ctx)
-				&& (path.getLocation().isInLargeArea(ctx) || getItemsNeededFromBank().isEmpty());
+		return !locationAttribute.isInSmallArea(ctx)
+				&& (locationAttribute.isInLargeArea(ctx) || getItemsNeededFromBank().isEmpty());
 	}
 
 	@Override
 	public void run() {
 		if (!locationAttribute.isInLargeArea(ctx)) {
+			//ctx.log.info("large");
 			doLarge();
-		} else {
-			if (!locationAttribute.isInSmallArea(ctx)) {
-				final Tile destination = ctx.movement.getDestination();
-				double distance = destination.distanceTo(ctx.players.local());
-				if (distance > 100 || !locationAttribute.getSmallArea().contains(destination)) {
-					if (doSmall()) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return locationAttribute.isInSmallArea(ctx) || ctx.movement.getDestination().distanceTo(ctx.players.local()) < 5;
-							}
-						});
-					}
-				}
+		} else if (!locationAttribute.isInSmallArea(ctx)) {
+			//ctx.log.info("small");
+			final Tile destination = ctx.movement.getDestination();
+			double distance = IMovement.Euclidean(ctx.players.local().getLocation(), destination);
+			if (!destination.getMatrix(ctx).isOnMap() || distance > 100 || !locationAttribute.getSmallArea().contains(destination)) {
+				doSmall();
 			}
 		}
 	}
@@ -72,13 +67,13 @@ public abstract class NodePath extends LogGildedAltarTask {
 	protected boolean doSmall() {
 		final LocationAttribute location = path.getLocation();
 		final Tile tile = location.getSmallRandom(ctx);
-		if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(tile)) {
+		if (ctx.movement.findPath(tile).traverse()) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return location.isInSmallArea(ctx);
 				}
-			});
+			}, Random.nextInt(550, 650), Random.nextInt(9, 12));
 		}
 		sleep(250, 1250);
 		return location.isInSmallArea(ctx);

@@ -1,7 +1,6 @@
 package org.logicail.rsbot.scripts.framework;
 
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.Tree;
 import org.logicail.rsbot.util.LinkedProperties;
 import org.logicail.rsbot.util.Painter;
@@ -73,7 +72,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	 *
 	 * @param task
 	 */
-	public void submit(Task<T> task) {
+	public void submit(Runnable task) {
 		ctx.submit(task);
 	}
 }

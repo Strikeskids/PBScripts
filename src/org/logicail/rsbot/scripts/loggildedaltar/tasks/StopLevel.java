@@ -13,6 +13,11 @@ public class StopLevel<T extends LogicailScript> extends Node<T> {
 	private final int skill;
 	private final int level;
 
+	@Override
+	public String toString() {
+		return "StopLevel";
+	}
+
 	public StopLevel(T script, int skill, int level) {
 		super(script);
 		this.skill = skill;

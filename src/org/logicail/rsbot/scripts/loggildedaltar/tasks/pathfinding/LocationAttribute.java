@@ -4,7 +4,6 @@ import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Timer;
-import org.powerbot.script.wrappers.Area;
 import org.powerbot.script.wrappers.Tile;
 
 /**
@@ -32,7 +31,17 @@ public enum LocationAttribute {
 					new Tile(2609, 3107, 0)),
 			new LogicailArea(new Tile(2619, 3159, 0), new Tile(2628, 3151, 0))),
 
-	EDGEVILLE(new LogicailArea(new Tile(3089, 3501, 0), new Tile(3099, 3487, 0)),
+	/*
+	// orig new LogicailArea(new Tile(3089, 3501, 0), new Tile(3099, 3487, 0))
+	Area myArea = new Area(new Tile[] { new Tile(3091, 3499, 0), new Tile(3091, 3487, 0), new Tile(3095, 3487, 0),
+	 new Tile(3095, 3494, 0), new Tile(3099, 3494, 0), new Tile(3099, 3499, 0),
+	 new Tile(3091, 3499, 0) });
+
+	 new LogicailArea(new Tile(3091, 3500, 0), new Tile(3091, 3488, 0), new Tile(3095, 3488, 0),
+			new Tile(3095, 3496, 0), new Tile(3099, 3496, 0), new Tile(3099, 3500, 0)),
+	 */
+	EDGEVILLE(new LogicailArea(new Tile(3091, 3500, 0), new Tile(3091, 3488, 0), new Tile(3095, 3488, 0),
+			new Tile(3095, 3496, 0), new Tile(3099, 3496, 0), new Tile(3099, 3500, 0)),
 			new LogicailArea(new Tile(3059, 3521, 0), new Tile(3135, 3480, 0)),
 			new LogicailArea(new Tile(3125, 3520, 0), new Tile(3128, 3514, 0))),
 
@@ -101,7 +110,7 @@ public enum LocationAttribute {
 		return obeliskArea;
 	}
 
-	public Area getSmallArea() {
+	public LogicailArea getSmallArea() {
 		return smallArea;
 	}
 

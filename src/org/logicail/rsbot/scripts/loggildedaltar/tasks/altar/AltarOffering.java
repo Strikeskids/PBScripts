@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,7 +9,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
  * Date: 05/01/14
  * Time: 20:02
  */
-public class AltarOffering extends AltarAbstract {
+public class AltarOffering extends LogGildedAltarTask {
 	public AltarOffering(LogGildedAltar script) {
 		super(script);
 	}

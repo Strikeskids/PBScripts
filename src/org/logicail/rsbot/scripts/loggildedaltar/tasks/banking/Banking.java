@@ -27,6 +27,11 @@ public class Banking extends Branch<LogGildedAltar> {
 	public int fail = 0;
 	protected final LogGildedAltarOptions options;
 
+	@Override
+	public String toString() {
+		return "Banking";
+	}
+
 	public Banking(LogGildedAltar script) {
 		super(script);
 		options = script.options;
@@ -48,17 +53,13 @@ public class Banking extends Branch<LogGildedAltar> {
 				return true;
 			}
 			final Tile tile = new LogicailArea(location.derive(-2, -2), location.derive(3, 3)).getRandomReachable(ctx, 6);
-			return tile.distanceTo(ctx.players.local()) < 10;
+			return tile.getMatrix(ctx).isValid() && tile.distanceTo(ctx.players.local()) < 10;
 		}
 		return script.bankingTask.inBank();
 	}
 
 	@Override
 	public void run() {
-		if (ctx.widgets.get(13).isValid() || !ctx.game.isLoggedIn() || !ctx.isShutdown() || ctx.isPaused()) {
-			return;
-		}
-
 		fail++;
 		if (fail > 70) {
 			StringBuilder reason = new StringBuilder();

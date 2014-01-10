@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
 import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
+import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
@@ -17,6 +18,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.edgeville.Hou
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity.FightCavesBank;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleBankWalk;
 import org.powerbot.script.methods.Equipment;
+import org.powerbot.script.wrappers.Locatable;
 
 import java.util.Enumeration;
 
@@ -29,6 +31,11 @@ import java.util.Enumeration;
 public class BankingTask extends Branch<LogGildedAltar> {
 	protected final LogGildedAltarOptions options;
 	private Banking banking;
+
+	@Override
+	public String toString() {
+		return "BankingTask";
+	}
 
 	public BankingTask(LogGildedAltar script, Enumeration<Path> enabledPaths) {
 		super(script);
@@ -71,10 +78,15 @@ public class BankingTask extends Branch<LogGildedAltar> {
 	@Override
 	public boolean branch() {
 		return options.banking
-				&& !script.summoningTask.isValid();
+				&& (script.summoningTask == null || !script.summoningTask.isValid());
 	}
 
 	public boolean inBank() {
+		final Locatable nearest = ctx.bank.getNearest();
+		if (IMovement.Euclidean(ctx.players.local(), nearest) < 8) {
+			return true;
+		}
+
 		for (Task node : tasks) {
 			if (node != null && node instanceof NodePath && ((NodePath) node).getPath().getLocation().isInSmallArea(ctx)) {
 				return true;

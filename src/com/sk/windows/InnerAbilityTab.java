@@ -13,7 +13,7 @@ public enum InnerAbilityTab implements Window {
 
 	COMBAT_SPELL(MainWindow.MAGIC_ABILITIES, 1, "Combat", 20),
 
-	TELEPORT_SPELL(MainWindow.MAGIC_ABILITIES, 1, "Teleport", 20),
+	TELEPORT_SPELL(MainWindow.MAGIC_ABILITIES, 2, "Teleport", 20),
 
 	SKILLING_SPELL(MainWindow.MAGIC_ABILITIES, 1, "Skilling", 20),
 
@@ -28,11 +28,11 @@ public enum InnerAbilityTab implements Window {
 	private final int component;
 	private final int shift;
 
-	private InnerAbilityTab(final MainWindow t, final int c, final String s, final int sval) {
-		this.superWindow = t;
-		this.component = c;
-		this.openAction = s;
-		this.shift = sval;
+	private InnerAbilityTab(final MainWindow superWindow, final int component, final String openAction, final int shiftValue) {
+		this.superWindow = superWindow;
+		this.component = component;
+		this.openAction = openAction;
+		this.shift = shiftValue;
 	}
 
 	public MainWindow getSuperWindow() {

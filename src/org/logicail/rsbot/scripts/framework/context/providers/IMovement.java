@@ -41,7 +41,7 @@ public class IMovement extends Movement {
 		};
 
 		for (Tile tile : area.getTileArray()) {
-			if ((!tile.equals(locatable.getLocation()) || tile.getMatrix(ctx).isReachable()) && getDistance(locatable, tile) <= maxDistance) {
+			if ((!tile.equals(locatable.getLocation()) || tile.getMatrix(ctx).isReachable()) && Euclidean(locatable, tile) <= maxDistance) {
 				if (ctx.objects.select().at(tile).select(filter).isEmpty()) {
 					tiles.add(tile);
 				}
@@ -61,7 +61,19 @@ public class IMovement extends Movement {
 				public Boolean call() throws Exception {
 					return tile.getMatrix(ctx).isOnScreen() || tile.distanceTo(ctx.players.local()) < 5;
 				}
-			}, Random.nextInt(150, 250), Random.nextInt(10, 15));
+			}, Random.nextInt(400, 650), Random.nextInt(10, 15));
 		}
+	}
+
+	public static double Euclidean(Locatable start, Locatable end) {
+		if (start == null || end == null) {
+			return Double.MAX_VALUE;
+		}
+
+		final Tile startLocation = start.getLocation();
+		final Tile location = end.getLocation();
+		int dx = location.x - startLocation.x;
+		int dy = location.y - startLocation.y;
+		return Math.sqrt(dx * dx + dy * dy);
 	}
 }

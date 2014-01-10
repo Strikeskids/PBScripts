@@ -14,21 +14,21 @@ import java.util.List;
  * Date: 03/01/14
  * Time: 17:58
  */
-public class ISummoningStore extends ItemQuery<Item> {
-	public static final int WIDGET_STORE = 671;
-	public static final int WIDGET_STORE_ITEMS = 27;
+public class IItemStore extends ItemQuery<Item> {
+	private final Component component;
 
-	public ISummoningStore(IMethodContext context) {
+	public IItemStore(IMethodContext context, Component component) {
 		super(context);
+		this.component = component;
 	}
 
 	@Override
 	protected List<Item> get() {
 		List<Item> items = new LinkedList<Item>();
 
-		for (Component component : ctx.widgets.get(WIDGET_STORE, WIDGET_STORE_ITEMS).getChildren()) {
-			if (component.isValid() && component.getItemId() != -1) {
-				items.add(new Item(ctx, component));
+		for (Component c : component.getChildren()) {
+			if (c.isValid() && c.getItemId() != -1) {
+				items.add(new Item(ctx, c));
 			}
 		}
 

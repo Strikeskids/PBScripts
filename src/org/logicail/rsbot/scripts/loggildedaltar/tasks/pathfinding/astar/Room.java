@@ -70,7 +70,7 @@ public class Room extends IMethodProvider {
 		this.roomStorage = roomStorage;
 		this.localX = localX;
 		this.localY = localY;
-		this.index = roomStorage.getIndex(getLocation()) - 9;
+		this.index = roomStorage.getIndex(getLocation());
 	}
 
 	public Tile getLocation() {
@@ -140,7 +140,7 @@ public class Room extends IMethodProvider {
 
 	public LogicailArea getArea() {
 		final Tile location = getLocation();
-		return new LogicailArea(location, location.derive(8, -8));
+		return new LogicailArea(location.derive(0, 1), location.derive(8, -7));
 	}
 
 	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int[] ids, int... ids2) {
@@ -149,6 +149,6 @@ public class Room extends IMethodProvider {
 
 	public LogicailArea getWallArea() {
 		final Tile location = getLocation();
-		return new LogicailArea(location.derive(-1, 1), location.derive(9, -10));
+		return new LogicailArea(location.derive(-1, 2), location.derive(9, -8));
 	}
 }

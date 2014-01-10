@@ -155,6 +155,10 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 						}
 					}
 				} else {
+					for (ChatOption option : ctx.chat.select()) {
+						ctx.log.info(option.getText());
+					}
+
 					for (ChatOption option : ctx.chat.select().text("Go to your house.").first()) {
 						entering = option.select(Random.nextBoolean());
 					}

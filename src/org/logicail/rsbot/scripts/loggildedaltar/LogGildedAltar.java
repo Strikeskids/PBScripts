@@ -15,6 +15,7 @@ import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.util.SkillData;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
@@ -47,11 +48,13 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public BankingTask bankingTask;
 	public HouseTask houseTask;
 	public HousePortal housePortal = new HousePortal(this);
-	public RoomStorage roomStorage;
+	public RoomStorage roomStorage = new RoomStorage(this);
 	public LeaveHouse leaveHouse;
 
 	public YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
 	public AltarTask altarTask;
+	private int pouchFailure;
+	public volatile long nextSummon;
 
 	private SkillData skillData = null;
 	private int currentLevel = -1;
@@ -60,6 +63,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	@Override
 	public LinkedProperties getPaintInfo() {
 		final LinkedProperties properties = new LinkedProperties();
+		properties.put("Not everything tested", "Report errors on forum");
 
 		if (ctx.game.isLoggedIn()) {
 			if (skillData == null) {
@@ -76,24 +80,18 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		properties.put("Status", options.status);
 		properties.put("Time Running", org.powerbot.script.util.Timer.format(runtime));
 
-		if (skillData != null) {
+		if (skillData != null && ctx.game.isLoggedIn()) {
 			properties.put("TTL", org.powerbot.script.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
 			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
 			properties.put("XP Gained", String.format("%,d", experience()));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.PRAYER)));
+			if (currentLevel < 99) {
+				properties.put("XP to level " + (currentLevel + 1), String.format("%,d", org.logicail.rsbot.scripts.framework.util.SkillData.getExperenceToNextLevel(ctx, Skills.PRAYER)));
+			}
 		}
 
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered, (int) (options.bonesOffered / time)));
-
-//		if (currentLevel < 99) {
-//			properties.put("XP to level " + currentLevel + 1, String.format("%,d", .getExperienceToLevel(Skills.PRAYER, level + 1)), 575, 30, new Color(0, 0, 0, 64), Color.WHITE);
-//		}
-
-//		properties.put("ELDER_TREE_SETTING", ctx.settings.get(3881));
-//		for (int i = 0; i < 10; i++) {
-//			properties.put("ELDER_TREE_" + i, ctx.settings.get(3881, i, 0x1) == 0x1);
-//		}
 
 		return properties;
 	}
@@ -130,7 +128,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						});
 					}*/
 				} else {
-					if (message.startsWith("Your familiar is too large to fit into the area you are standing in")) {
+					if (message.startsWith("Your familiar is too big to fit here.")) {
 						final Player local = ctx.players.local();
 						if (local == null) {
 							break;
@@ -179,10 +177,29 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							//ActivateAura.setTimeNextAura(System.currentTimeMillis() + Random.nextInt(seconds * 1000, seconds * 1020)); // TODO
 						} catch (Exception ignored) {
 						}
-					}*/
+					}*/ else if (message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")) {
+						log.info("moveFamiliar");
+						submit(new Runnable() {
+							@Override
+							public void run() {
+								if (moveFamiliar()) {
+									if (ctx.summoning.summon(options.beastOfBurden)) {
+										pouchFailure = 0;
+									} else {
+										pouchFailure++;
+										if (pouchFailure > 2) {
+											ctx.log.info("Wait a while before summoning again");
+											nextSummon = System.currentTimeMillis() + Random.nextInt(25000, 35000);
+										}
+									}
+								}
+							}
+						});
+					}
 				}
 				break;
 			case 2:
+				ctx.log.info("Chat[2]: " + message);
 				if (options.detectHouses) {
 					houseHandler.parseHouses(message);
 				}
@@ -212,6 +229,26 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		}
 	}
 
+
+	private boolean moveFamiliar() {
+		// Find area 3x3 all reachable
+		final Tile location = ctx.players.local().getLocation();
+		LogicailArea area = new LogicailArea(location.derive(-8, -8), location.derive(8, 8));
+		final Tile tile = area.findSpace(ctx, 3, 3);
+		if (tile != Tile.NIL) {
+			// Walk to side
+			if (ctx.movement.findPath(tile).traverse()) {
+				return (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return tile.equals(ctx.players.local().getLocation());
+					}
+				}, Random.nextInt(400, 650), Random.nextInt(10, 15)));
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void repaint(Graphics g) {
 		super.repaint(g);
@@ -225,6 +262,11 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 			g.setColor(Color.RED);
 			g.drawString(NEW_VERSION_STRING, x, y);
 		}
+
+		/*final Tile location = ctx.players.local().getLocation();
+		LogicailArea area = new LogicailArea(location.derive(-8, -8), location.derive(8, 8));
+		final Tile tile = area.findSpace(ctx, 3, 3);
+		tile.getMatrix(ctx).draw(g);*/
 	}
 
 	@Override

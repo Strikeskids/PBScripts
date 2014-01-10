@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners;
 
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarAbstract;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTask;
 
 /**
@@ -9,7 +9,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTa
  * Date: 05/01/14
  * Time: 18:19
  */
-public abstract class BurnerAbstract extends AltarAbstract {
+public abstract class BurnerAbstract extends LogGildedAltarTask {
 	protected final AltarLightBurnersTask burnersTask;
 
 	public BurnerAbstract(AltarLightBurnersTask burnersTask) {

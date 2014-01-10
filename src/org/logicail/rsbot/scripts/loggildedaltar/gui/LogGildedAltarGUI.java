@@ -8,7 +8,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
 import org.powerbot.script.Script;
@@ -1013,12 +1012,13 @@ public class LogGildedAltarGUI extends JFrame {
 		options.useBOB = enableSummoning.isSelected();
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
-		script.submit(new Task<LogGildedAltar>(script) {
+		script.submit(new Runnable() {
 			@Override
 			public void run() {
-				if (options.detectHouses) {
-					ctx.properties.setProperty("login.world", Integer.toString(31));
-				}
+				try {
+					if (options.detectHouses) {
+						script.ctx.properties.setProperty("login.world", Integer.toString(31));
+					}
 
 				/*if (options.useBOB) {
 					try {
@@ -1029,13 +1029,12 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 				}*/
 
+					script.altarTask = new AltarTask(script);
 
-				script.roomStorage = new RoomStorage(script);
+					script.submit(new AnimationMonitor<LogGildedAltar>(script));
+					script.submit(new AntiBan<LogGildedAltar>(script));
 
-				script.submit(new AnimationMonitor<LogGildedAltar>(script));
-				script.submit(new AntiBan<LogGildedAltar>(script));
-
-				// v4
+					// v4
 		/*
 				// POSTBACK
 				// LEAVE HOUSE
@@ -1047,46 +1046,50 @@ public class LogGildedAltarGUI extends JFrame {
 				// BANKING
 		*/
 
-				script.tree.add(new LogoutIdle(script));
+					script.tree.add(new LogoutIdle(script));
 
 //				if (options.useBOB) {
 //					script.tree.add(new PickupBones(script));
 //				}
 
-				final Postback postback = new Postback(script);
-				script.getExecQueue(Script.State.STOP).add(new Runnable() {
-					@Override
-					public void run() {
-						postback.postback();
+					final Postback postback = new Postback(script);
+					script.getExecQueue(Script.State.STOP).add(new Runnable() {
+						@Override
+						public void run() {
+							postback.postback();
+						}
+					});
+
+					script.tree.add(postback);
+
+					if (options.stopLevelEnabled) {
+						script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel));
 					}
-				});
 
-				script.tree.add(postback);
+					script.tree.add(script.leaveHouse = new LeaveHouse(script));
+					script.bankingTask = new BankingTask(script, bankEnabledModel.elements());
 
-				if (options.stopLevelEnabled) {
-					script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel));
-				}
-
-				script.tree.add(script.leaveHouse = new LeaveHouse(script));
-				script.bankingTask = new BankingTask(script, bankEnabledModel.elements());
-
-				if (ctx.game.isLoggedIn() && ctx.players.local() != null) {
-					if (options.lightBurners && !(ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
+					if (script.ctx.game.isLoggedIn() && script.ctx.players.local() != null) {
+						if (options.lightBurners && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
+							script.bankingTask.setBanking();
+						}
+					} else {
 						script.bankingTask.setBanking();
 					}
-				} else {
-					script.bankingTask.setBanking();
+
+					script.tree.add(new RenewFamiliar(script));
+
+					script.tree.add(script.summoningTask = new SummoningTask(script));
+					script.tree.add(script.bankingTask);
+					script.tree.add(script.houseTask = new HouseTask(script, houseEnabledModel.elements()));
+
+
+					script.tree.add(script.altarTask);
+
+					options.TimeLastOffering = System.currentTimeMillis();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-
-				script.tree.add(script.summoningTask = new SummoningTask(script));
-				script.tree.add(script.bankingTask);
-				script.tree.add(script.houseTask = new HouseTask(script, houseEnabledModel.elements()));
-
-				script.tree.add(new RenewFamiliar(script));
-
-				script.tree.add(script.altarTask = new AltarTask(script));
-
-				options.TimeLastOffering = System.currentTimeMillis();
 			}
 		});
 

@@ -14,7 +14,7 @@ import java.util.List;
  * Time: 21:36
  */
 public class RoomStorage extends IMethodProvider {
-	private final Room[] rooms = new Room[81];
+	public Room[] rooms = new Room[81];
 	private final LogGildedAltar script;
 
 	public RoomStorage(LogGildedAltar script) {
@@ -23,14 +23,14 @@ public class RoomStorage extends IMethodProvider {
 
 		// Create the rooms
 		for (int x = 16; x <= 80; x += 8) {
-			for (int y = 16; y <= 80; y += 8) {
+			for (int y = 15; y <= 80; y += 8) {
 				final Room r = new Room(ctx, this, x, y);
 				rooms[r.getIndex()] = r;
 			}
 		}
 
 		// Find neighbours
-		if (script.houseTask.isInHouse()) {
+		if (script.houseTask != null && script.houseTask.isInHouse()) {
 			findNeighbours();
 		}
 	}

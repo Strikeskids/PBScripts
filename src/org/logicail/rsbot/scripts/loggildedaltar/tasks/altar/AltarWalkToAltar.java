@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.AltarTask;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Astar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
@@ -19,7 +20,7 @@ import java.util.List;
  * Date: 05/01/14
  * Time: 17:27
  */
-public class AltarWalkToAltar extends AltarAbstract {
+public class AltarWalkToAltar extends LogGildedAltarTask {
 	public AltarWalkToAltar(LogGildedAltar script) {
 		super(script);
 	}
@@ -39,7 +40,7 @@ public class AltarWalkToAltar extends AltarAbstract {
 	public void run() {
 		options.status = "Goin' to the chapel...";
 
-		final GameObject altar = altarTask.getAltar();
+		final GameObject altar = script.altarTask.getAltar();
 		final Room currentRoom = script.roomStorage.getRoom(ctx.players.local());
 		final Room altarRoom = script.roomStorage.getRoom(altar);
 		final HousePath path = new Astar(script).findRoute(altarRoom);

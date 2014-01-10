@@ -17,12 +17,13 @@ public class IMagic extends IMethodProvider {
 	}
 
 	public boolean cast(Spell spell) {
-		if (spell.getSpellbook().isOpen(ctx) && spell.getWindow().open(ctx)) {
+		if (spell.getSpellbook().isOpen(ctx)) {
 			if (!spell.getWindow().isOpen(ctx)) {
-				if (spell.getWindow().open(ctx)) {
-					sleep(50, 500);
-				}
+				ctx.log.info("open window " + spell.getWindow());
+				spell.getWindow().open(ctx);
+				sleep(100, 300);
 			}
+			ctx.log.info("interact component");
 			final Component component = spell.getComponent(ctx);
 			return component.isValid() && component.isVisible() && component.interact("Cast");
 		}

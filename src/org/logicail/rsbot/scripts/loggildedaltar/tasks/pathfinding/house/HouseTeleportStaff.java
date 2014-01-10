@@ -66,27 +66,27 @@ public class HouseTeleportStaff extends NodePath {
 
 	@Override
 	public void run() {
-		try {
-			script.houseTask.setHouseTeleportMode();
-		} catch (Exception ignored) {
-		}
+		script.houseTask.setHouseTeleportMode();
 
 		if (ctx.equipment.select().id(staff).isEmpty() && !ctx.backpack.select().id(staff).isEmpty()) {
+			ctx.log.info("Equip");
 			ctx.equipment.equip(staff);
 		}
 
-		if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.magic.cast(StandardSpell.HOUSE_TELEPORT)) {
-			sleep(200, 800);
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					if (!ctx.hud.isVisible(Hud.Window.BACKPACK)) {
-						ctx.hud.view(Hud.Window.BACKPACK);
+		if (!ctx.equipment.select().id(staff).isEmpty()) {
+			if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.magic.cast(StandardSpell.HOUSE_TELEPORT)) {
+				sleep(200, 800);
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						if (!ctx.hud.isVisible(Hud.Window.BACKPACK)) {
+							ctx.hud.view(Hud.Window.BACKPACK);
+						}
+						final Player local = ctx.players.local();
+						return (ctx.isPaused() || !ctx.isShutdown()) || (local != null && local.getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null));
 					}
-					final Player local = ctx.players.local();
-					return !ctx.isPaused() && !ctx.isShutdown() && local != null && local.getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
-				}
-			}, 600, 54);
+				}, 600, 54);
+			}
 		}
 	}
 }
