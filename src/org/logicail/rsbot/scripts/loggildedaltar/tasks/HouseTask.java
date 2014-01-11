@@ -17,13 +17,16 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.Yanil
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanillePortalWalk;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
+import org.logicail.rsbot.util.TargetableRectangle;
 import org.powerbot.script.lang.Filter;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.*;
+import org.powerbot.script.wrappers.Component;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -45,7 +48,8 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	public String toString() {
 		return "HouseTask";
 	}
-	private static final int SETTING_HOUSE_LOCATION = 481;
+
+	public static final int SETTING_HOUSE_LOCATION = 481;
 	private static final int EXIT_PORTAL = 13405;
 	protected final LogGildedAltarOptions options;
 
@@ -83,7 +87,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public boolean branch() {
-		return !options.banking
+		return !options.banking.get()
 				&& !isInHouse()
 				&& !ctx.bank.isOpen();
 	}
@@ -204,14 +208,15 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	}
 
 	public void setHouseTeleportMode() {
-		if((options.useOtherHouse && !isTeleportInHouse()) || (!options.useOtherHouse && !isTeleportInHouse())) {
+		final boolean before = isTeleportInHouse();
+		if ((options.useOtherHouse && !before) || (!options.useOtherHouse && !before)) {
 			return;
 		}
 
-		if(ctx.hud.open(Hud.Menu.OPTIONS)) {
+		if (ctx.hud.open(Hud.Menu.OPTIONS)) {
 			final Component gameSettings = ctx.widgets.get(1433, 0);
 			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, options.useOtherHouse ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_PORTAL);
-			if(gameSettings.isVisible()) {
+			if (gameSettings.isVisible()) {
 				gameSettings.interact("Select");
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -221,10 +226,36 @@ public class HouseTask extends Branch<LogGildedAltar> {
 				});
 			}
 
-			if(component.isValid() && component.interact("Select")) {
-				sleep(100, 600);
-				ctx.keyboard.send("{VK_ESCAPE down}");
-				ctx.keyboard.send("{VK_ESCAPE up}");
+			if (component.isValid() && component.interact("Select")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return before != isTeleportInHouse();
+					}
+				}, Random.nextInt(150, 250), 10);
+			}
+
+			close();
+		}
+	}
+
+	private void close() {
+		final Component child = ctx.widgets.get(1477, 54).getChild(2);
+		if (child.isValid() && child.isVisible()) {
+			final Rectangle rect = child.getBoundingRect();
+			if (rect != null) {
+				rect.translate(15, 20);
+				rect.width /= 2;
+				rect.height /= 3;
+				TargetableRectangle targetableRectangle = new TargetableRectangle(ctx, rect);
+				if (targetableRectangle.interact("Close Window")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return !child.isValid();
+						}
+					}, Random.nextInt(150, 250), 10);
+				}
 			}
 		}
 	}

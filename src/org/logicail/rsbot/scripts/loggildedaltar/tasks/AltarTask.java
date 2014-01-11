@@ -40,7 +40,7 @@ public class AltarTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public boolean branch() {
-		return !options.banking && script.houseTask.isInHouse();
+		return !options.banking.get() && script.houseTask.isInHouse();
 	}
 
 	public GameObject getAltar() {

@@ -46,7 +46,7 @@ public class ISummoning extends Summoning {
 	}*/
 
 	public boolean canSummon(Familiar familiar) {
-		return !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
+		return familiar != null && !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
 	}
 
 	public boolean close() {
@@ -92,11 +92,11 @@ public class ISummoning extends Summoning {
 					action = "Store-All";
 				}
 				// TODO: Reenable
-				/*if (hasAction(item, action)) {
+				if (hasAction(item, action)) {
 					if (item.interact(action)) {
 						return true;
 					}
-				} else*/
+				}/* else
 				if (item.interact("Store-X") && ctx.chat.waitForInputWidget()) {
 					sleep(800, 1200);
 					if (amount == 0) {
@@ -105,7 +105,7 @@ public class ISummoning extends Summoning {
 					if (ctx.chat.isInputWidgetOpen()) {
 						ctx.log.info("KB send " + amount + " == " + ctx.keyboard.sendln(amount + ""));
 					}
-				}
+				}*/
 			}
 		}
 
@@ -127,8 +127,7 @@ public class ISummoning extends Summoning {
 
 	@Override
 	public boolean renewFamiliar() {
-		closeBankIfInTheWay();
-		return super.renewFamiliar();
+		return isFamiliarSummoned() && canSummon(getFamiliar()) && interactOrb("Renew Familiar");
 	}
 
 	public boolean summon(Familiar familiar) {
@@ -145,12 +144,12 @@ public class ISummoning extends Summoning {
 		final Item pouch = ctx.backpack.shuffle().poll();
 		if (ctx.hud.view(Hud.Window.BACKPACK)) {
 			sleep(200, 800);
-			return pouch.isValid() && pouch.interact("Summon") && Condition.wait(new Callable<Boolean>() {
+			return pouch.isValid() && pouch.interact("Summon");/* && Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return ctx.summoning.isFamiliarSummoned() && !pouch.isValid();
 				}
-			}, Random.nextInt(500, 700), Random.nextInt(4, 8));
+			}, Random.nextInt(500, 700), Random.nextInt(4, 8));*/
 		}
 
 		return false;

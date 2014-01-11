@@ -104,7 +104,7 @@ public class Banking extends Branch<LogGildedAltar> {
 	}
 
 	public void setBanking(boolean state) {
-		options.banking = state;
+		options.banking.set(state);
 		if (state) {
 			beastOfBurdenWithdraws = 0;
 			withdrawnDelegation = false;

@@ -83,14 +83,16 @@ public class AltarOfferBones extends LogGildedAltarTask {
 			if (altar.isValid() && !altar.isOnScreen()) {
 				ctx.camera.turnTo(altar);
 			}
-			if (selectedItem.getId() == options.offering.getId() && altar.interact("Use", selectedItem.getName() + " -> Altar")) {
-				if (Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+			if (selectedItem.getId() == options.offering.getId()) {
+				if (altar.interact("Use", selectedItem.getName() + " -> Altar") || altar.getLocation().getMatrix(ctx).interact("Use", selectedItem.getName() + " -> Altar")) {
+					if (Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+						}
+					})) {
+						AnimationMonitor.put(ANIMATION_OFFERING);
 					}
-				})) {
-					AnimationMonitor.put(ANIMATION_OFFERING);
 				}
 			}
 		}

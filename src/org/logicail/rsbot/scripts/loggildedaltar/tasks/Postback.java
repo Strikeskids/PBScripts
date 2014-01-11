@@ -84,6 +84,8 @@ public class Postback extends LogGildedAltarTask {
 			return;
 		}
 
+		// TODO: Compress
+
 		JsonObject json = new JsonObject();
 		json.add("script", script.getName());
 		json.add("userid", Environment.getUserId());
@@ -92,7 +94,7 @@ public class Postback extends LogGildedAltarTask {
 		json.add("timerunning", timeRunning - previousTimeRunning);
 		final int experience = script.experience();
 		json.add("xpgained", experience - previousXPGained);
-		final int bonesBuried = options.bonesOffered;
+		final int bonesBuried = options.bonesOffered.get();
 		json.add("bonesburied", bonesBuried);
 		json.add("status", options.status);
 		if (options.detectHouses) {
@@ -101,6 +103,7 @@ public class Postback extends LogGildedAltarTask {
 				json.add("currenthouse", currentHouse.getPlayerName());
 			}
 		}
+		//json.add("settings", options.toJson());
 
 		//ctx.log.info("Postback: " + json.toString());
 
@@ -137,7 +140,7 @@ public class Postback extends LogGildedAltarTask {
 							if (latest_version != null && latest_version.isNumber()) {
 								final double latest_version_double = latest_version.asDouble();
 								if (latest_version_double > script.getVersion()) {
-									options.newVersionAvailable = true;
+									options.newVersionAvailable.set(true);
 								}
 							}
 						}

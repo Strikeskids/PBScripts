@@ -115,8 +115,9 @@ public class BankWithdraw extends BankingAbstract {
 						}
 					}
 
-					if (script.nextSummon < System.currentTimeMillis() && ctx.summoning.canSummon(options.beastOfBurden)) {
+					if (script.nextSummon.get() < System.currentTimeMillis() && ctx.summoning.canSummon(options.beastOfBurden)) {
 						RenewFamiliar.renew(script);
+						return;
 					}
 				}
 			}

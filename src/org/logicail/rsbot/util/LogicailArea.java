@@ -184,6 +184,7 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 			return list.get(org.powerbot.script.util.Random.nextInt(0, Math.min(2, tiles.size())));
 		}
 
+		ctx.log.info("NIL");
 		return Tile.NIL;
 	}
 

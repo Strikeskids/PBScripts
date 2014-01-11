@@ -1,11 +1,14 @@
 package org.logicail.rsbot.scripts.loggildedaltar;
 
+import com.eclipsesource.json.JsonObject;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
 import org.powerbot.script.AbstractScript;
 import org.powerbot.script.methods.Summoning;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,10 +19,32 @@ import java.util.Properties;
 public class LogGildedAltarOptions {
 	public volatile long TimeLastOffering;
 
+	public JsonObject toJson() {
+		JsonObject json = new JsonObject();
+		json.add("offering", offering.name());
+		json.add("lightBurners", lightBurners);
+		if (useBOB) {
+			json.add("useBOB", useOtherHouse);
+			json.add("usedBOB", usedBOB.get());
+			json.add("beastOfBurden", beastOfBurden.name());
+			json.add("onlyHouseObelisk", onlyHouseObelisk);
+		}
+		if(useOtherHouse) {
+			json.add("useOtherHouse", useOtherHouse);
+			json.add("detectHouses", detectHouses);
+			json.add("stopOffering", stopOffering);
+		}
+		json.add("banking", banking.get());
+		json.add("stopLevelEnabled", stopLevelEnabled);
+		json.add("stopLevel", stopLevel);
+		json.add("bonesOffered", bonesOffered.get());
+		return json;
+	}
+
 	/* Settings */
 	public boolean lightBurners = true;
 	public boolean useBOB = false;
-	public volatile boolean usedBOB = false; // Used BOB this trip
+	public AtomicBoolean usedBOB = new AtomicBoolean(false); // Used BOB this trip
 	public Summoning.Familiar beastOfBurden = Summoning.Familiar.BULL_ANT;
 	public Offering offering = Offering.IMPIOUS_ASHES;
 	public boolean useOtherHouse = false;
@@ -30,13 +55,13 @@ public class LogGildedAltarOptions {
 	//public boolean useAura = false;
 	//public static MyAuras.Aura aura = MyAuras.Aura.CORRUPTION;
 	/* Move to bank delegation */
-	public volatile boolean banking = false;
+	public volatile AtomicBoolean banking = new AtomicBoolean(false);
 	public boolean bobonce = false;
 	public boolean stopLevelEnabled = false;
 	public int stopLevel;
-	public volatile String status = "";
-	public volatile int bonesOffered;
-	public volatile boolean newVersionAvailable;
+	public String status = "";
+	public AtomicInteger bonesOffered = new AtomicInteger();
+	public AtomicBoolean newVersionAvailable = new AtomicBoolean(false);
 	private File settingsFile;
 	private final String FILENAME = "settings.ini";
 

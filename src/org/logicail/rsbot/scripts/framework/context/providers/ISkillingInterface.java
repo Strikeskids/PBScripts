@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.util.TargetableRectangle;
 import org.powerbot.script.lang.Filter;
+import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
@@ -259,11 +260,11 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return getCategoryRectangle(target) != null;
+						return getCategoryRectangle(ctx, target) != null;
 					}
 				})) {
 					sleep(250, 750);
-					TargetableRectangle rectangle = getCategoryRectangle(target);
+					TargetableRectangle rectangle = getCategoryRectangle(ctx, target);
 					if (rectangle != null && ctx.mouse.move(rectangle)) {
 						sleep(200, 500);
 						if (rectangle.contains(ctx.mouse.getLocation()) && ctx.menu.click(org.powerbot.script.methods.Menu.filter("Select"))) {
@@ -302,7 +303,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 		return "";
 	}
 
-	public TargetableRectangle getCategoryRectangle(String text) {
+	public TargetableRectangle getCategoryRectangle(MethodContext ctx, String text) {
 		final Component widgetChild = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY_MENU);
 		final Component[] options = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 62).getChildren();
 
@@ -313,7 +314,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 				rectangle.y += i * 15 + 7;
 				rectangle.width -= 9;
 				rectangle.height = 10;
-				return new TargetableRectangle(rectangle);
+				return new TargetableRectangle(ctx, rectangle);
 			}
 		}
 

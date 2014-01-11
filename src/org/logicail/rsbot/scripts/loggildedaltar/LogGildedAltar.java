@@ -9,23 +9,16 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePo
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleLodestone;
 import org.logicail.rsbot.util.LinkedProperties;
-import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Skills;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
 import org.powerbot.script.util.SkillData;
-import org.powerbot.script.wrappers.Player;
-import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +29,7 @@ import java.util.concurrent.Callable;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.01,
+		version = 6.011,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -53,12 +46,12 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	public YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
 	public AltarTask altarTask;
-	private int pouchFailure;
-	public volatile long nextSummon;
+	public AtomicLong nextSummon = new AtomicLong();
 
 	private SkillData skillData = null;
 	private int currentLevel = -1;
 	private int startLevel = -1;
+	public AtomicBoolean familiarFailed = new AtomicBoolean();
 
 	@Override
 	public LinkedProperties getPaintInfo() {
@@ -91,7 +84,9 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		}
 
 		final float time = runtime / 3600000f;
-		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered, (int) (options.bonesOffered / time)));
+		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
+
+		//properties.put("isTeleportInHouse", ctx.settings.get(HouseTask.SETTING_HOUSE_LOCATION, 29, 1) == 0);
 
 		return properties;
 	}
@@ -108,7 +103,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		if (experience > 0) {
 			return experience;
 		}
-		return (int) (options.bonesOffered * options.offering.getXp());
+		return (int) (options.bonesOffered.get() * options.offering.getXp());
 	}
 
 	@Override
@@ -124,7 +119,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						ctx.stop("Can't enter friends house anymore");
 					}
 				} else if (message.equals("Your beast of burden has no more items.")) {
-					options.usedBOB = true;
+					options.usedBOB.set(true);
 				} else if (message.equals("You cannot turn off an aura. It must deplete in its own time.")) {
 					/*if (options.useAura) {
 						submit(new Task<LogGildedAltar>(this) {
@@ -136,46 +131,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 					}*/
 				} else {
 					if (message.startsWith("Your familiar is too big to fit here.")) {
-						final Player local = ctx.players.local();
-						if (local == null) {
-							break;
-						}
-						final Tile currentLocation = local.getLocation();
-
-						final List<Tile> tiles = new ArrayList<Tile>();
-						for (Tile tile : new LogicailArea(currentLocation.derive(-5, -5), currentLocation.derive(5, 5)).getReachable(ctx)) {
-							double distance = tile.distanceTo(currentLocation);
-							if (distance > 2 && distance < 6) {
-								tiles.add(tile);
-							}
-						}
-
-						Collections.shuffle(tiles);
-
-						if (!tiles.isEmpty()) {
-							log.info("Walk so familiar can be summoned");
-							getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
-								@Override
-								public void run() {
-									final int limit = Math.min(5, tiles.size());
-									for (int i = 0; i < limit; ++i) {
-										final Tile destination = tiles.get(i);
-										if (ctx.movement.findPath(destination).traverse()) {
-											sleep(400, 1200);
-											if (Condition.wait(new Callable<Boolean>() {
-												@Override
-												public Boolean call() throws Exception {
-													final Player player = ctx.players.local();
-													return player == null || !currentLocation.equals(player.getLocation());
-												}
-											})) {
-												break;
-											}
-										}
-									}
-								}
-							});
-						}
+						familiarFailed.set(true);
 					}/* else if (options.useAura && message.startsWith("Currently recharging.")) {
 						try {
 							int start = message.indexOf("<col=ff0000>") + 12;
@@ -186,23 +142,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						} catch (Exception ignored) {
 						}
 					}*/ else if (message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")) {
-						getController().getExecutor().offer(new Runnable() {
-							@Override
-							public void run() {
-								log.info("moveFamiliar");
-								if (moveFamiliar()) {
-									if (ctx.summoning.summon(options.beastOfBurden)) {
-										pouchFailure = 0;
-									} else {
-										pouchFailure++;
-										if (pouchFailure > 2) {
-											ctx.log.info("Wait a while before summoning again");
-											nextSummon = System.currentTimeMillis() + Random.nextInt(25000, 35000);
-										}
-									}
-								}
-							}
-						});
+						familiarFailed.set(true);
 					}
 				}
 				break;
@@ -230,38 +170,18 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				break;
 			case 109:
 				if (message.equals("Note: anything your familiar is carrying when it disappears will be placed on the floor.")) {
-					options.usedBOB = false;
+					options.usedBOB.set(false);
 				} else if (message.contains("your offering.")) {
-					++options.bonesOffered;
+					options.bonesOffered.incrementAndGet();
 				}
 		}
-	}
-
-
-	private boolean moveFamiliar() {
-		// Find area 3x3 all reachable
-		final Tile location = ctx.players.local().getLocation();
-		LogicailArea area = new LogicailArea(location.derive(-8, -8), location.derive(8, 8));
-		final Tile tile = area.findSpace(ctx, 3, 3);
-		if (tile != Tile.NIL) {
-			// Walk to side
-			if (ctx.movement.findPath(tile).traverse()) {
-				return (Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return tile.equals(ctx.players.local().getLocation());
-					}
-				}, Random.nextInt(400, 650), Random.nextInt(10, 15)));
-			}
-		}
-		return false;
 	}
 
 	@Override
 	public void repaint(Graphics g) {
 		super.repaint(g);
 
-		if (options.newVersionAvailable) {
+		if (options.newVersionAvailable.get()) {
 			final Point point = ctx.mouse.getLocation();
 			int x = point.x + 10;
 			int y = point.y + 6;

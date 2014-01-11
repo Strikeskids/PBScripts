@@ -1,9 +1,12 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.banking;
 
+import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.RenewFamiliar;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Tile;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -65,24 +68,26 @@ public class BankBob extends BankingAbstract {
 			// OPEN BOB
 			bankingBranch.fail = 0;
 			options.status = "Open familiar";
-			/*if (LocationAttribute.EDGEVILLE.isInLargeArea(ctx)) {
-				final Npc npc = ctx.summoning.getNpc();
-				if (npc.isValid() && Calculations.distanceTo(familiar) > 3 && Summoning.doCallFollower()) {
-					sleep(250, 575);
-				}
-			}*/
 
 			if (!ctx.summoning.open()) {
+
 				final Tile start = ctx.players.local().getLocation();
-				final Tile destination = start.randomize(-3, 0, -2, 2);
-				final double distance = destination.distanceTo(start);
-				if (distance > 1 && distance < 6 && ctx.movement.findPath(destination).traverse()) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return start.equals(ctx.players.local().getLocation());
+				final List<Tile> tiles = RenewFamiliar.familarTile(ctx);
+				for (final Tile tile : tiles) {
+					script.familiarFailed.set(false);
+					if (ctx.movement.findPath(tile).traverse()) {
+						if (Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return IMovement.Euclidean(tile, ctx.players.local()) < 2.5;
+							}
+						}, Random.nextInt(400, 650), Random.nextInt(10, 15)) || !start.equals(start)) {
+							if (ctx.summoning.open() || !script.familiarFailed.get()) {
+								break;
+							}
+							sleep(600, 1800);
 						}
-					}, Random.nextInt(550, 650), Random.nextInt(1, 4));
+					}
 				}
 			}
 		}

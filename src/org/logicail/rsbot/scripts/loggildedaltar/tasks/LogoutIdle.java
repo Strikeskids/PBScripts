@@ -34,11 +34,11 @@ public class LogoutIdle extends LogGildedAltarTask {
 
 	@Override
 	public void run() {
-		if (options.bonesOffered == lastBonesBuried) {
+		if (options.bonesOffered.get() == lastBonesBuried) {
 			options.status = ("Logout idle");
 			ctx.stop("No bones offered in last 20 minutes, logging out to avoid idling");
 		} else {
-			lastBonesBuried = options.bonesOffered;
+			lastBonesBuried = options.bonesOffered.get();
 			reset();
 		}
 	}

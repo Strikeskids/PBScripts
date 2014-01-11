@@ -36,20 +36,22 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 
 	@Override
 	public void run() {
-		if (options.useBOB && !options.usedBOB && ctx.summoning.isFamiliarSummoned() && options.beastOfBurden.getBoBSpace() > 0) {
+		if (options.useBOB && !options.usedBOB.get() && ctx.summoning.isFamiliarSummoned() && options.beastOfBurden.getBoBSpace() > 0) {
 			options.status = "Taking items from BoB";
 			ctx.log.info(options.status);
 
 			final int inventoryCount = ctx.backpack.select().count();
 
-			if (ctx.summoning.takeBoB()) {
+			if (ctx.summoning.interactOrb("Take BoB")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return options.usedBOB || ctx.backpack.select().count() > inventoryCount;
+						return options.usedBOB.get() || ctx.backpack.select().count() > inventoryCount;
 					}
-				});
-				sleep(100, 600);
+				}, Random.nextInt(300, 600), 4);
+				if (options.usedBOB.get()) {
+					sleep(100, 600);
+				}
 			}
 		} else if (getBackpackOffering().isEmpty()) {
 			options.status = ("Out of bones banking");

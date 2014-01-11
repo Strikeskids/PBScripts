@@ -77,7 +77,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public boolean branch() {
-		return options.banking
+		return options.banking.get()
 				&& (script.summoningTask == null || !script.summoningTask.isValid());
 	}
 
