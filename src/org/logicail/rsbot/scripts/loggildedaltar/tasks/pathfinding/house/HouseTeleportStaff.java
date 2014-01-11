@@ -66,7 +66,10 @@ public class HouseTeleportStaff extends NodePath {
 
 	@Override
 	public void run() {
-		script.houseTask.setHouseTeleportMode();
+		if(!script.houseTask.setHouseTeleportMode()) {
+			script.log.info("Wait for game settings to close");
+			return;
+		}
 
 		if (ctx.equipment.select().id(staff).isEmpty() && !ctx.backpack.select().id(staff).isEmpty()) {
 			script.log.info("Equip");
