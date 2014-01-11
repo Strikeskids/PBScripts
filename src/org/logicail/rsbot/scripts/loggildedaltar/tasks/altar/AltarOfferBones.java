@@ -102,7 +102,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		}
 	}
 
-	boolean selectBone() {
+	private boolean selectBone() {
 		if (ctx.hud.view(Hud.Window.BACKPACK)) {
 			if (ctx.backpack.getSelectedItem().getId() != options.offering.getId()) {
 				if (ctx.backpack.isItemSelected() && ctx.menu.click(Menu.filter("Cancel"))) {
@@ -116,7 +116,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 
 				for (Item item : getBackpackOffering().first()) {
 					if (ctx.hud.view(Hud.Window.BACKPACK)) {
-						if (!ctx.backpack.isItemSelected() && ctx.backpack.isCollapsed() && ctx.backpack.scroll(item) && item.interact("Use")) {
+						if (!ctx.backpack.isItemSelected() && ctx.backpack.scroll(item) && item.interact("Use")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
