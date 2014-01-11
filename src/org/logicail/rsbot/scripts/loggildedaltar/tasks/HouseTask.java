@@ -249,7 +249,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 				rect.width /= 2;
 				rect.height /= 3;
 				TargetableRectangle targetableRectangle = new TargetableRectangle(ctx, rect);
-				if (targetableRectangle.interact("Close Window")) {
+				if (targetableRectangle.hover() && ctx.menu.click(org.powerbot.script.methods.Menu.filter("Close Window"))) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
