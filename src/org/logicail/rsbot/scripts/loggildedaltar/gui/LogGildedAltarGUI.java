@@ -1012,7 +1012,8 @@ public class LogGildedAltarGUI extends JFrame {
 		options.useBOB = enableSummoning.isSelected();
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
-		script.submit(new Runnable() {
+		final Script.Controller.Executor<Runnable> executor = script.getController().getExecutor();
+		executor.offer(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -1031,8 +1032,8 @@ public class LogGildedAltarGUI extends JFrame {
 
 					script.altarTask = new AltarTask(script);
 
-					script.submit(new AnimationMonitor<LogGildedAltar>(script));
-					script.submit(new AntiBan<LogGildedAltar>(script));
+					executor.offer(new Thread(new AnimationMonitor<LogGildedAltar>(script)));
+					executor.offer(new Thread(new AntiBan<LogGildedAltar>(script)));
 
 					// v4
 		/*
@@ -1094,7 +1095,7 @@ public class LogGildedAltarGUI extends JFrame {
 		});
 
 		if (options.detectHouses) {
-			script.submit(new Task<LogGildedAltar>(script) {
+			executor.offer(new Task<LogGildedAltar>(script) {
 				@Override
 				public void run() {
 					script.houseHandler.addOpenHouses();

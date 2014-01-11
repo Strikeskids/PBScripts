@@ -6,14 +6,11 @@ import com.sk.methods.action.ActionBar;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.AbstractScript;
-import org.powerbot.script.Script;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Component;
 
 import java.awt.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -48,7 +45,7 @@ public class IMethodContext extends MethodContext {
 	// SK
 
 	// Concurrent task executor
-	private final ExecutorService executor = Executors.newCachedThreadPool();
+	//private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AbstractScript script;
 	private volatile boolean shutdown;
 	private volatile boolean paused;
@@ -59,7 +56,7 @@ public class IMethodContext extends MethodContext {
 		log = script.log;
 
 		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
-
+/*
 		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
 			@Override
 			public void run() {
@@ -81,7 +78,7 @@ public class IMethodContext extends MethodContext {
 				executor.shutdown();
 			}
 		});
-
+*/
 		skillingInterface = new ISkillingInterface(this);
 		backpack = new IBackpack(this);
 		camera = new ICamera(this);
@@ -147,10 +144,11 @@ public class IMethodContext extends MethodContext {
 			script.getController().stop();
 		}
 	}
-
+/*
 	public final void submit(Runnable task) {
 		if (!isShutdown()) {
 			executor.submit(task);
 		}
 	}
+	*/
 }

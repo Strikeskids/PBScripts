@@ -72,7 +72,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	 *
 	 * @param task
 	 */
-	public void submit(Runnable task) {
+	/*public void submit(Runnable task) {
 		ctx.submit(task);
-	}
+	}*/
 }

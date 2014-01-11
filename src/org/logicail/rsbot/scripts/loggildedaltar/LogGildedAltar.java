@@ -36,7 +36,7 @@ import java.util.concurrent.Callable;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6,
+		version = 6.01,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -65,11 +65,11 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final LinkedProperties properties = new LinkedProperties();
 		properties.put("Not everything tested", "Report errors on forum");
 
-		if (ctx.game.isLoggedIn()) {
+		currentLevel = ctx.skills.getLevel(Skills.PRAYER);
+		if (currentLevel > 0) {
 			if (skillData == null) {
 				skillData = new SkillData(ctx);
 			}
-			currentLevel = ctx.skills.getLevel(Skills.PRAYER);
 			if (startLevel == -1) {
 				startLevel = currentLevel;
 			}
@@ -80,7 +80,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		properties.put("Status", options.status);
 		properties.put("Time Running", org.powerbot.script.util.Timer.format(runtime));
 
-		if (skillData != null && ctx.game.isLoggedIn()) {
+		if (skillData != null) {
 			properties.put("TTL", org.powerbot.script.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
 			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
 			properties.put("XP Gained", String.format("%,d", experience()));
@@ -96,10 +96,17 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		return properties;
 	}
 
+	private volatile int experience = 0;
+
 	public int experience() {
-		try {
-			return skillData.experience(Skills.PRAYER);
-		} catch (Exception ignored) {
+		if (skillData != null && currentLevel > 1) {
+			try {
+				return experience = skillData.experience(Skills.PRAYER);
+			} catch (Exception ignored) {
+			}
+		}
+		if (experience > 0) {
+			return experience;
 		}
 		return (int) (options.bonesOffered * options.offering.getXp());
 	}
@@ -136,9 +143,9 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						final Tile currentLocation = local.getLocation();
 
 						final List<Tile> tiles = new ArrayList<Tile>();
-						for (Tile tile : new LogicailArea(currentLocation.derive(-5, -5), currentLocation.derive(5, 5)).getTileArray()) {
+						for (Tile tile : new LogicailArea(currentLocation.derive(-5, -5), currentLocation.derive(5, 5)).getReachable(ctx)) {
 							double distance = tile.distanceTo(currentLocation);
-							if (distance > 2 && distance < 6 && tile.getMatrix(ctx).isReachable()) {
+							if (distance > 2 && distance < 6) {
 								tiles.add(tile);
 							}
 						}
@@ -147,10 +154,11 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 						if (!tiles.isEmpty()) {
 							log.info("Walk so familiar can be summoned");
-							submit(new Task<LogGildedAltar>(this) {
+							getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
 								@Override
 								public void run() {
-									for (int i = 0; i < 5; ++i) {
+									final int limit = Math.min(5, tiles.size());
+									for (int i = 0; i < limit; ++i) {
 										final Tile destination = tiles.get(i);
 										if (ctx.movement.findPath(destination).traverse()) {
 											sleep(400, 1200);
@@ -178,10 +186,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						} catch (Exception ignored) {
 						}
 					}*/ else if (message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")) {
-						log.info("moveFamiliar");
-						submit(new Runnable() {
+						getController().getExecutor().offer(new Runnable() {
 							@Override
 							public void run() {
+								log.info("moveFamiliar");
 								if (moveFamiliar()) {
 									if (ctx.summoning.summon(options.beastOfBurden)) {
 										pouchFailure = 0;
@@ -209,7 +217,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 					options.status = "Can't enter friends house anymore";
 					log.info("Can't enter friends house anymore");
 
-					submit(new Task<LogGildedAltar>(this) {
+					getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
 						@Override
 						public void run() {
 							houseHandler.currentHouseFailed();
@@ -271,7 +279,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	@Override
 	public void start() {
-		submit(new Task<LogGildedAltar>(this) {
+		getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {

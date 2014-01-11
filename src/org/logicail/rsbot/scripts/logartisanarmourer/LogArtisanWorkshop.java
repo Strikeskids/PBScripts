@@ -142,8 +142,10 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 		} catch (NullPointerException ignored) {
 		}
 
-		submit(new AnimationMonitor<LogArtisanWorkshop>(this));
-		submit(new AntiBan<LogArtisanWorkshop>(this));
+		final Controller.Executor<Runnable> executor = getController().getExecutor();
+
+		executor.offer(new Thread(new AnimationMonitor<LogArtisanWorkshop>(this)));
+		executor.offer(new Thread(new AntiBan<LogArtisanWorkshop>(this)));
 
 		//tree.add(new LogoutIdle());
 
@@ -327,7 +329,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	public void start() {
 		super.start();
 
-		submit(new Task<LogArtisanWorkshop>(this) {
+		getController().getExecutor().offer(new Task<LogArtisanWorkshop>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {

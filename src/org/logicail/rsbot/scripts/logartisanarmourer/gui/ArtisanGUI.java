@@ -343,7 +343,7 @@ public class ArtisanGUI extends JFrame {
 		} else if (s.equals("Track room")) {
 			options.mode = Mode.REPAIR_TRACK;
 			options.ingotType = (IngotType) trackIngotType.getSelectedItem();
-			script.submit(new Task<LogArtisanWorkshop>(script) {
+			script.getController().getExecutor().offer(new Task<LogArtisanWorkshop>(script) {
 				@Override
 				public void run() {
 					if (!ctx.backpack.select().isEmpty()) {
