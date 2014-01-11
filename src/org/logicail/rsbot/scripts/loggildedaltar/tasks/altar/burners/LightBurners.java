@@ -69,10 +69,11 @@ public class LightBurners extends BurnerAbstract {
 
 			if (burner.isOnScreen() && burner.interact("Light", "Incense burner")) {
 				sleep(100, 200);
+				final GameObject finalBurner = burner;
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !burner.isValid();
+						return !finalBurner.isValid();
 					}
 				}, Random.nextInt(400, 600), Random.nextInt(10, 20));
 			}

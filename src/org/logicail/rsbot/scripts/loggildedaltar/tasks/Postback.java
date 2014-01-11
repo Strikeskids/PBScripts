@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.IOUtil;
 import org.powerbot.script.methods.Environment;
@@ -22,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
  * Date: 08/01/14
  * Time: 16:42
  */
-public class Postback extends LogGildedAltarTask {
+public class Postback extends Task<LogGildedAltar> {
 	private static final int INTERVAL = 1200000; // 20 mins
 	private static final String POSTBACK_URL = "http://www.logicail.co.uk/data.php";
 	private static Cipher cipher = null;
@@ -66,17 +67,20 @@ public class Postback extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
-		if (cipher != null && nextRun < System.currentTimeMillis()) {
-			nextRun = System.currentTimeMillis() + INTERVAL;
-			return true;
-		}
-		return false;
-	}
-
-	@Override
 	public void run() {
-		postback();
+		if (cipher != null && nextRun < System.currentTimeMillis()) {
+			postback();
+		}
+
+		sleep(500);
+
+		if (!Thread.interrupted()) {
+			try {
+				script.getController().getExecutor().offer(this);
+			} catch (NullPointerException ignored) {
+				postback();
+			}
+		}
 	}
 
 	public synchronized void postback() {
@@ -94,10 +98,10 @@ public class Postback extends LogGildedAltarTask {
 		json.add("timerunning", timeRunning - previousTimeRunning);
 		final int experience = script.experience();
 		json.add("xpgained", experience - previousXPGained);
-		final int bonesBuried = options.bonesOffered.get();
+		final int bonesBuried = script.options.bonesOffered.get();
 		json.add("bonesburied", bonesBuried);
-		json.add("status", options.status);
-		if (options.detectHouses.get()) {
+		json.add("status", script.options.status);
+		if (script.options.detectHouses.get()) {
 			final OpenHouse currentHouse = script.houseHandler.getCurrentHouse();
 			if (currentHouse != null) {
 				json.add("currenthouse", currentHouse.getPlayerName());
@@ -140,7 +144,7 @@ public class Postback extends LogGildedAltarTask {
 							if (latest_version != null && latest_version.isNumber()) {
 								final double latest_version_double = latest_version.asDouble();
 								if (latest_version_double > script.getVersion()) {
-									options.newVersionAvailable.set(true);
+									script.options.newVersionAvailable.set(true);
 								}
 							}
 						}
