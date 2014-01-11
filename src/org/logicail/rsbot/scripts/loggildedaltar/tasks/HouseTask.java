@@ -210,6 +210,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	public void setHouseTeleportMode() {
 		final boolean before = isTeleportInHouse();
 		if ((options.useOtherHouse && !before) || (!options.useOtherHouse && !before)) {
+			close();
 			return;
 		}
 
