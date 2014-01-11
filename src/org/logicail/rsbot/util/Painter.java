@@ -20,7 +20,7 @@ public class Painter extends IMethodProvider implements PaintListener {
 	private final BasicStroke mouseStroke = new BasicStroke(2f);
 	private final String title;
 
-	private Point location = new Point(50, 200);
+	private Point location = new Point(50, 220);
 	private Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
 
 	public Painter(IMethodContext context, AbstractScript script) {

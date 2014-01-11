@@ -95,32 +95,35 @@ public class AltarOfferBones extends LogGildedAltarTask {
 					}
 				}
 			}
+		} else {
+			script.log.info("Bone not selected");
 		}
 	}
 
 	boolean selectBone() {
-		if (ctx.backpack.getSelectedItem().getId() != options.offering.getId()) {
-			if (ctx.backpack.isItemSelected() && ctx.menu.click(Menu.filter("Cancel"))) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !ctx.backpack.isItemSelected();
-					}
-				}, 300, 8);
-			}
-
-			for (Item item : getBackpackOffering().first()) {
-				if (!ctx.hud.isVisible(Hud.Window.BACKPACK) && ctx.hud.view(Hud.Window.BACKPACK)) {
-					sleep(100, 500);
-				}
-
-				if (!ctx.backpack.isItemSelected() && ctx.backpack.isCollapsed() && ctx.backpack.scroll(item) && item.interact("Use")) {
+		if (ctx.hud.view(Hud.Window.BACKPACK)) {
+			if (ctx.backpack.getSelectedItem().getId() != options.offering.getId()) {
+				if (ctx.backpack.isItemSelected() && ctx.menu.click(Menu.filter("Cancel"))) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.backpack.getSelectedItem().getId() == options.offering.getId();
+							return !ctx.backpack.isItemSelected();
 						}
 					}, 300, 8);
+				}
+
+				for (Item item : getBackpackOffering().first()) {
+					if (ctx.hud.view(Hud.Window.BACKPACK)) {
+						if (!ctx.backpack.isItemSelected() && ctx.backpack.isCollapsed() && ctx.backpack.scroll(item) && item.interact("Use")) {
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return ctx.backpack.getSelectedItem().getId() == options.offering.getId();
+								}
+							}, Random.nextInt(200, 600), Random.nextInt(4, 8));
+							sleep(100, 500);
+						}
+					}
 				}
 			}
 		}
