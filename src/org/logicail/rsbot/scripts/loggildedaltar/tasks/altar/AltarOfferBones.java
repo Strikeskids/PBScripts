@@ -93,6 +93,8 @@ public class AltarOfferBones extends LogGildedAltarTask {
 					})) {
 						AnimationMonitor.put(ANIMATION_OFFERING);
 					}
+				} else {
+					script.log.info("Couldn't interact with altar");
 				}
 			}
 		} else {
