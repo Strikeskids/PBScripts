@@ -1,7 +1,9 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.powerbot.script.lang.Filter;
 import org.powerbot.script.methods.Hud;
+import org.powerbot.script.methods.Menu;
 import org.powerbot.script.methods.Summoning;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
@@ -97,10 +99,15 @@ public class ISummoning extends Summoning {
 			}
 
 			final int backpackCount = backpack.select().id(id).count();
-			for (Item item : backpack.shuffle().first()) {
+			for (final Item item : backpack.shuffle().first()) {
 				final String action = getStoreString(amount);
 				if (action.equals("Store-X")) {
-					if (item.interact(action) && ctx.chat.waitForInputWidget()) {
+					if (item.interact(new Filter<Menu.Entry>() {
+						@Override
+						public boolean accept(Menu.Entry entry) {
+							return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
+						}
+					}) && ctx.chat.waitForInputWidget()) {
 						sleep(800, 1200);
 						if (amount == 0) {
 							amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
@@ -110,7 +117,12 @@ public class ISummoning extends Summoning {
 						}
 					}
 				}
-				return item.interact(action, item.getName());
+				return item.interact(new Filter<Menu.Entry>() {
+					@Override
+					public boolean accept(Menu.Entry entry) {
+						return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
+					}
+				});
 			}
 		}
 
