@@ -21,6 +21,11 @@ public class HouseTablet extends MagicTablet {
 	}
 
 	@Override
+	public String toString() {
+		return "HouseTablet";
+	}
+
+	@Override
 	public boolean isValid() {
 		return super.isValid()
 				&& script.housePortal.getPortalLocation() == null;

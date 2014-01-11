@@ -219,8 +219,8 @@ public class SmithTrack extends Branch {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.isPaused()
-									|| ctx.isShutdown()
+							return script.getController().isSuspended()
+									|| script.getController().isStopping()
 									|| ctx.backpack.select().id(makeid).count() >= target
 									|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
 						}

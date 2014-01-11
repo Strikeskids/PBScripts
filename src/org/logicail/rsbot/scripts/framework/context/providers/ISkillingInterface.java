@@ -353,7 +353,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 		if (currentQuantity != -1) {
 			final Timer t = new Timer(Math.abs(targetQuantity - currentQuantity) * Random.nextInt(2000, 3000));
 			if (targetQuantity > currentQuantity) {
-				while (t.isRunning() && !ctx.isPaused() && !ctx.isShutdown() && targetQuantity > currentQuantity) {
+				while (t.isRunning() && targetQuantity > currentQuantity) {
 					if (!isOpen()) {
 						break;
 					}
@@ -366,7 +366,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 					currentQuantity = getQuantity();
 				}
 			} else {
-				while (t.isRunning() && !ctx.isPaused() && !ctx.isShutdown() && currentQuantity > targetQuantity) {
+				while (t.isRunning() && currentQuantity > targetQuantity) {
 					if (!isOpen()) {
 						break;
 					}

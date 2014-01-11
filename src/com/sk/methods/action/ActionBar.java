@@ -131,7 +131,6 @@ public class ActionBar extends ActionQuery<Action> {
 		if (getCurrentBar() == bar)
 			return true;
 		if (!isExpanded()) {
-			if (ctx.debug)
 				log.warning("switchBar: bar must be expanded to switch");
 			return false;
 		}
@@ -139,12 +138,10 @@ public class ActionBar extends ActionQuery<Action> {
 		final Component button = ctx.widgets.get(BAR_WIDGET, dir < 0 ? PREV_BAR : NEXT_BAR);
 		final String action = dir < 0 ? "Previous" : "Next";
 		if (!button.isValid()) {
-			if (ctx.debug)
 				log.info("switchBar: switch button invalid");
 			return false;
 		}
 		if (!button.isVisible()) {
-			if (ctx.debug)
 				log.info("switchBar: switch button not visible");
 			return false;
 		}

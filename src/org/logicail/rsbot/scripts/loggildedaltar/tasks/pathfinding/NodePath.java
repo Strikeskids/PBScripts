@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  */
 public abstract class NodePath extends LogGildedAltarTask {
 	protected final LocationAttribute locationAttribute;
-	private final Path path;
+	protected final Path path;
 
 	public NodePath(LogGildedAltar script, Path path) {
 		super(script);

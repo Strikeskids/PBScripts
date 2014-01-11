@@ -332,7 +332,7 @@ public class LogGildedAltarGUI extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
-				if (!startPressed && !script.ctx.isShutdown()) {
+				if (!startPressed) {
 					script.getController().stop();
 				}
 			}

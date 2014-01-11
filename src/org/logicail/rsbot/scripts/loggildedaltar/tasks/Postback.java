@@ -69,10 +69,11 @@ public class Postback extends Task<LogGildedAltar> {
 	@Override
 	public void run() {
 		if (cipher != null && nextRun < System.currentTimeMillis()) {
+			nextRun = System.currentTimeMillis() + INTERVAL;
 			postback();
 		}
 
-		sleep(500);
+		sleep(2000);
 
 		if (!Thread.interrupted()) {
 			try {

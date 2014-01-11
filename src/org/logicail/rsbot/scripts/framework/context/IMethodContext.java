@@ -19,9 +19,7 @@ import java.awt.*;
  * Time: 20:53
  */
 public class IMethodContext extends MethodContext {
-	public final ILogger log = new ILogger(8);
-
-	public boolean debug;
+	public final ILogger log = new ILogger(10);
 
 	// Providers
 	public ISkillingInterface skillingInterface;
@@ -39,15 +37,13 @@ public class IMethodContext extends MethodContext {
 	public SkKeyboard keyboard;
 	public ActionBar actionBar;
 	public Combat combat;
+	// SK
 
 	public final String useragent;
-	// SK
 
 	// Concurrent task executor
 	//private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AbstractScript script;
-	private volatile boolean shutdown;
-	private volatile boolean paused;
 
 	public IMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext);
@@ -55,29 +51,7 @@ public class IMethodContext extends MethodContext {
 		script.log.addHandler(log);
 
 		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
-/*
-		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
-			@Override
-			public void run() {
-				paused = true;
-			}
-		});
 
-		script.getExecQueue(Script.State.RESUME).add(new Runnable() {
-			@Override
-			public void run() {
-				paused = false;
-			}
-		});
-
-		script.getExecQueue(Script.State.STOP).add(new Runnable() {
-			@Override
-			public void run() {
-				shutdown = true;
-				executor.shutdown();
-			}
-		});
-*/
 		skillingInterface = new ISkillingInterface(this);
 		backpack = new IBackpack(this);
 		camera = new ICamera(this);
@@ -94,14 +68,6 @@ public class IMethodContext extends MethodContext {
 		magic = new IMagic(this);
 		movement = new IMovement(this);
 		bank = new IBank(this);
-	}
-
-	public final boolean isPaused() {
-		return paused;
-	}
-
-	public final boolean isShutdown() {
-		return shutdown;
 	}
 
 	public void stop(final String reason) {
@@ -143,11 +109,4 @@ public class IMethodContext extends MethodContext {
 			script.getController().stop();
 		}
 	}
-/*
-	public final void submit(Runnable task) {
-		if (!isShutdown()) {
-			executor.submit(task);
-		}
-	}
-	*/
 }

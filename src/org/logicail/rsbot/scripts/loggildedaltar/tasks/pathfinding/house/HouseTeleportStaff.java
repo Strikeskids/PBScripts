@@ -8,8 +8,8 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.methods.Equipment;
 import org.powerbot.script.methods.Game;
-import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Player;
 
 import java.util.ArrayList;
@@ -79,13 +79,10 @@ public class HouseTeleportStaff extends NodePath {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						if (!ctx.hud.isVisible(Hud.Window.BACKPACK)) {
-							ctx.hud.view(Hud.Window.BACKPACK);
-						}
 						final Player local = ctx.players.local();
-						return (ctx.isPaused() || !ctx.isShutdown()) || (local != null && local.getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null));
+						return (script.getController().isSuspended() || script.getController().isStopping()) || (local != null && local.getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null));
 					}
-				}, 600, 54);
+				}, Random.nextInt(550, 650), Random.nextInt(20, 60));
 			}
 		}
 	}
