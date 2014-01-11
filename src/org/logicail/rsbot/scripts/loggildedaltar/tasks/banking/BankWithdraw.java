@@ -95,7 +95,7 @@ public class BankWithdraw extends BankingAbstract {
 
             /* Disable summoning if don't have level required */
 			if (options.beastOfBurden.getRequiredLevel() > ctx.skills.getRealLevel(Skills.SUMMONING)) {
-				ctx.log.info("Summoning level too low -> Disabling summoning");
+				script.log.info("Summoning level too low -> Disabling summoning");
 				options.useBOB.set(false);
 			} else {
 				if (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned()) { // If 5 minutes left take a pouch
@@ -111,7 +111,7 @@ public class BankWithdraw extends BankingAbstract {
 							}
 						}
 						if (!ctx.bank.withdraw(options.beastOfBurden.getPouchId(), 1)) {
-							ctx.log.info("Can't withdraw pouch");
+							script.log.info("Can't withdraw pouch");
 						}
 					}
 
@@ -164,7 +164,7 @@ public class BankWithdraw extends BankingAbstract {
 		if (options.bobonce.get() && bankingBranch.beastOfBurdenWithdraws.get() == 0) {
 			if (!ctx.backpack.isFull()) {
 				if (!ctx.bank.withdraw(options.offering.getId(), Bank.Amount.ALL)) {
-					ctx.log.info("Could not withdraw bones");
+					script.log.info("Could not withdraw bones");
 				} else {
 					return;
 				}
@@ -174,7 +174,7 @@ public class BankWithdraw extends BankingAbstract {
 		if (options.lightBurners.get()) {
 			int marrentilCount = ctx.backpack.select().id(Banking.ID_MARRENTIL).count();
 			if (marrentilCount < 2) {
-				ctx.log.info("Withdraw clean marrentil");
+				script.log.info("Withdraw clean marrentil");
 				options.status = "Withdraw clean marrentil";
 				if (ctx.backpack.isFull()) {
 					ctx.bank.deposit(options.offering.getId(), 1);
@@ -192,7 +192,7 @@ public class BankWithdraw extends BankingAbstract {
 
 				if (ctx.backpack.select().id(Banking.ID_MARRENTIL).count() < 2) {
 					options.status = "Could not withdraw clean marrentil";
-					ctx.log.info(options.status);
+					script.log.info(options.status);
 				}
 			}
 			marrentilCount = ctx.backpack.select().id(Banking.ID_MARRENTIL).count();
@@ -206,7 +206,7 @@ public class BankWithdraw extends BankingAbstract {
 		if (!ctx.backpack.isFull()) {
 			if (!ctx.bank.withdraw(options.offering.getId(), 0)) {
 				options.status = "Could not withdraw bones";
-				ctx.log.info(options.status);
+				script.log.info(options.status);
 			} else {
 				return;
 			}
@@ -258,7 +258,7 @@ public class BankWithdraw extends BankingAbstract {
 						}
 					}
 					if (!success) {
-						ctx.log.info("Ran out of required item for: " + ((NodePath) node).getPath().getLocation().name());
+						script.log.info("Ran out of required item for: " + ((NodePath) node).getPath().getLocation().name());
 					} else {
 						sleep(100, 300);
 					}

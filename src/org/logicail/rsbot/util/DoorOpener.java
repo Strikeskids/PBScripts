@@ -33,7 +33,7 @@ public class DoorOpener extends IMethodProvider implements ChainingIterator<Game
 						return !door.isValid();
 					}
 				})) {
-					ctx.log.info("Opened door");
+					return true;
 				}
 			}
 		}

@@ -76,41 +76,47 @@ public class ISummoning extends Summoning {
 		return getCloseButton().isValid();
 	}
 
+	private static String getStoreString(int amount) {
+		switch (amount) {
+			case 0:
+				return "Store-All";
+			case 1:
+			case 5:
+			case 10:
+				return "Store-" + amount;
+			default:
+				return "Store-X";
+		}
+	}
+
 	public boolean deposit(final int id, int amount) {
 		if (open()) {
 			int spaceLeft = getFamiliar().getBoBSpace() - familiar.select().count();
 			if (spaceLeft == 0) {
 				return false;
 			}
+
 			final int backpackCount = backpack.select().id(id).count();
 			for (Item item : backpack.shuffle().first()) {
-				String action = "Store-" + amount;
-				if (backpackCount == 0) {
-					return false;
+				final String action = getStoreString(amount);
+				if (action.equals("Store-X")) {
+					if (item.interact(action) && ctx.chat.waitForInputWidget()) {
+						sleep(800, 1200);
+						if (amount == 0) {
+							amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
+						}
+						if (ctx.chat.isInputWidgetOpen() && ctx.keyboard.sendln(amount + "")) {
+							return true;
+						}
+					}
 				}
-				if (backpackCount < amount || amount == 0 || backpackCount < spaceLeft) {
-					action = "Store-All";
-				}
-				// TODO: Reenable
-				if (hasAction(item, action)) {
-					if (item.interact(action)) {
-						return true;
-					}
-				}/* else
-				if (item.interact("Store-X") && ctx.chat.waitForInputWidget()) {
-					sleep(800, 1200);
-					if (amount == 0) {
-						amount = Random.nextInt(backpackCount, backpackCount * Random.nextInt(2, 5));
-					}
-					if (ctx.chat.isInputWidgetOpen()) {
-						ctx.log.info("KB send " + amount + " == " + ctx.keyboard.sendln(amount + ""));
-					}
-				}*/
+				return item.interact(action, item.getName());
 			}
 		}
 
 		return false;
 	}
+
 
 	private void closeBankIfInTheWay() {
 		final Component bank = ctx.bank.getWidget();
@@ -118,7 +124,6 @@ public class ISummoning extends Summoning {
 			final Component orb = getOrb();
 			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
 				sleep(50, 250);
-				ctx.log.info("Bank interface in the way of orb closing bank");
 				ctx.bank.close();
 				sleep(200, 1000);
 			}
@@ -159,6 +164,7 @@ public class ISummoning extends Summoning {
 		if (item.hover()) {
 			for (String a : ctx.menu.getItems()) {
 				if (a != null && a.matches("^" + action + "(<.*>)?")) {
+					//ctx.log.info("Action: \"" + a + "\"");
 					return true;
 				}
 			}

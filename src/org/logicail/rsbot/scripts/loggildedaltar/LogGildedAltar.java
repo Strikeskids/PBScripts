@@ -14,6 +14,7 @@ import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.SkillData;
+import org.powerbot.script.wrappers.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +30,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.012,
+		version = 6.013,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -86,10 +87,18 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
 
+		properties.put("InputHandler is null?", ctx.inputHandler == null);
+
 		return properties;
 	}
 
 	private volatile int experience = 0;
+
+	@Override
+	public int poll() {
+
+		return super.poll();
+	}
 
 	public int experience() {
 		if (skillData != null && currentLevel > 1) {
@@ -146,7 +155,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				break;
 			case 2:
 				if (options.detectHouses.get()) {
-					ctx.log.info("Chat[2]: " + message);
+					//log.info("Chat[2]: " + message);
 					houseHandler.parseHouses(message);
 				}
 				break;
@@ -193,6 +202,13 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		LogicailArea area = new LogicailArea(location.derive(-8, -8), location.derive(8, 8));
 		final Tile tile = area.findSpace(ctx, 3, 3);
 		tile.getMatrix(ctx).draw(g);*/
+
+		if (altarTask != null) {
+			final GameObject altar = altarTask.getAltar();
+			if (altar.isValid()) {
+				altar.getLocation().getMatrix(ctx).draw(g);
+			}
+		}
 	}
 
 	@Override

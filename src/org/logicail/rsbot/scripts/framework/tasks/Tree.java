@@ -52,7 +52,7 @@ public class Tree<T extends LogicailScript> extends Node<T> {
 		if (isValid()) {
 			Task task = get();
 			if (task != null) {
-				ctx.log.info("Run: " + task);
+				script.log.info("Run: " + task);
 				task.run();
 			}
 		}

@@ -39,7 +39,7 @@ public class LightBurners extends BurnerAbstract {
 			return;
 		}
 
-		ctx.log.info("Lighting incense burners");
+		script.log.info("Lighting incense burners");
 
 		final Room room = script.roomStorage.getRoom(ctx.players.local());
 		if (room == null) {

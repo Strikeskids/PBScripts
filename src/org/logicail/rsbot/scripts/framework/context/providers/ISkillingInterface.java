@@ -51,7 +51,6 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	public boolean cancelProduction() {
 		if (isProductionInterfaceOpen()) {
 			if (isProductionComplete()) {
-				ctx.log.info("Production Complete");
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

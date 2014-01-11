@@ -59,7 +59,7 @@ public class AltarObelisk extends LogGildedAltarTask {
 
 	@Override
 	public void run() {
-		ctx.log.info("Finding path to obelisk");
+		script.log.info("Finding path to obelisk");
 
 		try {
 			final GameObject obelisk = script.altarTask.getMiniObelisk();
@@ -105,7 +105,7 @@ public class AltarObelisk extends LogGildedAltarTask {
 
 							if (ctx.summoning.getSummoningPoints() > points && ctx.players.local().getAnimation() == -1) {
 								options.status = "Recharged at house obelisk";
-								ctx.log.info(options.status);
+								script.log.info(options.status);
 								script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.getRequiredPoints() * 1.5), (int) (options.beastOfBurden.getRequiredPoints() * 2.33));
 								resetNextPoints();
 								sleep(600, 1400);

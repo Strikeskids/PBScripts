@@ -37,7 +37,7 @@ public class YanilleBankWalk extends NodePath {
 	@Override
 	public boolean doLarge() {
 		if (!options.useOtherHouse.get() && script.houseTask.getHouseLocation() != HouseTask.HouseLocation.YANILLE) {
-			ctx.log.info("House not in yanille");
+			script.log.info("House not in yanille");
 			return false;
 		}
 
@@ -51,7 +51,7 @@ public class YanilleBankWalk extends NodePath {
 	@Override
 	public boolean doSmall() {
 		if (!options.useOtherHouse.get() && script.houseTask.getHouseLocation() != HouseTask.HouseLocation.YANILLE) {
-			ctx.log.info("House not in yanille");
+			script.log.info("House not in yanille");
 			return false;
 		} else {
 			options.status = "Walking to yanille bank";

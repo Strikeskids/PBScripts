@@ -11,7 +11,6 @@ import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Component;
 
 import java.awt.*;
-import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +19,7 @@ import java.util.logging.Logger;
  * Time: 20:53
  */
 public class IMethodContext extends MethodContext {
-	public final Logger log;
+	public final ILogger log = new ILogger(8);
 
 	public boolean debug;
 
@@ -53,7 +52,7 @@ public class IMethodContext extends MethodContext {
 	public IMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext);
 		this.script = script;
-		log = script.log;
+		script.log.addHandler(log);
 
 		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
 /*

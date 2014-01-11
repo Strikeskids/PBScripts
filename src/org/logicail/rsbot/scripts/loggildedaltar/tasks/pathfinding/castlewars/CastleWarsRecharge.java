@@ -40,7 +40,7 @@ public class CastleWarsRecharge extends RechargeSummoning {
 			}
 			return true;
 		} else {
-			ctx.log.info("Can not walk to obelisk");
+			script.log.info("Can not walk to obelisk");
 			return false;
 		}
 	}

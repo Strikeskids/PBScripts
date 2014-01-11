@@ -37,7 +37,7 @@ public class ICamera extends Camera {
 	 */
 	public boolean prepare(final Locatable locatable) {
 		if (!(locatable instanceof Interactive)) {
-			ctx.log.severe("ICamera.prepare: Not an instance of interactive");
+			//ctx.log.severe("ICamera.prepare: Not an instance of interactive");
 			return false;
 		}
 

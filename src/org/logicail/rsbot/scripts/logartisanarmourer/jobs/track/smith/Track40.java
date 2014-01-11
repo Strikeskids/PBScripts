@@ -30,7 +30,7 @@ public class Track40 extends AbstractTrack {
 	@Override
 	public void run() {
 		if (!smithTrack.anvilReady()) {
-			ctx.log.info("Anvil not ready");
+			script.log.info("Anvil not ready");
 			return;
 		}
 
@@ -47,7 +47,7 @@ public class Track40 extends AbstractTrack {
 				if (rails == 0) {
 					// Check don't have any partially complete tracks
 					if (!ctx.backpack.select().id(SmithTrack.PARTS).isEmpty()) {
-						ctx.log.info("Deposit partial tracks/parts");
+						script.log.info("Deposit partial tracks/parts");
 						ctx.skillingInterface.close();
 						sleep(200, 1000);
 						for (GameObject minecart : ctx.objects.select().id(LogArtisanWorkshop.ID_MINE_CART).nearest().limit(3).shuffle().first()) {
@@ -65,15 +65,15 @@ public class Track40 extends AbstractTrack {
 						}
 						sleep(250, 1000);
 					} else {
-						ctx.log.info("Make Rails");
+						script.log.info("Make Rails");
 						smithTrack.smith(smithTrack.getRails());
 					}
 				} else {
 					if (rails != x) {
-						ctx.log.info("Make Rails");
+						script.log.info("Make Rails");
 						smithTrack.smith(smithTrack.getRails(), x - rails);
 					} else {
-						ctx.log.info("Make BasePlate");
+						script.log.info("Make BasePlate");
 						smithTrack.smith(smithTrack.getBasePlate(), x - baseplate);
 					}
 				}

@@ -43,10 +43,10 @@ public class WaitForBurners extends BurnerAbstract {
 
 			options.status = "Waiting for burners";
 			if (options.detectHouses.get()) {
-				ctx.log.info("Waiting to see if someone lights the burners otherwise skipping house in "
+				script.log.info("Waiting to see if someone lights the burners otherwise skipping house in "
 						+ timer.toRemainingString());
 			} else {
-				ctx.log.info("Waiting to see if someone lights the burners");
+				script.log.info("Waiting to see if someone lights the burners");
 			}
 
 			if (options.stopOffering.get() && ctx.players.local().getAnimation() != -1 && ctx.players.local().getLocation().randomize(2, 2).getMatrix(ctx).interact("Walk here")) {

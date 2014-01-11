@@ -79,6 +79,8 @@ public class Painter extends IMethodProvider implements PaintListener {
 		// Resize background
 		backgroundRectangle.width = width + 20;
 		backgroundRectangle.height = y - location.y;
+
+		ctx.log.repaint(g, 50, 50);
 	}
 
 	private void drawMouse(Graphics2D g2d) {

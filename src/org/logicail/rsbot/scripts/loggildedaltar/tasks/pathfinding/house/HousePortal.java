@@ -122,7 +122,7 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 
 			if (ctx.chat.select().text("Go to a friend's house.").isEmpty()) {
 				if (options.useOtherHouse.get() && ctx.chat.isInputWidgetOpen()) {
-					ctx.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
+					script.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
 					Component previous = ctx.widgets.get(IChat.WIDGET_INPUT, 3).getChild(0);
 					if (previous.isValid() && previous.isOnScreen() && previous.getText().toLowerCase().equals("last name entered: " + openHouse.getPlayerName()) && previous.interact("Use:")) {
 						entering = true;
@@ -156,7 +156,7 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 					}
 				} else {
 					for (ChatOption option : ctx.chat.select()) {
-						ctx.log.info(option.getText());
+						script.log.info(option.getText());
 					}
 
 					for (ChatOption option : ctx.chat.select().text("Go to your house.").first()) {

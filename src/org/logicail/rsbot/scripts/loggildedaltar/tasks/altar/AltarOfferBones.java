@@ -75,7 +75,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 //		}
 
 		options.status = "Use bones on altar";
-		ctx.log.info(options.status);
+		script.log.info(options.status);
 
 		final GameObject altar = script.altarTask.getAltar();
 		if (selectBone()) {

@@ -87,7 +87,7 @@ public class RechargeSummoning extends NodePath {
 
 					if (ctx.summoning.getSummoningPoints() > points && ctx.players.local().getAnimation() == -1) {
 						options.status = "Recharged at obelisk";
-						ctx.log.info(options.status);
+						script.log.info(options.status);
 						script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.getRequiredPoints() * 1.5), (int) (options.beastOfBurden.getRequiredPoints() * 2.33));
 						sleep(500, 1500);
 						return true;

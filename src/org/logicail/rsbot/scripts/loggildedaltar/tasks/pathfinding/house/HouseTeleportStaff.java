@@ -69,7 +69,7 @@ public class HouseTeleportStaff extends NodePath {
 		script.houseTask.setHouseTeleportMode();
 
 		if (ctx.equipment.select().id(staff).isEmpty() && !ctx.backpack.select().id(staff).isEmpty()) {
-			ctx.log.info("Equip");
+			script.log.info("Equip");
 			ctx.equipment.equip(staff);
 		}
 

@@ -125,7 +125,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 	public void leaveHouse() {
 		for (GameObject portal : ctx.objects.select().id(13405).nearest().first()) {
-			ctx.log.info("Leaving house");
+			script.log.info("Leaving house");
 
 			List<Tile> portalBounds = getTilesAround(portal);
 
@@ -140,7 +140,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 				if (pathToPortal != null && !pathToPortal.traverse(destination)) {
 					if (!destination.getMatrix(ctx).isReachable()) {
-						ctx.log.info("Failed to get to portal - trying failsafe");
+						script.log.info("Failed to get to portal - trying failsafe");
 						final Room current = script.roomStorage.getRoom(ctx.players.local());
 						final Room end = script.roomStorage.getRoom(portal);
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(current, end)).shuffle().first()) {

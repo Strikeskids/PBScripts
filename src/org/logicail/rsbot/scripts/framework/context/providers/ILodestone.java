@@ -48,7 +48,7 @@ public class ILodestone extends IMethodProvider {
 		}
 
 		if (!lodestone.isUnlocked(ctx)) {
-			ctx.log.info("Can't use lodestone " + lodestone);
+			//script.log.info("Can't use lodestone " + lodestone);
 			return false;
 		}
 

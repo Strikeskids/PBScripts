@@ -129,7 +129,7 @@ public class Postback extends LogGildedAltarTask {
 			//Get Response
 			try {
 				String read = IOUtil.read(connection.getInputStream(), 4096);
-				ctx.log.info(read);
+				script.log.info(read);
 				if (read != null) {
 					if (read.trim().equalsIgnoreCase("SHUTDOWN")) {
 						ctx.stop("Forced shutdown see thread on forum", false);

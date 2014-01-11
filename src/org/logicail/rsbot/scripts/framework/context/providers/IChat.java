@@ -35,6 +35,7 @@ public class IChat extends Chat {
 	}
 
 	public boolean isInputWidgetOpen() {
-		return getInputTextBox().isOnScreen();
+		final Component inputTextBox = getInputTextBox();
+		return inputTextBox.isVisible();
 	}
 }
