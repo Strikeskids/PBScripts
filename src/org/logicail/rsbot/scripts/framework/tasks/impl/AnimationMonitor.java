@@ -69,7 +69,10 @@ public class AnimationMonitor<T extends LogicailScript<T>> extends Task<T> {
 		sleep(150);
 
 		if (!Thread.interrupted()) {
-			script.getController().getExecutor().offer(this);
+			try {
+				script.getController().getExecutor().offer(this);
+			} catch (NullPointerException ignored) {
+			}
 		}
 	}
 }

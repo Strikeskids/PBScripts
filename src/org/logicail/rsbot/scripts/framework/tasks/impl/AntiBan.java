@@ -65,7 +65,10 @@ public class AntiBan<T extends LogicailScript<T>> extends Task<T> {
 		sleep(Random.nextInt(500, 1500));
 
 		if (!Thread.interrupted()) {
-			script.getController().getExecutor().offer(this);
+			try {
+				script.getController().getExecutor().offer(this);
+			} catch (NullPointerException ignored) {
+			}
 		}
 	}
 }
