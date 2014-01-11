@@ -1,9 +1,11 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners;
 
+import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.powerbot.script.lang.BasicNamedQuery;
+import org.powerbot.script.lang.Filter;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
@@ -46,7 +48,18 @@ public class LightBurners extends BurnerAbstract {
 			return;
 		}
 
-		for (final GameObject burner : burnersTask.getUnlitLanterns(room).shuffle().first()) {
+		GameObject burner = burnersTask.getUnlitLanterns(room).select(new Filter<GameObject>() {
+			@Override
+			public boolean accept(GameObject gameObject) {
+				return IMovement.Euclidean(gameObject, ctx.players.local()) < 2;
+			}
+		}).poll();
+
+		if (!burner.isValid()) {
+			burner = burnersTask.getUnlitLanterns(room).shuffle().poll();
+		}
+
+		if (burner.isValid()) {
 			ctx.camera.turnTo(burner);
 
 			if (!burner.isOnScreen()) {
