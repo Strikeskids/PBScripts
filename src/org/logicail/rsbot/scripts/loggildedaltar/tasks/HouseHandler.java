@@ -98,7 +98,7 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 			}
 		}
 
-		if (script.options.detectHouses && System.currentTimeMillis() > nextCheckForhouses) {
+		if (script.options.detectHouses.get() && System.currentTimeMillis() > nextCheckForhouses) {
 			nextCheckForhouses = System.currentTimeMillis() + 600000;
 			addOpenHouses();
 		}

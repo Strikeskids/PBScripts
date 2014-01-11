@@ -47,7 +47,7 @@ public class YanillePortalWalk extends NodePath {
 
 	@Override
 	public boolean doSmall() {
-		if ((script.houseTask.getHouseLocation() != HouseTask.HouseLocation.YANILLE && !options.useOtherHouse)) {
+		if ((script.houseTask.getHouseLocation() != HouseTask.HouseLocation.YANILLE && !options.useOtherHouse.get())) {
 			options.status = "House not in yanille";
 			return false;
 		} else {

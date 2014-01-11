@@ -42,20 +42,20 @@ public class WaitForBurners extends BurnerAbstract {
 			}
 
 			options.status = "Waiting for burners";
-			if (options.detectHouses) {
+			if (options.detectHouses.get()) {
 				ctx.log.info("Waiting to see if someone lights the burners otherwise skipping house in "
 						+ timer.toRemainingString());
 			} else {
 				ctx.log.info("Waiting to see if someone lights the burners");
 			}
 
-			if (options.stopOffering && ctx.players.local().getAnimation() != -1 && ctx.players.local().getLocation().randomize(2, 2).getMatrix(ctx).interact("Walk here")) {
+			if (options.stopOffering.get() && ctx.players.local().getAnimation() != -1 && ctx.players.local().getLocation().randomize(2, 2).getMatrix(ctx).interact("Walk here")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.players.local().getAnimation() != -1;
+						return ctx.players.local().getAnimation() == -1;
 					}
-				});
+				}, Random.nextInt(200, 600), 5);
 			}
 
 			sleep(600);
@@ -69,7 +69,7 @@ public class WaitForBurners extends BurnerAbstract {
 
 		final Room room = script.roomStorage.getRoom(ctx.players.local());
 		if (room != null && !burnersTask.getUnlitLanterns(room).isEmpty()) {
-			script.leaveHouse.leaveHouse = true;
+			script.leaveHouse.leaveHouse.set(true);
 			script.houseHandler.currentHouseFailed();
 		}
 	}

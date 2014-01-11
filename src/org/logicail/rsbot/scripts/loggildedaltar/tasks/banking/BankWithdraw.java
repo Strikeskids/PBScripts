@@ -81,7 +81,7 @@ public class BankWithdraw extends BankingAbstract {
 
         /* Summoning Pouch */
 		// TODO: made renew familar a loop job
-		if (options.useBOB && options.beastOfBurden.getBoBSpace() > 0) {
+		if (options.useBOB.get() && options.beastOfBurden.getBoBSpace() > 0) {
 			if (ctx.summoning.isFamiliarSummoned()) {
 				Summoning.Familiar familiar = ctx.summoning.getFamiliar();
 
@@ -96,7 +96,7 @@ public class BankWithdraw extends BankingAbstract {
             /* Disable summoning if don't have level required */
 			if (options.beastOfBurden.getRequiredLevel() > ctx.skills.getRealLevel(Skills.SUMMONING)) {
 				ctx.log.info("Summoning level too low -> Disabling summoning");
-				options.useBOB = false;
+				options.useBOB.set(false);
 			} else {
 				if (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned()) { // If 5 minutes left take a pouch
 					if (ctx.backpack.select().id(options.beastOfBurden.getPouchId()).isEmpty() && !ctx.bank.select().id(options.beastOfBurden.getPouchId()).isEmpty()) {
@@ -124,7 +124,7 @@ public class BankWithdraw extends BankingAbstract {
 		}
 
 
-		if (!bankingBranch.withdrawnDelegation) {
+		if (!bankingBranch.withdrawnDelegation.get()) {
 			List<Branch> list = new ArrayList<Branch>(
 					Arrays.asList(new Branch[]{script.bankingTask, script.houseTask})
 			);
@@ -135,7 +135,7 @@ public class BankWithdraw extends BankingAbstract {
 					return;
 				}
 			}
-			bankingBranch.withdrawnDelegation = true;
+			bankingBranch.withdrawnDelegation.set(true);
 		}
 
 		// Aura disabled for now
@@ -161,7 +161,7 @@ public class BankWithdraw extends BankingAbstract {
 					}
 				}*/
 
-		if (options.bobonce && bankingBranch.beastOfBurdenWithdraws == 0) {
+		if (options.bobonce.get() && bankingBranch.beastOfBurdenWithdraws.get() == 0) {
 			if (!ctx.backpack.isFull()) {
 				if (!ctx.bank.withdraw(options.offering.getId(), Bank.Amount.ALL)) {
 					ctx.log.info("Could not withdraw bones");
@@ -171,7 +171,7 @@ public class BankWithdraw extends BankingAbstract {
 			}
 		}
 
-		if (options.lightBurners) {
+		if (options.lightBurners.get()) {
 			int marrentilCount = ctx.backpack.select().id(Banking.ID_MARRENTIL).count();
 			if (marrentilCount < 2) {
 				ctx.log.info("Withdraw clean marrentil");
@@ -213,8 +213,8 @@ public class BankWithdraw extends BankingAbstract {
 		}
 
 		if (!getBackpackOffering().isEmpty()
-				&& (!options.lightBurners || (options.lightBurners && ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2))) {
-			bankingBranch.fail = 0;
+				&& (!options.lightBurners.get() || (options.lightBurners.get() && ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2))) {
+			bankingBranch.fail.set( 0);
 			ctx.bank.close();
 			options.status = "Finished banking";
 			bankingBranch.setBanking(false);

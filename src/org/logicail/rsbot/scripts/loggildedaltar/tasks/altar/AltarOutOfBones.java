@@ -36,7 +36,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 
 	@Override
 	public void run() {
-		if (options.useBOB && !options.usedBOB.get() && ctx.summoning.isFamiliarSummoned() && options.beastOfBurden.getBoBSpace() > 0) {
+		if (options.useBOB.get() && !options.usedBOB.get() && ctx.summoning.isFamiliarSummoned() && options.beastOfBurden.getBoBSpace() > 0) {
 			options.status = "Taking items from BoB";
 			ctx.log.info(options.status);
 

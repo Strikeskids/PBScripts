@@ -900,7 +900,7 @@ public class LogGildedAltarGUI extends JFrame {
 		// General
 		switch (comboBoxHouseMode.getSelectedIndex()) {
 			case 1:
-				options.useOtherHouse = true;
+				options.useOtherHouse.set(true);
 				if (friendName.getText().length() == 0 || friendName.getText().startsWith("Player Name")) {
 					tabbedPane.setSelectedComponent(generalTab);
 					JOptionPane.showMessageDialog(this, "Invalid friends name, consider using open house detection.");
@@ -926,8 +926,8 @@ public class LogGildedAltarGUI extends JFrame {
 				}
 				break;
 			case 2:
-				options.useOtherHouse = true;
-				options.detectHouses = true;
+				options.useOtherHouse.set(true);
+				options.detectHouses.set(true);
 
 				if (ignoredPlayers.getText().length() > 0) {
 					String[] names = ignoredPlayers.getText().split(",");
@@ -993,23 +993,23 @@ public class LogGildedAltarGUI extends JFrame {
 		startPressed = true;
 
 		options.offering = (Offering) comboBoxOffering.getSelectedItem();
-		options.lightBurners = lightBurners.isSelected();
-		options.bobonce = bobOnceCheckbox.isSelected();
+		options.lightBurners.set(lightBurners.isSelected());
+		options.bobonce.set(bobOnceCheckbox.isSelected());
 
 		//other
 		//options.screenshots = screenshotCheckbox.isSelected();
-		options.stopOffering = stopOfferingCheckbox.isSelected();
+		options.stopOffering.set(stopOfferingCheckbox.isSelected());
 
-		options.onlyHouseObelisk = houseRechargeCheckbox.isSelected();
+		options.onlyHouseObelisk.set( houseRechargeCheckbox.isSelected());
 
 		//options.useAura = enableAura.isSelected();
 		//options.aura = (MyAuras.Aura) comboBoxAura.getSelectedItem();
 
-		options.stopLevelEnabled = stopLevelCheckbox.isSelected();
-		options.stopLevel = Integer.parseInt(String.valueOf(stopLevelSpinner.getValue()));
+		options.stopLevelEnabled .set( stopLevelCheckbox.isSelected());
+		options.stopLevel.set( Integer.parseInt(String.valueOf(stopLevelSpinner.getValue())));
 
 		// Summoning
-		options.useBOB = enableSummoning.isSelected();
+		options.useBOB .set( enableSummoning.isSelected());
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
 		final Script.Controller.Executor<Runnable> executor = script.getController().getExecutor();
@@ -1017,7 +1017,7 @@ public class LogGildedAltarGUI extends JFrame {
 			@Override
 			public void run() {
 				try {
-					if (options.detectHouses) {
+					if (options.detectHouses.get()) {
 						script.ctx.properties.setProperty("login.world", Integer.toString(31));
 					}
 
@@ -1063,15 +1063,15 @@ public class LogGildedAltarGUI extends JFrame {
 
 					script.tree.add(postback);
 
-					if (options.stopLevelEnabled) {
-						script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel));
+					if (options.stopLevelEnabled.get()) {
+						script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel.get()));
 					}
 
 					script.tree.add(script.leaveHouse = new LeaveHouse(script));
 					script.bankingTask = new BankingTask(script, bankEnabledModel.elements());
 
 					if (script.ctx.game.isLoggedIn() && script.ctx.players.local() != null) {
-						if (options.lightBurners && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
+						if (options.lightBurners.get() && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
 							script.bankingTask.setBanking();
 						}
 					} else {
@@ -1094,7 +1094,7 @@ public class LogGildedAltarGUI extends JFrame {
 			}
 		});
 
-		if (options.detectHouses) {
+		if (options.detectHouses.get()) {
 			executor.offer(new Task<LogGildedAltar>(script) {
 				@Override
 				public void run() {

@@ -22,13 +22,13 @@ public class AltarLightBurnersTask extends Branch<LogGildedAltar> {
 	public AltarLightBurnersTask(LogGildedAltar script) {
 		super(script);
 
-		if (script.options.lightBurners) {
+		if (script.options.lightBurners.get()) {
 			add(new LightBurners(this));
 		}
-		if (script.options.useOtherHouse) {
+		if (script.options.useOtherHouse.get()) {
 			add(new WaitForBurners(this));
 		}
-		if (script.options.lightBurners) {
+		if (script.options.lightBurners.get()) {
 			add(new ReturnToBank(this));
 		}
 	}

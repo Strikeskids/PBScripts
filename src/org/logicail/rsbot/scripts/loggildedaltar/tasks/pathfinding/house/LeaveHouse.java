@@ -3,6 +3,8 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -10,7 +12,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
  * Time: 16:37
  */
 public class LeaveHouse extends LogGildedAltarTask {
-	public boolean leaveHouse = false;
+	public AtomicBoolean leaveHouse = new AtomicBoolean();
 
 	public LeaveHouse(LogGildedAltar script) {
 		super(script);
@@ -18,7 +20,7 @@ public class LeaveHouse extends LogGildedAltarTask {
 
 	@Override
 	public boolean isValid() {
-		return leaveHouse;
+		return leaveHouse.get();
 	}
 
 	@Override
@@ -26,10 +28,10 @@ public class LeaveHouse extends LogGildedAltarTask {
 		if (script.houseTask.isInHouse()) {
 			script.houseTask.leaveHouse();
 			if (script.houseTask.isInHouse()) {
-				leaveHouse = false;
+				leaveHouse.set(false);
 			}
 		} else {
-			leaveHouse = false;
+			leaveHouse.set(false);
 		}
 	}
 }

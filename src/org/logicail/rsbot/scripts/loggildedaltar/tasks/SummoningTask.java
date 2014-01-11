@@ -76,9 +76,9 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public boolean branch() {
-		if (!script.options.onlyHouseObelisk
+		if (!script.options.onlyHouseObelisk.get()
 				&& script.options.banking.get()
-				&& script.options.useBOB
+				&& script.options.useBOB.get()
 				&& !ctx.bank.isOpen()
 				&& (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned())) {
 			if (nextPoints == -1) {

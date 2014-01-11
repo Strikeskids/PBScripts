@@ -31,10 +31,10 @@ public class BankBob extends BankingAbstract {
 	}
 
 	private boolean depositBob() {
-		if (options.useBOB) {
-			if (!options.bobonce || (bankingBranch.beastOfBurdenWithdraws == 0)) {
+		if (options.useBOB.get()) {
+			if (!options.bobonce.get() || (bankingBranch.beastOfBurdenWithdraws.get() == 0)) {
 				if (options.beastOfBurden.getBoBSpace() > 0 && ctx.summoning.isFamiliarSummoned() && ctx.summoning.getTimeLeft() >= 180 && ctx.backpack.isFull() && !getBackpackOffering().isEmpty()) {
-					if (bankingBranch.beastOfBurdenCount < options.beastOfBurden.getBoBSpace()) {
+					if (bankingBranch.beastOfBurdenCount.get() < options.beastOfBurden.getBoBSpace()) {
 						return true;
 					}
 				}
@@ -50,13 +50,13 @@ public class BankBob extends BankingAbstract {
 			if (depositBob()) {
 				options.status = "Deposit in familiar";
 				if (ctx.summoning.isOpen()) {
-					int countBefore = bankingBranch.beastOfBurdenCount;
+					int countBefore = bankingBranch.beastOfBurdenCount.get();
 					if (ctx.summoning.deposit(options.offering.getId(), 0)) {
-						bankingBranch.beastOfBurdenCount = ctx.summoning.getFamiliarStore().select().count();
+						bankingBranch.beastOfBurdenCount.set(ctx.summoning.getFamiliarStore().select().count());
 					}
-					if (bankingBranch.beastOfBurdenCount != countBefore) {
-						bankingBranch.beastOfBurdenWithdraws++;
-						bankingBranch.fail = 0;
+					if (bankingBranch.beastOfBurdenCount.get() != countBefore) {
+						bankingBranch.beastOfBurdenWithdraws.incrementAndGet();
+						bankingBranch.fail.set(0);
 					}
 				}
 			} else {
@@ -66,7 +66,7 @@ public class BankBob extends BankingAbstract {
 			}
 		} else {
 			// OPEN BOB
-			bankingBranch.fail = 0;
+			bankingBranch.fail.set(0);
 			options.status = "Open familiar";
 
 			if (!ctx.summoning.open()) {

@@ -45,7 +45,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		nextOfferingTime = Random.nextGaussian(4000, 6000, 1000);
 
 		// Check if current house has altar
-		if (options.useOtherHouse && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+		if (options.useOtherHouse.get() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
 			OpenHouse currentHouse = script.houseHandler.getCurrentHouse();
 			if (currentHouse != null) {
 				currentHouse.setHasObelisk(script.altarTask.getMiniObelisk().isValid());

@@ -209,14 +209,14 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 	public void setHouseTeleportMode() {
 		final boolean before = isTeleportInHouse();
-		if ((options.useOtherHouse && !before) || (!options.useOtherHouse && !before)) {
+		if ((options.useOtherHouse.get() && !before) || (!options.useOtherHouse.get() && !before)) {
 			close();
 			return;
 		}
 
 		if (ctx.hud.open(Hud.Menu.OPTIONS)) {
 			final Component gameSettings = ctx.widgets.get(1433, 0);
-			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, options.useOtherHouse ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_PORTAL);
+			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, options.useOtherHouse.get() ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_HOUSE);
 			if (gameSettings.isVisible()) {
 				gameSettings.interact("Select");
 				Condition.wait(new Callable<Boolean>() {

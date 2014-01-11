@@ -26,7 +26,7 @@ public class BankOpen extends BankingAbstract {
 
 	@Override
 	public void run() {
-		bankingBranch.fail = 0;
+		bankingBranch.fail.set(0);
 		options.status = "Open bank";
 
 		for (Item item : ctx.equipment.select().id(Banking.ALWAYS_DEPOSIT)) {

@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.011,
+		version = 6.012,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -86,8 +86,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
 
-		//properties.put("isTeleportInHouse", ctx.settings.get(HouseTask.SETTING_HOUSE_LOCATION, 29, 1) == 0);
-
 		return properties;
 	}
 
@@ -115,7 +113,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				if (message.equals("They have locked their house to visitors.") || message.equals("They do not seem to be at home.") || message.equals("That player is in building mode at the moment.")) {
 					log.info("House not available");
 					houseHandler.currentHouseFailed();
-					if (!options.detectHouses && houseHandler.getOpenHouse() == null) {
+					if (!options.detectHouses.get() && houseHandler.getOpenHouse() == null) {
 						ctx.stop("Can't enter friends house anymore");
 					}
 				} else if (message.equals("Your beast of burden has no more items.")) {
@@ -147,8 +145,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				}
 				break;
 			case 2:
-				ctx.log.info("Chat[2]: " + message);
-				if (options.detectHouses) {
+				if (options.detectHouses.get()) {
+					ctx.log.info("Chat[2]: " + message);
 					houseHandler.parseHouses(message);
 				}
 				break;
@@ -161,7 +159,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						@Override
 						public void run() {
 							houseHandler.currentHouseFailed();
-							if (!options.detectHouses && houseHandler.getOpenHouse() == null) {
+							if (!options.detectHouses.get() && houseHandler.getOpenHouse() == null) {
 								ctx.stop("Can't enter friends house anymore");
 							}
 						}

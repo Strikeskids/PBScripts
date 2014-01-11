@@ -112,7 +112,7 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 
 		for (GameObject portal : ctx.objects.select().id(ID_ENTER_PORTAL).nearest().first()) {
 			final OpenHouse openHouse = script.houseHandler.getOpenHouse();
-			if (options.useOtherHouse && openHouse == null) {
+			if (options.useOtherHouse.get() && openHouse == null) {
 				options.status = "Waiting for a house";
 				sleep(250, 1250);
 				return;
@@ -121,7 +121,7 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 			options.status = "Enter the portal";
 
 			if (ctx.chat.select().text("Go to a friend's house.").isEmpty()) {
-				if (options.useOtherHouse && ctx.chat.isInputWidgetOpen()) {
+				if (options.useOtherHouse.get() && ctx.chat.isInputWidgetOpen()) {
 					ctx.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
 					Component previous = ctx.widgets.get(IChat.WIDGET_INPUT, 3).getChild(0);
 					if (previous.isValid() && previous.isOnScreen() && previous.getText().toLowerCase().equals("last name entered: " + openHouse.getPlayerName()) && previous.interact("Use:")) {
@@ -145,7 +145,7 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 				}
 			} else {
 				// Chat open
-				if (options.useOtherHouse) {
+				if (options.useOtherHouse.get()) {
 					for (final ChatOption option : ctx.chat.first()) {
 						if (option.select(Random.nextBoolean())) {
 							if (ctx.chat.waitForInputWidget()) {
@@ -175,7 +175,7 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 					}
 				})) {
 					options.status = "Entered house";
-					if (options.useOtherHouse && openHouse != null) {
+					if (options.useOtherHouse.get() && openHouse != null) {
 						openHouse.setEntered();
 					}
 				}

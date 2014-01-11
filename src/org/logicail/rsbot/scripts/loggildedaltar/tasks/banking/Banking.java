@@ -9,6 +9,9 @@ import org.powerbot.script.wrappers.Locatable;
 import org.powerbot.script.wrappers.Tile;
 import org.powerbot.script.wrappers.TileMatrix;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -21,10 +24,10 @@ public class Banking extends Branch<LogGildedAltar> {
 	public static final int[] ALWAYS_DEPOSIT = {
 			114, 116, 118, 120, 122, 124, 126, 134, 136, 138, 314, 441, 448, 450, 454, 554, 555, 560, 561, 562, 877,
 			882, 884, 886, 1704, 1973, 2327, 2429, 2433, 6961, 6962, 6963, 6965, 14665};
-	public int beastOfBurdenWithdraws = 0; // TODO: Use later in altar class
-	public boolean withdrawnDelegation = false;
-	public int beastOfBurdenCount;
-	public int fail = 0;
+	public AtomicInteger beastOfBurdenWithdraws = new AtomicInteger();
+	public AtomicBoolean withdrawnDelegation = new AtomicBoolean();
+	public AtomicInteger beastOfBurdenCount = new AtomicInteger();
+	public AtomicInteger fail = new AtomicInteger();
 	protected final LogGildedAltarOptions options;
 
 	@Override
@@ -60,15 +63,14 @@ public class Banking extends Branch<LogGildedAltar> {
 
 	@Override
 	public void run() {
-		fail++;
-		if (fail > 70) {
+		if (fail.incrementAndGet() > 70) {
 			StringBuilder reason = new StringBuilder();
 			reason.append("Banking error\n\n");
 			final Node<LogGildedAltar> state = state();
 			reason.append("State: ").append(state).append("\n\n");
 
 			if (state instanceof BankWithdraw) {
-				if (options.lightBurners) {
+				if (options.lightBurners.get()) {
 					reason.append(getMarrentilError());
 				}
 				reason.append(getBonesError());
@@ -106,9 +108,9 @@ public class Banking extends Branch<LogGildedAltar> {
 	public void setBanking(boolean state) {
 		options.banking.set(state);
 		if (state) {
-			beastOfBurdenWithdraws = 0;
-			withdrawnDelegation = false;
-			beastOfBurdenCount = 0;
+			beastOfBurdenWithdraws.set( 0);
+			withdrawnDelegation.set(false);
+			beastOfBurdenCount.set(0);
 		}
 	}
 }

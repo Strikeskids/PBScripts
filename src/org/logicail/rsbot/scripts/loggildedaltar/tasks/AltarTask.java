@@ -26,7 +26,7 @@ public class AltarTask extends Branch<LogGildedAltar> {
 		add(new AltarHouseLoading(script));
 		add(new AltarNoAltar(script));
 
-		if (options.useBOB) {
+		if (options.useBOB.get()) {
 			add(new AltarObelisk(script));
 		}
 

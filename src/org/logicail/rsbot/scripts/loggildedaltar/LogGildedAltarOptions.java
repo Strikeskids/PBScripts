@@ -22,43 +22,43 @@ public class LogGildedAltarOptions {
 	public JsonObject toJson() {
 		JsonObject json = new JsonObject();
 		json.add("offering", offering.name());
-		json.add("lightBurners", lightBurners);
-		if (useBOB) {
-			json.add("useBOB", useOtherHouse);
+		json.add("lightBurners", lightBurners.get());
+		if (useBOB.get()) {
+			json.add("useBOB", useOtherHouse.get());
 			json.add("usedBOB", usedBOB.get());
 			json.add("beastOfBurden", beastOfBurden.name());
-			json.add("onlyHouseObelisk", onlyHouseObelisk);
+			json.add("onlyHouseObelisk", onlyHouseObelisk.get());
 		}
-		if(useOtherHouse) {
-			json.add("useOtherHouse", useOtherHouse);
-			json.add("detectHouses", detectHouses);
-			json.add("stopOffering", stopOffering);
+		if(useOtherHouse.get()) {
+			json.add("useOtherHouse", useOtherHouse.get());
+			json.add("detectHouses", detectHouses.get());
+			json.add("stopOffering", stopOffering.get());
 		}
 		json.add("banking", banking.get());
-		json.add("stopLevelEnabled", stopLevelEnabled);
-		json.add("stopLevel", stopLevel);
+		json.add("stopLevelEnabled", stopLevelEnabled.get());
+		json.add("stopLevel", stopLevel.get());
 		json.add("bonesOffered", bonesOffered.get());
 		return json;
 	}
 
 	/* Settings */
-	public boolean lightBurners = true;
-	public boolean useBOB = false;
+	public AtomicBoolean lightBurners = new AtomicBoolean(true);
+	public AtomicBoolean useBOB = new AtomicBoolean();;
 	public AtomicBoolean usedBOB = new AtomicBoolean(false); // Used BOB this trip
 	public Summoning.Familiar beastOfBurden = Summoning.Familiar.BULL_ANT;
 	public Offering offering = Offering.IMPIOUS_ASHES;
-	public boolean useOtherHouse = false;
-	public boolean detectHouses = false;
+	public AtomicBoolean useOtherHouse = new AtomicBoolean();
+	public AtomicBoolean detectHouses = new AtomicBoolean();
 	//public volatile boolean screenshots = false;
-	public boolean stopOffering = true;
-	public boolean onlyHouseObelisk = false;
+	public AtomicBoolean stopOffering = new AtomicBoolean(true);
+	public AtomicBoolean onlyHouseObelisk = new AtomicBoolean();
 	//public boolean useAura = false;
 	//public static MyAuras.Aura aura = MyAuras.Aura.CORRUPTION;
 	/* Move to bank delegation */
-	public volatile AtomicBoolean banking = new AtomicBoolean(false);
-	public boolean bobonce = false;
-	public boolean stopLevelEnabled = false;
-	public int stopLevel;
+	public AtomicBoolean banking = new AtomicBoolean();
+	public AtomicBoolean bobonce = new AtomicBoolean();
+	public AtomicBoolean stopLevelEnabled = new AtomicBoolean();
+	public AtomicInteger stopLevel = new AtomicInteger(99);
 	public String status = "";
 	public AtomicInteger bonesOffered = new AtomicInteger();
 	public AtomicBoolean newVersionAvailable = new AtomicBoolean(false);

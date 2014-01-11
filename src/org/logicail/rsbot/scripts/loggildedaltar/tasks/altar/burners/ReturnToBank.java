@@ -20,7 +20,7 @@ public class ReturnToBank extends BurnerAbstract {
 
 	@Override
 	public boolean isValid() {
-		return options.lightBurners;
+		return options.lightBurners.get();
 	}
 
 	@Override

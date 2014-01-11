@@ -26,13 +26,13 @@ public class AltarNoAltar extends LogGildedAltarTask {
 			sleep(2000, 3500);
 			if (isValid()) {
 				options.status = "House does not have a gilded altar";
-				if (options.useOtherHouse) {
+				if (options.useOtherHouse.get()) {
 					script.houseHandler.currentHouseFailed();
 
-					if (!options.detectHouses && script.houseHandler.getOpenHouse() == null) {
+					if (!options.detectHouses.get() && script.houseHandler.getOpenHouse() == null) {
 						ctx.stop("House does not have a gilded altar");
 					} else {
-						script.leaveHouse.leaveHouse = true;
+						script.leaveHouse.leaveHouse.set(true);
 					}
 				}
 			}

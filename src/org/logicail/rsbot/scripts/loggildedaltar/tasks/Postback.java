@@ -97,7 +97,7 @@ public class Postback extends LogGildedAltarTask {
 		final int bonesBuried = options.bonesOffered.get();
 		json.add("bonesburied", bonesBuried);
 		json.add("status", options.status);
-		if (options.detectHouses) {
+		if (options.detectHouses.get()) {
 			final OpenHouse currentHouse = script.houseHandler.getCurrentHouse();
 			if (currentHouse != null) {
 				json.add("currenthouse", currentHouse.getPlayerName());
