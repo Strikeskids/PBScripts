@@ -33,7 +33,10 @@ public class HouseTablet extends MagicTablet {
 
 	@Override
 	public void run() {
-		script.houseTask.setHouseTeleportMode();
+		if(!script.houseTask.setHouseTeleportMode()) {
+			script.log.info("Wait for game settings to close");
+			return;
+		}
 
 		for (Item tablet : ctx.backpack.first()) {
 			// Move the tablet to 3 slot (after marrentil)

@@ -70,6 +70,7 @@ public class BankBob extends BankingAbstract {
 			options.status = "Open familiar";
 
 			if (!ctx.summoning.open()) {
+				// If edgeville
 
 				final Tile start = ctx.players.local().getLocation();
 				final List<Tile> tiles = RenewFamiliar.familarTile(ctx);

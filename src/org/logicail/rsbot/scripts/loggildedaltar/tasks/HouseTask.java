@@ -207,24 +207,24 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		return tiles;
 	}
 
-	public void setHouseTeleportMode() {
+	public boolean setHouseTeleportMode() {
 		final boolean before = isTeleportInHouse();
 		if ((options.useOtherHouse.get() && !before) || (!options.useOtherHouse.get() && !before)) {
-			close();
-			return;
+			return close();
 		}
 
 		if (ctx.hud.open(Hud.Menu.OPTIONS)) {
 			final Component gameSettings = ctx.widgets.get(1433, 0);
 			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, options.useOtherHouse.get() ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_HOUSE);
 			if (gameSettings.isVisible()) {
-				gameSettings.interact("Select");
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !gameSettings.isVisible() && component.isValid();
-					}
-				});
+				if (gameSettings.interact("Select")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return !gameSettings.isVisible() && component.isValid();
+						}
+					}, Random.nextInt(150, 250), 10);
+				}
 			}
 
 			if (component.isValid() && component.interact("Select")) {
@@ -234,13 +234,14 @@ public class HouseTask extends Branch<LogGildedAltar> {
 						return before != isTeleportInHouse();
 					}
 				}, Random.nextInt(150, 250), 10);
+				sleep(200, 800);
 			}
-
-			close();
 		}
+
+		return close();
 	}
 
-	private void close() {
+	public boolean close() {
 		final Component child = ctx.widgets.get(1477, 54).getChild(2);
 		if (child.isValid() && child.isVisible()) {
 			final Rectangle rect = child.getBoundingRect();
@@ -259,6 +260,8 @@ public class HouseTask extends Branch<LogGildedAltar> {
 				}
 			}
 		}
+
+		return !child.isValid() && !child.isVisible();
 	}
 
 	public boolean isTeleportInHouse() {
