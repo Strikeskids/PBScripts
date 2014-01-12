@@ -212,13 +212,15 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 	public boolean setHouseTeleportMode() {
 		final boolean before = isTeleportInHouse();
-		if ((options.useOtherHouse.get() && !before) || (!options.useOtherHouse.get() && !before)) {
+		final boolean useOtherHouse = options.useOtherHouse.get();
+
+		if ((useOtherHouse && isTeleportPortal()) || (!useOtherHouse && isTeleportInHouse())) {
 			return close();
 		}
 
 		if (ctx.hud.open(Hud.Menu.OPTIONS)) {
 			final Component gameSettings = ctx.widgets.get(1433, 0);
-			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, options.useOtherHouse.get() ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_HOUSE);
+			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, useOtherHouse ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_HOUSE);
 			if (gameSettings.isVisible()) {
 				if (gameSettings.interact("Select")) {
 					Condition.wait(new Callable<Boolean>() {
@@ -230,7 +232,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 				}
 			}
 
-			if (component.isValid() && component.interact("Select")) {
+			if (component.isValid() && component.interact("Toggle")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -269,6 +271,10 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 	public boolean isTeleportInHouse() {
 		return ctx.settings.get(SETTING_HOUSE_LOCATION, 29, 1) == 0;
+	}
+
+	public boolean isTeleportPortal() {
+		return !isTeleportInHouse();
 	}
 
 	public static enum HouseLocation {
