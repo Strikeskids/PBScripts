@@ -26,6 +26,7 @@ public class LogGildedAltarOptions {
 		if (useBOB.get()) {
 			json.add("useBOB", useOtherHouse.get());
 			json.add("usedBOB", usedBOB.get());
+			json.add("bobonce", bobonce.get());
 			json.add("beastOfBurden", beastOfBurden.name());
 			json.add("onlyHouseObelisk", onlyHouseObelisk.get());
 		}

@@ -32,7 +32,7 @@ public class BankBob extends BankingAbstract {
 
 	private boolean depositBob() {
 		if (options.useBOB.get()) {
-			if (!options.bobonce.get() || (bankingBranch.beastOfBurdenWithdraws.get() == 0)) {
+			if (!options.bobonce.get() || bankingBranch.beastOfBurdenWithdraws.get() == 0) {
 				if (options.beastOfBurden.getBoBSpace() > 0 && ctx.summoning.isFamiliarSummoned() && ctx.summoning.getTimeLeft() >= 180 && ctx.backpack.isFull() && !getBackpackOffering().isEmpty()) {
 					if (bankingBranch.beastOfBurdenCount.get() < options.beastOfBurden.getBoBSpace()) {
 						return true;
@@ -52,11 +52,12 @@ public class BankBob extends BankingAbstract {
 				if (ctx.summoning.isOpen()) {
 					int countBefore = bankingBranch.beastOfBurdenCount.get();
 					if (ctx.summoning.deposit(options.offering.getId(), 0)) {
-						bankingBranch.beastOfBurdenCount.set(ctx.summoning.getFamiliarStore().select().count());
-					}
-					if (bankingBranch.beastOfBurdenCount.get() != countBefore) {
-						bankingBranch.beastOfBurdenWithdraws.incrementAndGet();
-						bankingBranch.fail.set(0);
+						int newValue = ctx.summoning.getFamiliarStore().select().count();
+						bankingBranch.beastOfBurdenCount.set(newValue);
+						if (newValue != countBefore) {
+							bankingBranch.beastOfBurdenWithdraws.incrementAndGet();
+							bankingBranch.fail.set(0);
+						}
 					}
 				}
 			} else {

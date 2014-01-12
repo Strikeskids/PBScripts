@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.02,
+		version = 6.021,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -87,6 +87,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
 
 		properties.put("InputHandler is null", ctx.inputHandler == null);
+
+		if (bankingTask != null) {
+			properties.put("beastOfBurdenWithdraws", bankingTask.banking.beastOfBurdenWithdraws.get());
+		}
 
 		return properties;
 	}
