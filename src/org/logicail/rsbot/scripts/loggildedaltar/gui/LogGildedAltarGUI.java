@@ -1054,14 +1054,13 @@ public class LogGildedAltarGUI extends JFrame {
 //				}
 
 					final Postback postback = new Postback(script);
+					script.tree.add(postback);
 					script.getExecQueue(Script.State.STOP).add(new Runnable() {
 						@Override
 						public void run() {
 							postback.postback();
 						}
 					});
-
-					script.tree.add(postback);
 
 					if (options.stopLevelEnabled.get()) {
 						script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel.get()));
