@@ -75,7 +75,7 @@ public class LightBurners extends BurnerAbstract {
 					public Boolean call() throws Exception {
 						return !finalBurner.isValid();
 					}
-				}, Random.nextInt(400, 600), Random.nextInt(10, 20));
+				}, Random.nextInt(300, 500), Random.nextInt(6, 12));
 			}
 		}
 	}
