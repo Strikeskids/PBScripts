@@ -19,6 +19,9 @@ public class IBank extends Bank {
 		backpack = new IItemStore(ctx, ctx.widgets.get(WIDGET, WIDGET_BANK_ITEMS));
 	}
 
+	/**
+	 * Backpack when bank is open
+	 */
 	public final IItemStore backpack;
 
 	public Component getWidget() {

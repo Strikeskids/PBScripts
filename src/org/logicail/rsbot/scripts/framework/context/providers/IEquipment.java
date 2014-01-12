@@ -43,6 +43,7 @@ public class IEquipment extends Equipment {
 				}
 			}
 		}
+
 		if (item.isValid()) {
 			if (item.interact(new Filter<Menu.Entry>() {
 				@Override
@@ -56,6 +57,7 @@ public class IEquipment extends Equipment {
 						return !select().id(ids).isEmpty();
 					}
 				}, Random.nextInt(300, 800), 5);
+				sleep(100, 300);
 			}
 		}
 

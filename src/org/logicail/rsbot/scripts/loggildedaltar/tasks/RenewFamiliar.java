@@ -1,15 +1,17 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
+import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttribute;
 import org.logicail.rsbot.util.LogicailArea;
-import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -71,14 +73,38 @@ public class RenewFamiliar extends LogGildedAltarTask {
 		script.nextSummon.set(System.currentTimeMillis() + Random.nextInt(5000, 15000));
 	}
 
-	public static List<Tile> familarTile(MethodContext ctx) {
+
+	private static final LogicailArea EDGEVILLE_AREA_LEFT = new LogicailArea(new Tile(3086, 3495, 0), new Tile(3091, 3488, 0));
+	private static final LogicailArea EDGEVILLE_AREA_TOP = new LogicailArea(new Tile(3088, 3505, 0), new Tile(3095, 3499, 0));
+
+	public static List<Tile> familarTile(IMethodContext ctx) {
 		final Tile location = ctx.players.local().getLocation();
-		final LogicailArea area = new LogicailArea(location.derive(-6, -6), location.derive(6, 6));
 		List<Tile> tiles = new ArrayList<Tile>();
+		LogicailArea area = new LogicailArea(location.derive(-7, -7), location.derive(5, 5));
+
+		boolean edgeville = false;
+
+		if (LocationAttribute.EDGEVILLE.isInLargeArea(ctx)) {
+			edgeville = true;
+			if (IMovement.Euclidean(location, EDGEVILLE_AREA_LEFT.getCentralTile()) < IMovement.Euclidean(location, EDGEVILLE_AREA_TOP.getCentralTile())) {
+				area = EDGEVILLE_AREA_LEFT;
+			} else {
+				area = EDGEVILLE_AREA_TOP;
+			}
+		}
+
 		for (Tile tile : area.getTileArray()) {
 			final double distanceTo = location.distanceTo(tile);
-			if (distanceTo > 2 && distanceTo < 6) {
+			if (distanceTo > 2 && (edgeville || distanceTo < 9)) {
 				tiles.add(tile);
+			}
+		}
+
+		Iterator<Tile> iterator = tiles.iterator();
+		while (iterator.hasNext()) {
+			final Tile next = iterator.next();
+			if (!next.getMatrix(ctx).isReachable()) {
+				iterator.remove();
 			}
 		}
 

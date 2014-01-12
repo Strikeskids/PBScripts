@@ -39,18 +39,6 @@ public class ISummoning extends Summoning {
 		backpack = new IItemStore(context, ctx.widgets.get(671, 30));
 	}
 
-	public IItemStore getFamiliarStore() {
-		return familiar;
-	}
-
-	/*public IItemStore getBackpackStore() {
-		return backpack;
-	}*/
-
-	public boolean canSummon(Familiar familiar) {
-		return familiar != null && !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
-	}
-
 	public boolean close() {
 		if (!isOpen()) {
 			return true;
@@ -78,6 +66,43 @@ public class ISummoning extends Summoning {
 		return getCloseButton().isValid();
 	}
 
+	public boolean deposit(final int id, int amount) {
+		if (open()) {
+			int spaceLeft = getFamiliar().getBoBSpace() - familiar.select().count();
+			if (spaceLeft == 0) {
+				return false;
+			}
+
+			final int backpackCount = backpack.select().id(id).count();
+			final Item item = backpack.shuffle().poll();
+			final String action = getStoreString(amount);
+			if (action.equals("Store-X")) {
+				if (item.interact(new Filter<Menu.Entry>() {
+					@Override
+					public boolean accept(Menu.Entry entry) {
+						return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
+					}
+				}) && ctx.chat.waitForInputWidget()) {
+					sleep(800, 1200);
+					if (amount == 0) {
+						amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
+					}
+					if (ctx.chat.isInputWidgetOpen() && ctx.keyboard.sendln(amount + "")) {
+						return true;
+					}
+				}
+			}
+			return item.interact(new Filter<Menu.Entry>() {
+				@Override
+				public boolean accept(Menu.Entry entry) {
+					return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
+				}
+			});
+		}
+
+		return false;
+	}
+
 	private static String getStoreString(int amount) {
 		switch (amount) {
 			case 0:
@@ -89,99 +114,6 @@ public class ISummoning extends Summoning {
 			default:
 				return "Store-X";
 		}
-	}
-
-	public boolean deposit(final int id, int amount) {
-		if (open()) {
-			int spaceLeft = getFamiliar().getBoBSpace() - familiar.select().count();
-			if (spaceLeft == 0) {
-				return false;
-			}
-
-			final int backpackCount = backpack.select().id(id).count();
-			for (final Item item : backpack.shuffle().first()) {
-				final String action = getStoreString(amount);
-				if (action.equals("Store-X")) {
-					if (item.interact(new Filter<Menu.Entry>() {
-						@Override
-						public boolean accept(Menu.Entry entry) {
-							return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
-						}
-					}) && ctx.chat.waitForInputWidget()) {
-						sleep(800, 1200);
-						if (amount == 0) {
-							amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
-						}
-						if (ctx.chat.isInputWidgetOpen() && ctx.keyboard.sendln(amount + "")) {
-							return true;
-						}
-					}
-				}
-				return item.interact(new Filter<Menu.Entry>() {
-					@Override
-					public boolean accept(Menu.Entry entry) {
-						return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
-					}
-				});
-			}
-		}
-
-		return false;
-	}
-
-
-	private void closeBankIfInTheWay() {
-		final Component bank = ctx.bank.getWidget();
-		if (bank.isValid()) {
-			final Component orb = getOrb();
-			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
-				sleep(50, 250);
-				ctx.bank.close();
-				sleep(200, 1000);
-			}
-		}
-	}
-
-	@Override
-	public boolean renewFamiliar() {
-		return isFamiliarSummoned() && canSummon(getFamiliar()) && interactOrb("Renew Familiar");
-	}
-
-	public boolean summon(Familiar familiar) {
-		if (!canSummon(familiar)) {
-			return false;
-		}
-
-		// Close bank
-		if (ctx.bank.isOpen()) {
-			ctx.bank.close();
-			sleep(400, 1200);
-		}
-
-		final Item pouch = ctx.backpack.shuffle().poll();
-		if (ctx.hud.view(Hud.Window.BACKPACK)) {
-			sleep(200, 800);
-			return pouch.isValid() && pouch.interact("Summon");/* && Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return ctx.summoning.isFamiliarSummoned() && !pouch.isValid();
-				}
-			}, Random.nextInt(500, 700), Random.nextInt(4, 8));*/
-		}
-
-		return false;
-	}
-
-	public boolean hasAction(final Item item, final String action) {
-		if (item.hover()) {
-			for (String a : ctx.menu.getItems()) {
-				if (a != null && a.matches("^" + action + "(<.*>)?")) {
-					//ctx.log.info("Action: \"" + a + "\"");
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	public boolean open() {
@@ -196,7 +128,7 @@ public class ISummoning extends Summoning {
 					return !ctx.chat.select().text("Store").isEmpty();
 				}
 			})) {
-				for (ChatOption option : ctx.chat.select().text("Store")) {
+				for (ChatOption option : ctx.chat.select().text("Store").first()) {
 					sleep(100, 800);
 					if (option.select(Random.nextBoolean())) {
 						Condition.wait(new Callable<Boolean>() {
@@ -213,6 +145,35 @@ public class ISummoning extends Summoning {
 		return isOpen();
 	}
 
+	public IItemStore getFamiliarStore() {
+		return familiar;
+	}
+
+	public boolean hasAction(final Item item, final String action) {
+		if (item.hover()) {
+			for (String a : ctx.menu.getItems()) {
+				if (a != null && a.matches("^" + action + "(<.*>)?")) {
+					//ctx.log.info("Action: \"" + a + "\"");
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean renewFamiliar() {
+		return isFamiliarSummoned() && canSummon(getFamiliar()) && interactOrb("Renew Familiar");
+	}
+
+	/*public IItemStore getBackpackStore() {
+		return backpack;
+	}*/
+
+	public boolean canSummon(Familiar familiar) {
+		return familiar != null && !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
+	}
+
 	public boolean interactOrb(String action) {
 		// Bank in the way of orb
 		closeBankIfInTheWay();
@@ -221,7 +182,44 @@ public class ISummoning extends Summoning {
 		return orb.isValid() && orb.isVisible() && orb.interact(action);
 	}
 
+	private void closeBankIfInTheWay() {
+		final Component bank = ctx.bank.getWidget();
+		if (bank.isValid()) {
+			final Component orb = getOrb();
+			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
+				sleep(50, 250);
+				ctx.bank.close();
+				sleep(200, 1000);
+			}
+		}
+	}
+
 	public Component getOrb() {
 		return ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
+	}
+
+	/**
+	 * Note returns straight away
+	 * @param familiar
+	 * @return
+	 */
+	public boolean summon(Familiar familiar) {
+		if (!canSummon(familiar)) {
+			return false;
+		}
+
+		// Close bank
+		if (ctx.bank.isOpen()) {
+			ctx.bank.close();
+			sleep(400, 1200);
+		}
+
+		final Item pouch = ctx.backpack.shuffle().poll();
+		if (ctx.hud.view(Hud.Window.BACKPACK)) {
+			sleep(200, 800);
+			return pouch.isValid() && pouch.interact("Summon");
+		}
+
+		return false;
 	}
 }

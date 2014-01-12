@@ -14,7 +14,6 @@ import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.SkillData;
-import org.powerbot.script.wrappers.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.018,
+		version = 6.019,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -120,6 +119,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		switch (messageEvent.getId()) {
 			case 0:
 				if (message.equals("They have locked their house to visitors.") || message.equals("They do not seem to be at home.") || message.equals("That player is in building mode at the moment.")) {
+					housePortal.enteringHouse.set(false);
 					log.info("House not available");
 					houseHandler.currentHouseFailed();
 					if (!options.detectHouses.get() && houseHandler.getOpenHouse() == null) {
@@ -137,7 +137,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						});
 					}*/
 				} else {
-					if (message.startsWith("Your familiar is too big to fit here.")) {
+					if (message.startsWith("Your familiar is too big to fit here.") || message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")) {
 						familiarFailed.set(true);
 					}/* else if (options.useAura && message.startsWith("Currently recharging.")) {
 						try {
@@ -148,9 +148,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							//ActivateAura.setTimeNextAura(System.currentTimeMillis() + Random.nextInt(seconds * 1000, seconds * 1020)); // TODO
 						} catch (Exception ignored) {
 						}
-					}*/ else if (message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")) {
-						familiarFailed.set(true);
-					}
+					}*/
 				}
 				break;
 			case 2:
@@ -161,6 +159,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				break;
 			case 4:
 				if (message.equals("That player is offline, or has privacy mode enabled.")) {
+					housePortal.enteringHouse.set(false);
 					options.status = "Can't enter friends house anymore";
 					log.info("Can't enter friends house anymore");
 
@@ -203,12 +202,12 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final Tile tile = area.findSpace(ctx, 3, 3);
 		tile.getMatrix(ctx).draw(g);*/
 
-		if (altarTask != null) {
-			final GameObject altar = altarTask.getAltar();
-			if (altar.isValid()) {
-				altar.getLocation().getMatrix(ctx).draw(g);
-			}
-		}
+//		if (altarTask != null) {
+//			final GameObject altar = altarTask.getAltar();
+//			if (altar.isValid()) {
+//				altar.getLocation().getMatrix(ctx).draw(g);
+//			}
+//		}
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import org.powerbot.script.wrappers.Tile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,10 +27,10 @@ import java.util.concurrent.Callable;
  * Date: 03/01/14
  * Time: 18:46
  */
-// implements MessageListener
-public class HousePortal extends NodePath/* implements MessageListener*/ {
+public class HousePortal extends NodePath {
 	public static final int ID_ENTER_PORTAL = 15531;
 	private static final LocationAttribute[] PORTAL_LOCATION_ATTRIBUTES = {LocationAttribute.YANILLE_HOUSE, LocationAttribute.RIMMINGTON_HOUSE, LocationAttribute.TAVERLEY_HOUSE, LocationAttribute.POLLNIVNEACH_HOUSE, LocationAttribute.RELLEKKA_HOUSE, LocationAttribute.BRIMHAVEN_HOUSE};
+	public AtomicBoolean enteringHouse = new AtomicBoolean();
 
 	public HousePortal(LogGildedAltar script) {
 		super(script, Path.HOME_PORTAL);
@@ -105,7 +106,6 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 	 * @return How long to delay before next call or -1 on stop
 	 */
 	public void enterPortal() {
-		boolean entering = false;
 		if (script.houseTask.isInHouse() || ctx.players.local().isInCombat()) {
 			return;
 		}
@@ -125,10 +125,10 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 					script.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
 					Component previous = ctx.widgets.get(IChat.WIDGET_INPUT, 3).getChild(0);
 					if (previous.isValid() && previous.isOnScreen() && previous.getText().toLowerCase().equals("last name entered: " + openHouse.getPlayerName()) && previous.interact("Use:")) {
-						entering = true;
+						enteringHouse.set(true);
 					} else {
 						sleep(150, 850);
-						entering = makeInput(openHouse.getPlayerName());
+						enteringHouse.set(makeInput(openHouse.getPlayerName()));
 					}
 				} else {
 					if (ctx.camera.prepare(portal) && portal.interact("Enter", "Portal")) {
@@ -155,28 +155,26 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 						}
 					}
 				} else {
-					for (ChatOption option : ctx.chat.select()) {
-						script.log.info(option.getText());
-					}
-
 					for (ChatOption option : ctx.chat.select().text("Go to your house.").first()) {
-						entering = option.select(Random.nextBoolean());
+						enteringHouse.set(option.select(Random.nextBoolean()));
 					}
 				}
 			}
 
-			if (entering) {
+			if (enteringHouse.get()) {
 				options.status = "Waiting for house to load";
 
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return script.houseTask.isInHouse() && script.houseTask.isLoadingHouse();
+						return !enteringHouse.get() || (script.houseTask.isInHouse() && script.houseTask.isLoadingHouse());
 					}
 				})) {
-					options.status = "Entered house";
-					if (options.useOtherHouse.get() && openHouse != null) {
-						openHouse.setEntered();
+					if (enteringHouse.get()) {
+						options.status = "Entered house";
+						if (options.useOtherHouse.get() && openHouse != null) {
+							openHouse.setEntered();
+						}
 					}
 				}
 
@@ -200,22 +198,10 @@ public class HousePortal extends NodePath/* implements MessageListener*/ {
 				text = textBox.getText();
 			}
 			if (text != null && text.equalsIgnoreCase(text) && textBox.isOnScreen()) {
-				return ctx.keyboard.send("", true);
+				return ctx.keyboard.sendln("");
 			}
 		}
 
 		return false;
 	}
-
-	/*@Override
-	public void messaged(MessageEvent messageEvent) {
-		if (entering) {
-			String message = messageEvent.getMessage();
-			if ((messageEvent.getId() == 0
-					&& (message.equals("They have locked their house to visitors.") || message.equals("They do not seem to be at home.")))
-					|| (messageEvent.getId() == 4 && message.equals("That player is offline, or has privacy mode enabled."))) {
-				entering = false;
-			}
-		}
-	}*/
 }

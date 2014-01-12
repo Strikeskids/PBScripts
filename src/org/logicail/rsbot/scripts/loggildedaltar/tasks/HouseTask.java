@@ -39,7 +39,9 @@ import java.util.concurrent.Callable;
  * Time: 21:48
  */
 public class HouseTask extends Branch<LogGildedAltar> {
-	public static final int WIDGET_LOADING_HOUSE = 399; // There's no place like home...
+	public static final int WIDGET_LOADING_HOUSE = 399;
+	public static final int WIDGET_LOADING_HOUSE_CHILD = 1; // There's no place like home...
+
 	public static final int WIDGET_HOUSE_OPTIONS = 1443;
 	public static final int WIDGET_HOUSE_OPTIONS_HOUSE = 1;
 	public static final int WIDGET_HOUSE_OPTIONS_PORTAL = 3;
@@ -93,11 +95,11 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	}
 
 	public boolean isInHouse() {
-		return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.game.isLoggedIn() && (isLoadingHouse() || !ctx.objects.select().id(EXIT_PORTAL).isEmpty());
+		return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && (isLoadingHouse() || !ctx.objects.select().id(EXIT_PORTAL).isEmpty());
 	}
 
 	public boolean isLoadingHouse() {
-		return ctx.widgets.get(WIDGET_LOADING_HOUSE).isValid();
+		return ctx.widgets.get(WIDGET_LOADING_HOUSE, WIDGET_LOADING_HOUSE_CHILD).isValid();
 	}
 
 	public HouseLocation getHouseLocation() {

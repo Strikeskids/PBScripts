@@ -7,10 +7,7 @@ import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.ItemTeleport;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.burthorpe.BurthorpeLodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.canifis.KharyrllPortalRoom;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.daemonheim.DaemonheimKinship;
@@ -31,11 +28,6 @@ import java.util.Enumeration;
 public class BankingTask extends Branch<LogGildedAltar> {
 	protected final LogGildedAltarOptions options;
 	private Banking banking;
-
-	@Override
-	public String toString() {
-		return "BankingTask";
-	}
 
 	public BankingTask(LogGildedAltar script, Enumeration<Path> enabledPaths) {
 		super(script);
@@ -76,15 +68,22 @@ public class BankingTask extends Branch<LogGildedAltar> {
 	}
 
 	@Override
+	public String toString() {
+		return "BankingTask";
+	}
+
+	@Override
 	public boolean branch() {
 		return options.banking.get()
 				&& (script.summoningTask == null || !script.summoningTask.isValid());
 	}
 
 	public boolean inBank() {
-		final Locatable nearest = ctx.bank.getNearest();
-		if (IMovement.Euclidean(ctx.players.local(), nearest) < 8) {
-			return true;
+		if (!LocationAttribute.EDGEVILLE.isInLargeArea(ctx)) {
+			final Locatable nearest = ctx.bank.getNearest();
+			if (IMovement.Euclidean(ctx.players.local(), nearest) < 8) {
+				return true;
+			}
 		}
 
 		for (Task node : tasks) {
