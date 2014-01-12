@@ -23,11 +23,11 @@ import java.awt.event.ItemListener;
  * Date: 12/01/14
  * Time: 19:10
  */
-public class Gui extends MethodProvider {
+public class PiersGUI extends MethodProvider {
 
 	private AbstractScript fletch;
 
-	public Gui(MethodContext arg0, AbstractScript fletch) {
+	public PiersGUI(MethodContext arg0, AbstractScript fletch) {
 		super(arg0);
 		this.fletch = fletch;
 		components();

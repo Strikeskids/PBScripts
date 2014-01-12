@@ -11,8 +11,8 @@ import java.awt.*;
  * Date: 12/01/14
  * Time: 19:08
  */
-@Manifest(name = "PiersTestGUIScript", description = "Test pFletcher gui on mac", hidden = true)
-public class PiersTestGUIScript extends PollingScript {
+@Manifest(name = "PiersTestScript", description = "Test pFletcher gui on mac", hidden = true)
+public class PiersTestScript extends PollingScript {
 	@Override
 	public int poll() {
 		return 1000;
@@ -24,7 +24,7 @@ public class PiersTestGUIScript extends PollingScript {
 			@Override
 			public void run() {
 				try {
-					new Gui(ctx, PiersTestGUIScript.this);
+					new PiersGUI(ctx, PiersTestScript.this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
