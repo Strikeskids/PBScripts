@@ -94,6 +94,9 @@ public class ItemTeleport extends NodePath {
 					}
 					break;
 				} else if (action.startsWith("Teleport") || action.startsWith("Rub")) {
+					if (window == Hud.Window.BACKPACK && !ctx.backpack.scroll(item)) {
+						return false;
+					}
 					if (item.interact(action, item.getName())) {
 						final String finalDestination = destination;
 						if (Condition.wait(new Callable<Boolean>() {

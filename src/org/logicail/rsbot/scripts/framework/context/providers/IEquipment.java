@@ -41,6 +41,9 @@ public class IEquipment extends Equipment {
 				if (!ctx.hud.isVisible(Hud.Window.BACKPACK) && ctx.hud.view(Hud.Window.BACKPACK)) {
 					sleep(200, 800);
 				}
+				if (!ctx.backpack.scroll(item)) {
+					return false;
+				}
 			}
 		}
 

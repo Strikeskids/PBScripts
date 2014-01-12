@@ -24,6 +24,11 @@ public class LightBurners extends BurnerAbstract {
 	}
 
 	@Override
+	public String toString() {
+		return "LightBurners";
+	}
+
+	@Override
 	public boolean isValid() {
 		final Room room = script.roomStorage.getRoom(ctx.players.local());
 		if (room != null) {

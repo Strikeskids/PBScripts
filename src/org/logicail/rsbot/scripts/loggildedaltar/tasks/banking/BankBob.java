@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.RenewFamiliar;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
+import org.powerbot.script.wrappers.ChatOption;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.List;
@@ -70,24 +71,42 @@ public class BankBob extends BankingAbstract {
 			bankingBranch.fail.set(0);
 			options.status = "Open familiar";
 
-			if (!ctx.summoning.open()) {
-				// If edgeville
-
-				final Tile start = ctx.players.local().getLocation();
-				final List<Tile> tiles = RenewFamiliar.familarTile(ctx);
-				for (final Tile tile : tiles) {
-					script.familiarFailed.set(false);
-					if (ctx.movement.findPath(tile).traverse()) {
-						if (Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return IMovement.Euclidean(tile, ctx.players.local()) < 2.5;
+			if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.interactOrb("Interact")) {
+				if (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return script.familiarFailed.get() || !ctx.chat.select().text("Store").isEmpty();
+					}
+				})) {
+					for (ChatOption option : ctx.chat.select().text("Store").first()) {
+						sleep(100, 800);
+						if (option.select(Random.nextBoolean())) {
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return ctx.summoning.isOpen();
+								}
+							}, Random.nextInt(550, 650), Random.nextInt(4, 12));
+						}
+					}
+				} else {
+					sleep(200, 1200);
+					final Tile start = ctx.players.local().getLocation();
+					final List<Tile> tiles = RenewFamiliar.familarTile(ctx);
+					for (final Tile tile : tiles) {
+						script.familiarFailed.set(false);
+						if (ctx.movement.findPath(tile).traverse()) {
+							if (Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return IMovement.Euclidean(tile, ctx.players.local()) < 2.5;
+								}
+							}, Random.nextInt(400, 650), Random.nextInt(10, 15)) || !start.equals(start)) {
+								if (ctx.summoning.open() || !script.familiarFailed.get()) {
+									break;
+								}
+								sleep(600, 1800);
 							}
-						}, Random.nextInt(400, 650), Random.nextInt(10, 15)) || !start.equals(start)) {
-							if (ctx.summoning.open() || !script.familiarFailed.get()) {
-								break;
-							}
-							sleep(600, 1800);
 						}
 					}
 				}
