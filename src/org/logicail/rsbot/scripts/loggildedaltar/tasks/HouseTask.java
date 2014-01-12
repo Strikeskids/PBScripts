@@ -60,6 +60,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		options = script.options;
 
 		add(script.housePortal);
+
 		while (houseNodes.hasMoreElements()) {
 			add(createPath(houseNodes.nextElement()));
 		}

@@ -86,7 +86,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
 
-		properties.put("InputHandler is null?", ctx.inputHandler == null);
+		properties.put("InputHandler is null", ctx.inputHandler == null);
 
 		return properties;
 	}

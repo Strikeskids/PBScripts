@@ -100,7 +100,7 @@ public class Postback extends Task<LogGildedAltar> {
 		final int experience = script.experience();
 		json.add("xpgained", experience - previousXPGained);
 		final int bonesBuried = script.options.bonesOffered.get();
-		json.add("bonesburied", bonesBuried);
+		json.add("bonesburied", bonesBuried - previousBonesBuried);
 		json.add("status", script.options.status);
 		if (script.options.detectHouses.get()) {
 			final OpenHouse currentHouse = script.houseHandler.getCurrentHouse();
@@ -108,7 +108,7 @@ public class Postback extends Task<LogGildedAltar> {
 				json.add("currenthouse", currentHouse.getPlayerName());
 			}
 		}
-		//json.add("settings", options.toJson());
+		//json.add("settings", script.options.toJson());
 
 		//ctx.log.info("Postback: " + json.toString());
 
