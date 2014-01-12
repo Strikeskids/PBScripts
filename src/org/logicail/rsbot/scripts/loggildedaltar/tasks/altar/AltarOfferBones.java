@@ -116,7 +116,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 
 				for (Item item : getBackpackOffering().first()) {
 					if (ctx.hud.view(Hud.Window.BACKPACK)) {
-						if (!ctx.backpack.isItemSelected() && ctx.backpack.scroll(item) && item.interact("Use")) {
+						if (!ctx.backpack.isItemSelected() && item.isValid() && ctx.backpack.scroll(item) && item.interact("Use")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {

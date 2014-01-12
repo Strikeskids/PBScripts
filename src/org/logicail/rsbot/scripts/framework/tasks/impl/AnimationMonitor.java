@@ -1,8 +1,7 @@
 package org.logicail.rsbot.scripts.framework.tasks.impl;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.powerbot.script.wrappers.Player;
+import org.logicail.rsbot.scripts.framework.tasks.LoopTask;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 07/12/13
  * Time: 21:33
  */
-public class AnimationMonitor<T extends LogicailScript<T>> extends Task<T> {
+public class AnimationMonitor<T extends LogicailScript<T>> extends LoopTask<T> {
 	private static final Map<Integer, Long> map = new ConcurrentHashMap<Integer, Long>();
 
 	/**
@@ -49,30 +48,19 @@ public class AnimationMonitor<T extends LogicailScript<T>> extends Task<T> {
 		super(script);
 	}
 
-	public static void put(int animation) {
-		if (animation != -1) {
-			map.put(animation, System.currentTimeMillis());
-		}
-	}
-
-	@Override
-	public void run() {
+	public int loop() {
 		try {
 			if (ctx.game.isLoggedIn()) {
-				final Player local = ctx.players.local();
-				if (local != null) {
-					put(local.getAnimation());
-				}
+				put(ctx.players.local().getAnimation());
 			}
 		} catch (Exception ignored) {
 		}
-		sleep(150);
+		return 100;
+	}
 
-		if (!Thread.interrupted()) {
-			try {
-				script.getController().getExecutor().offer(this);
-			} catch (NullPointerException ignored) {
-			}
+	public static void put(int animation) {
+		if (animation != -1) {
+			map.put(animation, System.currentTimeMillis());
 		}
 	}
 }

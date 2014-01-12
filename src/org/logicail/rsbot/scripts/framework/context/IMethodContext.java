@@ -6,11 +6,15 @@ import com.sk.methods.action.ActionBar;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.AbstractScript;
+import org.powerbot.script.Script;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Component;
 
 import java.awt.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,8 +46,10 @@ public class IMethodContext extends MethodContext {
 	public final String useragent;
 
 	// Concurrent task executor
-	//private final ExecutorService executor = Executors.newCachedThreadPool();
+	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AbstractScript script;
+	private AtomicBoolean paused = new AtomicBoolean();
+	private AtomicBoolean shutdown = new AtomicBoolean();
 
 	public IMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext);
@@ -51,6 +57,29 @@ public class IMethodContext extends MethodContext {
 		script.log.addHandler(log);
 
 		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
+
+		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
+			@Override
+			public void run() {
+				paused.set(true);
+			}
+		});
+
+		script.getExecQueue(Script.State.RESUME).add(new Runnable() {
+			@Override
+			public void run() {
+				paused.set(false);
+			}
+		});
+
+		script.getExecQueue(Script.State.STOP).add(new Runnable() {
+			@Override
+			public void run() {
+				paused.set(true);
+				shutdown.set(true);
+				executor.shutdown();
+			}
+		});
 
 		skillingInterface = new ISkillingInterface(this);
 		backpack = new IBackpack(this);
@@ -108,5 +137,19 @@ public class IMethodContext extends MethodContext {
 		} finally {
 			script.getController().stop();
 		}
+	}
+
+	public final void submit(Runnable task) {
+		if (!isShutdown()) {
+			executor.submit(task);
+		}
+	}
+
+	public boolean isShutdown() {
+		return shutdown.get();
+	}
+
+	public boolean isPaused() {
+		return paused.get();
 	}
 }

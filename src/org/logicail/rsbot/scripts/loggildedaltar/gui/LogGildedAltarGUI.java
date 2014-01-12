@@ -1000,16 +1000,16 @@ public class LogGildedAltarGUI extends JFrame {
 		//options.screenshots = screenshotCheckbox.isSelected();
 		options.stopOffering.set(stopOfferingCheckbox.isSelected());
 
-		options.onlyHouseObelisk.set( houseRechargeCheckbox.isSelected());
+		options.onlyHouseObelisk.set(houseRechargeCheckbox.isSelected());
 
 		//options.useAura = enableAura.isSelected();
 		//options.aura = (MyAuras.Aura) comboBoxAura.getSelectedItem();
 
-		options.stopLevelEnabled .set( stopLevelCheckbox.isSelected());
-		options.stopLevel.set( Integer.parseInt(String.valueOf(stopLevelSpinner.getValue())));
+		options.stopLevelEnabled.set(stopLevelCheckbox.isSelected());
+		options.stopLevel.set(Integer.parseInt(String.valueOf(stopLevelSpinner.getValue())));
 
 		// Summoning
-		options.useBOB .set( enableSummoning.isSelected());
+		options.useBOB.set(enableSummoning.isSelected());
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
 		final Script.Controller.Executor<Runnable> executor = script.getController().getExecutor();
@@ -1032,8 +1032,8 @@ public class LogGildedAltarGUI extends JFrame {
 
 					script.altarTask = new AltarTask(script);
 
-					executor.offer(new Thread(new AnimationMonitor<LogGildedAltar>(script)));
-					executor.offer(new Thread(new AntiBan<LogGildedAltar>(script)));
+					script.ctx.submit(new AnimationMonitor<LogGildedAltar>(script));
+					script.ctx.submit(new AntiBan<LogGildedAltar>(script));
 
 					// v4
 		/*
@@ -1053,16 +1053,15 @@ public class LogGildedAltarGUI extends JFrame {
 //					script.tree.add(new PickupBones(script));
 //				}
 
-					//final Postback postback = ;
-					/*script.getExecQueue(Script.State.STOP).add(new Runnable() {
+					final Postback postback = new Postback(script);
+					script.getExecQueue(Script.State.STOP).add(new Runnable() {
 						@Override
 						public void run() {
 							postback.postback();
 						}
-					});*/
-					script.getController().getExecutor().offer(new Thread(new Postback(script)));
+					});
 
-					//script.tree.add(postback);
+					script.tree.add(postback);
 
 					if (options.stopLevelEnabled.get()) {
 						script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel.get()));

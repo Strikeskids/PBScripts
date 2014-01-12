@@ -142,10 +142,8 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 		} catch (NullPointerException ignored) {
 		}
 
-		final Controller.Executor<Runnable> executor = getController().getExecutor();
-
-		executor.offer(new Thread(new AnimationMonitor<LogArtisanWorkshop>(this)));
-		executor.offer(new Thread(new AntiBan<LogArtisanWorkshop>(this)));
+		ctx.submit(new AnimationMonitor<LogArtisanWorkshop>(this));
+		ctx.submit(new AntiBan<LogArtisanWorkshop>(this));
 
 		//tree.add(new LogoutIdle());
 

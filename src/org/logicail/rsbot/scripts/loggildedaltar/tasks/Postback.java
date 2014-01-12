@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.IOUtil;
 import org.powerbot.script.methods.Environment;
@@ -23,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
  * Date: 08/01/14
  * Time: 16:42
  */
-public class Postback extends Task<LogGildedAltar> {
+public class Postback extends LogGildedAltarTask {
 	private static final int INTERVAL = 1200000; // 20 mins
 	private static final String POSTBACK_URL = "http://www.logicail.co.uk/data.php";
 	private static Cipher cipher = null;
@@ -67,20 +66,15 @@ public class Postback extends Task<LogGildedAltar> {
 	}
 
 	@Override
+	public boolean isValid() {
+		return cipher != null && nextRun < System.currentTimeMillis();
+	}
+
+	@Override
 	public void run() {
 		if (cipher != null && nextRun < System.currentTimeMillis()) {
 			nextRun = System.currentTimeMillis() + INTERVAL;
 			postback();
-		}
-
-		sleep(2000);
-
-		if (!Thread.interrupted()) {
-			try {
-				script.getController().getExecutor().offer(this);
-			} catch (NullPointerException ignored) {
-				postback();
-			}
 		}
 	}
 

@@ -28,7 +28,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 	@Override
 	public boolean isValid() {
 		if (getBackpackOffering().count() < nextTakeBoB) {
-			nextTakeBoB = Random.nextGaussian(2, 8, 2);
+			nextTakeBoB = Random.nextGaussian(2, 8, 3, 2);
 			return true;
 		}
 		return false;
@@ -48,10 +48,8 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 					public Boolean call() throws Exception {
 						return options.usedBOB.get() || ctx.backpack.select().count() > inventoryCount;
 					}
-				}, Random.nextInt(300, 600), 4);
-				if (options.usedBOB.get()) {
-					sleep(100, 600);
-				}
+				}, Random.nextInt(300, 600), 5);
+				sleep(100, 600);
 			}
 		} else if (getBackpackOffering().isEmpty()) {
 			options.status = ("Out of bones banking");
