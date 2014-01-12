@@ -61,8 +61,8 @@ public class BankingTask extends Branch<LogGildedAltar> {
 				return new LodestoneTeleport(script, path, ILodestone.Lodestone.EDGEVILLE);
 			case CANIFIS:
 				return new KharyrllPortalRoom(script);
-			case BURTHORPE_TROLL_INVASION:
-				return new ItemTeleport(script, path, "Troll Invasion", Equipment.Slot.NECK, 3867, 3865, 3863, 3861, 3859, 3857, 3855, 3853);
+			//case BURTHORPE_TROLL_INVASION:
+			//	return new ItemTeleport(script, path, "Troll Invasion", Equipment.Slot.NECK, 3867, 3865, 3863, 3861, 3859, 3857, 3855, 3853);
 		}
 		return null;
 	}

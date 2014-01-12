@@ -10,7 +10,7 @@ import java.util.EnumSet;
  */
 public enum Path {
 	// Bank
-	BURTHORPE_TROLL_INVASION("Burthorpe: Games Necklace", PathType.BANK, LocationAttribute.BURTHORPE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.REQUIRE_FAILSAFE)),
+	//BURTHORPE_TROLL_INVASION("Burthorpe: Games Necklace", PathType.BANK, LocationAttribute.BURTHORPE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.REQUIRE_FAILSAFE)),
 	BURTHORPE_LODESTONE("Burthorpe: Lodestones", PathType.BANK, LocationAttribute.BURTHORPE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.IS_FAILSAFE)),
 	CANIFIS("Portal Chamber: Kharyrll", PathType.BANK, LocationAttribute.CANIFIS, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.REQUIRE_FAILSAFE)),
 	CASTLE_WARS_RING_OF_DUELING("Castle Wars: Ring of duelling", PathType.BANK, LocationAttribute.CASTLE_WARS, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.ENABLE_DEFAULT, PathSetting.REQUIRE_FAILSAFE)),

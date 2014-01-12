@@ -12,8 +12,10 @@ import org.powerbot.script.methods.Equipment;
  * Time: 16:22
  */
 public class FightCavesBank extends ItemTeleport {
+	private static final int TOKKUL_ZO = 23643;
+
 	public FightCavesBank(LogGildedAltar script) {
-		super(script, Path.FIGHT_CAVES, "Fight Caves", Equipment.Slot.RING, 23643);
+		super(script, Path.FIGHT_CAVES, "Fight Caves", Equipment.Slot.RING, TOKKUL_ZO);
 	}
 
 	@Override
