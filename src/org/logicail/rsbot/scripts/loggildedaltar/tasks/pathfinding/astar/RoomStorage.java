@@ -56,12 +56,12 @@ public class RoomStorage extends IMethodProvider {
 			}
 		}
 
-		final CollisionMap collisionMap = ctx.movement.getCollisionMap();
-
 		for (Room room : rooms) {
 			int index = room.getIndex();
+			final Tile location = room.getLocation();
+
 			// North
-			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY() - 1).contains(CollisionFlag.NORTH)) {
+			if (!flagAt(location.derive(3, 0)).contains(CollisionFlag.NORTH)) {
 				final Room r = getRoom(index + 9);
 				if (r != null) {
 					r.addNeighbour(room);
@@ -69,7 +69,7 @@ public class RoomStorage extends IMethodProvider {
 			}
 
 			// East
-			if (!collisionMap.getFlagAt(room.getLocalX() + 8, room.getLocalY() - 4).contains(CollisionFlag.EAST)) {
+			if (!flagAt(location.derive(7, -3)).contains(CollisionFlag.EAST)) {
 				final Room r = getRoom(index + 1);
 				if (r != null) {
 					r.addNeighbour(room);
@@ -77,7 +77,7 @@ public class RoomStorage extends IMethodProvider {
 			}
 
 			// South
-			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY() - 6).contains(CollisionFlag.SOUTH)) {
+			if (!flagAt(location.derive(3, -7)).contains(CollisionFlag.SOUTH)) {
 				final Room r = getRoom(index - 9);
 				if (r != null) {
 					r.addNeighbour(room);
@@ -85,13 +85,19 @@ public class RoomStorage extends IMethodProvider {
 			}
 
 			// West
-			if (!collisionMap.getFlagAt(room.getLocalX() + 1, room.getLocalY() - 4).contains(CollisionFlag.WEST)) {
+			if (!flagAt(location.derive(0, -3)).contains(CollisionFlag.WEST)) {
 				final Room r = getRoom(index - 1);
 				if (r != null) {
 					r.addNeighbour(room);
 				}
 			}
 		}
+	}
+
+	private CollisionFlag flagAt(Tile location) {
+		final CollisionMap collisionMap = ctx.movement.getCollisionMap();
+		final Tile base = ctx.game.getMapBase();
+		return collisionMap.getFlagAt(location.x - base.x, location.y - base.y);
 	}
 
 	public List<Room> getPossibleNeighbours(Room room) {

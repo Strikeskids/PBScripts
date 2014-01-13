@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.032,
+		version = 6.033,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -219,48 +219,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //			for (Room neighbour : roomStorage.getPossibleNeighbours(room)) {
 //				for (Tile tile : neighbour.getArea().getTileArray()) {
 //					tile.getMatrix(ctx).draw(g);
-//				}
-//			}
-//		}
-
-//		final Room room = roomStorage.getRoom(ctx.players.local());
-//		if (room != null) {
-//			final CollisionMap collisionMap = ctx.movement.getCollisionMap();
-//
-//			int index = room.getIndex();
-//			// North
-//			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY() - 1).contains(CollisionFlag.NORTH)) {
-//				final Room r = roomStorage.getRoom(index + 9);
-//				if (r != null) {
-//					//r.addNeighbour(room);
-//					r.getArea().getCentralTile().getMatrix(ctx).draw(g);
-//				}
-//			}
-//
-//			// East
-//			if (!collisionMap.getFlagAt(room.getLocalX() + 8, room.getLocalY() - 4).contains(CollisionFlag.EAST)) {
-//				final Room r = roomStorage.getRoom(index + 1);
-//				if (r != null) {
-//					//r.addNeighbour(room);
-//					r.getArea().getCentralTile().getMatrix(ctx).draw(g);
-//				}
-//			}
-//
-//			// South
-//			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY() - 6).contains(CollisionFlag.SOUTH)) {
-//				final Room r = roomStorage.getRoom(index - 9);
-//				if (r != null) {
-//					//r.addNeighbour(room);
-//					r.getArea().getCentralTile().getMatrix(ctx).draw(g);
-//				}
-//			}
-//
-//			// West
-//			if (!collisionMap.getFlagAt(room.getLocalX() + 1, room.getLocalY() - 4).contains(CollisionFlag.WEST)) {
-//				final Room r = roomStorage.getRoom(index - 1);
-//				if (r != null) {
-//					//r.addNeighbour(room);
-//					r.getArea().getCentralTile().getMatrix(ctx).draw(g);
 //				}
 //			}
 //		}

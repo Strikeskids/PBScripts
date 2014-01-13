@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.MagicTablet;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.powerbot.script.methods.Game;
+import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Item;
 
@@ -33,7 +34,7 @@ public class HouseTablet extends MagicTablet {
 
 	@Override
 	public void run() {
-		if(!script.houseTask.setHouseTeleportMode()) {
+		if (!script.houseTask.setHouseTeleportMode()) {
 			script.log.info("Wait for game settings to close");
 			return;
 		}
@@ -54,13 +55,16 @@ public class HouseTablet extends MagicTablet {
 				tablet = Inventory.getItem(tabletID);
 			}*/
 
-			if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && tablet.interact("Break")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
-					}
-				});
+			if (ctx.hud.view(Hud.Window.BACKPACK)) {
+				sleep(100, 350);
+				if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && tablet.interact("Break")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
+						}
+					});
+				}
 			}
 		}
 	}
