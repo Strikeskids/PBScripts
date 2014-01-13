@@ -48,7 +48,7 @@ public class RechargeSummoning extends NodePath {
 		if (obelisk.isValid() && IMovement.Euclidean(obelisk, ctx.players.local()) < 5) {
 			renewPoints();
 		} else {
-			if (IMovement.Euclidean(obelisk, ctx.players.local()) > 5 && !locationAttribute.isInObeliskArea(ctx)) {
+			if (!locationAttribute.isInObeliskArea(ctx)) {
 				if (doSmall()) {
 					sleep(400, 1200);
 				}
