@@ -409,6 +409,16 @@ public class LogGildedAltarGUI extends JFrame {
 
 		// Summoning
 		enableSummoning = new JCheckBox("Enable summoning");
+		enableSummoning.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				final boolean enable = e.getStateChange() == ItemEvent.SELECTED;
+				houseRechargeCheckbox.setEnabled(enable);
+				summoningPotionCheckbox.setEnabled(enable);
+				bobOnceCheckbox.setEnabled(enable);
+				comboBoxBOB.setEnabled(enable);
+			}
+		});
 		houseRechargeCheckbox = new JCheckBox("Only recharge summoning points at house obelisk");
 		houseRechargeCheckbox.addItemListener(new ItemListener() {
 			@Override
@@ -427,11 +437,13 @@ public class LogGildedAltarGUI extends JFrame {
 				}
 			}
 		});
-
-
 		bobOnceCheckbox = new JCheckBox("Only fill beast of burden once (fast banking for yak)");
-
 		comboBoxBOB = new JComboBox<String>(familiarMap.keySet().toArray(new String[familiarMap.size()]));
+
+		houseRechargeCheckbox.setEnabled(false);
+		summoningPotionCheckbox.setEnabled(false);
+		bobOnceCheckbox.setEnabled(false);
+		comboBoxBOB.setEnabled(false);
 
 		/*
 		screenshotCheckbox = new JCheckBox("Save screenshot when script stops");
@@ -466,8 +478,15 @@ public class LogGildedAltarGUI extends JFrame {
 		//enableAura = new JCheckBox("Enable Aura");
 
 		stopLevelCheckbox = new JCheckBox("Stop at level", false);
+		stopLevelCheckbox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				stopLevelSpinner.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
 
 		stopLevelSpinner = new JSpinner(new SpinnerNumberModel(/*Math.min(Math.max(1, Skills.getLevel(Skills.PRAYER)) + 1, 99)*/99, 1, 99, 1));
+		stopLevelSpinner.setEnabled(false);
 
 		// Bottom
 		startButton = new JButton("Start Script");
