@@ -56,7 +56,7 @@ public class Astar extends IMethodProvider {
 			closed.add(last);
 			for (Room room : last.getNeighbours()) {
 				HousePath newPath = path.addRoom(room);
-				newPath.estimate = newPath.cost + IMovement.Euclidean(room.getArea().getCentralTile(), destination.getArea().getCentralTile());
+				newPath.estimate = newPath.cost + 1; //IMovement.Euclidean(room.getArea().getCentralTile(), destination.getArea().getCentralTile())
 				open.add(newPath);
 			}
 		}
