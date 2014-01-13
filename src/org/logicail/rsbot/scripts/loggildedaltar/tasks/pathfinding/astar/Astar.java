@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.wrappers.Locatable;
 
@@ -55,17 +56,11 @@ public class Astar extends IMethodProvider {
 			closed.add(last);
 			for (Room room : last.getNeighbours()) {
 				HousePath newPath = path.addRoom(room);
-				newPath.estimate = newPath.cost + 1;
+				newPath.estimate = newPath.cost + IMovement.Euclidean(room.getArea().getCentralTile(), destination.getArea().getCentralTile());
 				open.add(newPath);
 			}
 		}
 
 		return null;
 	}
-
-	/*public int manhatten(Room start, Room destination) {
-		final Tile startLocation = start.getLocation();
-		final Tile endLocation = destination.getLocation();
-		return (Math.abs(startLocation.x - endLocation.x) + Math.abs(startLocation.x - endLocation.y));
-	}*/
 }

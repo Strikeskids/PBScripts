@@ -64,6 +64,11 @@ public class Room extends IMethodProvider {
 	private final int localY;
 	private final int index;
 	private Set<Room> neighbours = new HashSet<Room>();
+	private LogicailArea area;
+	private LogicailArea wallarea;
+
+	private Tile mapBase = null;
+	private Tile location = null;
 
 	public Room(IMethodContext context, RoomStorage roomStorage, int localX, int localY) {
 		super(context);
@@ -74,8 +79,13 @@ public class Room extends IMethodProvider {
 	}
 
 	public Tile getLocation() {
-		final Tile mapBase = ctx.game.getMapBase();
-		return new Tile(mapBase.x + localX, mapBase.y + localY, mapBase.getPlane());
+		if (location != null && mapBase != null && mapBase.equals(ctx.game.getMapBase())) {
+			return location;
+		}
+		area = null;
+		wallarea = null;
+		mapBase = ctx.game.getMapBase();
+		return location = new Tile(mapBase.x + localX, mapBase.y + localY, mapBase.getPlane());
 	}
 
 	public int getIndex() {
@@ -140,7 +150,10 @@ public class Room extends IMethodProvider {
 
 	public LogicailArea getArea() {
 		final Tile location = getLocation();
-		return new LogicailArea(location.derive(0, 1), location.derive(8, -7));
+		if (area != null) {
+			return area;
+		}
+		return area = new LogicailArea(location.derive(0, 1), location.derive(8, -7));
 	}
 
 	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int[] ids, int... ids2) {
@@ -149,6 +162,9 @@ public class Room extends IMethodProvider {
 
 	public LogicailArea getWallArea() {
 		final Tile location = getLocation();
-		return new LogicailArea(location.derive(-1, 2), location.derive(9, -8));
+		if (wallarea != null) {
+			return wallarea;
+		}
+		return wallarea = new LogicailArea(location.derive(-1, 2), location.derive(9, -8));
 	}
 }
