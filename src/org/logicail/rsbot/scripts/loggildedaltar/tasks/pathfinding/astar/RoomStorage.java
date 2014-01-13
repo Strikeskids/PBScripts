@@ -61,7 +61,7 @@ public class RoomStorage extends IMethodProvider {
 		for (Room room : rooms) {
 			int index = room.getIndex();
 			// North
-			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY()).contains(CollisionFlag.NORTH)) {
+			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY() - 1).contains(CollisionFlag.NORTH)) {
 				final Room r = getRoom(index + 9);
 				if (r != null) {
 					r.addNeighbour(room);
@@ -77,7 +77,7 @@ public class RoomStorage extends IMethodProvider {
 			}
 
 			// South
-			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY() - 7).contains(CollisionFlag.SOUTH)) {
+			if (!collisionMap.getFlagAt(room.getLocalX() + 4, room.getLocalY() - 6).contains(CollisionFlag.SOUTH)) {
 				final Room r = getRoom(index - 9);
 				if (r != null) {
 					r.addNeighbour(room);
