@@ -18,6 +18,7 @@ import org.powerbot.script.util.SkillData;
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -29,7 +30,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.035,
+		version = 6.036,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -49,8 +50,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public AtomicLong nextSummon = new AtomicLong();
 
 	private SkillData skillData = null;
-	private int currentLevel = -1;
-	private int startLevel = -1;
+	private AtomicInteger currentLevel = new AtomicInteger(-1);
+	private AtomicInteger startLevel = new AtomicInteger(-1);
 	public AtomicBoolean familiarFailed = new AtomicBoolean();
 
 	@Override
@@ -58,13 +59,12 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final LinkedProperties properties = new LinkedProperties();
 		properties.put("Not everything tested", "Report errors on forum");
 
-		currentLevel = ctx.skills.getLevel(Skills.PRAYER);
-		if (currentLevel > 0) {
+		final int current = ctx.skills.getLevel(Skills.PRAYER);
+		currentLevel.set(current);
+		if (current > 0) {
 			if (skillData == null) {
+				startLevel.set(current);
 				skillData = new SkillData(ctx);
-			}
-			if (startLevel == -1) {
-				startLevel = currentLevel;
 			}
 		}
 
@@ -75,11 +75,11 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 		if (skillData != null) {
 			properties.put("TTL", org.powerbot.script.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
-			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
+			properties.put("Level", String.format("%d (+%d)", current, current - startLevel.get()));
 			properties.put("XP Gained", String.format("%,d", experience()));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.PRAYER)));
-			if (currentLevel < 99) {
-				properties.put("XP to level " + (currentLevel + 1), String.format("%,d", org.logicail.rsbot.scripts.framework.util.SkillData.getExperenceToNextLevel(ctx, Skills.PRAYER)));
+			if (current < 99) {
+				properties.put("XP to level " + (current + 1), String.format("%,d", org.logicail.rsbot.scripts.framework.util.SkillData.getExperenceToNextLevel(ctx, Skills.PRAYER)));
 			}
 		}
 
@@ -104,7 +104,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	}
 
 	public int experience() {
-		if (skillData != null && currentLevel > 1) {
+		if (skillData != null && currentLevel.get() > 1) {
 			try {
 				return experience = skillData.experience(Skills.PRAYER);
 			} catch (Exception ignored) {

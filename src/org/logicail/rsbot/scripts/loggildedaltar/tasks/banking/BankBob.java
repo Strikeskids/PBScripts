@@ -72,25 +72,24 @@ public class BankBob extends BankingAbstract {
 			options.status = "Open familiar";
 
 			if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.interactOrb(Summoning.Option.INTERACT)) {
-				if (Condition.wait(new Callable<Boolean>() {
+				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return script.familiarFailed.get() || !ctx.chat.select().text("Store").isEmpty();
 					}
-				})) {
-					for (ChatOption option : ctx.chat.select().text("Store").first()) {
-						sleep(100, 800);
-						if (option.select(Random.nextBoolean())) {
-							Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									return ctx.summoning.isOpen();
-								}
-							}, Random.nextInt(550, 650), Random.nextInt(4, 12));
-						}
+				}, Random.nextInt(300, 600), 10);
+				sleep(100, 800);
+				final ChatOption option = ctx.chat.select().text("Store").poll();
+				if (option.isValid()) {
+					if (option.select(Random.nextBoolean())) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return ctx.summoning.isOpen();
+							}
+						}, Random.nextInt(550, 650), Random.nextInt(4, 12));
 					}
 				} else {
-					sleep(200, 1200);
 					final Tile start = ctx.players.local().getLocation();
 					final List<Tile> tiles = RenewFamiliar.familarTile(ctx);
 					for (final Tile tile : tiles) {
