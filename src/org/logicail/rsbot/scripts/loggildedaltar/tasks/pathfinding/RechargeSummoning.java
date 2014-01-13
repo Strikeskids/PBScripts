@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
+import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
@@ -43,12 +44,15 @@ public class RechargeSummoning extends NodePath {
 
 	@Override
 	public void run() {
-		if (!locationAttribute.isInObeliskArea(ctx)) {
-			if (doSmall()) {
-				sleep(400, 1200);
-			}
-		} else {
+		final GameObject obelisk = ctx.objects.select().id(OBELISK).nearest().poll();
+		if (obelisk.isValid() && IMovement.Euclidean(obelisk, ctx.players.local()) < 5) {
 			renewPoints();
+		} else {
+			if (IMovement.Euclidean(obelisk, ctx.players.local()) > 5 && !locationAttribute.isInObeliskArea(ctx)) {
+				if (doSmall()) {
+					sleep(400, 1200);
+				}
+			}
 		}
 
 		sleep(200, 600);

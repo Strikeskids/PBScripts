@@ -34,7 +34,7 @@ public class RenewFamiliar extends LogGildedAltarTask {
 	@Override
 	public boolean isValid() {
 		if (options.useBOB.get() && options.beastOfBurden.getBoBSpace() > 0 && System.currentTimeMillis() > script.nextSummon.get()) {
-			if (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned()) {
+			if (ctx.summoning.getTimeLeft() <= 150 || !ctx.summoning.isFamiliarSummoned()) {
 				return ctx.summoning.canSummon(options.beastOfBurden);
 			}
 		}

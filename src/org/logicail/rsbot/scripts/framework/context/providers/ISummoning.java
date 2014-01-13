@@ -225,7 +225,7 @@ public class ISummoning extends Summoning {
 	public boolean canSummon(Familiar familiar) {
 		return familiar != null
 				&& getSummoningPoints() >= familiar.getRequiredPoints()
-				&& (!isFamiliarSummoned() || getTimeLeft() <= 300) // TODO: Check this
+				&& (!isFamiliarSummoned() || getTimeLeft() <= 150)
 				&& !ctx.backpack.select().id(familiar.getPouchId()).isEmpty();
 	}
 
