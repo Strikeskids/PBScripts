@@ -60,6 +60,7 @@ public class LogGildedAltarOptions {
 	/* Move to bank delegation */
 	public AtomicBoolean banking = new AtomicBoolean();
 	public AtomicBoolean bobonce = new AtomicBoolean();
+	public AtomicBoolean onlySummoningPotions = new AtomicBoolean();
 	public AtomicBoolean stopLevelEnabled = new AtomicBoolean();
 	public AtomicInteger stopLevel = new AtomicInteger(99);
 	public String status = "";

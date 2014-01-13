@@ -17,6 +17,9 @@ public class RoomStorage extends IMethodProvider {
 	public Room[] rooms = new Room[81];
 	private final LogGildedAltar script;
 
+	private Tile base = null;
+	private CollisionMap collisionMap = null;
+
 	public RoomStorage(LogGildedAltar script) {
 		super(script.ctx);
 		this.script = script;
@@ -36,6 +39,11 @@ public class RoomStorage extends IMethodProvider {
 	}
 
 	public void findNeighbours() {
+		if (collisionMap == null || base == null || !base.equals(ctx.game.getMapBase())) {
+			base = ctx.game.getMapBase();
+			collisionMap = ctx.movement.getCollisionMap();
+		}
+
 		for (Room room : rooms) {
 			room.clearNeighbours();
 		}
@@ -94,10 +102,8 @@ public class RoomStorage extends IMethodProvider {
 		}
 	}
 
-	private CollisionFlag flagAt(Tile location) {
-		final CollisionMap collisionMap = ctx.movement.getCollisionMap();
-		final Tile base = ctx.game.getMapBase();
-		return collisionMap.getFlagAt(location.x - base.x, location.y - base.y);
+	private CollisionFlag flagAt(Tile derive) {
+		return collisionMap.getFlagAt(derive.x - base.x, derive.y - base.y);
 	}
 
 	public List<Room> getPossibleNeighbours(Room room) {

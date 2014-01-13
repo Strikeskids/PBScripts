@@ -9,6 +9,7 @@ import java.util.EnumSet;
  * Time: 15:36
  */
 public enum Path {
+	SUMMONING_ANYWHERE("Anywhere", PathType.SUMMONING, LocationAttribute.ANYWHERE),
 	// Bank
 	//BURTHORPE_TROLL_INVASION("Burthorpe: Games Necklace", PathType.BANK, LocationAttribute.BURTHORPE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.REQUIRE_FAILSAFE)),
 	BURTHORPE_LODESTONE("Burthorpe: Lodestones", PathType.BANK, LocationAttribute.BURTHORPE, EnumSet.of(PathSetting.ENABLE_LIST, PathSetting.IS_FAILSAFE)),
@@ -47,6 +48,9 @@ public enum Path {
 	private final PathType pathType;
 	private final EnumSet<PathSetting> options;
 
+	private Path(final String name, PathType pathType, final LocationAttribute location) {
+		this(name, pathType, location, EnumSet.noneOf(PathSetting.class));
+	}
 	private Path(final String name, PathType pathType, final LocationAttribute location, EnumSet<PathSetting> options) {
 		this.name = name;
 		this.location = location;

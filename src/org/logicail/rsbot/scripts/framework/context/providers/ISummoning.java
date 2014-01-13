@@ -144,6 +144,36 @@ public class ISummoning extends Summoning {
 		return isOpen();
 	}
 
+	@Override
+	public boolean dismissFamiliar() {
+		if (!isFamiliarSummoned()) {
+			return false;
+		}
+
+		if (interactOrb(Option.DISMISS)) {
+			if (Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.chat.select().text("Yes").isEmpty();
+				}
+			})) {
+				for (ChatOption option : ctx.chat.first()) {
+					sleep(100, 800);
+					if (option.select(Random.nextBoolean())) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !isFamiliarSummoned();
+							}
+						}, Random.nextInt(550, 650), Random.nextInt(4, 12));
+					}
+				}
+			}
+		}
+
+		return !isFamiliarSummoned();
+	}
+
 	public boolean interactOrb(Option option) {
 		if (option == null) {
 			return false;

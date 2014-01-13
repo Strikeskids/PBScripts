@@ -11,6 +11,7 @@ import org.logicail.rsbot.util.DoorOpener;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.wrappers.GameObject;
 import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.wrappers.TileMatrix;
 
 import java.util.List;
 
@@ -49,8 +50,9 @@ public class AltarWalkToAltar extends LogGildedAltarTask {
 			final List<Tile> tilesNear = ctx.movement.getTilesNear(new LogicailArea(location.derive(2, -2), location.derive(6, -6)), altar, 4);
 			if (tilesNear.isEmpty()) return;
 			final Tile destination = tilesNear.get(0);
-			if (!path.traverse(destination)) {
-				if (!destination.getMatrix(ctx).isReachable()) {
+			final TileMatrix matrix = destination.getMatrix(ctx);
+			if (matrix.isOnScreen() && matrix.interact("Walk here") || !path.traverse(destination)) {
+				if (!matrix.isReachable()) {
 					for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(altarRoom, currentRoom)).first()) {
 						if (DoorOpener.open(ctx, door)) {
 							sleep(100, 600);
@@ -58,7 +60,7 @@ public class AltarWalkToAltar extends LogGildedAltarTask {
 					}
 				}
 
-				ctx.movement.walk(destination);
+				ctx.movement.findPath(destination).traverse();
 			}
 		}
 	}
