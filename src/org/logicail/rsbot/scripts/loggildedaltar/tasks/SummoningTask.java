@@ -44,12 +44,10 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 				case EDGEVILLE_MOUNTED_AMULET_OF_GLORY:
 					if (!edgeville) {
 						edgeville = true;
-						add(new RechargeSummoning(script, Path.EDGEVILLE_OBELISK, new Tile[]{new Tile(3073, 3504, 0), new Tile(3077, 3504, 0), new Tile(3081, 3504, 0),
-								new Tile(3085, 3504, 0), new Tile(3089, 3504, 0), new Tile(3093, 3504, 0),
-								new Tile(3097, 3504, 0), new Tile(3101, 3504, 0), new Tile(3105, 3505, 0),
-								new Tile(3109, 3506, 0), new Tile(3112, 3507, 0), new Tile(3114, 3511, 0),
-								new Tile(3115, 3515, 0), new Tile(3119, 3516, 0), new Tile(3123, 3516, 0),
-								new Tile(3126, 3516, 0), new Tile(3127, 3516, 0)}));
+						add(new RechargeSummoning(script, Path.EDGEVILLE_OBELISK, new Tile[]{new Tile(3070, 3503, 0), new Tile(3075, 3503, 0), new Tile(3080, 3503, 0),
+								new Tile(3085, 3503, 0), new Tile(3090, 3503, 0), new Tile(3095, 3503, 0),
+								new Tile(3100, 3503, 0), new Tile(3105, 3504, 0), new Tile(3110, 3506, 0),
+								new Tile(3114, 3509, 0), new Tile(3118, 3511, 0), new Tile(3122, 3514, 0), new Tile(3127, 3516, 0)}));
 					}
 					break;
 				case CASTLE_WARS_RING_OF_DUELING:
@@ -79,7 +77,7 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 		if (!script.options.onlyHouseObelisk.get()
 				&& script.options.banking.get()
 				&& script.options.useBOB.get()
-				&& !ctx.bank.isOpen()
+				//&& !ctx.bank.isOpen()
 				&& (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned())) {
 			if (nextPoints == -1) {
 				nextPoints = Random.nextInt(script.options.beastOfBurden.getRequiredPoints() + 1, script.options.beastOfBurden.getRequiredPoints() * 2);

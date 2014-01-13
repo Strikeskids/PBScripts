@@ -32,19 +32,17 @@ public class RechargeSummoning extends NodePath {
 	}
 
 	@Override
+	protected boolean doLarge() {
+		return false;
+	}
+
+	@Override
 	public boolean isValid() {
-		return locationAttribute.isInLargeArea(ctx)/* || getItemsNeededFromBank() == null*/;
+		return locationAttribute.isInLargeArea(ctx);
 	}
 
 	@Override
 	public void run() {
-		if (!locationAttribute.isInLargeArea(ctx)) {
-			if (doLarge()) {
-				sleep(250, 1000);
-			}
-			return;
-		}
-
 		if (!locationAttribute.isInObeliskArea(ctx)) {
 			if (doSmall()) {
 				sleep(400, 1200);
@@ -57,18 +55,19 @@ public class RechargeSummoning extends NodePath {
 	}
 
 	@Override
-	protected boolean doLarge() {
-		return false;
-	}
-
-	@Override
 	protected boolean doSmall() {
-		if (pathToObelisk == null) {
-			return ctx.movement.findPath(locationAttribute.getObeliskRandom(ctx)).traverse();
-		} else {
-			pathToObelisk.randomize(2, 2);
-			return pathToObelisk.traverse() || ctx.movement.findPath(locationAttribute.getObeliskRandom(ctx)).traverse();
+		final Tile obeliskRandom = locationAttribute.getObeliskRandom(ctx);
+		if (ctx.movement.findPath(obeliskRandom).traverse()) {
+			sleep(800, 1800);
+			return true;
 		}
+
+		if (pathToObelisk != null) {
+			pathToObelisk.randomize(2, 2);
+			return pathToObelisk.traverse();
+		}
+
+		return false;
 	}
 
 	protected boolean renewPoints() {
