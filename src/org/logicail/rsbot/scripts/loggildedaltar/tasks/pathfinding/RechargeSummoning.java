@@ -56,9 +56,17 @@ public class RechargeSummoning extends NodePath {
 
 	@Override
 	protected boolean doSmall() {
-		final Tile obeliskRandom = locationAttribute.getObeliskRandom(ctx);
-		if (ctx.movement.findPath(obeliskRandom).traverse()) {
-			sleep(800, 1800);
+		Tile obeliskRandom;
+
+		final GameObject obelisk = ctx.objects.select().id(OBELISK).nearest().poll();
+		if (obelisk.isValid()) {
+			obeliskRandom = obelisk.getLocation().derive(2, 2);
+		} else {
+			obeliskRandom = locationAttribute.getObeliskRandom(ctx);
+		}
+
+		if (obeliskRandom != null && ctx.movement.findPath(obeliskRandom).traverse() || ctx.movement.stepTowards(obeliskRandom)) {
+			sleep(1000, 2222);
 			return true;
 		}
 
