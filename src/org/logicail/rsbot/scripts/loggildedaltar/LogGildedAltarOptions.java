@@ -18,8 +18,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * Time: 21:58
  */
 public class LogGildedAltarOptions {
-	public AtomicLong TimeLastOffering = new AtomicLong();
-	public AtomicInteger timesBob = new AtomicInteger();
+	public final AtomicLong TimeLastOffering = new AtomicLong();
+	public final AtomicInteger timesBob = new AtomicInteger();
 
 	public JsonObject toJson() {
 		JsonObject json = new JsonObject();
@@ -45,27 +45,27 @@ public class LogGildedAltarOptions {
 	}
 
 	/* Settings */
-	public AtomicBoolean lightBurners = new AtomicBoolean(true);
-	public AtomicBoolean useBOB = new AtomicBoolean();;
-	public AtomicBoolean usedBOB = new AtomicBoolean(false); // Used BOB this trip
+	public final AtomicBoolean lightBurners = new AtomicBoolean(true);
+	public final AtomicBoolean useBOB = new AtomicBoolean();;
+	public final AtomicBoolean usedBOB = new AtomicBoolean(false); // Used BOB this trip
 	public Summoning.Familiar beastOfBurden = Summoning.Familiar.BULL_ANT;
 	public Offering offering = Offering.IMPIOUS_ASHES;
-	public AtomicBoolean useOtherHouse = new AtomicBoolean();
-	public AtomicBoolean detectHouses = new AtomicBoolean();
+	public final AtomicBoolean useOtherHouse = new AtomicBoolean();
+	public final AtomicBoolean detectHouses = new AtomicBoolean();
 	//public volatile boolean screenshots = false;
-	public AtomicBoolean stopOffering = new AtomicBoolean(true);
-	public AtomicBoolean onlyHouseObelisk = new AtomicBoolean();
+	public final AtomicBoolean stopOffering = new AtomicBoolean(true);
+	public final AtomicBoolean onlyHouseObelisk = new AtomicBoolean();
 	//public boolean useAura = false;
 	//public static MyAuras.Aura aura = MyAuras.Aura.CORRUPTION;
 	/* Move to bank delegation */
-	public AtomicBoolean banking = new AtomicBoolean();
-	public AtomicBoolean bobonce = new AtomicBoolean();
-	public AtomicBoolean onlySummoningPotions = new AtomicBoolean();
-	public AtomicBoolean stopLevelEnabled = new AtomicBoolean();
-	public AtomicInteger stopLevel = new AtomicInteger(99);
+	public final AtomicBoolean banking = new AtomicBoolean();
+	public final AtomicBoolean bobonce = new AtomicBoolean();
+	public final AtomicBoolean onlySummoningPotions = new AtomicBoolean();
+	public final AtomicBoolean stopLevelEnabled = new AtomicBoolean();
+	public final AtomicInteger stopLevel = new AtomicInteger(99);
 	public String status = "";
-	public AtomicInteger bonesOffered = new AtomicInteger();
-	public AtomicBoolean newVersionAvailable = new AtomicBoolean(false);
+	public final AtomicInteger bonesOffered = new AtomicInteger();
+	public final AtomicBoolean newVersionAvailable = new AtomicBoolean(false);
 	private File settingsFile;
 	private final String FILENAME = "settings.ini";
 

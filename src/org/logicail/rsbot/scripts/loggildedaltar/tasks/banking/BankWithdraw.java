@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.banking;
 
 import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.RenewFamiliar;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.SummoningPotion;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.methods.Bank;
@@ -68,7 +69,7 @@ public class BankWithdraw extends BankingAbstract {
 		}
 
 		// Deposit items with no charge
-		for (Item item : ctx.backpack.select().id(Banking.ALWAYS_DEPOSIT).shuffle()) {
+		for (Item item : ctx.backpack.select().id(Banking.ALWAYS_DEPOSIT, SummoningPotion.SUMMONING_POTION).shuffle()) {
 			if (item.isValid()) {
 				ctx.bank.deposit(item.getId(), Bank.Amount.ALL);
 			}
@@ -126,7 +127,7 @@ public class BankWithdraw extends BankingAbstract {
 
 		if (!bankingBranch.withdrawnDelegation.get()) {
 			List<Branch> list = new ArrayList<Branch>(
-					Arrays.asList(new Branch[]{script.bankingTask, script.houseTask})
+					Arrays.asList(new Branch[]{script.bankingTask, script.houseTask, script.summoningTask})
 			);
 			Collections.shuffle(list);
 			for (Branch branch : list) {
@@ -215,7 +216,6 @@ public class BankWithdraw extends BankingAbstract {
 
 		if (!getBackpackOffering().isEmpty()
 				&& (!options.lightBurners.get() || (options.lightBurners.get() && ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2))) {
-			bankingBranch.fail.set( 0);
 			ctx.bank.close();
 			options.status = "Finished banking";
 			bankingBranch.setBanking(false);

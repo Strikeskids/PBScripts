@@ -36,23 +36,23 @@ import java.util.concurrent.atomic.AtomicLong;
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
-	public LogGildedAltarOptions options = new LogGildedAltarOptions(this);
+	public final LogGildedAltarOptions options = new LogGildedAltarOptions(this);
 	public SummoningTask summoningTask;
-	public HouseHandler houseHandler = new HouseHandler(this);
+	public final HouseHandler houseHandler = new HouseHandler(this);
 	public BankingTask bankingTask;
 	public HouseTask houseTask;
-	public HousePortal housePortal = new HousePortal(this);
-	public RoomStorage roomStorage = new RoomStorage(this);
+	public final HousePortal housePortal = new HousePortal(this);
+	public final RoomStorage roomStorage = new RoomStorage(this);
 	public LeaveHouse leaveHouse;
 
-	public YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
+	public final YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
 	public AltarTask altarTask;
-	public AtomicLong nextSummon = new AtomicLong();
+	public final AtomicLong nextSummon = new AtomicLong();
 
 	private SkillData skillData = null;
-	private AtomicInteger currentLevel = new AtomicInteger(-1);
-	private AtomicInteger startLevel = new AtomicInteger(-1);
-	public AtomicBoolean familiarFailed = new AtomicBoolean();
+	private final AtomicInteger currentLevel = new AtomicInteger(-1);
+	private final AtomicInteger startLevel = new AtomicInteger(-1);
+	public final AtomicBoolean familiarFailed = new AtomicBoolean();
 
 	@Override
 	public LinkedProperties getPaintInfo() {
@@ -140,8 +140,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							}
 						});
 					}*/
-				} else {
-					if (message.startsWith("Your familiar is too big to fit here.") || message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")) {
+				} else if (options.useBOB.get()) {
+					if (message.startsWith("Your familiar is too big to fit here.")
+							|| message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")
+							|| message.contains(" too far away ")) {
 						familiarFailed.set(true);
 					}/* else if (options.useAura && message.startsWith("Currently recharging.")) {
 						try {

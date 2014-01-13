@@ -58,6 +58,8 @@ public class SummoningPotion extends NodePath {
 				}, Random.nextInt(200, 500), Random.nextInt(5, 10));
 			}
 		}
+
+		sleep(1000, 2000);
 	}
 
 	@Override

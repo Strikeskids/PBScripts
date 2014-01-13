@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.gui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
+import org.logicail.rsbot.scripts.framework.tasks.impl.LogoutIdle;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
@@ -23,10 +24,7 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.*;
 
 /**
@@ -75,6 +73,7 @@ public class LogGildedAltarGUI extends JFrame {
 	private JCheckBox enableSummoning;
 	private JComboBox<String> comboBoxBOB;
 	private JCheckBox houseRechargeCheckbox;
+	private JCheckBox summoningPotionCheckbox;
 	private JCheckBox bobOnceCheckbox;
 	//private JSlider mouseSpeedSlider;
 	//private JCheckBox mouseSpeedCheckBox;
@@ -302,6 +301,8 @@ public class LogGildedAltarGUI extends JFrame {
 			panelConstraints.gridy++;
 			panel.add(houseRechargeCheckbox, panelConstraints);
 			panelConstraints.gridy++;
+			panel.add(summoningPotionCheckbox, panelConstraints);
+			panelConstraints.gridy++;
 			panel.add(bobOnceCheckbox, panelConstraints);
 			panelConstraints.gridy++;
 
@@ -409,6 +410,25 @@ public class LogGildedAltarGUI extends JFrame {
 		// Summoning
 		enableSummoning = new JCheckBox("Enable summoning");
 		houseRechargeCheckbox = new JCheckBox("Only recharge summoning points at house obelisk");
+		houseRechargeCheckbox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					summoningPotionCheckbox.setSelected(false);
+				}
+			}
+		});
+		summoningPotionCheckbox = new JCheckBox("Only recharge summoning points using summoning potions (inc. flasks)");
+		summoningPotionCheckbox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					houseRechargeCheckbox.setSelected(false);
+				}
+			}
+		});
+
+
 		bobOnceCheckbox = new JCheckBox("Only fill beast of burden once (fast banking for yak)");
 
 		comboBoxBOB = new JComboBox<String>(familiarMap.keySet().toArray(new String[familiarMap.size()]));
@@ -851,6 +871,7 @@ public class LogGildedAltarGUI extends JFrame {
 
 		//settings.setProperty("screenshots", String.valueOf(screenshotCheckbox.isSelected()));
 		settings.setProperty("onlyhouseobelisk", String.valueOf(houseRechargeCheckbox.isSelected()));
+		settings.setProperty("summoningPotion", String.valueOf(summoningPotionCheckbox.isSelected()));
 
 		settings.setProperty("bobonce", String.valueOf(bobOnceCheckbox.isSelected()));
 
@@ -1000,7 +1021,6 @@ public class LogGildedAltarGUI extends JFrame {
 		//options.screenshots = screenshotCheckbox.isSelected();
 		options.stopOffering.set(stopOfferingCheckbox.isSelected());
 
-		options.onlyHouseObelisk.set(houseRechargeCheckbox.isSelected());
 
 		//options.useAura = enableAura.isSelected();
 		//options.aura = (MyAuras.Aura) comboBoxAura.getSelectedItem();
@@ -1010,6 +1030,8 @@ public class LogGildedAltarGUI extends JFrame {
 
 		// Summoning
 		options.useBOB.set(enableSummoning.isSelected());
+		options.onlyHouseObelisk.set(houseRechargeCheckbox.isSelected());
+		options.onlySummoningPotions.set(summoningPotionCheckbox.isSelected());
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
 		final Script.Controller.Executor<Runnable> executor = script.getController().getExecutor();
@@ -1047,7 +1069,7 @@ public class LogGildedAltarGUI extends JFrame {
 				// BANKING
 		*/
 
-					script.tree.add(new LogoutIdle(script));
+					script.tree.add(new LogoutIdle<LogGildedAltar>(script, script.options.bonesOffered));
 
 //				if (options.useBOB) {
 //					script.tree.add(new PickupBones(script));
@@ -1144,6 +1166,7 @@ public class LogGildedAltarGUI extends JFrame {
 				stopOfferingCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("stop_offering", "true")));
 
 				houseRechargeCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("onlyhouseobelisk", "false")));
+				summoningPotionCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("summoningPotion", "false")));
 
 				bobOnceCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("bobonce", "false")));
 

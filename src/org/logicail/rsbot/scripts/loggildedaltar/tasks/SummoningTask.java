@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.RechargeSummoning;
@@ -28,8 +29,16 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 		return "SummoningTask";
 	}
 
+	protected final LogGildedAltarOptions options;
+
 	public SummoningTask(LogGildedAltar script) {
 		super(script);
+		options = script.options;
+
+		if (options.onlySummoningPotions.get()) {
+			add(new SummoningPotion(script));
+			return;
+		}
 
 		boolean edgeville = false;
 
@@ -74,7 +83,7 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public boolean branch() {
-		if (!script.options.onlyHouseObelisk.get()
+		if (!script.options.onlyHouseObelisk.get() // TODO: Move house obelisk here
 				&& script.options.banking.get()
 				&& script.options.useBOB.get()
 				//&& !ctx.bank.isOpen()

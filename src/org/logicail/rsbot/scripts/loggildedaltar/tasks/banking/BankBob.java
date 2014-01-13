@@ -6,6 +6,7 @@ import org.powerbot.script.methods.Summoning;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.ChatOption;
+import org.powerbot.script.wrappers.Npc;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.List;
@@ -56,9 +57,6 @@ public class BankBob extends BankingAbstract {
 					if (ctx.summoning.deposit(options.offering.getId(), 0)) {
 						int newValue = ctx.summoning.getFamiliarStore().select().count();
 						bankingBranch.beastOfBurdenCount.set(newValue);
-						if (newValue != countBefore) {
-							bankingBranch.fail.set(0);
-						}
 					}
 				}
 			} else {
@@ -68,8 +66,8 @@ public class BankBob extends BankingAbstract {
 			}
 		} else {
 			// OPEN BOB
-			bankingBranch.fail.set(0);
 			options.status = "Open familiar";
+			script.familiarFailed.set(false);
 
 			if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.interactOrb(Summoning.Option.INTERACT)) {
 				Condition.wait(new Callable<Boolean>() {
@@ -90,6 +88,22 @@ public class BankBob extends BankingAbstract {
 						}, Random.nextInt(550, 650), Random.nextInt(4, 12));
 					}
 				} else {
+					final Npc npc = ctx.summoning.getNpc();
+					final double distance = IMovement.Euclidean(npc, ctx.players.local());
+					if (ctx.summoning.isFamiliarSummoned() && distance > 4) {
+						if (ctx.summoning.interactOrb(Summoning.Option.CALL_FOLLOWER)) {
+							if (Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return IMovement.Euclidean(npc, ctx.players.local()) < distance;
+								}
+							}, Random.nextInt(200, 400), 10)) {
+								sleep(100, 600);
+								return;
+							}
+						}
+					}
+
 					final Tile start = ctx.players.local().getLocation();
 					final List<Tile> tiles = RenewFamiliar.familarTile(ctx);
 					for (final Tile tile : tiles) {
