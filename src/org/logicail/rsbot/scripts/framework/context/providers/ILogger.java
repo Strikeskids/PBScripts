@@ -14,16 +14,32 @@ import java.util.logging.LogRecord;
  * Time: 20:06
  */
 public class ILogger extends Handler {
-	private final int capacity;
-	private AtomicBoolean painted = new AtomicBoolean();
 	private static final long MAX_LIFETIME = 10000;
+	private final int capacity;
+	private final AtomicBoolean painted = new AtomicBoolean();
+
+	private long lastLoop = System.currentTimeMillis();
+	private final ConcurrentLinkedDeque<LogEntry> logEntries = new ConcurrentLinkedDeque<LogEntry>();
 
 	public ILogger(int capacity) {
 		this.capacity = capacity;
 	}
 
-	private long lastLoop = System.currentTimeMillis();
-	private final ConcurrentLinkedDeque<LogEntry> logEntries = new ConcurrentLinkedDeque<LogEntry>();
+	@Override
+	public void close() throws SecurityException {
+	}
+
+	@Override
+	public void flush() {
+		logEntries.clear();
+	}
+
+	@Override
+	public void publish(LogRecord record) {
+		if (painted.get()) {
+			logEntries.push(new LogEntry(record));
+		}
+	}
 
 	public void repaint(Graphics g, int x, int y) {
 		painted.set(true);
@@ -58,22 +74,6 @@ public class ILogger extends Handler {
 		g2d.setComposite(previousComposite);
 
 		lastLoop = System.currentTimeMillis();
-	}
-
-	@Override
-	public void publish(LogRecord record) {
-		if (painted.get()) {
-			logEntries.push(new LogEntry(record));
-		}
-	}
-
-	@Override
-	public void flush() {
-		logEntries.clear();
-	}
-
-	@Override
-	public void close() throws SecurityException {
 	}
 
 	private class LogEntry {

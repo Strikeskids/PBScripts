@@ -26,8 +26,8 @@ import java.util.Enumeration;
  * Time: 16:14
  */
 public class BankingTask extends Branch<LogGildedAltar> {
+	public final Banking banking;
 	protected final LogGildedAltarOptions options;
-	public Banking banking;
 
 	public BankingTask(LogGildedAltar script, Enumeration<Path> enabledPaths) {
 		super(script);

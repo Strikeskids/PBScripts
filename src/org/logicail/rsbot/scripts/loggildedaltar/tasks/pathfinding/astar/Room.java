@@ -58,12 +58,11 @@ public class Room extends IMethodProvider {
 			13109, // Fremennick
 			13119, // Fancy stone
 			36625};
-	public double travelTime = 1; // Always room to room on grid
-	private final RoomStorage roomStorage;
+	public final double travelTime = 1; // Always room to room on grid
 	private final int localX;
 	private final int localY;
 	private final int index;
-	private Set<Room> neighbours = new HashSet<Room>();
+	private final Set<Room> neighbours = new HashSet<Room>();
 	private LogicailArea area;
 	private LogicailArea wallarea;
 
@@ -72,7 +71,6 @@ public class Room extends IMethodProvider {
 
 	public Room(IMethodContext context, RoomStorage roomStorage, int localX, int localY) {
 		super(context);
-		this.roomStorage = roomStorage;
 		this.localX = localX;
 		this.localY = localY;
 		this.index = roomStorage.getIndex(getLocation());
@@ -111,8 +109,7 @@ public class Room extends IMethodProvider {
 
 		Room room = (Room) o;
 
-		if (index != room.index) return false;
-		return localX == room.localX && localY == room.localY;
+		return index == room.index && localX == room.localX && localY == room.localY;
 	}
 
 	@Override

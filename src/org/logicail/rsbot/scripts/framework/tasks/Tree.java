@@ -28,10 +28,15 @@ public class Tree<T extends LogicailScript> extends Node<T> {
 		this.tasks.addAll(Arrays.asList(tasks));
 	}
 
+	public void add(Node<T> node) {
+		if (node != null) {
+			tasks.add(node);
+		}
+	}
+
 	public void add(Node<T>... nodes) {
 		for (Node<T> node : nodes) {
-			if (node == null) continue;
-			tasks.add(node);
+			add(node);
 		}
 	}
 

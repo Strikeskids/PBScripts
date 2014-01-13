@@ -41,10 +41,7 @@ public enum InnerAbilityTab implements Window {
 
 	@Override
 	public boolean open(final IMethodContext ctx) {
-		if (isOpen(ctx))
-			return true;
-		return superWindow.open(ctx)
-				&& ctx.widgets.get(superWindow.getSource().getWidget(), 6 + component).interact(openAction);
+		return isOpen(ctx) || superWindow.open(ctx) && ctx.widgets.get(superWindow.getSource().getWidget(), 6 + component).interact(openAction);
 	}
 
 	@Override

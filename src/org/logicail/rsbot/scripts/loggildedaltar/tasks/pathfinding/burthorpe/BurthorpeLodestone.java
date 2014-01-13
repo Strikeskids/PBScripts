@@ -14,7 +14,7 @@ import org.powerbot.script.wrappers.TilePath;
  * Time: 19:04
  */
 public class BurthorpeLodestone extends LodestoneTeleport {
-	private final TilePath PATH_TO_BANK = new TilePath(ctx, new Tile[]{new Tile(2898, 3540, 0), new Tile(2898, 3537, 0), new Tile(2898, 3534, 0),
+	private final TilePath pathToBank = new TilePath(ctx, new Tile[]{new Tile(2898, 3540, 0), new Tile(2898, 3537, 0), new Tile(2898, 3534, 0),
 			new Tile(2898, 3531, 0), new Tile(2896, 3527, 0), new Tile(2893, 3527, 0),
 			new Tile(2891, 3527, 0)});
 
@@ -34,8 +34,8 @@ public class BurthorpeLodestone extends LodestoneTeleport {
 
 		if (locationAttribute.isInLargeArea(ctx) && !locationAttribute.isInSmallArea(ctx)) {
 			options.status = "Walking";
-			PATH_TO_BANK.randomize(2, 2);
-			if (PATH_TO_BANK.traverse() || ctx.movement.findPath(locationAttribute.getSmallRandom(ctx)).traverse()) {
+			pathToBank.randomize(2, 2);
+			if (pathToBank.traverse() || ctx.movement.findPath(locationAttribute.getSmallRandom(ctx)).traverse()) {
 				sleep(250, 1400);
 			}
 		}

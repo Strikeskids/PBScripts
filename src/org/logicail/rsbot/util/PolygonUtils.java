@@ -27,7 +27,7 @@ public class PolygonUtils {
 		double A = PolygonArea(polygon, N);
 		int i, j;
 
-		double factor = 0;
+		double factor;
 		for (i = 0; i < N; i++) {
 			j = (i + 1) % N;
 			factor = (polygon[i].x * polygon[j].y - polygon[j].x * polygon[i].y);

@@ -60,7 +60,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	public static final int ID_SMELTER = 29395;
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
-	public LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
+	public final LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
 
 	private SkillData skillData = null;
 	private int currentLevel = -1;

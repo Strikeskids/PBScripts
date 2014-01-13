@@ -18,7 +18,7 @@ public interface Condition {
 
 	public static class Builder {
 		private final boolean and;
-		private List<Condition> blocks = new ArrayList<Condition>();
+		private final List<Condition> blocks = new ArrayList<Condition>();
 
 		public Builder(boolean and) {
 			this.and = and;

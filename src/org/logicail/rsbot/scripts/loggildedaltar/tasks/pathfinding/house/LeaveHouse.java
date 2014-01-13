@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Time: 16:37
  */
 public class LeaveHouse extends LogGildedAltarTask {
-	public AtomicBoolean leaveHouse = new AtomicBoolean();
+	public final AtomicBoolean leaveHouse = new AtomicBoolean();
 
 	public LeaveHouse(LogGildedAltar script) {
 		super(script);

@@ -23,7 +23,7 @@ import java.util.concurrent.Callable;
  * Date: 17/03/13
  * Time: 16:46
  */
-public class SmithTrack extends Branch {
+public class SmithTrack extends Branch<LogArtisanWorkshop> {
 	public static final int[] RAILS = {20506, 20515, 20520};
 	public static final int[] BASE_PLATE = {20507, 20516, 20521};
 	public static final int[] TRACK_40 = {20511, 20525, 20529};
@@ -39,7 +39,7 @@ public class SmithTrack extends Branch {
 
 	private final LogArtisanWorkshop script;
 
-	private SmithAnvil anvil;
+	private final SmithAnvil anvil;
 
 	static {
 		List<Integer> ids = new ArrayList<Integer>();

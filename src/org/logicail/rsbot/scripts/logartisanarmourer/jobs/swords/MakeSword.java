@@ -25,7 +25,7 @@ public class MakeSword extends ArtisanArmourerTask {
 	public static final int[] HEATED_INGOTS = {20566, 20567, 20568, 20569, 20570, 20571};
 	public static final int TONGS = 20565;
 	public static final int[] SWORD_PLANS = {20559, 20560, 20561, 20562, 20563, 20564};
-	private SmithAnvil smithAnvil;
+	private final SmithAnvil smithAnvil;
 
 	public MakeSword(LogArtisanWorkshop script, SmithAnvil smithAnvil) {
 		super(script);

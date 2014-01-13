@@ -12,7 +12,7 @@ public enum Spellbook {
 
 	private static final int SPELLBOOK_SETTING = 4, MASK = 0x3;
 
-	private int id;
+	private final int id;
 
 	private Spellbook(int id) {
 		this.id = id;

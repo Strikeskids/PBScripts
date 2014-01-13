@@ -43,11 +43,11 @@ public class ActionBar extends ActionQuery<Action> {
 
 	private static final int ADRENALINE_SETTING = 679, MAXIMUM_ADRENALINE = 1000;
 
-	public IMethodContext ctx;
-	public MethodContext octx;
-	public Logger log = Logger.getLogger(getClass().getSimpleName());
+	public final IMethodContext ctx;
+	public final MethodContext octx;
+	public final Logger log = Logger.getLogger(getClass().getSimpleName());
 
-	private Map<Integer, BarIcon> icons = new HashMap<Integer, BarIcon>();
+	private final Map<Integer, BarIcon> icons = new HashMap<Integer, BarIcon>();
 
 	public ActionBar(IMethodContext ctx) {
 		super(ctx);
@@ -131,18 +131,18 @@ public class ActionBar extends ActionQuery<Action> {
 		if (getCurrentBar() == bar)
 			return true;
 		if (!isExpanded()) {
-				log.warning("switchBar: bar must be expanded to switch");
+			log.warning("switchBar: bar must be expanded to switch");
 			return false;
 		}
 		int dir = (((bar - getCurrentBar()) % NUM_BARS + NUM_BARS / 2 + NUM_BARS) % NUM_BARS - NUM_BARS / 2);
 		final Component button = ctx.widgets.get(BAR_WIDGET, dir < 0 ? PREV_BAR : NEXT_BAR);
 		final String action = dir < 0 ? "Previous" : "Next";
 		if (!button.isValid()) {
-				log.info("switchBar: switch button invalid");
+			log.info("switchBar: switch button invalid");
 			return false;
 		}
 		if (!button.isVisible()) {
-				log.info("switchBar: switch button not visible");
+			log.info("switchBar: switch button not visible");
 			return false;
 		}
 		for (int i = 0; i < Math.abs(dir); ++i) {

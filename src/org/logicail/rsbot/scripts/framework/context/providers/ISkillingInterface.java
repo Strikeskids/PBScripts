@@ -40,7 +40,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	private static final int WIDGET_PRODUCTION_MAIN = 1251;
 	private static final int WIDGET_PRODUCTION_PROGRESS = 33;
 	private static final int WIDGET_PRODUCTION_CANCEL = 48;
-	protected IMethodContext ctx;
+	protected final IMethodContext ctx;
 
 
 	public ISkillingInterface(IMethodContext context) {

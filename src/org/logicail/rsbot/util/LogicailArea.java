@@ -47,6 +47,18 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 		return centralTile.randomize(2, 2);
 	}
 
+	@Override
+	public Tile getCentralTile() {
+		if (central != null) {
+			return central;
+		}
+
+		final Point point = PolygonUtils.polygonCenterOfMass(getPolygon());
+		central = new Tile(point.x, point.y, plane);
+
+		return central;
+	}
+
 	public Tile[] getReachable(MethodContext ctx) {
 		List<Tile> reachable = new ArrayList<Tile>();
 
@@ -84,17 +96,5 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 		}
 		this.tiles = Arrays.copyOf(array, numberOfTiles);
 		return tiles;
-	}
-
-	@Override
-	public Tile getCentralTile() {
-		if (central != null) {
-			return central;
-		}
-
-		final Point point = PolygonUtils.polygonCenterOfMass(getPolygon());
-		central = new Tile(point.x, point.y, plane);
-
-		return central;
 	}
 }

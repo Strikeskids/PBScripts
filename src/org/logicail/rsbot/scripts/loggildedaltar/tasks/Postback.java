@@ -35,11 +35,6 @@ public class Postback extends LogGildedAltarTask {
 	private static final SecretKeySpec SECRET_KEY_SPEC = new SecretKeySpec(SECRET_KEY.getBytes(), "AES");
 	private long nextRun = System.currentTimeMillis() + INTERVAL;
 
-	@Override
-	public String toString() {
-		return "Postback";
-	}
-
 	private static String padString(String source) {
 		char paddingChar = ' ';
 		int size = 16;
@@ -63,6 +58,11 @@ public class Postback extends LogGildedAltarTask {
 		} catch (NoSuchPaddingException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Postback";
 	}
 
 	@Override

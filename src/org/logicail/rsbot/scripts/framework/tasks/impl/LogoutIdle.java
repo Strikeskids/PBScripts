@@ -17,16 +17,15 @@ public class LogoutIdle<T extends LogicailScript> extends Node<T> {
 	private long nextRun;
 	private int lastValue = -1;
 
-	private void reset() {
-		nextRun = System.currentTimeMillis() + Random.nextInt(19 * 60 * 1000, 21 * 60 * 1000);
-	}
-
 	public LogoutIdle(T script, AtomicInteger watch) {
 		super(script);
 		this.watch = watch;
 		reset();
 	}
 
+	private void reset() {
+		nextRun = System.currentTimeMillis() + Random.nextInt(19 * 60 * 1000, 21 * 60 * 1000);
+	}
 
 	@Override
 	public boolean isValid() {

@@ -106,6 +106,10 @@ public enum LocationAttribute {
 		assert largeArea != null;
 	}
 
+	public LogicailArea getLargeArea() {
+		return largeArea;
+	}
+
 	public LogicailArea getObeliskArea() {
 		return obeliskArea;
 	}

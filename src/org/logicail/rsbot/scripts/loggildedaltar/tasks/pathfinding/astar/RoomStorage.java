@@ -14,7 +14,7 @@ import java.util.List;
  * Time: 21:36
  */
 public class RoomStorage extends IMethodProvider {
-	public Room[] rooms = new Room[81];
+	public final Room[] rooms = new Room[81];
 	private final LogGildedAltar script;
 
 	private Tile base = null;
@@ -102,10 +102,6 @@ public class RoomStorage extends IMethodProvider {
 		}
 	}
 
-	private CollisionFlag flagAt(Tile derive) {
-		return collisionMap.getFlagAt(derive.x - base.x, derive.y - base.y);
-	}
-
 	public List<Room> getPossibleNeighbours(Room room) {
 		List<Room> list = new ArrayList<Room>();
 
@@ -165,6 +161,10 @@ public class RoomStorage extends IMethodProvider {
 			return rooms[index];
 		}
 		return null;
+	}
+
+	private CollisionFlag flagAt(Tile derive) {
+		return collisionMap.getFlagAt(derive.x - base.x, derive.y - base.y);
 	}
 
 	public int getLength() {

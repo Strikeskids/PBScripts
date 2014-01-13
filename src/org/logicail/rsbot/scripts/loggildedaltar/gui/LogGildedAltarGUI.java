@@ -82,8 +82,8 @@ public class LogGildedAltarGUI extends JFrame {
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
 	private final LogGildedAltarOptions options;
-	private Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
-	private Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
+	private final Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
+	private final Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
 	public LogGildedAltarGUI(LogGildedAltar script) {
 		this.script = script;
@@ -404,8 +404,8 @@ public class LogGildedAltarGUI extends JFrame {
 				remove(enabledBank, bankDisabledModel, bankEnabledModel);
 			}
 		});
-		disabledBank.setCellRenderer(new ListRenderer());
-		enabledBank.setCellRenderer(new ListRenderer());
+		disabledBank.setCellRenderer(new ListRenderer<Path>());
+		enabledBank.setCellRenderer(new ListRenderer<Path>());
 
 		// Summoning
 		enableSummoning = new JCheckBox("Enable summoning");
@@ -612,30 +612,29 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 
 					JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-					DefaultListModel listModel = (DefaultListModel) enabledBank.getModel();
 					int index = dl.getIndex();
 
 					java.util.List list = enabledBank.getSelectedValuesList();
 					for (int i = list.size() - 1; i >= 0; i--) {
-						Object object = list.get(i);
-						if (index > listModel.indexOf(object)) {
+						final Object o = list.get(i);
+						if (index > bankEnabledModel.indexOf(o)) {
 							index--;
 						}
-						listModel.removeElement(object);
-						listModel.insertElementAt(object, index);
-						index = listModel.indexOf(object);
+						bankEnabledModel.removeElement(o);
+						bankEnabledModel.insertElementAt((Path) o, index);
+						index = bankEnabledModel.indexOf(o);
 					}
 
 					return true;
 				}
 
 				@Override
-				public int getSourceActions(JComponent c) {
+				public int getSourceActions(JComponent component) {
 					return MOVE;
 				}
 
 				@Override
-				protected Transferable createTransferable(JComponent c) {
+				protected Transferable createTransferable(JComponent component) {
 					return new StringSelection("");
 				}
 			});
@@ -799,30 +798,29 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 
 					JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-					DefaultListModel listModel = (DefaultListModel) enabledHouse.getModel();
 					int index = dl.getIndex();
 
 					java.util.List list = enabledHouse.getSelectedValuesList();
 					for (int i = list.size() - 1; i >= 0; i--) {
-						Object object = list.get(i);
-						if (index > listModel.indexOf(object)) {
+						final Object object = list.get(i);
+						if (index > houseEnabledModel.indexOf(object)) {
 							index--;
 						}
-						listModel.removeElement(object);
-						listModel.insertElementAt(object, index);
-						index = listModel.indexOf(object);
+						houseEnabledModel.removeElement(object);
+						houseEnabledModel.insertElementAt((Path) object, index);
+						index = houseEnabledModel.indexOf(object);
 					}
 
 					return true;
 				}
 
 				@Override
-				public int getSourceActions(JComponent c) {
+				public int getSourceActions(JComponent component) {
 					return MOVE;
 				}
 
 				@Override
-				protected Transferable createTransferable(JComponent c) {
+				protected Transferable createTransferable(JComponent component) {
 					return new StringSelection("");
 				}
 			});
@@ -1223,7 +1221,7 @@ public class LogGildedAltarGUI extends JFrame {
 				for (String name : settings.getProperty("banks", "").split("~")) {
 					for (int i = 0; i < bankDisabledModel.getSize(); i++) {
 						final Object element = bankDisabledModel.getElementAt(i);
-						if (element instanceof Path) {
+						if (element != null) {
 							if (((Path) element).getName().equals(name)) {
 								disabledBank.setSelectedIndex(i);
 								add(disabledBank, bankDisabledModel, bankEnabledModel);
@@ -1235,7 +1233,7 @@ public class LogGildedAltarGUI extends JFrame {
 				for (String name : settings.getProperty("house", "").split("~")) {
 					for (int i = 0; i < houseDisabledModel.getSize(); i++) {
 						final Object element = houseDisabledModel.getElementAt(i);
-						if (element instanceof Path) {
+						if (element != null) {
 							if (((Path) element).getName().equals(name)) {
 								disabledHouse.setSelectedIndex(i);
 								add(disabledHouse, houseDisabledModel, houseEnabledModel);
@@ -1244,7 +1242,7 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 				}
 			}
-			script.log.info("Settings Loaded");
+			//script.log.info("Settings Loaded");
 		} catch (Exception ignored) {
 		}
 	}

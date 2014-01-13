@@ -28,13 +28,24 @@ public class SummoningPotion extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
-		return getItemsNeededFromBank().isEmpty();
+	protected boolean doLarge() {
+		return false;
 	}
 
 	@Override
-	protected boolean doLarge() {
-		return false;
+	public List<BankRequiredItem> getItemsNeededFromBank() {
+		List<BankRequiredItem> list = new ArrayList<BankRequiredItem>();
+
+		if (ctx.backpack.select().id(SUMMONING_POTION).isEmpty()) {
+			list.add(new BankRequiredItem(1, false, null, SUMMONING_POTION));
+		}
+
+		return list;
+	}
+
+	@Override
+	public boolean isValid() {
+		return getItemsNeededFromBank().isEmpty();
 	}
 
 	@Override
@@ -60,16 +71,5 @@ public class SummoningPotion extends NodePath {
 		}
 
 		sleep(1000, 2000);
-	}
-
-	@Override
-	public List<BankRequiredItem> getItemsNeededFromBank() {
-		List<BankRequiredItem> list = new ArrayList<BankRequiredItem>();
-
-		if (ctx.backpack.select().id(SUMMONING_POTION).isEmpty()) {
-			list.add(new BankRequiredItem(1, false, null, SUMMONING_POTION));
-		}
-
-		return list;
 	}
 }

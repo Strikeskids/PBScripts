@@ -9,7 +9,7 @@ import java.util.*;
  * Date: 03/01/14
  * Time: 15:35
  */
-public class SortedListModel<T> extends AbstractListModel {
+public class SortedListModel<T> extends AbstractListModel<T> {
 	// Define a SortedSet
 	final SortedSet<T> model;
 
@@ -35,8 +35,8 @@ public class SortedListModel<T> extends AbstractListModel {
 	}
 
 	public void addAll(T elements[]) {
-		Collection c = Arrays.asList(elements);
-		model.addAll(c);
+		Collection<T> collection = Arrays.asList(elements);
+		model.addAll(collection);
 		fireContentsChanged(this, 0, getSize());
 	}
 
@@ -54,9 +54,9 @@ public class SortedListModel<T> extends AbstractListModel {
 		return model.first();
 	}
 
-	public Object getElementAt(int index) {
+	public T getElementAt(int index) {
 		// Return the appropriate element
-		return model.toArray()[index];
+		return (T) model.toArray()[index];
 	}
 
 	public boolean isEmpty() {

@@ -10,7 +10,7 @@ import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
  * Time: 20:58
  */
 public abstract class Task<T extends LogicailScript> extends IMethodProvider implements Runnable {
-	public T script;
+	public final T script;
 
 	public Task(T script) {
 		super(script.ctx);

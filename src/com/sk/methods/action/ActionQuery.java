@@ -15,7 +15,7 @@ import java.util.EnumSet;
 
 public abstract class ActionQuery<T extends Action> extends AbstractQuery<ActionQuery<T>, T> implements
 		Identifiable.Query<ActionQuery<T>> {
-	public IMethodContext ctx;
+	public final IMethodContext ctx;
 
 	public ActionQuery(IMethodContext ctx) {
 		super(ctx);

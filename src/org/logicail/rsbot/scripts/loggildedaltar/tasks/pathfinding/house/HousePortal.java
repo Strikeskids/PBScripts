@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class HousePortal extends NodePath {
 	public static final int ID_ENTER_PORTAL = 15531;
 	private static final LocationAttribute[] PORTAL_LOCATION_ATTRIBUTES = {LocationAttribute.YANILLE_HOUSE, LocationAttribute.RIMMINGTON_HOUSE, LocationAttribute.TAVERLEY_HOUSE, LocationAttribute.POLLNIVNEACH_HOUSE, LocationAttribute.RELLEKKA_HOUSE, LocationAttribute.BRIMHAVEN_HOUSE};
-	public AtomicBoolean enteringHouse = new AtomicBoolean();
+	public final AtomicBoolean enteringHouse = new AtomicBoolean();
 
 	public HousePortal(LogGildedAltar script) {
 		super(script, Path.HOME_PORTAL);

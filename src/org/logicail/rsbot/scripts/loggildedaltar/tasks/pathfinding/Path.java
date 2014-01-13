@@ -51,6 +51,7 @@ public enum Path {
 	private Path(final String name, PathType pathType, final LocationAttribute location) {
 		this(name, pathType, location, EnumSet.noneOf(PathSetting.class));
 	}
+
 	private Path(final String name, PathType pathType, final LocationAttribute location, EnumSet<PathSetting> options) {
 		this.name = name;
 		this.location = location;

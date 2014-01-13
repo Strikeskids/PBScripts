@@ -39,6 +39,11 @@ public class AltarTask extends Branch<LogGildedAltar> {
 	}
 
 	@Override
+	public String toString() {
+		return "AltarTask";
+	}
+
+	@Override
 	public boolean branch() {
 		return !options.banking.get() && script.houseTask.isInHouse();
 	}
@@ -56,10 +61,5 @@ public class AltarTask extends Branch<LogGildedAltar> {
 
 	public GameObject getMiniObelisk() {
 		return ctx.objects.select().id(AltarObelisk.MINI_OBELISK).nearest().poll();
-	}
-
-	@Override
-	public String toString() {
-		return "AltarTask";
 	}
 }

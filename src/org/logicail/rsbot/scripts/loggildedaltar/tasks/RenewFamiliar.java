@@ -22,13 +22,16 @@ import java.util.concurrent.Callable;
  * Time: 21:33
  */
 public class RenewFamiliar extends LogGildedAltarTask {
-	@Override
-	public String toString() {
-		return "RenewFamiliar";
-	}
+	private static final LogicailArea EDGEVILLE_AREA_LEFT = new LogicailArea(new Tile(3086, 3495, 0), new Tile(3091, 3488, 0));
+	private static final LogicailArea EDGEVILLE_AREA_TOP = new LogicailArea(new Tile(3088, 3505, 0), new Tile(3095, 3499, 0));
 
 	public RenewFamiliar(LogGildedAltar script) {
 		super(script);
+	}
+
+	@Override
+	public String toString() {
+		return "RenewFamiliar";
 	}
 
 	@Override
@@ -72,10 +75,6 @@ public class RenewFamiliar extends LogGildedAltarTask {
 
 		script.nextSummon.set(System.currentTimeMillis() + Random.nextInt(5000, 15000));
 	}
-
-
-	private static final LogicailArea EDGEVILLE_AREA_LEFT = new LogicailArea(new Tile(3086, 3495, 0), new Tile(3091, 3488, 0));
-	private static final LogicailArea EDGEVILLE_AREA_TOP = new LogicailArea(new Tile(3088, 3505, 0), new Tile(3095, 3499, 0));
 
 	public static List<Tile> familarTile(IMethodContext ctx) {
 		final Tile location = ctx.players.local().getLocation();

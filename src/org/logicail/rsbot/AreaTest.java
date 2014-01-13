@@ -12,22 +12,6 @@ import java.awt.*;
  * Time: 16:06
  */
 public class AreaTest {
-	public static void main(String[] args) {
-		Area regular = new Area(new Tile(3091, 3500, 0), new Tile(3099, 3488, 0));
-		Area irregular = new Area(new Tile(3091, 3500, 0), new Tile(3091, 3488, 0), new Tile(3095, 3488, 0),
-				new Tile(3095, 3496, 0), new Tile(3099, 3496, 0), new Tile(3099, 3500, 0));
-
-		System.out.println("Regular: " + regular.getCentralTile() + " " + regular.getPolygon().getBounds().getCenterX() + ", " + regular.getPolygon().getBounds().getCenterY());
-		System.out.println("Irregular: " + irregular.getCentralTile() + " " + irregular.getPolygon().getBounds().getCenterX() + ", " + irregular.getPolygon().getBounds().getCenterY());
-
-		String[] actions = new String[] {
-			"Store-1 <col=ff9040> Impious ashes",
-				"Store-5 <col=ff9040> Impious ashes",
-				"Store-10 <col=ff9040> Impious ashes",
-				"Store-All <col=ff9040> Impious ashes"
-		};
-	}
-
 	static class MyArea extends Area {
 		final int plane;
 		private Tile central = null;
@@ -87,7 +71,7 @@ public class AreaTest {
 			double A = PolygonArea(polygon, N);
 			int i, j;
 
-			double factor = 0;
+			double factor;
 			for (i = 0; i < N; i++) {
 				j = (i + 1) % N;
 				factor = (polygon[i].x * polygon[j].y - polygon[j].x * polygon[i].y);
@@ -122,6 +106,22 @@ public class AreaTest {
 			area /= 2.0;
 			return (Math.abs(area));
 		}
+	}
+
+	public static void main(String[] args) {
+		Area regular = new Area(new Tile(3091, 3500, 0), new Tile(3099, 3488, 0));
+		Area irregular = new Area(new Tile(3091, 3500, 0), new Tile(3091, 3488, 0), new Tile(3095, 3488, 0),
+				new Tile(3095, 3496, 0), new Tile(3099, 3496, 0), new Tile(3099, 3500, 0));
+
+		System.out.println("Regular: " + regular.getCentralTile() + " " + regular.getPolygon().getBounds().getCenterX() + ", " + regular.getPolygon().getBounds().getCenterY());
+		System.out.println("Irregular: " + irregular.getCentralTile() + " " + irregular.getPolygon().getBounds().getCenterX() + ", " + irregular.getPolygon().getBounds().getCenterY());
+
+		String[] actions = new String[]{
+				"Store-1 <col=ff9040> Impious ashes",
+				"Store-5 <col=ff9040> Impious ashes",
+				"Store-10 <col=ff9040> Impious ashes",
+				"Store-All <col=ff9040> Impious ashes"
+		};
 	}
 }
 

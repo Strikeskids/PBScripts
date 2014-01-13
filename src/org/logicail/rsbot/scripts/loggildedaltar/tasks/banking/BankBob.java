@@ -53,7 +53,6 @@ public class BankBob extends BankingAbstract {
 			if (depositBob()) {
 				options.status = "Deposit in familiar";
 				if (ctx.summoning.isOpen()) {
-					int countBefore = bankingBranch.beastOfBurdenCount.get();
 					if (ctx.summoning.deposit(options.offering.getId(), 0)) {
 						int newValue = ctx.summoning.getFamiliarStore().select().count();
 						bankingBranch.beastOfBurdenCount.set(newValue);

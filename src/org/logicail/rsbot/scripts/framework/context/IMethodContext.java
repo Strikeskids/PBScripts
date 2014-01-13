@@ -26,21 +26,21 @@ public class IMethodContext extends MethodContext {
 	public final ILogger log = new ILogger(10);
 
 	// Providers
-	public ISkillingInterface skillingInterface;
-	public IBackpack backpack;
-	public ICamera camera;
-	public IEquipment equipment;
-	public ISummoning summoning;
-	public IChat chat;
-	public ILodestone lodestones;
-	public IMovement movement;
-	public IMagic magic;
-	public IBank bank;
+	public final ISkillingInterface skillingInterface;
+	public final IBackpack backpack;
+	public final ICamera camera;
+	public final IEquipment equipment;
+	public final ISummoning summoning;
+	public final IChat chat;
+	public final ILodestone lodestones;
+	public final IMovement movement;
+	public final IMagic magic;
+	public final IBank bank;
 
 	// SK
-	public SkKeyboard keyboard;
-	public ActionBar actionBar;
-	public Combat combat;
+	public final SkKeyboard keyboard;
+	public final ActionBar actionBar;
+	public final Combat combat;
 	// SK
 
 	public final String useragent;
@@ -48,8 +48,8 @@ public class IMethodContext extends MethodContext {
 	// Concurrent task executor
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AbstractScript script;
-	private AtomicBoolean paused = new AtomicBoolean();
-	private AtomicBoolean shutdown = new AtomicBoolean();
+	private final AtomicBoolean paused = new AtomicBoolean();
+	private final AtomicBoolean shutdown = new AtomicBoolean();
 
 	public IMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext);
@@ -97,6 +97,10 @@ public class IMethodContext extends MethodContext {
 		magic = new IMagic(this);
 		movement = new IMovement(this);
 		bank = new IBank(this);
+	}
+
+	public boolean isPaused() {
+		return paused.get();
 	}
 
 	public void stop(final String reason) {
@@ -147,9 +151,5 @@ public class IMethodContext extends MethodContext {
 
 	public boolean isShutdown() {
 		return shutdown.get();
-	}
-
-	public boolean isPaused() {
-		return paused.get();
 	}
 }

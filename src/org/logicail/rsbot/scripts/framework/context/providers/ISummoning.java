@@ -26,7 +26,7 @@ public class ISummoning extends Summoning {
 	public static final int WIDGET_ORB = 1430;
 	public static final int WIDGET_ORB_BUTTON = 5;
 
-	protected IMethodContext ctx;
+	protected final IMethodContext ctx;
 
 	private final IItemStore familiar;
 	private final IItemStore backpack;
@@ -144,6 +144,33 @@ public class ISummoning extends Summoning {
 		return isOpen();
 	}
 
+	public boolean interactOrb(Option option) {
+		if (option == null) {
+			return false;
+		}
+
+		closeBankIfInTheWay();
+
+		final Component orb = getOrb();
+		return orb.isValid() && orb.isVisible() && orb.interact(option.getText());
+	}
+
+	private void closeBankIfInTheWay() {
+		final Component bank = ctx.bank.getWidget(); // 54, 48
+		if (bank.isValid()) {
+			final Component orb = getOrb();
+			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
+				sleep(50, 250);
+				ctx.bank.close();
+				sleep(200, 1000);
+			}
+		}
+	}
+
+	public Component getOrb() {
+		return ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
+	}
+
 	@Override
 	public boolean dismissFamiliar() {
 		if (!isFamiliarSummoned()) {
@@ -172,33 +199,6 @@ public class ISummoning extends Summoning {
 		}
 
 		return !isFamiliarSummoned();
-	}
-
-	public boolean interactOrb(Option option) {
-		if (option == null) {
-			return false;
-		}
-
-		closeBankIfInTheWay();
-
-		final Component orb = getOrb();
-		return orb.isValid() && orb.isVisible() && orb.interact(option.getText());
-	}
-
-	private void closeBankIfInTheWay() {
-		final Component bank = ctx.bank.getWidget(); // 54, 48
-		if (bank.isValid()) {
-			final Component orb = getOrb();
-			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
-				sleep(50, 250);
-				ctx.bank.close();
-				sleep(200, 1000);
-			}
-		}
-	}
-
-	public Component getOrb() {
-		return ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
 	}
 
 	public IItemStore getFamiliarStore() {

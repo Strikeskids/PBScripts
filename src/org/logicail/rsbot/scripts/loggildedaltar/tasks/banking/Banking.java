@@ -23,14 +23,9 @@ public class Banking extends Branch<LogGildedAltar> {
 	public static final int[] ALWAYS_DEPOSIT = {
 			114, 116, 118, 120, 122, 124, 126, 134, 136, 138, 229, 314, 441, 448, 450, 454, 554, 555, 560, 561, 562, 877,
 			882, 884, 886, 1704, 1973, 2327, 2429, 2433, 6961, 6962, 6963, 6965, 14665};
-	public AtomicBoolean withdrawnDelegation = new AtomicBoolean();
-	public AtomicInteger beastOfBurdenCount = new AtomicInteger();
+	public final AtomicBoolean withdrawnDelegation = new AtomicBoolean();
+	public final AtomicInteger beastOfBurdenCount = new AtomicInteger();
 	protected final LogGildedAltarOptions options;
-
-	@Override
-	public String toString() {
-		return "Banking";
-	}
 
 	public Banking(LogGildedAltar script) {
 		super(script);
@@ -41,6 +36,11 @@ public class Banking extends Branch<LogGildedAltar> {
 		add(new BankBob(this));
 		add(new BankOpen(this));
 		add(new BankWithdraw(this));
+	}
+
+	@Override
+	public String toString() {
+		return "Banking";
 	}
 
 	@Override

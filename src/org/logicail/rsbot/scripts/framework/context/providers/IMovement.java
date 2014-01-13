@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * Time: 12:57
  */
 public class IMovement extends Movement {
-	private IMethodContext ctx;
+	private final IMethodContext ctx;
 
 	public IMovement(IMethodContext context) {
 		super(context);
@@ -53,18 +53,6 @@ public class IMovement extends Movement {
 		return tiles;
 	}
 
-	public void walk(final Locatable locatable) {
-		final Tile tile = locatable.getLocation();
-		if (ctx.movement.findPath(locatable).traverse()) {
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return tile.getMatrix(ctx).isOnScreen() || tile.distanceTo(ctx.players.local()) < 5;
-				}
-			}, Random.nextInt(400, 650), Random.nextInt(10, 15));
-		}
-	}
-
 	public static double Euclidean(Locatable start, Locatable end) {
 		if (start == null || end == null) {
 			return Double.MAX_VALUE;
@@ -75,5 +63,17 @@ public class IMovement extends Movement {
 		int dx = location.x - startLocation.x;
 		int dy = location.y - startLocation.y;
 		return Math.sqrt(dx * dx + dy * dy);
+	}
+
+	public void walk(final Locatable locatable) {
+		final Tile tile = locatable.getLocation();
+		if (ctx.movement.findPath(locatable).traverse()) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return tile.getMatrix(ctx).isOnScreen() || tile.distanceTo(ctx.players.local()) < 5;
+				}
+			}, Random.nextInt(400, 650), Random.nextInt(10, 15));
+		}
 	}
 }

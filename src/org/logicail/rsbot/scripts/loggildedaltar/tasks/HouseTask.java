@@ -46,11 +46,6 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	public static final int WIDGET_HOUSE_OPTIONS_HOUSE = 1;
 	public static final int WIDGET_HOUSE_OPTIONS_PORTAL = 3;
 
-	@Override
-	public String toString() {
-		return "HouseTask";
-	}
-
 	public static final int SETTING_HOUSE_LOCATION = 481;
 	private static final int EXIT_PORTAL = 13405;
 	protected final LogGildedAltarOptions options;
@@ -86,6 +81,11 @@ public class HouseTask extends Branch<LogGildedAltar> {
 				return new TaverleyLodestone(script);
 		}
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "HouseTask";
 	}
 
 	@Override

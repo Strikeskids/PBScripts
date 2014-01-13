@@ -24,11 +24,6 @@ import org.powerbot.script.wrappers.Tile;
 public class SummoningTask extends Branch<LogGildedAltar> {
 	public int nextPoints = -1;
 
-	@Override
-	public String toString() {
-		return "SummoningTask";
-	}
-
 	protected final LogGildedAltarOptions options;
 
 	public SummoningTask(LogGildedAltar script) {
@@ -79,6 +74,11 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 					break;
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "SummoningTask";
 	}
 
 	@Override

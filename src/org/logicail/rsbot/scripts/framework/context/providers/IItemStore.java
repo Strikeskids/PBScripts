@@ -26,9 +26,9 @@ public class IItemStore extends ItemQuery<Item> {
 	protected List<Item> get() {
 		List<Item> items = new LinkedList<Item>();
 
-		for (Component c : component.getChildren()) {
-			if (c.isValid() && c.getItemId() != -1) {
-				items.add(new Item(ctx, c));
+		for (Component child : component.getChildren()) {
+			if (child.isValid() && child.getItemId() != -1) {
+				items.add(new Item(ctx, child));
 			}
 		}
 

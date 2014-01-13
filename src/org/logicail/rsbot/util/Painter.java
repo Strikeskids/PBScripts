@@ -11,8 +11,8 @@ import java.util.Enumeration;
 
 public class Painter extends IMethodProvider implements PaintListener {
 	// Public encase want to load custom font
-	public static Font FONT_TITLE = new Font("Arial", Font.BOLD, 14);
-	public static Font FONT_SMALL = new Font("Arial", Font.BOLD, 12);
+	public static final Font FONT_TITLE = new Font("Arial", Font.BOLD, 14);
+	public static final Font FONT_SMALL = new Font("Arial", Font.BOLD, 12);
 
 	private static final Color COLOUR_BACKGROUND = new Color(0, 0, 0, 128);
 	private static final Color COLOUR_BORDER = new Color(255, 255, 255, 192);
@@ -20,8 +20,8 @@ public class Painter extends IMethodProvider implements PaintListener {
 	private final BasicStroke mouseStroke = new BasicStroke(2f);
 	private final String title;
 
-	private Point location = new Point(50, 220);
-	private Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
+	private final Point location = new Point(50, 220);
+	private final Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
 
 	public Painter(IMethodContext context, AbstractScript script) {
 		super(context);

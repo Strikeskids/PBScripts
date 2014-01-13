@@ -66,7 +66,7 @@ public class HouseTeleportStaff extends NodePath {
 
 	@Override
 	public void run() {
-		if(!script.houseTask.setHouseTeleportMode()) {
+		if (!script.houseTask.setHouseTeleportMode()) {
 			script.log.info("Wait for game settings to close");
 			return;
 		}

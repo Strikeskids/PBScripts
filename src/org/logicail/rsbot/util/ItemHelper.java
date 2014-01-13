@@ -19,7 +19,7 @@ public class ItemHelper {
 	 */
 	public static Item getFirst(ItemQuery<Item> query, int[] ids, final int quantity) {
 		for (int id : ids) {
-			for (Item item : query.select().id(ids).select(new Filter<Item>() {
+			for (Item item : query.select().id(id).select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
 					return item.getStackSize() >= quantity;

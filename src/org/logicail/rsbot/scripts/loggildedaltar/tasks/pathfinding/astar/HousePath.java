@@ -23,11 +23,11 @@ import java.util.concurrent.Callable;
  * Time: 21:09
  */
 public class HousePath extends IMethodProvider implements Comparable<HousePath> {
-	public double cost;
+	public final double cost;
 	public double estimate;
 	private final LogGildedAltar script;
 	private Room last;
-	private HousePath previous;
+	private final HousePath previous;
 	private Room currentRoom;
 
 	public HousePath(LogGildedAltar script, Room start) {
@@ -56,6 +56,11 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 
 	public HousePath addRoom(Room room) {
 		return new HousePath(script, room, this, cost + room.travelTime);
+	}
+
+	@Override
+	public int compareTo(HousePath o) {
+		return Double.compare(estimate, o.estimate);
 	}
 
 	public boolean traverse(Tile destination) {
@@ -193,10 +198,5 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 		}
 
 		return list;
-	}
-
-	@Override
-	public int compareTo(HousePath o) {
-		return Double.compare(estimate, o.estimate);
 	}
 }

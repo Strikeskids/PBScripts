@@ -13,8 +13,8 @@ public class Action extends org.powerbot.script.wrappers.Action {
 	private static final int AVAILABILITY_CHILD = 96;
 	private static final int AVAILABLE_TEXT_COLOR = 0xFFFFFF;
 
-	protected IMethodContext ctx;
-	private BarIcon icon;
+	protected final IMethodContext ctx;
+	private final BarIcon icon;
 	private final int slot;
 
 	public Action(IMethodContext ctx, int slot, Type type, int id, BarIcon ico) {
@@ -58,10 +58,7 @@ public class Action extends org.powerbot.script.wrappers.Action {
 
 	@Override
 	public boolean isReady() {
-		if (!isValid())
-			return false;
-		return getAvailabilityComponent().getTextColor() == AVAILABLE_TEXT_COLOR
-				&& !getCooldownComponent().isVisible();
+		return isValid() && getAvailabilityComponent().getTextColor() == AVAILABLE_TEXT_COLOR && !getCooldownComponent().isVisible();
 	}
 
 	@Override

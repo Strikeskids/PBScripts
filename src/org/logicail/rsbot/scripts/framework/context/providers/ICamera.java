@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * Time: 16:05
  */
 public class ICamera extends Camera {
-	private IMethodContext ctx;
+	private final IMethodContext ctx;
 
 	public ICamera(IMethodContext context) {
 		super(context);

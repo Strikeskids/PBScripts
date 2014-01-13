@@ -14,7 +14,7 @@ import java.awt.*;
  * Time: 21:19
  */
 public class TargetableRectangle extends Interactive implements Targetable {
-	private Rectangle rectangle;
+	private final Rectangle rectangle;
 
 	public TargetableRectangle(MethodContext ctx, Rectangle rectangle) {
 		super(ctx);
