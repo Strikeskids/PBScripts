@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.036,
+		version = 6.037,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -48,18 +48,20 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public final YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
 	public AltarTask altarTask;
 	public final AtomicLong nextSummon = new AtomicLong();
+	public final AtomicBoolean familiarFailed = new AtomicBoolean();
 
 	private SkillData skillData = null;
 	private final AtomicInteger currentLevel = new AtomicInteger(-1);
 	private final AtomicInteger startLevel = new AtomicInteger(-1);
-	public final AtomicBoolean familiarFailed = new AtomicBoolean();
+
+	private AtomicInteger experience = new AtomicInteger();
 
 	@Override
 	public LinkedProperties getPaintInfo() {
 		final LinkedProperties properties = new LinkedProperties();
 		properties.put("Not everything tested", "Report errors on forum");
 
-		final int current = ctx.skills.getLevel(Skills.PRAYER);
+		final int current = ctx.skills.getRealLevel(Skills.PRAYER);
 		currentLevel.set(current);
 		if (current > 0) {
 			if (skillData == null) {
@@ -95,23 +97,16 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		return properties;
 	}
 
-	private volatile int experience = 0;
-
-	@Override
-	public int poll() {
-
-		return super.poll();
-	}
-
 	public int experience() {
 		if (skillData != null && currentLevel.get() > 1) {
 			try {
-				return experience = skillData.experience(Skills.PRAYER);
+				experience.set(skillData.experience(Skills.PRAYER));
 			} catch (Exception ignored) {
 			}
 		}
-		if (experience > 0) {
-			return experience;
+		final int get = experience.get();
+		if (get > 0) {
+			return get;
 		}
 		return (int) (options.bonesOffered.get() * options.offering.getXp());
 	}
@@ -188,6 +183,11 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 					options.bonesOffered.incrementAndGet();
 				}
 		}
+	}
+
+	@Override
+	public int poll() {
+		return super.poll();
 	}
 
 	@Override

@@ -193,7 +193,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 			if (skillData == null) {
 				skillData = new SkillData(ctx);
 			}
-			currentLevel = ctx.skills.getLevel(Skills.SMITHING);
+			currentLevel = ctx.skills.getRealLevel(Skills.SMITHING);
 			if (startLevel == -1) {
 				startLevel = currentLevel;
 			}

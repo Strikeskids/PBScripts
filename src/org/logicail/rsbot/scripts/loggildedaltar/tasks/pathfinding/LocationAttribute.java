@@ -43,7 +43,7 @@ public enum LocationAttribute {
 	EDGEVILLE(new LogicailArea(new Tile(3091, 3500, 0), new Tile(3091, 3488, 0), new Tile(3095, 3488, 0),
 			new Tile(3095, 3496, 0), new Tile(3099, 3496, 0), new Tile(3099, 3500, 0)),
 			new LogicailArea(new Tile(3059, 3521, 0), new Tile(3135, 3480, 0)),
-			new LogicailArea(new Tile(3125, 3520, 0), new Tile(3128, 3514, 0))),
+			new LogicailArea(new Tile(3125, 3518, 0), new Tile(3130, 3514, 0))),
 
 	LUNAR_ISLE(new LogicailArea(new Tile(2097, 3920, 0), new Tile(2102, 3916, 0)),
 			new LogicailArea(new Tile(2073, 3928, 0), new Tile(2120, 3903, 0)),
