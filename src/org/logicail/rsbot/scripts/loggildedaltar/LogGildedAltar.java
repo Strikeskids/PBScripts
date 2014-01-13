@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.031,
+		version = 6.032,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -88,8 +88,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 		properties.put("InputHandler is null", ctx.inputHandler == null);
 
-		if (bankingTask != null) {
-			properties.put("beastOfBurdenWithdraws", bankingTask.banking.beastOfBurdenWithdraws.get());
+		if (options.useBOB.get() && options.bobonce.get()) {
+			properties.put("timesBob", options.timesBob.get());
 		}
 
 		return properties;
@@ -180,6 +180,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				break;
 			case 109:
 				if (message.equals("Note: anything your familiar is carrying when it disappears will be placed on the floor.")) {
+					options.timesBob.incrementAndGet();
 					options.usedBOB.set(false);
 				} else if (message.contains("your offering.")) {
 					options.bonesOffered.incrementAndGet();
@@ -210,6 +211,15 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //			final GameObject altar = altarTask.getAltar();
 //			if (altar.isValid()) {
 //				altar.getLocation().getMatrix(ctx).draw(g);
+//			}
+//		}
+
+//		final Room room = roomStorage.getRoom(ctx.players.local());
+//		if (room != null) {
+//			for (Room neighbour : roomStorage.getPossibleNeighbours(room)) {
+//				for (Tile tile : neighbour.getArea().getTileArray()) {
+//					tile.getMatrix(ctx).draw(g);
+//				}
 //			}
 //		}
 	}

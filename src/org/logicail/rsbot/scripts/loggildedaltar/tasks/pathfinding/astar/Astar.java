@@ -1,7 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
-import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.wrappers.Locatable;
 
@@ -25,7 +24,7 @@ public class Astar extends IMethodProvider {
 
 	public HousePath findRoute(Locatable destination) {
 		script.roomStorage.findNeighbours();
-		return findRoute(script.roomStorage.getRoom(ctx.players.local()), script.roomStorage.getRoom(destination));
+		return findRoute(script.roomStorage.getRoom(ctx.players.local()), script.roomStorage.getRoom(destination)); // TODO: walk destination
 	}
 
 	public HousePath findRoute(Room destination) {

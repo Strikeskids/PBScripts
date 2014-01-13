@@ -20,7 +20,6 @@ import java.util.concurrent.Callable;
  * Time: 17:00
  */
 public class ISummoning extends Summoning {
-	// TODO
 	public static final int WIDGET_STORE = 671;
 	public static final int WIDGET_STORE_CLOSE_BUTTON = 21;
 	public static final int WIDGET_STORE_CLOSE_BUTTON_CHILD = 1;
@@ -50,7 +49,7 @@ public class ISummoning extends Summoning {
 			public Boolean call() throws Exception {
 				return !isOpen();
 			}
-		});
+		}, Random.nextInt(200, 400), Random.nextInt(5, 10));
 	}
 
 	public Component getCloseButton() {
@@ -121,14 +120,14 @@ public class ISummoning extends Summoning {
 			return true;
 		}
 
-		if (isFamiliarSummoned() && interactOrb("Interact")) {
+		if (isFamiliarSummoned() && interactOrb(Option.INTERACT)) {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return !ctx.chat.select().text("Store").isEmpty();
 				}
 			})) {
-				for (ChatOption option : ctx.chat.select().text("Store").first()) {
+				for (ChatOption option : ctx.chat.first()) {
 					sleep(100, 800);
 					if (option.select(Random.nextBoolean())) {
 						Condition.wait(new Callable<Boolean>() {
@@ -145,45 +144,19 @@ public class ISummoning extends Summoning {
 		return isOpen();
 	}
 
-	public IItemStore getFamiliarStore() {
-		return familiar;
-	}
-
-	public boolean hasAction(final Item item, final String action) {
-		if (item.hover()) {
-			for (String a : ctx.menu.getItems()) {
-				if (a != null && a.matches("^" + action + "(<.*>)?")) {
-					//ctx.log.info("Action: \"" + a + "\"");
-					return true;
-				}
-			}
+	public boolean interactOrb(Option option) {
+		if (option == null) {
+			return false;
 		}
-		return false;
-	}
 
-	@Override
-	public boolean renewFamiliar() {
-		return isFamiliarSummoned() && canSummon(getFamiliar()) && interactOrb("Renew Familiar");
-	}
-
-	/*public IItemStore getBackpackStore() {
-		return backpack;
-	}*/
-
-	public boolean canSummon(Familiar familiar) {
-		return familiar != null && !ctx.backpack.select().id(familiar.getPouchId()).isEmpty() && getSummoningPoints() >= familiar.getRequiredPoints();
-	}
-
-	public boolean interactOrb(String action) {
-		// Bank in the way of orb
 		closeBankIfInTheWay();
 
 		final Component orb = getOrb();
-		return orb.isValid() && orb.isVisible() && orb.interact(action);
+		return orb.isValid() && orb.isVisible() && orb.interact(option.getText());
 	}
 
 	private void closeBankIfInTheWay() {
-		final Component bank = ctx.bank.getWidget();
+		final Component bank = ctx.bank.getWidget(); // 54, 48
 		if (bank.isValid()) {
 			final Component orb = getOrb();
 			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
@@ -198,8 +171,37 @@ public class ISummoning extends Summoning {
 		return ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
 	}
 
+	public IItemStore getFamiliarStore() {
+		return familiar;
+	}
+
+//	public boolean hasAction(final Item item, final String action) {
+//		if (item.hover()) {
+//			for (String a : ctx.menu.getItems()) {
+//				if (a != null && a.matches("^" + action + "(<.*>)?")) {
+//					//ctx.log.info("Action: \"" + a + "\"");
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
+
+	@Override
+	public boolean renewFamiliar() {
+		return isFamiliarSummoned() && canSummon(getFamiliar()) && interactOrb(Option.RENEW_FAMILIAR);
+	}
+
+	public boolean canSummon(Familiar familiar) {
+		return familiar != null
+				&& getSummoningPoints() >= familiar.getRequiredPoints()
+				&& (!isFamiliarSummoned() || getTimeLeft() <= 300) // TODO: Check this
+				&& !ctx.backpack.select().id(familiar.getPouchId()).isEmpty();
+	}
+
 	/**
 	 * Note returns straight away
+	 *
 	 * @param familiar
 	 * @return
 	 */

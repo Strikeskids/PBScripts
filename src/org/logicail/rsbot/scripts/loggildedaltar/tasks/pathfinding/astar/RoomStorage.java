@@ -94,24 +94,24 @@ public class RoomStorage extends IMethodProvider {
 		}
 	}
 
-	private List<Room> getPossibleNeighbours(Room room) {
+	public List<Room> getPossibleNeighbours(Room room) {
 		List<Room> list = new ArrayList<Room>();
 
 		if (room != null) {
 			final int index = room.getIndex();
-			Room temp = getRoom(index + 9);
+			Room temp = getRoom(index + 9); // north
 			if (temp != null) {
 				list.add(temp);
 			}
-			temp = getRoom(index - 9);
+			temp = getRoom(index - 9); // south
 			if (temp != null) {
 				list.add(temp);
 			}
-			temp = getRoom(index + 1);
+			temp = getRoom(index + 1); // east
 			if (temp != null) {
 				list.add(temp);
 			}
-			temp = getRoom(index - 9);
+			temp = getRoom(index - 1); // west
 			if (temp != null) {
 				list.add(temp);
 			}

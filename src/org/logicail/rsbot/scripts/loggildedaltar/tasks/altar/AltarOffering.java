@@ -26,7 +26,7 @@ public class AltarOffering extends LogGildedAltarTask {
 
 	@Override
 	public void run() {
-		options.TimeLastOffering = System.currentTimeMillis();
+		options.TimeLastOffering.set(System.currentTimeMillis());
 		options.status = "Offering bones";
 		sleep(100, 800);
 	}

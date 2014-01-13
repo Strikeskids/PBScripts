@@ -24,7 +24,7 @@ public class Banking extends Branch<LogGildedAltar> {
 	public static final int[] ALWAYS_DEPOSIT = {
 			114, 116, 118, 120, 122, 124, 126, 134, 136, 138, 314, 441, 448, 450, 454, 554, 555, 560, 561, 562, 877,
 			882, 884, 886, 1704, 1973, 2327, 2429, 2433, 6961, 6962, 6963, 6965, 14665};
-	public AtomicInteger beastOfBurdenWithdraws = new AtomicInteger();
+	//public AtomicInteger beastOfBurdenWithdraws = new AtomicInteger();
 	public AtomicBoolean withdrawnDelegation = new AtomicBoolean();
 	public AtomicInteger beastOfBurdenCount = new AtomicInteger();
 	public AtomicInteger fail = new AtomicInteger();
@@ -108,7 +108,7 @@ public class Banking extends Branch<LogGildedAltar> {
 	public void setBanking(boolean state) {
 		options.banking.set(state);
 		if (state) {
-			beastOfBurdenWithdraws.set( 0);
+			options.timesBob.set(0);
 			withdrawnDelegation.set(false);
 			beastOfBurdenCount.set(0);
 		}

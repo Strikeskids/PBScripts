@@ -161,7 +161,8 @@ public class BankWithdraw extends BankingAbstract {
 					}
 				}*/
 
-		if (options.bobonce.get() && bankingBranch.beastOfBurdenWithdraws.get() == 0) {
+		// Fill bob as much as possible before withdrawing marrentil
+		if (options.bobonce.get() && options.timesBob.get() == 0) {
 			if (!ctx.backpack.isFull()) {
 				if (!ctx.bank.withdraw(options.offering.getId(), Bank.Amount.ALL)) {
 					script.log.info("Could not withdraw bones");

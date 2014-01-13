@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.banking;
 
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.RenewFamiliar;
+import org.powerbot.script.methods.Summoning;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.ChatOption;
@@ -33,7 +34,7 @@ public class BankBob extends BankingAbstract {
 
 	private boolean depositBob() {
 		if (options.useBOB.get()) {
-			if (!options.bobonce.get() || bankingBranch.beastOfBurdenWithdraws.get() == 0) {
+			if (!options.bobonce.get() || options.timesBob.get() == 0) {
 				if (options.beastOfBurden.getBoBSpace() > 0 && ctx.summoning.isFamiliarSummoned() && ctx.summoning.getTimeLeft() >= 180 && ctx.backpack.isFull() && !getBackpackOffering().isEmpty()) {
 					if (bankingBranch.beastOfBurdenCount.get() < options.beastOfBurden.getBoBSpace()) {
 						return true;
@@ -56,7 +57,6 @@ public class BankBob extends BankingAbstract {
 						int newValue = ctx.summoning.getFamiliarStore().select().count();
 						bankingBranch.beastOfBurdenCount.set(newValue);
 						if (newValue != countBefore) {
-							bankingBranch.beastOfBurdenWithdraws.incrementAndGet();
 							bankingBranch.fail.set(0);
 						}
 					}
@@ -71,7 +71,7 @@ public class BankBob extends BankingAbstract {
 			bankingBranch.fail.set(0);
 			options.status = "Open familiar";
 
-			if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.interactOrb("Interact")) {
+			if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.interactOrb(Summoning.Option.INTERACT)) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

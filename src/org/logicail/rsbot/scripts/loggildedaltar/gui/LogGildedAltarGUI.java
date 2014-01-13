@@ -1086,7 +1086,7 @@ public class LogGildedAltarGUI extends JFrame {
 
 					script.tree.add(script.altarTask);
 
-					options.TimeLastOffering = System.currentTimeMillis();
+					options.TimeLastOffering.set(System.currentTimeMillis());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
+import org.powerbot.script.methods.Summoning;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 
@@ -42,7 +43,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 
 			final int inventoryCount = ctx.backpack.select().count();
 
-			if (ctx.summoning.interactOrb("Take BoB")) {
+			if (ctx.summoning.interactOrb(Summoning.Option.TAKE_BOB)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

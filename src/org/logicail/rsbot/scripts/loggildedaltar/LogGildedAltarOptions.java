@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Time: 21:58
  */
 public class LogGildedAltarOptions {
-	public volatile long TimeLastOffering;
+	public AtomicLong TimeLastOffering = new AtomicLong();
+	public AtomicInteger timesBob = new AtomicInteger();
 
 	public JsonObject toJson() {
 		JsonObject json = new JsonObject();
