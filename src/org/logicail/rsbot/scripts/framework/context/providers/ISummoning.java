@@ -25,9 +25,7 @@ public class ISummoning extends Summoning {
 	public static final int WIDGET_STORE_CLOSE_BUTTON_CHILD = 1;
 	public static final int WIDGET_ORB = 1430;
 	public static final int WIDGET_ORB_BUTTON = 5;
-
 	protected final IMethodContext ctx;
-
 	private final IItemStore familiar;
 	private final IItemStore backpack;
 
@@ -38,13 +36,25 @@ public class ISummoning extends Summoning {
 		backpack = new IItemStore(context, ctx.widgets.get(671, 30));
 	}
 
+	private static String getStoreString(int amount) {
+		switch (amount) {
+			case 0:
+				return "Store-All";
+			case 1:
+			case 5:
+			case 10:
+				return "Store-" + amount;
+			default:
+				return "Store-X";
+		}
+	}
+
 	public boolean close() {
 		if (!isOpen()) {
 			return true;
 		}
 
-		final Component button = getCloseButton();
-		return button.interact("Close") && Condition.wait(new Callable<Boolean>() {
+		return getCloseButton().interact("Close") && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return !isOpen();
@@ -62,7 +72,7 @@ public class ISummoning extends Summoning {
 	 * @return
 	 */
 	public boolean isOpen() {
-		return getCloseButton().isValid();
+		return familiar.isOpen();
 	}
 
 	public boolean deposit(final int id, int amount) {
@@ -102,25 +112,12 @@ public class ISummoning extends Summoning {
 		return false;
 	}
 
-	private static String getStoreString(int amount) {
-		switch (amount) {
-			case 0:
-				return "Store-All";
-			case 1:
-			case 5:
-			case 10:
-				return "Store-" + amount;
-			default:
-				return "Store-X";
-		}
-	}
-
 	public boolean open() {
 		if (isOpen()) {
 			return true;
 		}
 
-		if (isFamiliarSummoned() && interactOrb(Option.INTERACT)) {
+		if (isFamiliarSummoned() && select(Option.INTERACT)) {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
@@ -144,22 +141,21 @@ public class ISummoning extends Summoning {
 		return isOpen();
 	}
 
-	public boolean interactOrb(Option option) {
+	public boolean select(Option option) {
 		if (option == null) {
 			return false;
 		}
 
 		closeBankIfInTheWay();
 
-		final Component orb = getOrb();
-		return orb.isValid() && orb.isVisible() && orb.interact(option.getText());
+		return super.select(option);
 	}
 
 	private void closeBankIfInTheWay() {
 		final Component bank = ctx.bank.getWidget(); // 54, 48
 		if (bank.isValid()) {
-			final Component orb = getOrb();
-			if (orb.isValid() && bank.getBoundingRect().intersects(orb.getBoundingRect())) {
+			final Component orb = ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
+			if (bank.getBoundingRect().intersects(orb.getBoundingRect())) {
 				sleep(50, 250);
 				ctx.bank.close();
 				sleep(200, 1000);
@@ -167,38 +163,9 @@ public class ISummoning extends Summoning {
 		}
 	}
 
-	public Component getOrb() {
-		return ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
-	}
-
 	@Override
 	public boolean dismissFamiliar() {
-		if (!isFamiliarSummoned()) {
-			return false;
-		}
-
-		if (interactOrb(Option.DISMISS)) {
-			if (Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return ctx.chat.select().text("Yes").isEmpty();
-				}
-			})) {
-				for (ChatOption option : ctx.chat.first()) {
-					sleep(100, 800);
-					if (option.select(Random.nextBoolean())) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return !isFamiliarSummoned();
-							}
-						}, Random.nextInt(550, 650), Random.nextInt(4, 12));
-					}
-				}
-			}
-		}
-
-		return !isFamiliarSummoned();
+		return isFamiliarSummoned() && select(Option.DISMISS);
 	}
 
 	public IItemStore getFamiliarStore() {
@@ -219,7 +186,7 @@ public class ISummoning extends Summoning {
 
 	@Override
 	public boolean renewFamiliar() {
-		return isFamiliarSummoned() && canSummon(getFamiliar()) && interactOrb(Option.RENEW_FAMILIAR);
+		return select(Option.RENEW_FAMILIAR);
 	}
 
 	public boolean canSummon(Familiar familiar) {

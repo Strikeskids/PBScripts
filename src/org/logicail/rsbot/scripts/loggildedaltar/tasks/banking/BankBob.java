@@ -68,7 +68,7 @@ public class BankBob extends BankingAbstract {
 			options.status = "Open familiar";
 			script.familiarFailed.set(false);
 
-			if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.interactOrb(Summoning.Option.INTERACT)) {
+			if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.select(Summoning.Option.INTERACT)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -90,7 +90,7 @@ public class BankBob extends BankingAbstract {
 					final Npc npc = ctx.summoning.getNpc();
 					final double distance = IMovement.Euclidean(npc, ctx.players.local());
 					if (ctx.summoning.isFamiliarSummoned() && distance > 4) {
-						if (ctx.summoning.interactOrb(Summoning.Option.CALL_FOLLOWER)) {
+						if (ctx.summoning.select(Summoning.Option.CALL_FOLLOWER)) {
 							if (Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {

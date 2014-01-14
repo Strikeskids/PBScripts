@@ -34,31 +34,28 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.039,
+		version = 6.04,
 		hidden = true,
 		authors = {"Logicail"}
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
 	public final LogGildedAltarOptions options = new LogGildedAltarOptions(this);
-	public SummoningTask summoningTask;
 	public final HouseHandler houseHandler = new HouseHandler(this);
-	public BankingTask bankingTask;
-	public HouseTask houseTask;
 	public final HousePortal housePortal = new HousePortal(this);
 	public final RoomStorage roomStorage = new RoomStorage(this);
-	public LeaveHouse leaveHouse;
-
 	public final YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
-	public AltarTask altarTask;
 	public final AtomicLong nextSummon = new AtomicLong();
 	public final AtomicBoolean familiarFailed = new AtomicBoolean();
-
-	private SkillData skillData = null;
 	private final AtomicInteger currentLevel = new AtomicInteger(-1);
 	private final AtomicInteger startLevel = new AtomicInteger(-1);
-
 	private final AtomicInteger experience = new AtomicInteger();
+	public SummoningTask summoningTask;
+	public BankingTask bankingTask;
+	public HouseTask houseTask;
+	public LeaveHouse leaveHouse;
+	public AltarTask altarTask;
+	private SkillData skillData = null;
 
 	@Override
 	public LinkedProperties getPaintInfo() {
@@ -92,11 +89,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
 
-		properties.put("InputHandler is null", ctx.inputHandler == null);
-
-		if (options.useBOB.get() && options.bobonce.get()) {
-			properties.put("timesBob", options.timesBob.get());
+		if (options.useOtherHouse.get()) {
+			properties.put("Typing is broken", ctx.inputHandler == null);
 		}
+
 
 		return properties;
 	}

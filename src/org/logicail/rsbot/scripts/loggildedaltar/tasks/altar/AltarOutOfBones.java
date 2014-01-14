@@ -43,7 +43,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 
 			final int inventoryCount = ctx.backpack.select().count();
 
-			if (ctx.summoning.interactOrb(Summoning.Option.TAKE_BOB)) {
+			if (ctx.summoning.select(Summoning.Option.TAKE_BOB)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

@@ -25,8 +25,16 @@ import java.util.concurrent.Callable;
  * Time: 20:17
  */
 public class BankWithdraw extends BankingAbstract {
+	private static final int[] RENEW_TIMES = {360, 330, 300, 270};
+	private int nextRenew;
+
 	public BankWithdraw(Banking banking) {
 		super(banking);
+		reset();
+	}
+
+	public final void reset() {
+		nextRenew = RENEW_TIMES[Random.nextInt(0, RENEW_TIMES.length)];
 	}
 
 	@Override
@@ -36,7 +44,7 @@ public class BankWithdraw extends BankingAbstract {
 
 	// TODO: Check this
 	private void createSpaceInInventory(int min, int max) {
-		if (isSpace(min)) {
+		if (isNotSpace(min)) {
 			if (!ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max))) {
 				sleep(200, 800);
 				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
@@ -45,8 +53,8 @@ public class BankWithdraw extends BankingAbstract {
 		}
 	}
 
-	private boolean isSpace(int space) {
-		return getSpace() < space;
+	private boolean isNotSpace(int slotsRequired) {
+		return getSpace() < slotsRequired;
 	}
 
 	private int getSpace() {
@@ -99,7 +107,7 @@ public class BankWithdraw extends BankingAbstract {
 				script.log.info("Summoning level too low -> Disabling summoning");
 				options.useBOB.set(false);
 			} else {
-				if (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned()) { // If 5 minutes left take a pouch
+				if (ctx.summoning.getTimeLeft() <= nextRenew || !ctx.summoning.isFamiliarSummoned()) { // If 5 minutes left take a pouch
 					if (ctx.backpack.select().id(options.beastOfBurden.getPouchId()).isEmpty() && !ctx.bank.select().id(options.beastOfBurden.getPouchId()).isEmpty()) {
 						if (ctx.backpack.isFull()) {
 							if (ctx.bank.deposit(options.offering.getId(), 1)) {
@@ -111,7 +119,9 @@ public class BankWithdraw extends BankingAbstract {
 								});
 							}
 						}
-						if (!ctx.bank.withdraw(options.beastOfBurden.getPouchId(), 1)) {
+						if (ctx.bank.withdraw(options.beastOfBurden.getPouchId(), 1)) {
+							reset();
+						} else {
 							script.log.info("Can't withdraw pouch");
 						}
 					}
@@ -123,7 +133,6 @@ public class BankWithdraw extends BankingAbstract {
 				}
 			}
 		}
-
 
 		if (!bankingBranch.withdrawnDelegation.get()) {
 			List<Branch> list = new ArrayList<Branch>(
@@ -252,6 +261,11 @@ public class BankWithdraw extends BankingAbstract {
 								if (bankRequiredItem.equip()) {
 									if (ctx.equipment.equip(id)) {
 										sleep(100, 300);
+										ctx.bank.open();
+										sleep(300, 900);
+										if (!ctx.bank.isOpen()) {
+											return;
+										}
 									}
 								}
 								break;

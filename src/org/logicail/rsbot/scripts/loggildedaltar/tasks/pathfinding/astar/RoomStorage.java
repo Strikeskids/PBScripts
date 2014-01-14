@@ -16,7 +16,6 @@ import java.util.List;
 public class RoomStorage extends IMethodProvider {
 	public final Room[] rooms = new Room[81];
 	private final LogGildedAltar script;
-
 	private Tile base = null;
 	private CollisionMap collisionMap = null;
 
@@ -30,11 +29,6 @@ public class RoomStorage extends IMethodProvider {
 				final Room r = new Room(ctx, this, x, y);
 				rooms[r.getIndex()] = r;
 			}
-		}
-
-		// Find neighbours
-		if (script.houseTask != null && script.houseTask.isInHouse()) {
-			findNeighbours();
 		}
 	}
 

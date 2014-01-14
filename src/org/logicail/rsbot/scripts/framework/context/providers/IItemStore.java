@@ -22,6 +22,10 @@ public class IItemStore extends ItemQuery<Item> {
 		this.component = component;
 	}
 
+	public boolean isOpen() {
+		return component.isValid();
+	}
+
 	@Override
 	protected List<Item> get() {
 		List<Item> items = new LinkedList<Item>();

@@ -24,56 +24,12 @@ import java.util.concurrent.Callable;
 public class RenewFamiliar extends LogGildedAltarTask {
 	private static final LogicailArea EDGEVILLE_AREA_LEFT = new LogicailArea(new Tile(3086, 3495, 0), new Tile(3091, 3488, 0));
 	private static final LogicailArea EDGEVILLE_AREA_TOP = new LogicailArea(new Tile(3088, 3505, 0), new Tile(3095, 3499, 0));
+	private static final int[] RENEW_TIMES = {150, 120, 90, 60};
+	private int nextRenew;
 
 	public RenewFamiliar(LogGildedAltar script) {
 		super(script);
-	}
-
-	@Override
-	public String toString() {
-		return "RenewFamiliar";
-	}
-
-	@Override
-	public boolean isValid() {
-		if (options.useBOB.get() && options.beastOfBurden.getBoBSpace() > 0 && System.currentTimeMillis() > script.nextSummon.get()) {
-			if (ctx.summoning.getTimeLeft() <= 150 || !ctx.summoning.isFamiliarSummoned()) {
-				return ctx.summoning.canSummon(options.beastOfBurden);
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public void run() {
-		script.familiarFailed.set(false);
-		renew(script);
-		sleep(1000, 3000);
-
-		if (script.familiarFailed.get()) {
-			script.options.status = "Renewing familiar failed";
-			final Tile start = ctx.players.local().getLocation();
-			final List<Tile> tiles = familarTile(ctx);
-			for (final Tile tile : tiles) {
-				script.familiarFailed.set(false);
-				if (ctx.movement.findPath(tile).traverse()) {
-					if (Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return IMovement.Euclidean(tile, ctx.players.local()) < 2.5;
-						}
-					}, Random.nextInt(400, 650), Random.nextInt(10, 15)) || !start.equals(start)) {
-						renew(script);
-						if (!script.familiarFailed.get()) {
-							break;
-						}
-						sleep(600, 1800);
-					}
-				}
-			}
-		}
-
-		script.nextSummon.set(System.currentTimeMillis() + Random.nextInt(5000, 15000));
+		reset();
 	}
 
 	public static List<Tile> familarTile(IMethodContext ctx) {
@@ -122,9 +78,64 @@ public class RenewFamiliar extends LogGildedAltarTask {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return script.familiarFailed.get() || !(script.ctx.summoning.canSummon(script.options.beastOfBurden) && (script.ctx.summoning.getTimeLeft() <= 300 || !script.ctx.summoning.isFamiliarSummoned()));
+					return script.familiarFailed.get() || !(script.ctx.summoning.canSummon(script.options.beastOfBurden) && (script.ctx.summoning.getTimeLeft() <= 150 || !script.ctx.summoning.isFamiliarSummoned()));
 				}
 			});
 		}
+	}
+
+	public final void reset() {
+		nextRenew = RENEW_TIMES[Random.nextInt(0, RENEW_TIMES.length)];
+	}
+
+	@Override
+	public String toString() {
+		return "RenewFamiliar";
+	}
+
+	@Override
+	public boolean isValid() {
+		if (options.useBOB.get() && options.beastOfBurden.getBoBSpace() > 0 && System.currentTimeMillis() > script.nextSummon.get()) {
+			if (!ctx.summoning.isFamiliarSummoned() || ctx.summoning.getTimeLeft() <= nextRenew) {
+				return ctx.summoning.canSummon(options.beastOfBurden);
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void run() {
+		script.familiarFailed.set(false);
+		renew(script);
+		sleep(1000, 3000);
+
+		if (script.familiarFailed.get()) {
+			script.options.status = "Renewing familiar failed";
+			final Tile start = ctx.players.local().getLocation();
+			final List<Tile> tiles = familarTile(ctx);
+			for (final Tile tile : tiles) {
+				script.familiarFailed.set(false);
+				if (ctx.movement.findPath(tile).traverse()) {
+					if (Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return IMovement.Euclidean(tile, ctx.players.local()) < 2.5;
+						}
+					}, Random.nextInt(400, 650), Random.nextInt(10, 15)) || !start.equals(start)) {
+						renew(script);
+						if (!script.familiarFailed.get()) {
+							break;
+						}
+						sleep(600, 1800);
+					}
+				}
+			}
+		}
+
+		if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.getTimeLeft() > nextRenew) {
+			reset();
+		}
+
+		script.nextSummon.set(System.currentTimeMillis() + Random.nextInt(5000, 15000));
 	}
 }
