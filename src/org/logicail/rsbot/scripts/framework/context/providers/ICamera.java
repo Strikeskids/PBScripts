@@ -9,7 +9,7 @@ import org.powerbot.script.wrappers.Interactive;
 import org.powerbot.script.wrappers.Locatable;
 import org.powerbot.script.wrappers.Tile;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -88,17 +88,12 @@ public class ICamera extends Camera {
 	private Tile getReachableTile(Locatable locatable) {
 		final Tile location = locatable.getLocation();
 		final LogicailArea area = new LogicailArea(location.derive(-3, -3), location.derive(4, 4));
-		List<Tile> reachable = new LinkedList<Tile>();
-		for (Tile tile : area.getTileArray()) {
-			if (tile.getMatrix(ctx).isReachable()) {
-				reachable.add(tile);
-			}
-		}
+		final List<Tile> reachable = new ArrayList<Tile>(area.getReachable(ctx));
 
 		if (!reachable.isEmpty()) {
 			return reachable.get(Random.nextInt(0, reachable.size()));
 		}
 
-		return location;
+		return location.randomize(2, 2);
 	}
 }

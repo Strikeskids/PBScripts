@@ -50,16 +50,8 @@ public class SummoningPotion extends NodePath {
 
 	@Override
 	public void run() {
-		if (ctx.bank.isOpen()) {
-			ctx.bank.close();
-			sleep(200, 800);
-			if (ctx.bank.isOpen()) {
-				return;
-			}
-		}
-
-		final Item potion = ItemHelper.getFirst(ctx.backpack, SUMMONING_POTION, 1);
-		if (ctx.hud.view(Hud.Window.BACKPACK)) {
+		final Item potion = ItemHelper.getFirst(ctx.bank.isOpen() ? ctx.bank.backpack : ctx.backpack, SUMMONING_POTION, 1);
+		if (ctx.bank.isOpen() || ctx.hud.view(Hud.Window.BACKPACK)) {
 			if (potion.isValid() && potion.interact("Drink")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override

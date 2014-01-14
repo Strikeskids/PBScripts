@@ -7,9 +7,9 @@ import org.powerbot.script.wrappers.Tile;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,8 +19,7 @@ import java.util.List;
  */
 public class LogicailArea extends org.powerbot.script.wrappers.Area {
 	protected final int plane;
-
-	private Tile[] tiles = null;
+	private Set<Tile> tiles = null;
 	private Tile central;
 
 	public LogicailArea(Tile... tile) {
@@ -35,9 +34,9 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 
 	public Tile getRandomReachable(IMethodContext ctx, double distanceFromCenter) {
 		final Tile centralTile = getCentralTile();
-		List<Tile> reachable = Arrays.asList(getReachable(ctx));
-
+		java.util.List<Tile> reachable = new ArrayList<Tile>(getReachable(ctx));
 		Collections.shuffle(reachable);
+
 		for (Tile tile : reachable) {
 			if (IMovement.Euclidean(centralTile, tile) <= distanceFromCenter) {
 				return tile;
@@ -59,8 +58,8 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 		return central;
 	}
 
-	public Tile[] getReachable(MethodContext ctx) {
-		List<Tile> reachable = new ArrayList<Tile>();
+	public Set<Tile> getReachable(MethodContext ctx) {
+		HashSet<Tile> reachable = new HashSet<Tile>();
 
 		for (Tile tile : getTileArray()) {
 			if (tile.getMatrix(ctx).isReachable()) {
@@ -68,18 +67,17 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 			}
 		}
 
-		return reachable.toArray(new Tile[reachable.size()]);
+		return reachable;
 	}
 
-	public Tile[] getTileArray() {
+	public Set<Tile> getTileArray() {
 		if (tiles != null) {
 			return tiles;
 		}
 
 		final Polygon polygon = getPolygon();
 		final Rectangle bounds = polygon.getBounds();
-		final Tile[] array = new Tile[bounds.width * bounds.height];
-		int numberOfTiles = 0;
+		final Set<Tile> set = new HashSet<Tile>();
 
 		int x = 0;
 		while (x < bounds.width) {
@@ -88,13 +86,13 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 				final int tempX = bounds.x + x;
 				final int tempY = bounds.y + y;
 				if (polygon.contains(tempX, tempY)) {
-					array[numberOfTiles++] = new Tile(tempX, tempY, plane);
+					set.add(new Tile(tempX, tempY, plane));
 				}
 				++y;
 			}
 			++x;
 		}
-		this.tiles = Arrays.copyOf(array, numberOfTiles);
-		return tiles;
+
+		return this.tiles = set;
 	}
 }

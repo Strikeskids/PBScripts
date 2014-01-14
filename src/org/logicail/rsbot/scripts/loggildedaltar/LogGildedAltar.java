@@ -50,11 +50,11 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	private final AtomicInteger currentLevel = new AtomicInteger(-1);
 	private final AtomicInteger startLevel = new AtomicInteger(-1);
 	private final AtomicInteger experience = new AtomicInteger();
-	public SummoningTask summoningTask;
-	public BankingTask bankingTask;
-	public HouseTask houseTask;
-	public LeaveHouse leaveHouse;
-	public AltarTask altarTask;
+	public SummoningTask summoningTask = null;
+	public BankingTask bankingTask = null;
+	public HouseTask houseTask = null;
+	public LeaveHouse leaveHouse = null;
+	public AltarTask altarTask = null;
 	private SkillData skillData = null;
 
 	@Override
@@ -93,6 +93,15 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 			properties.put("Typing is broken", ctx.inputHandler == null);
 		}
 
+//		for (ElderTree tree : ElderTree.values()) {
+//			properties.put(tree.name(), tree.hasBranches(ctx) + " " + tree.getTime(ctx));
+//		}
+
+//		properties.put(1321, ctx.settings.get(1321, 7, 0xf));
+
+		//for (CrystalTree tree : CrystalTree.values()) {
+		//	properties.put(tree.name(), tree.hasBranches(ctx)/* + " " + tree.getTime(ctx)*/);
+		//}
 
 		return properties;
 	}
@@ -224,11 +233,13 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //			tile.getMatrix(ctx).draw(g);
 //		}
 
-		for (Node<LogGildedAltar> node : summoningTask.getNodes()) {
-			if (node instanceof NodePath) {
-				final LocationAttribute location = ((NodePath) node).getPath().getLocation();
-				for (Tile tile : location.getObeliskArea().getTileArray()) {
-					tile.getMatrix(ctx).draw(g);
+		if (summoningTask != null) {
+			for (Node<LogGildedAltar> node : summoningTask.getNodes()) {
+				if (node instanceof NodePath) {
+					final LocationAttribute location = ((NodePath) node).getPath().getLocation();
+					for (Tile tile : location.getObeliskArea().getTileArray()) {
+						tile.getMatrix(ctx).draw(g);
+					}
 				}
 			}
 		}

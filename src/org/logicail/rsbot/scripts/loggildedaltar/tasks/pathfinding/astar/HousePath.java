@@ -24,10 +24,10 @@ import java.util.concurrent.Callable;
  */
 public class HousePath extends IMethodProvider implements Comparable<HousePath> {
 	public final double cost;
-	public double estimate;
 	private final LogGildedAltar script;
-	private Room last;
 	private final HousePath previous;
+	public double estimate;
+	private Room last;
 	private Room currentRoom;
 
 	public HousePath(LogGildedAltar script, Room start) {
@@ -180,7 +180,7 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 		Collections.reverse(list);
 
 		final int index = script.roomStorage.getIndex(ctx.players.local());
-		if (index > -1 && index < script.roomStorage.getLength()) {
+		if (index != -1) {
 			// Clean up path remove already traversed parts
 			int removeBefore = -1;
 			for (int i = 0; i < list.size(); i++) {

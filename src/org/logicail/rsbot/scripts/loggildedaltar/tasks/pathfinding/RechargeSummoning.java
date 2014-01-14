@@ -64,7 +64,7 @@ public class RechargeSummoning extends NodePath {
 
 		final GameObject obelisk = ctx.objects.select().id(OBELISK).nearest().poll();
 		if (obelisk.isValid()) {
-			obeliskRandom = obelisk.getLocation().derive(2, 2);
+			obeliskRandom = obelisk.getLocation().randomize(2, 2);
 		} else {
 			obeliskRandom = locationAttribute.getObeliskRandom(ctx);
 		}
