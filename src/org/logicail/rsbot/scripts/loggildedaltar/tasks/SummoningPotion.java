@@ -51,7 +51,14 @@ public class SummoningPotion extends NodePath {
 	@Override
 	public void run() {
 		if (ctx.bank.isOpen() && ctx.bank.close()) {
-			sleep(200, 800);
+			if (!Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !ctx.bank.isOpen();
+				}
+			}, Random.nextInt(100, 200), 15)) {
+				return;
+			}
 		}
 
 		final Item potion = ItemHelper.getFirst(ctx.backpack, SUMMONING_POTION, 1);
