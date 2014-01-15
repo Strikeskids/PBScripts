@@ -29,7 +29,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 	@Override
 	public boolean isValid() {
 		if (getBackpackOffering().count() < nextTakeBoB) {
-			nextTakeBoB = Random.nextGaussian(2, 8, 3, 2);
+			nextTakeBoB = Random.nextInt(1, 8);
 			return true;
 		}
 		return false;

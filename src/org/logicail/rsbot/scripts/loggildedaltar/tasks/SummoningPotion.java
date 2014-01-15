@@ -36,10 +36,8 @@ public class SummoningPotion extends NodePath {
 	public List<BankRequiredItem> getItemsNeededFromBank() {
 		List<BankRequiredItem> list = new ArrayList<BankRequiredItem>();
 
-		if (script.summoningTask.branch()) {
-			if (ctx.backpack.select().id(SUMMONING_POTION).isEmpty()) {
-				list.add(new BankRequiredItem(1, false, null, SUMMONING_POTION));
-			}
+		if (ctx.backpack.select().id(SUMMONING_POTION).isEmpty()) {
+			list.add(new BankRequiredItem(1, false, null, SUMMONING_POTION));
 		}
 
 		return list;

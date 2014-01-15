@@ -136,8 +136,11 @@ public class BankWithdraw extends BankingAbstract {
 
 		if (!bankingBranch.withdrawnDelegation.get()) {
 			List<Branch> list = new ArrayList<Branch>(
-					Arrays.asList(new Branch[]{script.bankingTask, script.houseTask, script.summoningTask})
+					Arrays.asList(new Branch[]{script.bankingTask, script.houseTask})
 			);
+			if (script.summoningTask.branch()) {
+				list.add(script.summoningTask);
+			}
 			Collections.shuffle(list);
 			for (Branch branch : list) {
 				withdrawRequiredItems(branch);
@@ -145,6 +148,7 @@ public class BankWithdraw extends BankingAbstract {
 					return;
 				}
 			}
+
 			bankingBranch.withdrawnDelegation.set(true);
 		}
 
