@@ -54,9 +54,8 @@ public class AltarWalkToAltar extends LogGildedAltarTask {
 			if (matrix.isOnScreen() && matrix.interact("Walk here") || !path.traverse(destination)) {
 				if (!matrix.isReachable()) {
 					for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(altarRoom, currentRoom)).first()) {
-						if (DoorOpener.open(ctx, door)) {
-							sleep(100, 600);
-						}
+						DoorOpener.open(ctx, door);
+						sleep(100, 600);
 					}
 				}
 

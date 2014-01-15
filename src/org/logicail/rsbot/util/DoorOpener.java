@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.powerbot.script.lang.ChainingIterator;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
 
 import java.util.concurrent.Callable;
@@ -19,12 +20,22 @@ public class DoorOpener extends IMethodProvider implements ChainingIterator<Game
 		super(context);
 	}
 
-	@Override
-	public boolean next(int i, final GameObject door) {
-		return open(ctx, door);
+	public static boolean open(IMethodContext ctx, final GameObject door) {
+		if (openDoor(ctx, door)) return true;
+
+		if (door.isValid()) {
+			if (ctx.camera.getPitch() > 50) {
+				ctx.camera.setPitch(Random.nextInt(0, 40));
+			} else {
+				ctx.camera.setAngle(Random.nextInt(0, 360));
+			}
+			if (openDoor(ctx, door)) return true;
+		}
+
+		return !door.isValid();
 	}
 
-	public static boolean open(IMethodContext ctx, final GameObject door) {
+	private static boolean openDoor(IMethodContext ctx, final GameObject door) {
 		if (ctx.camera.prepare(door)) {
 			if (door.interact("Open")) {
 				if (Condition.wait(new Callable<Boolean>() {
@@ -37,7 +48,11 @@ public class DoorOpener extends IMethodProvider implements ChainingIterator<Game
 				}
 			}
 		}
+		return false;
+	}
 
-		return !door.isValid();
+	@Override
+	public boolean next(int i, final GameObject door) {
+		return open(ctx, door);
 	}
 }
