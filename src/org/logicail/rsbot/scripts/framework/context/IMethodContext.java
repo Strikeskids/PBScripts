@@ -53,6 +53,7 @@ public class IMethodContext extends MethodContext {
 
 	public IMethodContext(final MethodContext originalContext, AbstractScript script) {
 		super(originalContext);
+		this.inputHandler = originalContext.inputHandler;
 		this.script = script;
 		script.log.addHandler(log);
 

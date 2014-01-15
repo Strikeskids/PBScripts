@@ -21,8 +21,8 @@ import java.awt.*;
 public abstract class LogicailScript<T extends LogicailScript> extends PollingScript implements PaintListener {
 	public final IMethodContext ctx;
 	public final Tree<T> tree;
-	protected JFrame gui;
 	private final Painter paint;
+	protected JFrame gui;
 
 	protected LogicailScript() {
 		this.ctx = new IMethodContext(super.ctx, this);

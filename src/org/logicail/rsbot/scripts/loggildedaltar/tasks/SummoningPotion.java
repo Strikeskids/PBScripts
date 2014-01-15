@@ -50,8 +50,12 @@ public class SummoningPotion extends NodePath {
 
 	@Override
 	public void run() {
-		final Item potion = ItemHelper.getFirst(ctx.bank.isOpen() ? ctx.bank.backpack : ctx.backpack, SUMMONING_POTION, 1);
-		if (ctx.bank.isOpen() || ctx.hud.view(Hud.Window.BACKPACK)) {
+		if (ctx.bank.isOpen() && ctx.bank.close()) {
+			sleep(200, 800);
+		}
+
+		final Item potion = ItemHelper.getFirst(ctx.backpack, SUMMONING_POTION, 1);
+		if (ctx.hud.view(Hud.Window.BACKPACK)) {
 			if (potion.isValid() && potion.interact("Drink")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -62,6 +66,6 @@ public class SummoningPotion extends NodePath {
 			}
 		}
 
-		sleep(1000, 2000);
+		sleep(400, 1300);
 	}
 }

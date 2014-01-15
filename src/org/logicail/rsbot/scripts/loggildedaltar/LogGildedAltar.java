@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.04,
+		version = 6.041,
 		hidden = true,
 		authors = {"Logicail"}
 )
@@ -92,10 +92,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
-
-		if (options.useOtherHouse.get()) {
-			properties.put("Typing is broken", ctx.inputHandler == null);
-		}
 
 //		for (ElderTree tree : ElderTree.values()) {
 //			properties.put(tree.name(), tree.hasBranches(ctx) + " " + tree.getTime(ctx));
