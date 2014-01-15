@@ -54,7 +54,7 @@ public enum ElderTree {
 	 * <tt>0</tt> if have not started chopping
 	 * <tt>1-5</tt> minutes of tree life remaining
 	 * else
-	 * <tt>0-10</tt> minutes until tree is available again
+	 * <tt>1-10</tt> minutes until tree is available again
 	 * @see #hasBranches
 	 */
 	public int getTime(MethodContext ctx) {

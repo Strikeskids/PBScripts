@@ -62,14 +62,18 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final LinkedProperties properties = new LinkedProperties();
 		properties.put("Not everything tested", "Report errors on forum");
 
-		final int current = ctx.skills.getRealLevel(Skills.PRAYER);
-		currentLevel.set(current);
-		if (current > 0) {
-			if (skillData == null) {
-				startLevel.set(current);
-				skillData = new SkillData(ctx);
+		if (ctx.game.isLoggedIn()) {
+			final int current = ctx.skills.getRealLevel(Skills.PRAYER);
+			currentLevel.set(current);
+			if (current > 0) {
+				if (skillData == null) {
+					startLevel.set(current);
+					skillData = new SkillData(ctx);
+				}
 			}
 		}
+
+		final int current = currentLevel.get();
 
 		final long runtime = getRuntime();
 

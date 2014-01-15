@@ -20,7 +20,6 @@ import java.util.Set;
 public class LogicailArea extends org.powerbot.script.wrappers.Area {
 	protected final int plane;
 	private Set<Tile> tiles = null;
-	private Tile central;
 
 	public LogicailArea(Tile... tile) {
 		super(tile);
@@ -44,18 +43,6 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 		}
 
 		return centralTile.randomize(2, 2);
-	}
-
-	@Override
-	public Tile getCentralTile() {
-		if (central != null) {
-			return central;
-		}
-
-		final Point point = PolygonUtils.polygonCenterOfMass(getPolygon());
-		central = new Tile(point.x, point.y, plane);
-
-		return central;
 	}
 
 	public Set<Tile> getReachable(MethodContext ctx) {
