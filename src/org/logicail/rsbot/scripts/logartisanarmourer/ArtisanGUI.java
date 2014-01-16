@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.logartisanarmourer.gui;
+package org.logicail.rsbot.scripts.logartisanarmourer;
 
 import org.logicail.rsbot.scripts.framework.LogicailGui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;

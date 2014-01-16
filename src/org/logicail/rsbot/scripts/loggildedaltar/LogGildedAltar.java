@@ -3,7 +3,6 @@ package org.logicail.rsbot.scripts.loggildedaltar;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttribute;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;

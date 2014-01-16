@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.loggildedaltar.gui;
+package org.logicail.rsbot.scripts.loggildedaltar;
 
 import org.logicail.rsbot.scripts.framework.LogicailGui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
@@ -7,6 +7,8 @@ import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.framework.tasks.impl.LogoutIdle;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
+import org.logicail.rsbot.scripts.loggildedaltar.gui.ListRenderer;
+import org.logicail.rsbot.scripts.loggildedaltar.gui.SortedListModel;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;

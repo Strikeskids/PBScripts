@@ -4,7 +4,6 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
-import org.logicail.rsbot.scripts.logartisanarmourer.gui.ArtisanGUI;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.DepositOre;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.MakeIngots;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.StayInArea;
