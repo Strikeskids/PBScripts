@@ -86,7 +86,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 					gui.setScript(LogArtisanWorkshop.this);
 				} catch (Exception exception) {
 					exception.printStackTrace();
-					new ErrorDialog("gui", exception.getMessage());
+					JOptionPane.showMessageDialog(new JFrame(), exception, "Dialog", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
