@@ -64,6 +64,21 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	private int currentLevel = -1;
 	private int startLevel = -1;
 
+	protected LogArtisanWorkshop() {
+		super();
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					gui = new ArtisanGUI(LogArtisanWorkshop.this);
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
+			}
+		});
+	}
+
 	private int getRequiredLevel() {
 		int requiredLevel = 30;
 		switch (options.mode) {
@@ -320,30 +335,4 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 ////			}
 ////		}
 //	}
-
-	@Override
-	public void start() {
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					gui = new ArtisanGUI(LogArtisanWorkshop.this);
-				} catch (Exception exception) {
-					exception.printStackTrace();
-				}
-			}
-		});
-
-		/*try {
-			final File file = download("http://logicail.co.uk/resources/fonts/OpenSans-Regular.ttf", "OpenSans-Regular.ttf");
-			final Font font = FontLoader.load(file);
-			Painter.FONT_TITLE = font.deriveFont(Font.BOLD, 14);
-			Painter.FONT_SMALL = font.deriveFont(Font.BOLD, 12);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
-
-		//Painter.FONT_TITLE
-	}
 }

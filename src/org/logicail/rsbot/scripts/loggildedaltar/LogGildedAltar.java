@@ -60,15 +60,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public LogGildedAltar() {
 		super();
 
-		getExecQueue(State.START).offer(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						gui = new LogGildedAltarGUI(LogGildedAltar.this);
-					}
-				});
+				gui = new LogGildedAltarGUI(LogGildedAltar.this);
 			}
 		});
 
