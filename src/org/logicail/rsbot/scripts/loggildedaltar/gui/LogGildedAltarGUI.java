@@ -11,7 +11,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
-import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.Script;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.methods.Summoning;
@@ -87,52 +86,48 @@ public class LogGildedAltarGUI extends JFrame {
 	private JSpinner stopLevelSpinner;
 
 	public LogGildedAltarGUI(LogGildedAltar script) {
-		try {
-			this.script = script;
-			options = script.options;
-			initComponents();
-			setTitle(script.getName() + " v" + script.getVersion());
-			setMinimumSize(new Dimension(480, 550));
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.script = script;
+		options = script.options;
+		initComponents();
+		setTitle(script.getName() + " v" + script.getVersion());
+		setMinimumSize(new Dimension(480, 550));
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-			for (Path p : Path.values()) {
-				if (p.isEnabledInList()) {
-					switch (p.getPathType()) {
-						case BANK:
-							if (p.isEnabledByDefault())
-								bankEnabledModel.addElement(p);
-							else
-								bankDisabledModel.add(p);
-							break;
-						case HOME:
-							if (p.isEnabledByDefault())
-								houseEnabledModel.addElement(p);
-							else
-								houseDisabledModel.add(p);
-							break;
-					}
+		for (Path p : Path.values()) {
+			if (p.isEnabledInList()) {
+				switch (p.getPathType()) {
+					case BANK:
+						if (p.isEnabledByDefault())
+							bankEnabledModel.addElement(p);
+						else
+							bankDisabledModel.add(p);
+						break;
+					case HOME:
+						if (p.isEnabledByDefault())
+							houseEnabledModel.addElement(p);
+						else
+							houseDisabledModel.add(p);
+						break;
 				}
 			}
-
-			// Sort disabled models alphbetically
-
-
-			JPanel contentPane = (JPanel) getContentPane();
-			contentPane.setLayout(new BorderLayout());
-			contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-			contentPane.add(getTopPanel(), BorderLayout.NORTH);
-			contentPane.add(getCenterPanel(), BorderLayout.CENTER);
-			contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
-
-			loadActionPerformed();
-
-			pack();
-			setLocationRelativeTo(null);
-			setVisible(true);
-		} catch (Exception e) {
-			new ErrorDialog("GUI Exception", e.getMessage());
 		}
+
+		// Sort disabled models alphbetically
+
+
+		JPanel contentPane = (JPanel) getContentPane();
+		contentPane.setLayout(new BorderLayout());
+		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+		contentPane.add(getTopPanel(), BorderLayout.NORTH);
+		contentPane.add(getCenterPanel(), BorderLayout.CENTER);
+		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
+
+		loadActionPerformed();
+
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 
 	private JComponent getBottomPanel() {

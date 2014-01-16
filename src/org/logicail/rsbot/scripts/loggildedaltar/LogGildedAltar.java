@@ -23,8 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -60,6 +59,17 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public LeaveHouse leaveHouse = null;
 	public AltarTask altarTask = null;
 	private SkillData skillData = null;
+
+	public LogGildedAltar() {
+		super();
+
+		try {
+			System.setOut(new FileLogger(new PrintStream(new File(getStorageDirectory(), "out.log"))));
+			System.setErr(new FileLogger(new PrintStream(new File(getStorageDirectory(), "err.log"))));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public LinkedProperties getPaintInfo() {
@@ -257,37 +267,9 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						try {
-							gui = new LogGildedAltarGUI(LogGildedAltar.this);
-							PrintWriter printWriter = null;
-							try {
-								printWriter = new PrintWriter(new FileOutputStream(new File(getStorageDirectory(), "log.log"), true));
-								printWriter.println(gui);
-								getController().stop();
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							} finally {
-								if (printWriter != null) {
-									printWriter.flush();
-									printWriter.close();
-								}
-							}
-						} catch (Exception exception) {
-							PrintWriter printWriter = null;
-							try {
-								printWriter = new PrintWriter(new FileOutputStream(new File(getStorageDirectory(), "exception.log"), true));
-								exception.printStackTrace(printWriter);
-								exception.printStackTrace();
-								getController().stop();
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							} finally {
-								if (printWriter != null) {
-									printWriter.flush();
-									printWriter.close();
-								}
-							}
-						}
+						System.out.println("Init GUI");
+						gui = new LogGildedAltarGUI(LogGildedAltar.this);
+						System.out.println("After init GUI");
 					}
 				});
 			}

@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.util.IOUtil;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.util.Hiscores;
@@ -111,7 +112,7 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 	 */
 	public void addOpenHouses() {
 		nextCheckForhouses = System.currentTimeMillis() + 600000; // 10 minutes
-		final String json = script.downloadString(URL_GET_HOUSES);
+		final String json = IOUtil.readString(URL_GET_HOUSES, ctx.useragent);
 
 		try {
 			JsonObject jsonObject = JsonObject.readFrom(json);
