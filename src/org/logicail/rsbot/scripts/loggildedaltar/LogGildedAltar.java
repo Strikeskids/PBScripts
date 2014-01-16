@@ -58,7 +58,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	private SkillData skillData = null;
 
 	public LogGildedAltar() {
-		super();
+		//super();
 		instance = this;
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
