@@ -11,6 +11,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
+import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.Script;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.methods.Summoning;
@@ -34,8 +35,6 @@ import java.util.*;
  * Time: 12:49
  */
 public class LogGildedAltarGUI extends JFrame {
-	// Variable declaration
-	public boolean startPressed;
 	private final Comparator<Path> pathComparator = new Comparator<Path>() {
 		@Override
 		public int compare(Path o1, Path o2) {
@@ -46,7 +45,12 @@ public class LogGildedAltarGUI extends JFrame {
 	private final DefaultListModel<Path> houseEnabledModel = new DefaultListModel<Path>();
 	private final SortedListModel<Path> bankDisabledModel = new SortedListModel<Path>(pathComparator);
 	private final DefaultListModel<Path> bankEnabledModel = new DefaultListModel<Path>();
-	private final LogGildedAltar script;
+	private final Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
+	private final Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
+	// Variable declaration
+	public boolean startPressed;
+	private LogGildedAltar script;
+	private LogGildedAltarOptions options;
 	private JTabbedPane tabbedPane;
 	private JComponent generalTab;
 	private JComponent houseTab;
@@ -81,53 +85,54 @@ public class LogGildedAltarGUI extends JFrame {
 	//private JComboBox<MyAuras.Aura> comboBoxAura;
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
-	private final LogGildedAltarOptions options;
-	private final Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
-	private final Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
 	public LogGildedAltarGUI(LogGildedAltar script) {
-		this.script = script;
-		options = script.options;
-		initComponents();
-		setTitle(script.getName() + " v" + script.getVersion());
-		setMinimumSize(new Dimension(480, 550));
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		try {
+			this.script = script;
+			options = script.options;
+			initComponents();
+			setTitle(script.getName() + " v" + script.getVersion());
+			setMinimumSize(new Dimension(480, 550));
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		for (Path p : Path.values()) {
-			if (p.isEnabledInList()) {
-				switch (p.getPathType()) {
-					case BANK:
-						if (p.isEnabledByDefault())
-							bankEnabledModel.addElement(p);
-						else
-							bankDisabledModel.add(p);
-						break;
-					case HOME:
-						if (p.isEnabledByDefault())
-							houseEnabledModel.addElement(p);
-						else
-							houseDisabledModel.add(p);
-						break;
+			for (Path p : Path.values()) {
+				if (p.isEnabledInList()) {
+					switch (p.getPathType()) {
+						case BANK:
+							if (p.isEnabledByDefault())
+								bankEnabledModel.addElement(p);
+							else
+								bankDisabledModel.add(p);
+							break;
+						case HOME:
+							if (p.isEnabledByDefault())
+								houseEnabledModel.addElement(p);
+							else
+								houseDisabledModel.add(p);
+							break;
+					}
 				}
 			}
+
+			// Sort disabled models alphbetically
+
+
+			JPanel contentPane = (JPanel) getContentPane();
+			contentPane.setLayout(new BorderLayout());
+			contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+			contentPane.add(getTopPanel(), BorderLayout.NORTH);
+			contentPane.add(getCenterPanel(), BorderLayout.CENTER);
+			contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
+
+			loadActionPerformed();
+
+			pack();
+			setLocationRelativeTo(null);
+		} catch (Exception e) {
+			new ErrorDialog("GUI Exception", e.getMessage());
 		}
-
-		// Sort disabled models alphbetically
-
-
-		JPanel contentPane = (JPanel) getContentPane();
-		contentPane.setLayout(new BorderLayout());
-		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-		contentPane.add(getTopPanel(), BorderLayout.NORTH);
-		contentPane.add(getCenterPanel(), BorderLayout.CENTER);
-		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
-
-		loadActionPerformed();
-
-		pack();
 		setVisible(true);
-		setLocationRelativeTo(null);
 	}
 
 	private JComponent getBottomPanel() {

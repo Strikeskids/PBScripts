@@ -23,6 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -258,10 +259,23 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 					public void run() {
 						try {
 							gui = new LogGildedAltarGUI(LogGildedAltar.this);
+							PrintWriter printWriter = null;
+							try {
+								printWriter = new PrintWriter(new FileOutputStream(new File(getStorageDirectory(), "log.log"), true));
+								printWriter.println(gui);
+								getController().stop();
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} finally {
+								if (printWriter != null) {
+									printWriter.flush();
+									printWriter.close();
+								}
+							}
 						} catch (Exception exception) {
 							PrintWriter printWriter = null;
 							try {
-								printWriter = new PrintWriter(new File(getStorageDirectory(), "exception.log"));
+								printWriter = new PrintWriter(new FileOutputStream(new File(getStorageDirectory(), "exception.log"), true));
 								exception.printStackTrace(printWriter);
 								exception.printStackTrace();
 								getController().stop();
