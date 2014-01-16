@@ -57,9 +57,21 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public AltarTask altarTask = null;
 	private SkillData skillData = null;
 
-//	public LogGildedAltar() {
-//		super();
-//
+	public LogGildedAltar() {
+		super();
+
+		getExecQueue(State.START).offer(new Runnable() {
+			@Override
+			public void run() {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						gui = new LogGildedAltarGUI(LogGildedAltar.this);
+					}
+				});
+			}
+		});
+
 //        System.out.println("TEMP: " + getStorageDirectory());
 //
 //		try {
@@ -68,7 +80,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
 //		}
-//	}
+	}
 
 	@Override
 	public LinkedProperties getPaintInfo() {
@@ -256,15 +268,5 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				}
 			}
 		}
-	}
-
-	@Override
-	public void start() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				gui = new LogGildedAltarGUI(LogGildedAltar.this);
-			}
-		});
 	}
 }
