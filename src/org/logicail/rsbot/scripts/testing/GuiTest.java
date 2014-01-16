@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.testing;
 
+import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarGUI;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.PollingScript;
 
@@ -13,13 +14,13 @@ import javax.swing.*;
  */
 @Manifest(name = "Test GUI on Mac", description = "testing", hidden = true)
 public class GuiTest extends PollingScript {
-	private GUI gui;
+	private LogGildedAltarGUI gui;
 
 	public GuiTest() {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				gui = new GUI(GuiTest.this);
+				gui = new LogGildedAltarGUI();
 			}
 		});
 	}
