@@ -260,18 +260,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	@Override
 	public void start() {
-        System.out.println(getStorageDirectory());
-		getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						System.out.println("Init GUI");
-						gui = new LogGildedAltarGUI(LogGildedAltar.this);
-						System.out.println("After init GUI");
-					}
-				});
+				gui = new LogGildedAltarGUI(LogGildedAltar.this);
 			}
 		});
 	}

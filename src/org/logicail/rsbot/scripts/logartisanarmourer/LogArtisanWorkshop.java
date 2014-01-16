@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.logartisanarmourer.gui.ArtisanGUI;
@@ -61,7 +60,6 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public final LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
-
 	private SkillData skillData = null;
 	private int currentLevel = -1;
 	private int startLevel = -1;
@@ -325,21 +323,15 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 
 	@Override
 	public void start() {
-		super.start();
 
-		getController().getExecutor().offer(new Task<LogArtisanWorkshop>(this) {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							gui = new ArtisanGUI(LogArtisanWorkshop.this);
-						} catch (Exception exception) {
-							exception.printStackTrace();
-						}
-					}
-				});
+				try {
+					gui = new ArtisanGUI(LogArtisanWorkshop.this);
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
 			}
 		});
 
