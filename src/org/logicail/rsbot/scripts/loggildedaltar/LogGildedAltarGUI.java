@@ -47,7 +47,6 @@ public class LogGildedAltarGUI extends JFrame {
 	private SortedListModel<Path> bankDisabledModel;
 	private DefaultListModel<Path> bankEnabledModel;
 	private Summoning.Familiar[] familiars;
-	private Map<String, Summoning.Familiar> familiarMap;
 	//private LogGildedAltar script;
 	//private LogGildedAltarOptions options;
 	private JTabbedPane tabbedPane;
@@ -342,8 +341,7 @@ public class LogGildedAltarGUI extends JFrame {
 		bankDisabledModel = new SortedListModel<Path>(pathComparator);
 		bankEnabledModel = new DefaultListModel<Path>();
 		familiars = new Summoning.Familiar[]{Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
-		familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
-		familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
+		Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
 		for (Summoning.Familiar familiar : familiars) {
 			familiarMap.put(String.format("%s (%d)", prettyName(familiar.name()), familiar.getRequiredLevel()), familiar);
