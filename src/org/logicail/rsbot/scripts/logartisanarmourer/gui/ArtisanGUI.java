@@ -17,8 +17,6 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * Created with IntelliJ IDEA.
@@ -83,8 +81,8 @@ public class ArtisanGUI extends LogicailGui<LogArtisanWorkshop> {
 		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
 		pack();
-		setVisible(true);
 		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 
 	private JComponent getBottomPanel() {
@@ -126,14 +124,14 @@ public class ArtisanGUI extends LogicailGui<LogArtisanWorkshop> {
 	}
 
 	private void initComponents() {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				if (!startPressed) {
-					script.getController().stop();
-				}
-			}
-		});
+//		addWindowListener(new WindowAdapter() {
+//			@Override
+//			public void windowClosed(WindowEvent e) {
+//				if (!startPressed) {
+//					script.getController().stop();
+//				}
+//			}
+//		});
 
 		// Bottom
 		startButton = new JButton("Start Script");
