@@ -20,6 +20,10 @@ public class IOUtil {
 			connection = (HttpURLConnection) new URL(url).openConnection();
 			connection.addRequestProperty("User-Agent", useragent);
 			connection.setRequestProperty("Connection", "close");
+
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+
 			connection.setDoInput(true);
 			connection.setDoOutput(false);
 			connection.setUseCaches(false);

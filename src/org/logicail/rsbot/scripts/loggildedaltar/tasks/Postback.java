@@ -147,6 +147,9 @@ public class Postback extends LogGildedAltarTask {
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
 			connection.setRequestProperty("Connection", "close");
 
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+
 			connection.setUseCaches(false);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
