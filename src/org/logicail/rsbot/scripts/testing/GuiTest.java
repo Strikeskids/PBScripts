@@ -86,7 +86,7 @@ public class GuiTest extends PollingScript {
 
 			contentPane.add(getTopPanel(), BorderLayout.NORTH);
 //			contentPane.add(getCenterPanel(), BorderLayout.CENTER);
-//			contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
+			contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
 			pack();
 			setVisible(true);
