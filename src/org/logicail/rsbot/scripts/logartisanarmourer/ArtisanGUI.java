@@ -2,8 +2,6 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 
 import org.logicail.rsbot.scripts.framework.LogicailGui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
-import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
