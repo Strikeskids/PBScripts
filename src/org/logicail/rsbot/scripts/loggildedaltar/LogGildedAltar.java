@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicLong;
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
+	private static LogGildedAltar instance;
 	public final LogGildedAltarOptions options = new LogGildedAltarOptions(this);
 	public final HouseHandler houseHandler = new HouseHandler(this);
 	public final HousePortal housePortal = new HousePortal(this);
@@ -58,6 +59,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	public LogGildedAltar() {
 		super();
+		instance = this;
 
 		getExecQueue(State.START).add(new Runnable() {
 			@Override
@@ -65,7 +67,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						gui = new LogGildedAltarGUI(LogGildedAltar.this);
+						gui = new LogGildedAltarGUI();
+						gui.setVisible(true);
 					}
 				});
 			}
@@ -79,6 +82,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
 //		}
+	}
+
+	public static LogGildedAltar get() {
+		return instance;
 	}
 
 	@Override

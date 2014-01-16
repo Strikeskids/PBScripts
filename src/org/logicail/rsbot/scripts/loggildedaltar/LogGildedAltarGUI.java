@@ -48,8 +48,8 @@ public class LogGildedAltarGUI extends JFrame {
 	private DefaultListModel<Path> bankEnabledModel;
 	private Summoning.Familiar[] familiars;
 	private Map<String, Summoning.Familiar> familiarMap;
-	private LogGildedAltar script;
-	private LogGildedAltarOptions options;
+	//private LogGildedAltar script;
+	//private LogGildedAltarOptions options;
 	private JTabbedPane tabbedPane;
 	private JComponent generalTab;
 	private JComponent houseTab;
@@ -85,8 +85,8 @@ public class LogGildedAltarGUI extends JFrame {
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
 
-	public LogGildedAltarGUI(LogGildedAltar script) {
-		this.script = script;
+	public LogGildedAltarGUI(/*LogGildedAltar script*/) {
+		//this.script = script;
 		initComponents();
 		setMinimumSize(new Dimension(480, 550));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -332,7 +332,7 @@ public class LogGildedAltarGUI extends JFrame {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
-					script.getController().stop();
+					LogGildedAltar.get().getController().stop();
 				}
 			}
 		});
@@ -906,7 +906,7 @@ public class LogGildedAltarGUI extends JFrame {
 		settings.setProperty("stoplevelselected", String.valueOf(stopLevelCheckbox.isSelected()));
 		settings.setProperty("stoplevel", String.valueOf(stopLevelSpinner.getValue()));
 
-		options.save(settings);
+		LogGildedAltar.get().options.save(settings);
 	}
 
 	private String joinModel(DefaultListModel<Path> model) {
@@ -929,6 +929,9 @@ public class LogGildedAltarGUI extends JFrame {
 		if (startPressed) {
 			return;
 		}
+
+		final LogGildedAltar script = LogGildedAltar.get();
+		final LogGildedAltarOptions options = script.options;
 
 		if (houseEnabledModel.isEmpty()) {
 			tabbedPane.setSelectedComponent(houseTab);
@@ -1092,7 +1095,7 @@ public class LogGildedAltarGUI extends JFrame {
 				// BANKING
 		*/
 
-					script.tree.add(new LogoutIdle<LogGildedAltar>(script, script.options.bonesOffered));
+					script.tree.add(new LogoutIdle<LogGildedAltar>(script, options.bonesOffered));
 
 //				if (options.useBOB) {
 //					script.tree.add(new PickupBones(script));
@@ -1153,7 +1156,7 @@ public class LogGildedAltarGUI extends JFrame {
 
 	private void loadActionPerformed() {
 		try {
-			final Properties settings = options.load();
+			final Properties settings = LogGildedAltar.get().options.load();
 			if (settings.size() > 0) {
 				String temp = settings.getProperty("offering", "Bones").toLowerCase();
 				for (int i = 0; i < comboBoxOffering.getItemCount(); i++) {
