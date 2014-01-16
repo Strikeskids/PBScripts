@@ -21,9 +21,6 @@ import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -60,18 +57,18 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public AltarTask altarTask = null;
 	private SkillData skillData = null;
 
-	public LogGildedAltar() {
-		super();
-
-        System.out.println("TEMP: " + getStorageDirectory());
-
-		try {
-			System.setOut(new FileLogger(new PrintStream(new File(getStorageDirectory(), "out.log"))));
-			System.setErr(new FileLogger(new PrintStream(new File(getStorageDirectory(), "err.log"))));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+//	public LogGildedAltar() {
+//		super();
+//
+//        System.out.println("TEMP: " + getStorageDirectory());
+//
+//		try {
+//			System.setOut(new FileLogger(new PrintStream(new File(getStorageDirectory(), "out.log"))));
+//			System.setErr(new FileLogger(new PrintStream(new File(getStorageDirectory(), "err.log"))));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Override
 	public LinkedProperties getPaintInfo() {
