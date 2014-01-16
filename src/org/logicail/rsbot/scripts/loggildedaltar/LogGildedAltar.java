@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
 		version = 6.1,
+		topic = 1141536,
 		authors = {"Logicail"}
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
