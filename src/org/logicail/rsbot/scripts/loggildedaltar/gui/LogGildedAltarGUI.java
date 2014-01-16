@@ -41,14 +41,14 @@ public class LogGildedAltarGUI extends JFrame {
 			return o1.getName().compareTo(o2.getName());
 		}
 	};
-	private final SortedListModel<Path> houseDisabledModel = new SortedListModel<Path>(pathComparator);
-	private final DefaultListModel<Path> houseEnabledModel = new DefaultListModel<Path>();
-	private final SortedListModel<Path> bankDisabledModel = new SortedListModel<Path>(pathComparator);
-	private final DefaultListModel<Path> bankEnabledModel = new DefaultListModel<Path>();
-	private final Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
-	private final Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 	// Variable declaration
 	public boolean startPressed;
+	private SortedListModel<Path> houseDisabledModel;
+	private DefaultListModel<Path> houseEnabledModel;
+	private SortedListModel<Path> bankDisabledModel;
+	private DefaultListModel<Path> bankEnabledModel;
+	private Summoning.Familiar[] familiars;
+	private Map<String, Summoning.Familiar> familiarMap;
 	private LogGildedAltar script;
 	private LogGildedAltarOptions options;
 	private JTabbedPane tabbedPane;
@@ -129,10 +129,10 @@ public class LogGildedAltarGUI extends JFrame {
 
 			pack();
 			setLocationRelativeTo(null);
+			setVisible(true);
 		} catch (Exception e) {
 			new ErrorDialog("GUI Exception", e.getMessage());
 		}
-		setVisible(true);
 	}
 
 	private JComponent getBottomPanel() {
@@ -343,6 +343,14 @@ public class LogGildedAltarGUI extends JFrame {
 				}
 			}
 		});
+
+		houseDisabledModel = new SortedListModel<Path>(pathComparator);
+		houseEnabledModel = new DefaultListModel<Path>();
+		bankDisabledModel = new SortedListModel<Path>(pathComparator);
+		bankEnabledModel = new DefaultListModel<Path>();
+		familiars = new Summoning.Familiar[]{Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
+		familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
+		familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
 		for (Summoning.Familiar familiar : familiars) {
 			familiarMap.put(String.format("%s (%d)", prettyName(familiar.name()), familiar.getRequiredLevel()), familiar);
