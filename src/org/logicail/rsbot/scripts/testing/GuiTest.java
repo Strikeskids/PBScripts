@@ -1,9 +1,11 @@
 package org.logicail.rsbot.scripts.testing;
 
+import org.powerbot.script.AbstractScript;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.PollingScript;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -20,7 +22,7 @@ public class GuiTest extends PollingScript {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				gui = new GUI();
+				gui = new GUI(GuiTest.this);
 			}
 		});
 	}
@@ -38,10 +40,21 @@ public class GuiTest extends PollingScript {
 	}
 
 	class GUI extends JFrame {
-		GUI() throws HeadlessException {
-			setTitle("Testing");
-			setSize(200, 200);
-			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		private final AbstractScript script;
+
+		public GUI(AbstractScript script) {
+			this.script = script;
+
+			setTitle(this.script.getName() + " v" + this.script.getVersion());
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setMinimumSize(new Dimension(500, 360));
+
+			final JPanel contentPane = (JPanel) getContentPane();
+			contentPane.setLayout(new BorderLayout());
+			contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+			pack();
+			setLocationRelativeTo(null);
 			setVisible(true);
 		}
 	}
