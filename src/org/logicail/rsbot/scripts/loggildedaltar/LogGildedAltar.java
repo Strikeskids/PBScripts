@@ -21,6 +21,9 @@ import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -256,8 +259,20 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 						try {
 							gui = new LogGildedAltarGUI(LogGildedAltar.this);
 						} catch (Exception exception) {
-							exception.printStackTrace();
-							getController().stop();
+							PrintWriter printWriter = null;
+							try {
+								printWriter = new PrintWriter(new File(getStorageDirectory(), "exception.log"));
+								exception.printStackTrace(printWriter);
+								exception.printStackTrace();
+								getController().stop();
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} finally {
+								if (printWriter != null) {
+									printWriter.flush();
+									printWriter.close();
+								}
+							}
 						}
 					}
 				});
