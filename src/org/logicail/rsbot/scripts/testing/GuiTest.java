@@ -84,7 +84,7 @@ public class GuiTest extends PollingScript {
 			contentPane.setLayout(new BorderLayout());
 			contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-//			contentPane.add(getTopPanel(), BorderLayout.NORTH);
+			contentPane.add(getTopPanel(), BorderLayout.NORTH);
 //			contentPane.add(getCenterPanel(), BorderLayout.CENTER);
 //			contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
@@ -318,7 +318,6 @@ public class GuiTest extends PollingScript {
 				}
 				panel.add(ingots, constraints);
 			}
-
 
 			return panel;
 		}
