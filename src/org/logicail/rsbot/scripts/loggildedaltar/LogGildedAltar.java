@@ -63,6 +63,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public LogGildedAltar() {
 		super();
 
+        System.out.println("TEMP: " + getStorageDirectory());
+
 		try {
 			System.setOut(new FileLogger(new PrintStream(new File(getStorageDirectory(), "out.log"))));
 			System.setErr(new FileLogger(new PrintStream(new File(getStorageDirectory(), "err.log"))));
@@ -261,6 +263,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	@Override
 	public void start() {
+        System.out.println(getStorageDirectory());
 		getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
 			@Override
 			public void run() {
