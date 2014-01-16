@@ -138,9 +138,8 @@ public class Postback extends LogGildedAltarTask {
 		//ctx.log.info("Postback: " + json.toString());
 
 		final String data = "data=" + bytesToHex(encrypt(json.toString()));
-		HttpURLConnection connection = null;
 		try {
-			connection = (HttpURLConnection) new URL(POSTBACK_URL).openConnection();
+			HttpURLConnection connection = (HttpURLConnection) new URL(POSTBACK_URL).openConnection();
 
 			connection.addRequestProperty("User-Agent", ctx.useragent);
 			connection.setRequestMethod("POST");
@@ -160,7 +159,7 @@ public class Postback extends LogGildedAltarTask {
 
 			//Get Response
 			try {
-				String read = IOUtil.read(connection.getInputStream());
+				String read = IOUtil.read(connection.getInputStream(), 4096);
 				//script.log.info(read);
 				if (read != null) {
 					if (read.trim().equalsIgnoreCase("SHUTDOWN")) {
@@ -186,10 +185,6 @@ public class Postback extends LogGildedAltarTask {
 			previousBonesBuried = bonesBuried;
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
 		}
 	}
 }

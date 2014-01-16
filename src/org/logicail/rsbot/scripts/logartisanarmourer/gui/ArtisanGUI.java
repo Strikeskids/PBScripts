@@ -1,6 +1,8 @@
-package org.logicail.rsbot.scripts.logartisanarmourer;
+package org.logicail.rsbot.scripts.logartisanarmourer.gui;
 
 import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
+import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
@@ -14,6 +16,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,6 +26,8 @@ import java.awt.event.ActionListener;
  * Time: 12:20
  */
 public class ArtisanGUI extends JFrame {
+	private boolean startPressed;
+	private final LogArtisanWorkshop script;
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
 	private final JCheckBox burialRespectPipes = new JCheckBox("Repair pipes");
@@ -32,8 +38,8 @@ public class ArtisanGUI extends JFrame {
 	// Sword
 	private final JComboBox<IngotType> swordIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
 	private final JCheckBox swordRespectPipes = new JCheckBox("Repair pipes");
-	private boolean startPressed;
 	private JComponent burialArmourTab;
+
 	/*private JComponent getModeTab() {
 	    final JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,16 +64,17 @@ public class ArtisanGUI extends JFrame {
 	// Variable declaration
 	private JTabbedPane tabbedPane;
 	//private JComponent modeTab;
+
 	// Mode
 	//private JComboBox<Mode> comboBoxMode;
 	private JCheckBox respectKill;
 	private JButton startButton;
-	private LogArtisanWorkshop script;
 
-	public ArtisanGUI(LogArtisanWorkshop script) {
-		this.script = script;
+	public ArtisanGUI(LogArtisanWorkshop logArtisanWorkshop) {
+		this.script = logArtisanWorkshop;
 		initComponents();
 
+		setTitle(script.getName() + " v" + script.getVersion());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(500, 360));
 
@@ -80,8 +87,8 @@ public class ArtisanGUI extends JFrame {
 		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
 		pack();
-		setLocationRelativeTo(null);
 		setVisible(true);
+		setLocationRelativeTo(null);
 	}
 
 	private JComponent getBottomPanel() {
@@ -123,14 +130,14 @@ public class ArtisanGUI extends JFrame {
 	}
 
 	private void initComponents() {
-//		addWindowListener(new WindowAdapter() {
-//			@Override
-//			public void windowClosed(WindowEvent e) {
-//				if (!startPressed) {
-//					script.getController().stop();
-//				}
-//			}
-//		});
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				if (!startPressed) {
+					script.getController().stop();
+				}
+			}
+		});
 
 		// Bottom
 		startButton = new JButton("Start Script");

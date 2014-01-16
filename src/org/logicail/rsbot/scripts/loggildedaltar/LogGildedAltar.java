@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.loggildedaltar;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttribute;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
@@ -39,7 +40,6 @@ import java.util.concurrent.atomic.AtomicLong;
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
-	private static LogGildedAltar instance;
 	public final LogGildedAltarOptions options = new LogGildedAltarOptions(this);
 	public final HouseHandler houseHandler = new HouseHandler(this);
 	public final HousePortal housePortal = new HousePortal(this);
@@ -56,30 +56,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public LeaveHouse leaveHouse = null;
 	public AltarTask altarTask = null;
 	private SkillData skillData = null;
-
-	public LogGildedAltar() {
-		//super();
-		instance = this;
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				gui = new LogGildedAltarGUI();
-			}
-		});
-
-//        System.out.println("TEMP: " + getStorageDirectory());
-//
-//		try {
-//			System.setOut(new FileLogger(new PrintStream(new File(getStorageDirectory(), "out.log"))));
-//			System.setErr(new FileLogger(new PrintStream(new File(getStorageDirectory(), "err.log"))));
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		}
-	}
-
-	public static LogGildedAltar get() {
-		return instance;
-	}
 
 	@Override
 	public LinkedProperties getPaintInfo() {
@@ -267,5 +243,25 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				}
 			}
 		}
+	}
+
+	@Override
+	public void start() {
+		getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
+			@Override
+			public void run() {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							gui = new LogGildedAltarGUI(LogGildedAltar.this);
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							getController().stop();
+						}
+					}
+				});
+			}
+		});
 	}
 }

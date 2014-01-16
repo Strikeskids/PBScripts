@@ -2,8 +2,10 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
+import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
+import org.logicail.rsbot.scripts.logartisanarmourer.gui.ArtisanGUI;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.DepositOre;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.MakeIngots;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.StayInArea;
@@ -59,25 +61,10 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public final LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
+
 	private SkillData skillData = null;
 	private int currentLevel = -1;
 	private int startLevel = -1;
-
-	protected LogArtisanWorkshop() {
-		super();
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					gui = new ArtisanGUI(LogArtisanWorkshop.this);
-				} catch (Exception exception) {
-					exception.printStackTrace();
-					JOptionPane.showMessageDialog(new JFrame(), exception, "Dialog", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-	}
 
 	private int getRequiredLevel() {
 		int requiredLevel = 30;
@@ -335,4 +322,36 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 ////			}
 ////		}
 //	}
+
+	@Override
+	public void start() {
+		super.start();
+
+		getController().getExecutor().offer(new Task<LogArtisanWorkshop>(this) {
+			@Override
+			public void run() {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							gui = new ArtisanGUI(LogArtisanWorkshop.this);
+						} catch (Exception exception) {
+							exception.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+
+		/*try {
+			final File file = download("http://logicail.co.uk/resources/fonts/OpenSans-Regular.ttf", "OpenSans-Regular.ttf");
+			final Font font = FontLoader.load(file);
+			Painter.FONT_TITLE = font.deriveFont(Font.BOLD, 14);
+			Painter.FONT_SMALL = font.deriveFont(Font.BOLD, 12);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+
+		//Painter.FONT_TITLE
+	}
 }

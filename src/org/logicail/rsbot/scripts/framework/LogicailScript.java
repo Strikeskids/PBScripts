@@ -34,7 +34,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 			@Override
 			public void run() {
 				try {
-					if (gui != null) {
+					if (gui != null && gui.isVisible()) {
 						gui.dispose();
 					}
 				} catch (Exception ignored) {

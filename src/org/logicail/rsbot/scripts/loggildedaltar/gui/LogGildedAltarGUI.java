@@ -1,11 +1,11 @@
-package org.logicail.rsbot.scripts.loggildedaltar;
+package org.logicail.rsbot.scripts.loggildedaltar.gui;
 
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.framework.tasks.impl.LogoutIdle;
-import org.logicail.rsbot.scripts.loggildedaltar.gui.ListRenderer;
-import org.logicail.rsbot.scripts.loggildedaltar.gui.SortedListModel;
+import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
+import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
@@ -34,21 +34,19 @@ import java.util.*;
  * Time: 12:49
  */
 public class LogGildedAltarGUI extends JFrame {
+	// Variable declaration
+	public boolean startPressed;
 	private final Comparator<Path> pathComparator = new Comparator<Path>() {
 		@Override
 		public int compare(Path o1, Path o2) {
 			return o1.getName().compareTo(o2.getName());
 		}
 	};
-	// Variable declaration
-	public boolean startPressed;
-	private SortedListModel<Path> houseDisabledModel;
-	private DefaultListModel<Path> houseEnabledModel;
-	private SortedListModel<Path> bankDisabledModel;
-	private DefaultListModel<Path> bankEnabledModel;
-	private Summoning.Familiar[] familiars;
-	//private LogGildedAltar script;
-	//private LogGildedAltarOptions options;
+	private final SortedListModel<Path> houseDisabledModel = new SortedListModel<Path>(pathComparator);
+	private final DefaultListModel<Path> houseEnabledModel = new DefaultListModel<Path>();
+	private final SortedListModel<Path> bankDisabledModel = new SortedListModel<Path>(pathComparator);
+	private final DefaultListModel<Path> bankEnabledModel = new DefaultListModel<Path>();
+	private final LogGildedAltar script;
 	private JTabbedPane tabbedPane;
 	private JComponent generalTab;
 	private JComponent houseTab;
@@ -83,10 +81,15 @@ public class LogGildedAltarGUI extends JFrame {
 	//private JComboBox<MyAuras.Aura> comboBoxAura;
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
+	private final LogGildedAltarOptions options;
+	private final Summoning.Familiar[] familiars = {Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
+	private final Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
-	public LogGildedAltarGUI(/*LogGildedAltar script*/) {
-		//this.script = script;
+	public LogGildedAltarGUI(LogGildedAltar script) {
+		this.script = script;
+		options = script.options;
 		initComponents();
+		setTitle(script.getName() + " v" + script.getVersion());
 		setMinimumSize(new Dimension(480, 550));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -120,11 +123,11 @@ public class LogGildedAltarGUI extends JFrame {
 		contentPane.add(getCenterPanel(), BorderLayout.CENTER);
 		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
-		//loadActionPerformed();
+		loadActionPerformed();
 
 		pack();
-		setLocationRelativeTo(null);
 		setVisible(true);
+		setLocationRelativeTo(null);
 	}
 
 	private JComponent getBottomPanel() {
@@ -331,17 +334,10 @@ public class LogGildedAltarGUI extends JFrame {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
-					LogGildedAltar.get().getController().stop();
+					script.getController().stop();
 				}
 			}
 		});
-
-		houseDisabledModel = new SortedListModel<Path>(pathComparator);
-		houseEnabledModel = new DefaultListModel<Path>();
-		bankDisabledModel = new SortedListModel<Path>(pathComparator);
-		bankEnabledModel = new DefaultListModel<Path>();
-		familiars = new Summoning.Familiar[]{Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
-		Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
 		for (Summoning.Familiar familiar : familiars) {
 			familiarMap.put(String.format("%s (%d)", prettyName(familiar.name()), familiar.getRequiredLevel()), familiar);
@@ -904,7 +900,7 @@ public class LogGildedAltarGUI extends JFrame {
 		settings.setProperty("stoplevelselected", String.valueOf(stopLevelCheckbox.isSelected()));
 		settings.setProperty("stoplevel", String.valueOf(stopLevelSpinner.getValue()));
 
-		LogGildedAltar.get().options.save(settings);
+		options.save(settings);
 	}
 
 	private String joinModel(DefaultListModel<Path> model) {
@@ -927,9 +923,6 @@ public class LogGildedAltarGUI extends JFrame {
 		if (startPressed) {
 			return;
 		}
-
-		final LogGildedAltar script = LogGildedAltar.get();
-		final LogGildedAltarOptions options = script.options;
 
 		if (houseEnabledModel.isEmpty()) {
 			tabbedPane.setSelectedComponent(houseTab);
@@ -1093,7 +1086,7 @@ public class LogGildedAltarGUI extends JFrame {
 				// BANKING
 		*/
 
-					script.tree.add(new LogoutIdle<LogGildedAltar>(script, options.bonesOffered));
+					script.tree.add(new LogoutIdle<LogGildedAltar>(script, script.options.bonesOffered));
 
 //				if (options.useBOB) {
 //					script.tree.add(new PickupBones(script));
@@ -1154,7 +1147,7 @@ public class LogGildedAltarGUI extends JFrame {
 
 	private void loadActionPerformed() {
 		try {
-			final Properties settings = LogGildedAltar.get().options.load();
+			final Properties settings = options.load();
 			if (settings.size() > 0) {
 				String temp = settings.getProperty("offering", "Bones").toLowerCase();
 				for (int i = 0; i < comboBoxOffering.getItemCount(); i++) {
