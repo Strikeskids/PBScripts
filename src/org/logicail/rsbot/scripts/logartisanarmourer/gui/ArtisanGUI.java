@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.gui;
 
+import org.logicail.rsbot.scripts.framework.LogicailGui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshopOptions;
@@ -25,9 +26,7 @@ import java.awt.event.WindowEvent;
  * Date: 11/11/12
  * Time: 12:20
  */
-public class ArtisanGUI extends JFrame {
-	private boolean startPressed;
-	private final LogArtisanWorkshop script;
+public class ArtisanGUI extends LogicailGui<LogArtisanWorkshop> {
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
 	private final JCheckBox burialRespectPipes = new JCheckBox("Repair pipes");
@@ -38,8 +37,8 @@ public class ArtisanGUI extends JFrame {
 	// Sword
 	private final JComboBox<IngotType> swordIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
 	private final JCheckBox swordRespectPipes = new JCheckBox("Repair pipes");
+	private boolean startPressed;
 	private JComponent burialArmourTab;
-
 	/*private JComponent getModeTab() {
 	    final JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -64,17 +63,14 @@ public class ArtisanGUI extends JFrame {
 	// Variable declaration
 	private JTabbedPane tabbedPane;
 	//private JComponent modeTab;
-
 	// Mode
 	//private JComboBox<Mode> comboBoxMode;
 	private JCheckBox respectKill;
 	private JButton startButton;
 
-	public ArtisanGUI(LogArtisanWorkshop logArtisanWorkshop) {
-		this.script = logArtisanWorkshop;
+	public ArtisanGUI() {
 		initComponents();
 
-		setTitle(script.getName() + " v" + script.getVersion());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(500, 360));
 

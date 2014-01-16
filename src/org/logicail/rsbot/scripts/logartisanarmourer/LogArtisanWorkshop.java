@@ -71,7 +71,8 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 			@Override
 			public void run() {
 				try {
-					gui = new ArtisanGUI(LogArtisanWorkshop.this);
+					gui = new ArtisanGUI();
+					gui.setScript(LogArtisanWorkshop.this);
 				} catch (Exception exception) {
 					exception.printStackTrace();
 				}

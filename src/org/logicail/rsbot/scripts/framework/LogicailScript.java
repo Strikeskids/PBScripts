@@ -9,7 +9,6 @@ import org.powerbot.script.PollingScript;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -22,7 +21,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	public final IMethodContext ctx;
 	public final Tree<T> tree;
 	private final Painter paint;
-	protected JFrame gui;
+	protected LogicailGui gui;
 
 	protected LogicailScript() {
 		this.ctx = new IMethodContext(super.ctx, this);
@@ -34,7 +33,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 			@Override
 			public void run() {
 				try {
-					if (gui != null && gui.isVisible()) {
+					if (gui != null) {
 						gui.dispose();
 					}
 				} catch (Exception ignored) {

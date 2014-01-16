@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.gui;
 
+import org.logicail.rsbot.scripts.framework.LogicailGui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
@@ -33,7 +34,7 @@ import java.util.*;
  * Date: 28/10/12
  * Time: 12:49
  */
-public class LogGildedAltarGUI extends JFrame {
+public class LogGildedAltarGUI extends LogicailGui<LogGildedAltar> {
 	private final Comparator<Path> pathComparator = new Comparator<Path>() {
 		@Override
 		public int compare(Path o1, Path o2) {
@@ -85,11 +86,8 @@ public class LogGildedAltarGUI extends JFrame {
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
 
-	public LogGildedAltarGUI(LogGildedAltar script) {
-		this.script = script;
-		options = script.options;
+	public LogGildedAltarGUI() {
 		initComponents();
-		setTitle(script.getName() + " v" + script.getVersion());
 		setMinimumSize(new Dimension(480, 550));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -1253,6 +1251,12 @@ public class LogGildedAltarGUI extends JFrame {
 			//script.log.info("Settings Loaded");
 		} catch (Exception ignored) {
 		}
+	}
+
+	@Override
+	public void setScript(LogGildedAltar script) {
+		super.setScript(script);
+		options = script.options;
 	}
 }
 
