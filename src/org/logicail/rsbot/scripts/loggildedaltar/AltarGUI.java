@@ -1,9 +1,18 @@
 package org.logicail.rsbot.scripts.loggildedaltar;
 
+import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
+import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
+import org.logicail.rsbot.scripts.framework.tasks.impl.LogoutIdle;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.ListRenderer;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.SortedListModel;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
+import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
+import org.powerbot.script.Script;
+import org.powerbot.script.methods.Skills;
 import org.powerbot.script.methods.Summoning;
 
 import javax.swing.*;
@@ -15,10 +24,7 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.util.*;
 
 /**
@@ -27,7 +33,7 @@ import java.util.*;
  * Date: 28/10/12
  * Time: 12:49
  */
-public class LogGildedAltarGUI extends JFrame {
+public class AltarGUI extends JFrame {
 	private final Comparator<Path> pathComparator = new Comparator<Path>() {
 		@Override
 		public int compare(Path o1, Path o2) {
@@ -41,8 +47,9 @@ public class LogGildedAltarGUI extends JFrame {
 	private SortedListModel<Path> bankDisabledModel;
 	private DefaultListModel<Path> bankEnabledModel;
 	private Summoning.Familiar[] familiars;
-	//private LogGildedAltar script;
-	//private LogGildedAltarOptions options;
+	private Map<String, Summoning.Familiar> familiarMap;
+	private LogGildedAltar script;
+	private LogGildedAltarOptions options;
 	private JTabbedPane tabbedPane;
 	private JComponent generalTab;
 	private JComponent houseTab;
@@ -78,8 +85,9 @@ public class LogGildedAltarGUI extends JFrame {
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
 
-	public LogGildedAltarGUI(/*LogGildedAltar script*/) {
-		//this.script = script;
+	public AltarGUI(LogGildedAltar script) {
+		this.script = script;
+		this.options = script.options;
 		initComponents();
 		setMinimumSize(new Dimension(480, 550));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -114,7 +122,7 @@ public class LogGildedAltarGUI extends JFrame {
 		contentPane.add(getCenterPanel(), BorderLayout.CENTER);
 		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
-		//loadActionPerformed();
+//		loadActionPerformed();
 
 		pack();
 		setLocationRelativeTo(null);
@@ -321,21 +329,22 @@ public class LogGildedAltarGUI extends JFrame {
 	}
 
 	private void initComponents() {
-//		addWindowListener(new WindowAdapter() {
-//			@Override
-//			public void windowClosed(WindowEvent e) {
-//				if (!startPressed) {
-//					LogGildedAltar.get().getController().stop();
-//				}
-//			}
-//		});
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				if (!startPressed) {
+					LogGildedAltar.get().getController().stop();
+				}
+			}
+		});
 
 		houseDisabledModel = new SortedListModel<Path>(pathComparator);
 		houseEnabledModel = new DefaultListModel<Path>();
 		bankDisabledModel = new SortedListModel<Path>(pathComparator);
 		bankEnabledModel = new DefaultListModel<Path>();
 		familiars = new Summoning.Familiar[]{Summoning.Familiar.BULL_ANT, Summoning.Familiar.SPIRIT_TERRORBIRD, Summoning.Familiar.WAR_TORTOISE, Summoning.Familiar.PACK_YAK/*, Summoning.Familiar.CLAN_AVATAR*/};
-		Map<String, Summoning.Familiar> familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
+		familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
+		familiarMap = new LinkedHashMap<String, Summoning.Familiar>(familiars.length);
 
 		for (Summoning.Familiar familiar : familiars) {
 			familiarMap.put(String.format("%s (%d)", prettyName(familiar.name()), familiar.getRequiredLevel()), familiar);
@@ -898,7 +907,7 @@ public class LogGildedAltarGUI extends JFrame {
 		settings.setProperty("stoplevelselected", String.valueOf(stopLevelCheckbox.isSelected()));
 		settings.setProperty("stoplevel", String.valueOf(stopLevelSpinner.getValue()));
 
-//		LogGildedAltar.get().options.save(settings);
+		options.save(settings);
 	}
 
 	private String joinModel(DefaultListModel<Path> model) {
@@ -918,334 +927,331 @@ public class LogGildedAltarGUI extends JFrame {
 	}
 
 	private void startButtonActionPerformed() {
-//		if (startPressed) {
-//			return;
-//		}
-//
-//		final LogGildedAltar script = LogGildedAltar.get();
-//		final LogGildedAltarOptions options = script.options;
-//
-//		if (houseEnabledModel.isEmpty()) {
-//			tabbedPane.setSelectedComponent(houseTab);
-//			JOptionPane.showMessageDialog(this, "You must add at least one house method, otherwise how will I get there?");
-//			return;
-//		}
-//		if (bankEnabledModel.isEmpty()) {
-//			tabbedPane.setSelectedComponent(bankTab);
-//			JOptionPane.showMessageDialog(this, "You must add at least one bank method, otherwise how will I get there?");
-//			return;
-//		}
-//
-//		// General
-//		switch (comboBoxHouseMode.getSelectedIndex()) {
-//			case 1:
-//				options.useOtherHouse.set(true);
-//				if (friendName.getText().length() == 0 || friendName.getText().startsWith("Player Name")) {
-//					tabbedPane.setSelectedComponent(generalTab);
-//					JOptionPane.showMessageDialog(this, "Invalid friends name, consider using open house detection.");
-//					return;
+		if (startPressed) {
+			return;
+		}
+
+		if (houseEnabledModel.isEmpty()) {
+			tabbedPane.setSelectedComponent(houseTab);
+			JOptionPane.showMessageDialog(this, "You must add at least one house method, otherwise how will I get there?");
+			return;
+		}
+		if (bankEnabledModel.isEmpty()) {
+			tabbedPane.setSelectedComponent(bankTab);
+			JOptionPane.showMessageDialog(this, "You must add at least one bank method, otherwise how will I get there?");
+			return;
+		}
+
+		// General
+		switch (comboBoxHouseMode.getSelectedIndex()) {
+			case 1:
+				options.useOtherHouse.set(true);
+				if (friendName.getText().length() == 0 || friendName.getText().startsWith("Player Name")) {
+					tabbedPane.setSelectedComponent(generalTab);
+					JOptionPane.showMessageDialog(this, "Invalid friends name, consider using open house detection.");
+					return;
+				}
+
+				if (friendName.getText().length() > 0) {
+					String[] names = friendName.getText().split(",");
+					if (names.length == 0)
+						names = new String[]{friendName.getText()};
+					if (names.length > 0) {
+						for (String name : names) {
+							name = name.trim();
+							if (name.length() > 0) {
+								final OpenHouse openHouse = new OpenHouse(script, name);
+								openHouse.setTimeAdded(Long.MAX_VALUE);
+								if (!script.houseHandler.openHouses.contains(openHouse)) {
+									script.houseHandler.openHouses.add(openHouse);
+								}
+							}
+						}
+					}
+				}
+				break;
+			case 2:
+				options.useOtherHouse.set(true);
+				options.detectHouses.set(true);
+
+				if (ignoredPlayers.getText().length() > 0) {
+					String[] names = ignoredPlayers.getText().split(",");
+					if (names.length == 0)
+						names = new String[]{ignoredPlayers.getText()};
+					if (names.length > 0) {
+						for (String name : names) {
+							if (name.length() > 0) {
+								script.houseHandler.ignoreHouses.add(name);
+							}
+						}
+					}
+				}
+				break;
+		}
+
+		boolean requiresFailsafe = false;
+		boolean hasFailsafe = false;
+
+		// House
+		if (!houseEnabledModel.isEmpty()) {
+			for (Object object : houseEnabledModel.toArray()) {
+				if (object instanceof Path) {
+					if (((Path) object).isFailsafe()) {
+						hasFailsafe = true;
+					}
+					if (((Path) object).isFailsafeRequired()) {
+						requiresFailsafe = true;
+					}
+				}
+			}
+		}
+
+		if (requiresFailsafe && !hasFailsafe) {
+			tabbedPane.setSelectedComponent(houseTab);
+			JOptionPane.showMessageDialog(this, "Require a failsafe house method to be enabled (in case forgot teleport item)");
+			return;
+		}
+
+		requiresFailsafe = false;
+		hasFailsafe = false;
+
+		// Banking
+		if (!bankEnabledModel.isEmpty()) {
+			for (Object object : bankEnabledModel.toArray()) {
+				if (object != null && object instanceof Path) {
+					if (((Path) object).isFailsafe()) {
+						hasFailsafe = true;
+					}
+					if (((Path) object).isFailsafeRequired()) {
+						requiresFailsafe = true;
+					}
+				}
+			}
+		}
+
+		if (requiresFailsafe && !hasFailsafe) {
+			tabbedPane.setSelectedComponent(bankTab);
+			JOptionPane.showMessageDialog(this, "Require a failsafe bank method to be enabled (in case forgot teleport item)");
+			return;
+		}
+
+		startPressed = true;
+
+		options.offering = (Offering) comboBoxOffering.getSelectedItem();
+		options.lightBurners.set(lightBurners.isSelected());
+		options.bobonce.set(bobOnceCheckbox.isSelected());
+
+		//other
+		//options.screenshots = screenshotCheckbox.isSelected();
+		options.stopOffering.set(stopOfferingCheckbox.isSelected());
+
+
+		//options.useAura = enableAura.isSelected();
+		//options.aura = (MyAuras.Aura) comboBoxAura.getSelectedItem();
+
+		options.stopLevelEnabled.set(stopLevelCheckbox.isSelected());
+		options.stopLevel.set(Integer.parseInt(String.valueOf(stopLevelSpinner.getValue())));
+
+		// Summoning
+		options.useBOB.set(enableSummoning.isSelected());
+		options.onlyHouseObelisk.set(houseRechargeCheckbox.isSelected());
+		options.onlySummoningPotions.set(summoningPotionCheckbox.isSelected());
+		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
+
+		final Script.Controller.Executor<Runnable> executor = script.getController().getExecutor();
+		executor.offer(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (options.detectHouses.get()) {
+						script.ctx.properties.setProperty("login.world", Integer.toString(31));
+					}
+
+				/*if (options.useBOB) {
+					try {
+						Summoning.getSecondsLeft();
+					} catch (AbstractMethodError ignored) {
+						options.useBOB = false;
+						instance.getLogHandler().print("Settings hook broken, disabling summoning", Color.red);
+					}
+				}*/
+
+					script.altarTask = new AltarTask(script);
+
+					script.ctx.submit(new AnimationMonitor<LogGildedAltar>(script));
+					script.ctx.submit(new AntiBan<LogGildedAltar>(script));
+
+					// v4
+		/*
+				// POSTBACK
+				// LEAVE HOUSE
+				new WidgetCloser(),
+				// LogoutIdle
+				new WorldThirtyOne(),
+				// PickupBones
+				new ActivateAura(),
+				// BANKING
+		*/
+
+					script.tree.add(new LogoutIdle<LogGildedAltar>(script, script.options.bonesOffered));
+
+//				if (options.useBOB) {
+//					script.tree.add(new PickupBones(script));
 //				}
-//
-//				if (friendName.getText().length() > 0) {
-//					String[] names = friendName.getText().split(",");
-//					if (names.length == 0)
-//						names = new String[]{friendName.getText()};
-//					if (names.length > 0) {
-//						for (String name : names) {
-//							name = name.trim();
-//							if (name.length() > 0) {
-//								final OpenHouse openHouse = new OpenHouse(script, name);
-//								openHouse.setTimeAdded(Long.MAX_VALUE);
-//								if (!script.houseHandler.openHouses.contains(openHouse)) {
-//									script.houseHandler.openHouses.add(openHouse);
-//								}
-//							}
-//						}
-//					}
-//				}
-//				break;
-//			case 2:
-//				options.useOtherHouse.set(true);
-//				options.detectHouses.set(true);
-//
-//				if (ignoredPlayers.getText().length() > 0) {
-//					String[] names = ignoredPlayers.getText().split(",");
-//					if (names.length == 0)
-//						names = new String[]{ignoredPlayers.getText()};
-//					if (names.length > 0) {
-//						for (String name : names) {
-//							if (name.length() > 0) {
-//								script.houseHandler.ignoreHouses.add(name);
-//							}
-//						}
-//					}
-//				}
-//				break;
-//		}
-//
-//		boolean requiresFailsafe = false;
-//		boolean hasFailsafe = false;
-//
-//		// House
-//		if (!houseEnabledModel.isEmpty()) {
-//			for (Object object : houseEnabledModel.toArray()) {
-//				if (object instanceof Path) {
-//					if (((Path) object).isFailsafe()) {
-//						hasFailsafe = true;
-//					}
-//					if (((Path) object).isFailsafeRequired()) {
-//						requiresFailsafe = true;
-//					}
-//				}
-//			}
-//		}
-//
-//		if (requiresFailsafe && !hasFailsafe) {
-//			tabbedPane.setSelectedComponent(houseTab);
-//			JOptionPane.showMessageDialog(this, "Require a failsafe house method to be enabled (in case forgot teleport item)");
-//			return;
-//		}
-//
-//		requiresFailsafe = false;
-//		hasFailsafe = false;
-//
-//		// Banking
-//		if (!bankEnabledModel.isEmpty()) {
-//			for (Object object : bankEnabledModel.toArray()) {
-//				if (object != null && object instanceof Path) {
-//					if (((Path) object).isFailsafe()) {
-//						hasFailsafe = true;
-//					}
-//					if (((Path) object).isFailsafeRequired()) {
-//						requiresFailsafe = true;
-//					}
-//				}
-//			}
-//		}
-//
-//		if (requiresFailsafe && !hasFailsafe) {
-//			tabbedPane.setSelectedComponent(bankTab);
-//			JOptionPane.showMessageDialog(this, "Require a failsafe bank method to be enabled (in case forgot teleport item)");
-//			return;
-//		}
-//
-//		startPressed = true;
-//
-//		options.offering = (Offering) comboBoxOffering.getSelectedItem();
-//		options.lightBurners.set(lightBurners.isSelected());
-//		options.bobonce.set(bobOnceCheckbox.isSelected());
-//
-//		//other
-//		//options.screenshots = screenshotCheckbox.isSelected();
-//		options.stopOffering.set(stopOfferingCheckbox.isSelected());
-//
-//
-//		//options.useAura = enableAura.isSelected();
-//		//options.aura = (MyAuras.Aura) comboBoxAura.getSelectedItem();
-//
-//		options.stopLevelEnabled.set(stopLevelCheckbox.isSelected());
-//		options.stopLevel.set(Integer.parseInt(String.valueOf(stopLevelSpinner.getValue())));
-//
-//		// Summoning
-//		options.useBOB.set(enableSummoning.isSelected());
-//		options.onlyHouseObelisk.set(houseRechargeCheckbox.isSelected());
-//		options.onlySummoningPotions.set(summoningPotionCheckbox.isSelected());
-//		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
-//
-//		final Script.Controller.Executor<Runnable> executor = script.getController().getExecutor();
-//		executor.offer(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					if (options.detectHouses.get()) {
-//						script.ctx.properties.setProperty("login.world", Integer.toString(31));
-//					}
-//
-//				/*if (options.useBOB) {
-//					try {
-//						Summoning.getSecondsLeft();
-//					} catch (AbstractMethodError ignored) {
-//						options.useBOB = false;
-//						instance.getLogHandler().print("Settings hook broken, disabling summoning", Color.red);
-//					}
-//				}*/
-//
-//					script.altarTask = new AltarTask(script);
-//
-//					script.ctx.submit(new AnimationMonitor<LogGildedAltar>(script));
-//					script.ctx.submit(new AntiBan<LogGildedAltar>(script));
-//
-//					// v4
-//		/*
-//				// POSTBACK
-//				// LEAVE HOUSE
-//				new WidgetCloser(),
-//				// LogoutIdle
-//				new WorldThirtyOne(),
-//				// PickupBones
-//				new ActivateAura(),
-//				// BANKING
-//		*/
-//
-//					script.tree.add(new LogoutIdle<LogGildedAltar>(script, options.bonesOffered));
-//
-////				if (options.useBOB) {
-////					script.tree.add(new PickupBones(script));
-////				}
-//
-//					final Postback postback = new Postback(script);
-//					script.tree.add(postback);
-//					script.getExecQueue(Script.State.STOP).add(new Runnable() {
-//						@Override
-//						public void run() {
-//							postback.postback();
-//						}
-//					});
-//
-//					if (options.stopLevelEnabled.get()) {
-//						script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel.get()));
-//					}
-//
-//					script.tree.add(script.leaveHouse = new LeaveHouse(script));
-//					script.bankingTask = new BankingTask(script, bankEnabledModel.elements());
-//
-//					if (script.ctx.game.isLoggedIn() && script.ctx.players.local() != null) {
-//						if (options.lightBurners.get() && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
-//							script.bankingTask.setBanking();
-//						}
-//					} else {
-//						script.bankingTask.setBanking();
-//					}
-//
-//					script.tree.add(new RenewFamiliar(script));
-//
-//					script.tree.add(script.summoningTask = new SummoningTask(script));
-//					script.tree.add(script.bankingTask);
-//					script.tree.add(script.houseTask = new HouseTask(script, houseEnabledModel.elements()));
-//
-//
-//					script.tree.add(script.altarTask);
-//
-//					options.TimeLastOffering.set(System.currentTimeMillis());
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//
-//		if (options.detectHouses.get()) {
-//			executor.offer(new Task<LogGildedAltar>(script) {
-//				@Override
-//				public void run() {
-//					script.houseHandler.addOpenHouses();
-//				}
-//			});
-//		}
-//
-//		options.status = "Setup finished";
+
+					final Postback postback = new Postback(script);
+					script.tree.add(postback);
+					script.getExecQueue(Script.State.STOP).add(new Runnable() {
+						@Override
+						public void run() {
+							postback.postback();
+						}
+					});
+
+					if (options.stopLevelEnabled.get()) {
+						script.tree.add(new StopLevel<LogGildedAltar>(script, Skills.PRAYER, options.stopLevel.get()));
+					}
+
+					script.tree.add(script.leaveHouse = new LeaveHouse(script));
+					script.bankingTask = new BankingTask(script, bankEnabledModel.elements());
+
+					if (script.ctx.game.isLoggedIn() && script.ctx.players.local() != null) {
+						if (options.lightBurners.get() && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
+							script.bankingTask.setBanking();
+						}
+					} else {
+						script.bankingTask.setBanking();
+					}
+
+					script.tree.add(new RenewFamiliar(script));
+
+					script.tree.add(script.summoningTask = new SummoningTask(script));
+					script.tree.add(script.bankingTask);
+					script.tree.add(script.houseTask = new HouseTask(script, houseEnabledModel.elements()));
+
+
+					script.tree.add(script.altarTask);
+
+					options.TimeLastOffering.set(System.currentTimeMillis());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		if (options.detectHouses.get()) {
+			executor.offer(new Task<LogGildedAltar>(script) {
+				@Override
+				public void run() {
+					script.houseHandler.addOpenHouses();
+				}
+			});
+		}
+
+		options.status = "Setup finished";
 		dispose();
 	}
 
 	private void loadActionPerformed() {
-//		try {
-//			final Properties settings = LogGildedAltar.get().options.load();
-//			if (settings.size() > 0) {
-//				String temp = settings.getProperty("offering", "Bones").toLowerCase();
-//				for (int i = 0; i < comboBoxOffering.getItemCount(); i++) {
-//					if (comboBoxOffering.getItemAt(i).toString().toLowerCase().equals(temp)) {
-//						comboBoxOffering.setSelectedIndex(i);
-//						break;
-//					}
-//				}
-//				temp = settings.getProperty("mode", "Use own altar").toLowerCase();
-//				for (int i = 0; i < comboBoxHouseMode.getItemCount(); i++) {
-//					if (comboBoxHouseMode.getItemAt(i).toLowerCase().equals(temp)) {
-//						comboBoxHouseMode.setSelectedIndex(i);
-//						break;
-//					}
-//				}
-//				temp = settings.getProperty("bob", "Bull ant (40)").toLowerCase();
-//				for (int i = 0; i < comboBoxBOB.getItemCount(); i++) {
-//					if (comboBoxBOB.getItemAt(i).toLowerCase().equals(temp)) {
-//						comboBoxBOB.setSelectedIndex(i);
-//						break;
-//					}
-//				}
-//
-//				friendName.setText(settings.getProperty("friendname", "name1,name2"));
-//				ignoredPlayers.setText(settings.getProperty("ignorename", "name1,name2"));
-//				lightBurners.setSelected(Boolean.parseBoolean(settings.getProperty("lightburners", "true")));
-//				enableSummoning.setSelected(Boolean.parseBoolean(settings.getProperty("summoning", "false")));
-//
-//				//mouseSpeedCheckBox.setSelected(Boolean.parseBoolean(settings.getProperty("enablemousespeed", "false")));
-//				//mouseSpeedSlider.setValue(Integer.parseInt(settings.getProperty("mousespeed", "2")));
-//
-//				//screenshotCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("screenshots", "false")));
-//				stopOfferingCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("stop_offering", "true")));
-//
-//				houseRechargeCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("onlyhouseobelisk", "false")));
-//				summoningPotionCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("summoningPotion", "false")));
-//
-//				bobOnceCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("bobonce", "false")));
-//
-//				/*enableAura.setSelected(Boolean.parseBoolean(settings.getProperty("enableaura", "false")));
-//				MyAuras.Aura aura = MyAuras.getAura(settings.getProperty("aura", "Corruption"));
-//
-//				if (aura == null) {
-//					comboBoxAura.setSelectedIndex(0);
-//				} else {
-//					comboBoxAura.setSelectedItem(aura);
-//				}*/
-//
-//				stopLevelCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("stoplevelselected", "false")));
-//				stopLevelSpinner.setValue(Integer.parseInt(settings.getProperty("stoplevel", "99")));
-//
-//				bankEnabledModel.clear();
-//				bankDisabledModel.clear();
-//				houseEnabledModel.clear();
-//				houseDisabledModel.clear();
-//
-//				for (Path p : Path.values()) {
-//					if (p.isEnabledInList()) {
-//						switch (p.getPathType()) {
-//							case BANK:
-//								bankDisabledModel.add(p);
-//								break;
-//							case HOME:
-//								houseDisabledModel.add(p);
-//								break;
-//						}
-//					}
-//				}
-//
-//
-//				for (String name : settings.getProperty("banks", "").split("~")) {
-//					for (int i = 0; i < bankDisabledModel.getSize(); i++) {
-//						final Object element = bankDisabledModel.getElementAt(i);
-//						if (element != null) {
-//							if (((Path) element).getName().equals(name)) {
-//								disabledBank.setSelectedIndex(i);
-//								add(disabledBank, bankDisabledModel, bankEnabledModel);
-//							}
-//						}
-//					}
-//				}
-//
-//				for (String name : settings.getProperty("house", "").split("~")) {
-//					for (int i = 0; i < houseDisabledModel.getSize(); i++) {
-//						final Object element = houseDisabledModel.getElementAt(i);
-//						if (element != null) {
-//							if (((Path) element).getName().equals(name)) {
-//								disabledHouse.setSelectedIndex(i);
-//								add(disabledHouse, houseDisabledModel, houseEnabledModel);
-//							}
-//						}
-//					}
-//				}
-//			}
-//			//script.log.info("Settings Loaded");
-//		} catch (Exception ignored) {
-//		}
+		try {
+			final Properties settings = options.load();
+			if (settings.size() > 0) {
+				String temp = settings.getProperty("offering", "Bones").toLowerCase();
+				for (int i = 0; i < comboBoxOffering.getItemCount(); i++) {
+					if (comboBoxOffering.getItemAt(i).toString().toLowerCase().equals(temp)) {
+						comboBoxOffering.setSelectedIndex(i);
+						break;
+					}
+				}
+				temp = settings.getProperty("mode", "Use own altar").toLowerCase();
+				for (int i = 0; i < comboBoxHouseMode.getItemCount(); i++) {
+					if (comboBoxHouseMode.getItemAt(i).toLowerCase().equals(temp)) {
+						comboBoxHouseMode.setSelectedIndex(i);
+						break;
+					}
+				}
+				temp = settings.getProperty("bob", "Bull ant (40)").toLowerCase();
+				for (int i = 0; i < comboBoxBOB.getItemCount(); i++) {
+					if (comboBoxBOB.getItemAt(i).toLowerCase().equals(temp)) {
+						comboBoxBOB.setSelectedIndex(i);
+						break;
+					}
+				}
+
+				friendName.setText(settings.getProperty("friendname", "name1,name2"));
+				ignoredPlayers.setText(settings.getProperty("ignorename", "name1,name2"));
+				lightBurners.setSelected(Boolean.parseBoolean(settings.getProperty("lightburners", "true")));
+				enableSummoning.setSelected(Boolean.parseBoolean(settings.getProperty("summoning", "false")));
+
+				//mouseSpeedCheckBox.setSelected(Boolean.parseBoolean(settings.getProperty("enablemousespeed", "false")));
+				//mouseSpeedSlider.setValue(Integer.parseInt(settings.getProperty("mousespeed", "2")));
+
+				//screenshotCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("screenshots", "false")));
+				stopOfferingCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("stop_offering", "true")));
+
+				houseRechargeCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("onlyhouseobelisk", "false")));
+				summoningPotionCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("summoningPotion", "false")));
+
+				bobOnceCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("bobonce", "false")));
+
+				/*enableAura.setSelected(Boolean.parseBoolean(settings.getProperty("enableaura", "false")));
+				MyAuras.Aura aura = MyAuras.getAura(settings.getProperty("aura", "Corruption"));
+
+				if (aura == null) {
+					comboBoxAura.setSelectedIndex(0);
+				} else {
+					comboBoxAura.setSelectedItem(aura);
+				}*/
+
+				stopLevelCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("stoplevelselected", "false")));
+				stopLevelSpinner.setValue(Integer.parseInt(settings.getProperty("stoplevel", "99")));
+
+				bankEnabledModel.clear();
+				bankDisabledModel.clear();
+				houseEnabledModel.clear();
+				houseDisabledModel.clear();
+
+				for (Path p : Path.values()) {
+					if (p.isEnabledInList()) {
+						switch (p.getPathType()) {
+							case BANK:
+								bankDisabledModel.add(p);
+								break;
+							case HOME:
+								houseDisabledModel.add(p);
+								break;
+						}
+					}
+				}
+
+
+				for (String name : settings.getProperty("banks", "").split("~")) {
+					for (int i = 0; i < bankDisabledModel.getSize(); i++) {
+						final Object element = bankDisabledModel.getElementAt(i);
+						if (element != null) {
+							if (((Path) element).getName().equals(name)) {
+								disabledBank.setSelectedIndex(i);
+								add(disabledBank, bankDisabledModel, bankEnabledModel);
+							}
+						}
+					}
+				}
+
+				for (String name : settings.getProperty("house", "").split("~")) {
+					for (int i = 0; i < houseDisabledModel.getSize(); i++) {
+						final Object element = houseDisabledModel.getElementAt(i);
+						if (element != null) {
+							if (((Path) element).getName().equals(name)) {
+								disabledHouse.setSelectedIndex(i);
+								add(disabledHouse, houseDisabledModel, houseEnabledModel);
+							}
+						}
+					}
+				}
+			}
+			//script.log.info("Settings Loaded");
+		} catch (Exception ignored) {
+		}
 	}
 }
 
