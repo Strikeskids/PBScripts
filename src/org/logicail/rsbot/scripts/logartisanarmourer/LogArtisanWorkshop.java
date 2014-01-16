@@ -72,7 +72,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 			public void run() {
 				try {
 					gui = new ArtisanGUI();
-					//gui.setScript(LogArtisanWorkshop.this);
+					gui.setScript(LogArtisanWorkshop.this);
 				} catch (Exception exception) {
 					exception.printStackTrace();
 					new ErrorDialog("gui", exception.getMessage());

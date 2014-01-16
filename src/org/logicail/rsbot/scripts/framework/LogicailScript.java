@@ -21,7 +21,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	public final IMethodContext ctx;
 	public final Tree<T> tree;
 	private final Painter paint;
-	protected LogicailGui gui;
+	protected LogicailGui<T> gui;
 
 	protected LogicailScript() {
 		this.ctx = new IMethodContext(super.ctx, this);
