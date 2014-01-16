@@ -9,6 +9,7 @@ import org.powerbot.script.PollingScript;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -21,7 +22,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	public final IMethodContext ctx;
 	public final Tree<T> tree;
 	private final Painter paint;
-	protected LogicailGui<T> gui;
+	protected JFrame gui;
 
 	protected LogicailScript() {
 		this.ctx = new IMethodContext(super.ctx, this);

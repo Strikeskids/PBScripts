@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.logartisanarmourer;
 
-import org.logicail.rsbot.scripts.framework.LogicailGui;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
@@ -22,7 +21,7 @@ import java.awt.event.ActionListener;
  * Date: 11/11/12
  * Time: 12:20
  */
-public class ArtisanGUI extends LogicailGui<LogArtisanWorkshop> {
+public class ArtisanGUI extends JFrame {
 	// Burial armour
 	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
 	private final JCheckBox burialRespectPipes = new JCheckBox("Repair pipes");
@@ -63,8 +62,10 @@ public class ArtisanGUI extends LogicailGui<LogArtisanWorkshop> {
 	//private JComboBox<Mode> comboBoxMode;
 	private JCheckBox respectKill;
 	private JButton startButton;
+	private LogArtisanWorkshop script;
 
-	public ArtisanGUI() {
+	public ArtisanGUI(LogArtisanWorkshop script) {
+		this.script = script;
 		initComponents();
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
