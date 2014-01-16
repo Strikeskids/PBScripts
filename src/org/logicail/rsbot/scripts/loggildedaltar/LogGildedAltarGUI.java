@@ -120,7 +120,7 @@ public class LogGildedAltarGUI extends JFrame {
 		contentPane.add(getCenterPanel(), BorderLayout.CENTER);
 		contentPane.add(getBottomPanel(), BorderLayout.SOUTH);
 
-		loadActionPerformed();
+		//loadActionPerformed();
 
 		pack();
 		setLocationRelativeTo(null);
