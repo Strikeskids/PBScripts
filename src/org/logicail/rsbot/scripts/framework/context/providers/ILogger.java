@@ -17,9 +17,8 @@ public class ILogger extends Handler {
 	private static final long MAX_LIFETIME = 10000;
 	private final int capacity;
 	private final AtomicBoolean painted = new AtomicBoolean();
-
-	private long lastLoop = System.currentTimeMillis();
 	private final ConcurrentLinkedDeque<LogEntry> logEntries = new ConcurrentLinkedDeque<LogEntry>();
+	private long lastLoop = System.currentTimeMillis();
 
 	public ILogger(int capacity) {
 		this.capacity = capacity;
@@ -37,7 +36,10 @@ public class ILogger extends Handler {
 	@Override
 	public void publish(LogRecord record) {
 		if (painted.get()) {
-			logEntries.push(new LogEntry(record));
+			final LogEntry poll = logEntries.poll();
+			if (poll == null || !poll.text.equals(record.getMessage())) {
+				logEntries.push(new LogEntry(record));
+			}
 		}
 	}
 
