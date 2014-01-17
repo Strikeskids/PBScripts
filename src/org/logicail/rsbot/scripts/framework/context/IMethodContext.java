@@ -3,9 +3,9 @@ package org.logicail.rsbot.scripts.framework.context;
 import com.sk.methods.Combat;
 import com.sk.methods.SkKeyboard;
 import com.sk.methods.action.ActionBar;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
 import org.logicail.rsbot.util.ErrorDialog;
-import org.powerbot.script.AbstractScript;
 import org.powerbot.script.Script;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.util.Timer;
@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class IMethodContext extends MethodContext {
 	public final ILogger log = new ILogger(10);
-
 	// Providers
 	public final ISkillingInterface skillingInterface;
 	public final IBackpack backpack;
@@ -36,22 +35,19 @@ public class IMethodContext extends MethodContext {
 	public final IMovement movement;
 	public final IMagic magic;
 	public final IBank bank;
-
 	// SK
 	public final SkKeyboard keyboard;
 	public final ActionBar actionBar;
 	public final Combat combat;
 	// SK
-
 	public final String useragent;
-
+	public final LogicailScript script;
 	// Concurrent task executor
 	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private final AbstractScript script;
 	private final AtomicBoolean paused = new AtomicBoolean();
 	private final AtomicBoolean shutdown = new AtomicBoolean();
 
-	public IMethodContext(final MethodContext originalContext, AbstractScript script) {
+	public IMethodContext(final MethodContext originalContext, LogicailScript script) {
 		super(originalContext);
 		this.inputHandler = originalContext.inputHandler;
 		this.script = script;

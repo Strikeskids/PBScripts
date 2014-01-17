@@ -34,6 +34,11 @@ public class AltarLightBurnersTask extends Branch<LogGildedAltar> {
 	}
 
 	@Override
+	public String toString() {
+		return "";
+	}
+
+	@Override
 	public boolean branch() {
 		final GameObject altar = script.altarTask.getAltar();
 		if (altar.isValid()) {

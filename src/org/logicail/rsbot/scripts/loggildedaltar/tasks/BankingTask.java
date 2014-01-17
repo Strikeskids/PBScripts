@@ -69,7 +69,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public String toString() {
-		return "BankingTask";
+		return "";
 	}
 
 	@Override

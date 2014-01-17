@@ -85,7 +85,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 
 	@Override
 	public String toString() {
-		return "HouseTask";
+		return "";
 	}
 
 	@Override
