@@ -15,7 +15,6 @@ import org.powerbot.script.wrappers.Item;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -126,10 +125,7 @@ public class ItemTeleport extends NodePath {
 
 	@Override
 	public String toString() {
-		return "ItemTeleport{" +
-				"ids=" + Arrays.toString(ids) +
-				", destination='" + destination + '\'' +
-				'}';
+		return destination;
 	}
 
 	@Override
