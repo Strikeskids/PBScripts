@@ -13,15 +13,13 @@ public class Painter extends IMethodProvider implements PaintListener {
 	// Public encase want to load custom font
 	public static final Font FONT_TITLE = new Font("Arial", Font.BOLD, 14);
 	public static final Font FONT_SMALL = new Font("Arial", Font.BOLD, 12);
-
 	private static final Color COLOUR_BACKGROUND = new Color(0, 0, 0, 128);
 	private static final Color COLOUR_BORDER = new Color(255, 255, 255, 192);
-	private LinkedProperties properties;
 	private final BasicStroke mouseStroke = new BasicStroke(2f);
 	private final String title;
-
 	private final Point location = new Point(50, 220);
 	private final Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
+	private LinkedProperties properties;
 
 	public Painter(IMethodContext context, AbstractScript script) {
 		super(context);
@@ -35,6 +33,8 @@ public class Painter extends IMethodProvider implements PaintListener {
 
 	public void repaint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+
+		ctx.log.repaint(g, 50, 50);
 
 		int x = location.x + 10;
 		int y = location.y + 20;
@@ -79,8 +79,6 @@ public class Painter extends IMethodProvider implements PaintListener {
 		// Resize background
 		backgroundRectangle.width = width + 20;
 		backgroundRectangle.height = y - location.y;
-
-		ctx.log.repaint(g, 50, 50);
 	}
 
 	private void drawMouse(Graphics2D g2d) {
