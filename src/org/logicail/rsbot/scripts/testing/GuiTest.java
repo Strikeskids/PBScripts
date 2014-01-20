@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.testing;
 
-import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.PollingScript;
