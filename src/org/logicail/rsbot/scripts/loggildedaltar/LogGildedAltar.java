@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.13,
+		version = 6.14,
 		topic = 1141536,
 		authors = {"Logicail"}
 )

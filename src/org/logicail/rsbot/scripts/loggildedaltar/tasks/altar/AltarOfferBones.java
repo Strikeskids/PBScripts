@@ -78,27 +78,32 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		script.log.info(options.status);
 
 		final GameObject altar = script.altarTask.getAltar();
-		if (selectBone()) {
+		if (altar.isValid() && !altar.isOnScreen()) {
+			ctx.camera.turnTo(altar);
+		}
+
+		if (Random.nextBoolean() && selectBone()) {
 			Item selectedItem = ctx.backpack.getSelectedItem();
-			if (altar.isValid() && !altar.isOnScreen()) {
-				ctx.camera.turnTo(altar);
-			}
 			if (selectedItem.getId() == options.offering.getId()) {
 				if (altar.interact("Use", selectedItem.getName() + " -> Altar") || altar.getLocation().getMatrix(ctx).interact("Use", selectedItem.getName() + " -> Altar")) {
-					if (Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
-						}
-					})) {
-						AnimationMonitor.put(ANIMATION_OFFERING);
-					}
+					putAnimation();
 				} else {
 					script.log.info("Couldn't interact with altar");
 				}
 			}
-		} else {
-			script.log.info("Bone not selected");
+		} else if (altar.interact("Offer", "Altar")) {
+			putAnimation();
+		}
+	}
+
+	private void putAnimation() {
+		if (Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+			}
+		})) {
+			AnimationMonitor.put(ANIMATION_OFFERING);
 		}
 	}
 
