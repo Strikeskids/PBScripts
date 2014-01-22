@@ -27,6 +27,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -134,6 +135,18 @@ public class LogGildedAltarGUI extends JFrame {
 		pack();
 		setVisible(true);
 		setLocationRelativeTo(null);
+	}
+
+	private static List<Path> modelToPathList(DefaultListModel model) {
+		final List<Path> list = new ArrayList<Path>();
+		final Enumeration<?> elements = model.elements();
+		while (elements.hasMoreElements()) {
+			final Object o = elements.nextElement();
+			if (o instanceof Path) {
+				list.add((Path) o);
+			}
+		}
+		return list;
 	}
 
 	private JComponent getBottomPanel() {
@@ -1114,7 +1127,7 @@ public class LogGildedAltarGUI extends JFrame {
 					}
 
 					script.tree.add(script.leaveHouse = new LeaveHouse(script));
-					script.bankingTask = new BankingTask(script, (Enumeration<Path>) bankEnabledModel.elements());
+					script.bankingTask = new BankingTask(script, modelToPathList(bankEnabledModel));
 
 					if (script.ctx.game.isLoggedIn() && script.ctx.players.local() != null) {
 						if (options.lightBurners.get() && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
@@ -1128,7 +1141,7 @@ public class LogGildedAltarGUI extends JFrame {
 
 					script.tree.add(script.summoningTask = new SummoningTask(script));
 					script.tree.add(script.bankingTask);
-					script.tree.add(script.houseTask = new HouseTask(script, (Enumeration<Path>) houseEnabledModel.elements()));
+					script.tree.add(script.houseTask = new HouseTask(script, modelToPathList(houseEnabledModel)));
 
 
 					script.tree.add(script.altarTask);

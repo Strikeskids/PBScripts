@@ -17,7 +17,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.Yanil
 import org.powerbot.script.methods.Equipment;
 import org.powerbot.script.wrappers.Locatable;
 
-import java.util.Enumeration;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,13 +29,13 @@ public class BankingTask extends Branch<LogGildedAltar> {
 	public final Banking banking;
 	protected final LogGildedAltarOptions options;
 
-	public BankingTask(LogGildedAltar script, Enumeration<Path> enabledPaths) {
+	public BankingTask(LogGildedAltar script, List<Path> enabledPaths) {
 		super(script);
 		options = script.options;
 		// Always add banking (activate if in bank)
 		add(banking = new Banking(script));
-		while (enabledPaths.hasMoreElements()) {
-			add(createPath(enabledPaths.nextElement()));
+		for (Path path : enabledPaths) {
+			add(createPath(path));
 		}
 	}
 

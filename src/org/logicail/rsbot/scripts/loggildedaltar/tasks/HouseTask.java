@@ -28,7 +28,6 @@ import org.powerbot.script.wrappers.Component;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -41,23 +40,21 @@ import java.util.concurrent.Callable;
 public class HouseTask extends Branch<LogGildedAltar> {
 	public static final int WIDGET_LOADING_HOUSE = 399;
 	public static final int WIDGET_LOADING_HOUSE_CHILD = 1; // There's no place like home...
-
 	public static final int WIDGET_HOUSE_OPTIONS = 1443;
 	public static final int WIDGET_HOUSE_OPTIONS_HOUSE = 1;
 	public static final int WIDGET_HOUSE_OPTIONS_PORTAL = 3;
-
 	public static final int SETTING_HOUSE_LOCATION = 481;
 	private static final int EXIT_PORTAL = 13405;
 	protected final LogGildedAltarOptions options;
 
-	public HouseTask(LogGildedAltar script, Enumeration<Path> houseNodes) {
+	public HouseTask(LogGildedAltar script, List<Path> houseNodes) {
 		super(script);
 		options = script.options;
 
 		add(script.housePortal);
 
-		while (houseNodes.hasMoreElements()) {
-			add(createPath(houseNodes.nextElement()));
+		for (Path path : houseNodes) {
+			add(createPath(path));
 		}
 	}
 
