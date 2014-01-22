@@ -9,7 +9,7 @@ import java.util.*;
  * Date: 03/01/14
  * Time: 15:35
  */
-public class SortedListModel<T> extends AbstractListModel<T> {
+public class SortedListModel<T> extends AbstractListModel {
 	// Define a SortedSet
 	final SortedSet<T> model;
 

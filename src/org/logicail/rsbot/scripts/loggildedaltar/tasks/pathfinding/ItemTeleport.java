@@ -148,7 +148,7 @@ public class ItemTeleport extends NodePath {
 				final Item item = ctx.bank.select().id(ids).sort(new Comparator<Item>() {
 					@Override
 					public int compare(Item o1, Item o2) {
-						return Integer.compare(o1.getId(), o2.getId());
+						return Integer.valueOf(o1.getId()).compareTo(o2.getId());
 					}
 				}).reverse().poll();
 

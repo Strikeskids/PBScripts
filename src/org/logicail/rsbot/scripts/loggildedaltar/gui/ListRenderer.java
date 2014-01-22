@@ -11,7 +11,7 @@ import java.awt.*;
  * Date: 03/01/14
  * Time: 15:36
  */
-public class ListRenderer<T> extends JLabel implements ListCellRenderer<T> {
+public class ListRenderer extends JLabel implements ListCellRenderer {
 	public ListRenderer() {
 		setOpaque(true);
 	}

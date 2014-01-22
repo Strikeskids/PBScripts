@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 
 import java.awt.*;
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -17,7 +17,7 @@ public class ILogger extends Handler {
 	private static final long MAX_LIFETIME = 10000;
 	private final int capacity;
 	private final AtomicBoolean painted = new AtomicBoolean();
-	private final ConcurrentLinkedDeque<LogEntry> logEntries = new ConcurrentLinkedDeque<LogEntry>();
+	private final LinkedBlockingDeque<LogEntry> logEntries = new LinkedBlockingDeque<LogEntry>();
 	private long lastLoop = System.currentTimeMillis();
 
 	public ILogger(int capacity) {

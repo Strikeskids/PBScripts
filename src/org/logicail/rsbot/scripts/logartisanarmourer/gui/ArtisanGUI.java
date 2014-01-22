@@ -29,14 +29,14 @@ public class ArtisanGUI extends JFrame {
 	private boolean startPressed;
 	private final LogArtisanWorkshop script;
 	// Burial armour
-	private final JComboBox<IngotGrade> burialIngotGrade = new JComboBox<IngotGrade>(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
+	private final JComboBox burialIngotGrade = new JComboBox(new IngotGrade[]{IngotGrade.ONE, IngotGrade.TWO, IngotGrade.THREE});
 	private final JCheckBox burialRespectPipes = new JCheckBox("Repair pipes");
 	private final JCheckBox followInstructions = new JCheckBox("Follow instructions (XP/H often quicker when unticked but slightly move expensive)", true);
-	private final JComboBox<IngotType> burialIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
+	private final JComboBox burialIngotType = new JComboBox(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
 	// Track
-	private final JComboBox<IngotType> trackIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.BRONZE, IngotType.IRON, IngotType.STEEL});
+	private final JComboBox trackIngotType = new JComboBox(new IngotType[]{IngotType.BRONZE, IngotType.IRON, IngotType.STEEL});
 	// Sword
-	private final JComboBox<IngotType> swordIngotType = new JComboBox<IngotType>(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
+	private final JComboBox swordIngotType = new JComboBox(new IngotType[]{IngotType.IRON, IngotType.STEEL, IngotType.MITHRIL, IngotType.ADAMANT, IngotType.RUNE});
 	private final JCheckBox swordRespectPipes = new JCheckBox("Repair pipes");
 	private JComponent burialArmourTab;
 

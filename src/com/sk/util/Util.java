@@ -20,7 +20,7 @@ public class Util {
 		return ret;
 	}
 
-	@SafeVarargs
+	//@SafeVarargs
 	public static <K> K[] asArray(K... input) {
 		return input;
 	}
