@@ -43,7 +43,8 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 			Pattern.compile("([a-zA-Z\\d\\s-]+) -.*altar.*"), //name - *altar
 			Pattern.compile("([a-zA-Z\\d\\s-]+) for.*altar.*"), //name for altar
 			Pattern.compile(".*altar.*@([a-zA-Z\\d\\s-]+)"), //altar@name
-			Pattern.compile("([a-zA-Z\\d\\s-]{1,12}) .*altar.*") // name_name *altar*
+			Pattern.compile("([a-zA-Z\\d\\s-]{1,12}) .*altar.*"), // name_name *altar*
+			Pattern.compile("^([a-zA-Z\\d\\s-]{1,12})$") // length less than 12 characters
 	};
 	private static final String URL_GET_HOUSES = "http://logicail.co.uk/get_houses.php";
 	public final PriorityQueue<OpenHouse> openHouses = new PriorityQueue<OpenHouse>();
