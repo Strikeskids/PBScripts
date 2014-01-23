@@ -1,12 +1,9 @@
 package org.logicail.rsbot.scripts.loggildedaltar;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttribute;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
@@ -17,7 +14,6 @@ import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.SkillData;
-import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -233,16 +229,16 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //			tile.getMatrix(ctx).draw(g);
 //		}
 
-		if (summoningTask != null) {
-			for (Node<LogGildedAltar> node : summoningTask.getNodes()) {
-				if (node instanceof NodePath) {
-					final LocationAttribute location = ((NodePath) node).getPath().getLocation();
-					for (Tile tile : location.getObeliskArea().getTileArray()) {
-						tile.getMatrix(ctx).draw(g);
-					}
-				}
-			}
-		}
+//		if (summoningTask != null) {
+//			for (Node<LogGildedAltar> node : summoningTask.getNodes()) {
+//				if (node instanceof NodePath) {
+//					final LocationAttribute location = ((NodePath) node).getPath().getLocation();
+//					for (Tile tile : location.getObeliskArea().getTileArray()) {
+//						tile.getMatrix(ctx).draw(g);
+//					}
+//				}
+//			}
+//		}
 	}
 
 	@Override

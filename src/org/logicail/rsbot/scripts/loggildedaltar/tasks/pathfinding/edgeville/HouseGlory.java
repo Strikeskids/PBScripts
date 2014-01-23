@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.edgeville;
 
 import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
+import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
@@ -14,6 +15,7 @@ import org.powerbot.script.wrappers.GameObject;
 import org.powerbot.script.wrappers.Player;
 import org.powerbot.script.wrappers.Tile;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -46,7 +48,15 @@ public class HouseGlory extends NodePath {
 		if (script.houseTask.isInHouse()) {
 			final GameObject altar = script.altarTask.getAltar();
 			final Player local = ctx.players.local();
-			final GameObject mountedGlory = ctx.objects.select().id(MOUNTED_GLORY).nearest(altar.isValid() ? altar : local).poll();
+			final GameObject mountedGlory = ctx.objects.select().id(MOUNTED_GLORY).sort(new Comparator<GameObject>() {
+				@Override
+				public int compare(GameObject o1, GameObject o2) {
+					if (altar.isValid()) {
+						return Double.compare(IMovement.Euclidean(o1, altar), IMovement.Euclidean(o2, altar));
+					}
+					return Double.compare(IMovement.Euclidean(o1, local), IMovement.Euclidean(o2, local));
+				}
+			}).poll();
 			if (!mountedGlory.isValid()) return;
 			final Room gloryRoom = script.roomStorage.getRoom(mountedGlory);
 			final List<Tile> tiles = ctx.movement.getTilesNear(gloryRoom.getArea(), mountedGlory, 3);
