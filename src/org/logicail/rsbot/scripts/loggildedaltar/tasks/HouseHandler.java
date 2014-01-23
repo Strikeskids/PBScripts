@@ -6,12 +6,15 @@ import com.eclipsesource.json.JsonValue;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.IOUtil;
+import org.logicail.rsbot.util.IPlayerValidator;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
-import org.powerbot.script.util.Hiscores;
 import org.powerbot.script.util.Random;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +33,7 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 			Pattern.compile(".*\\*([a-zA-Z\\d\\s-]+)\\*.*"), //*name*
 			Pattern.compile(">([a-zA-Z\\d\\s-]+)<"), //>name<
 			Pattern.compile("\\[([a-zA-Z\\d\\s-]+)]"), //[name]
+			Pattern.compile("\\\\([a-zA-Z\\d\\s-]+)\\/"), //\name/
 			Pattern.compile("#([a-zA-Z\\d\\s-]+)#"), //#name#
 			Pattern.compile(".* ([a-zA-Z\\d\\s-]+)\\s*/"), // name/...
 			//Pattern.compile(".*\\[([a-zA-Z\d\s-]+)].*altar.*"), //[name] altar
@@ -38,14 +42,15 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 			Pattern.compile(".*join ([a-zA-Z\\d\\s-]+) for.*altar.*"), //join name for
 			Pattern.compile("([a-zA-Z\\d\\s-]+) -.*altar.*"), //name - *altar
 			Pattern.compile("([a-zA-Z\\d\\s-]+) for.*altar.*"), //name for altar
-			Pattern.compile(".*altar.*@([a-zA-Z\\d\\s-]+)") //altar@name
+			Pattern.compile(".*altar.*@([a-zA-Z\\d\\s-]+)"), //altar@name
+			Pattern.compile("([a-zA-Z\\d\\s-]{1,12}) .*altar.*") // name_name *altar*
 	};
 	private static final String URL_GET_HOUSES = "http://logicail.co.uk/get_houses.php";
 	public final PriorityQueue<OpenHouse> openHouses = new PriorityQueue<OpenHouse>();
 	public final Set<String> ignoreHouses = new HashSet<String>();
 	private final AtomicReference<OpenHouse> current_house = new AtomicReference<OpenHouse>();
 	private final LogGildedAltar script;
-	private final HashMap<String, Boolean> checkedNames = new HashMap<String, Boolean>();
+	//private final ConcurrentHashMap<String, Boolean> checkedNames = new ConcurrentHashMap<String, Boolean>();
 	private int nextTimeBounds = 900000;
 	private long waitUntil = System.currentTimeMillis();
 	private long nextCheckForhouses = 0;
@@ -129,7 +134,8 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 								script.log.info("Added house at \"" + playername + "\"");
 							}
 						}
-						checkedNames.put(playername, true);
+						//checkedNames.put(playername, true);
+						//IPlayerValidator.isValid(playername);
 					}
 				}
 			}
@@ -150,19 +156,19 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 	 *
 	 * @param message
 	 */
-	public void parseHouses(String message) {
+	public boolean parseHouses(String message) {
 		message = message.toLowerCase().trim();
 		if (/*(!message.contains("altar") && !message.contains("alter") && !message.contains("house"))*/
 				message.length() == 0
 						|| message.contains("world")
 						|| message.contains(" bot ")
 						|| message.contains("friends chat")) {
-			return;
+			return false;
 		}
 		for (Pattern p : ADVERT_PATTERNS) {
 			Matcher matcher = p.matcher(message);
 			if (matcher.find()) {
-				String player = matcher.group(1).trim();
+				String player = matcher.group(1).replace("altar", "").trim();
 				if (player.length() > 12) {
 					// Invalid name
 					continue;
@@ -174,19 +180,19 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 						if (validatePlayer(player)) {
 							openHouses.add(house);
 							script.log.info("Added house at \"" + player + "\"");
+							return true;
 						}
 					}
 					break;
 				}
 			}
 		}
+		return false;
 	}
 
 	boolean validatePlayer(String name) {
-		String underscoreName = name.replaceAll(" ", "_");
-
-		if (checkedNames.containsKey(name)) {
-			return checkedNames.get(name);
+		if (name == null) {
+			return false;
 		}
 
 		if (System.currentTimeMillis() < waitUntil) {
@@ -195,12 +201,6 @@ public class HouseHandler extends IMethodProvider implements MessageListener {
 
 		waitUntil = System.currentTimeMillis() + 10000;
 
-		try {
-			Hiscores lookup = Hiscores.getProfile(underscoreName);
-			return checkedNames.put(name, lookup != null);
-		} catch (Exception ignored) {
-		}
-
-		return checkedNames.put(name, false);
+		return IPlayerValidator.isValid(name);
 	}
 }
