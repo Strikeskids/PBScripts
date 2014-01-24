@@ -47,8 +47,9 @@ public class MakeSword extends ArtisanArmourerTask {
 	@Override
 	public void run() {
 		if (!isOpen()) {
+			ctx.skillingInterface.close();
 			smithAnvil.clickAnvil();
-			sleep(100, 600);
+			sleep(200, 1000);
 			return;
 		}
 
@@ -56,15 +57,18 @@ public class MakeSword extends ArtisanArmourerTask {
 
 		Sword hitPart = null;
 
-		// Finish tip first
-		if (Sword.Eighth.getHitsNeeded(ctx) > 0) {
-			hitPart = Sword.Eighth;
-		} else if (Sword.Sixteenth.getHitsNeeded(ctx) > 0) {
-			hitPart = Sword.Sixteenth;
-		} else {
-			final Sword[] parts = getSwordPartsByDistance();
-			if (parts != null && parts.length > 0) {
-				hitPart = parts[Random.nextInt(0, parts.length)];
+		Sword[] parts = Random.nextBoolean() ? new Sword[]{Sword.Eighth, Sword.Sixteenth} : new Sword[]{Sword.Sixteenth, Sword.Eighth};
+		for (Sword part : parts) {
+			if (part.getHitsNeeded(ctx) > 0) {
+				hitPart = part;
+				break;
+			}
+		}
+
+		if (hitPart == null) {
+			final List<Sword> swordList = getSwordPartsByDistance();
+			if (swordList.size() > 0) {
+				hitPart = swordList.get(Random.nextInt(0, swordList.size()));
 			}
 		}
 
@@ -77,9 +81,9 @@ public class MakeSword extends ArtisanArmourerTask {
 
 		if (HitType.setHitType(ctx, hitPart.getRequiredHitType(ctx, this))) {
 			//LogHandler.print("Hit " + hitPart + " with " + hitPart.getRequiredHitType());
-			if (hitPart.clickButton(ctx, this)) {
-				sleep(250, 700);
-			}
+			//script.log.info("Hit [" + hitPart + "] require=" + hitPart.getHitsNeeded(ctx) + " hittype=" + hitPart.getRequiredHitType(ctx, this));
+			hitPart.clickButton(ctx, this);
+			sleep(200, 800);
 		}
 	}
 
@@ -114,8 +118,9 @@ public class MakeSword extends ArtisanArmourerTask {
 	 *
 	 * @return
 	 */
-	public Sword[] getSwordPartsByDistance() {
+	public List<Sword> getSwordPartsByDistance() {
 		final ArrayList<Sword> list = new ArrayList<Sword>();
+
 		for (Sword swordPart : Sword.values()) {
 			if (swordPart.getHitsNeeded(ctx) > 0) {
 				list.add(swordPart);
@@ -130,15 +135,16 @@ public class MakeSword extends ArtisanArmourerTask {
 			final List<Sword> newList = new LinkedList<Sword>();
 
 			for (final Sword sword : list) {
-				if (sword.getRequiredHitType(ctx, this) == hitType) {
-					newList.add(sword);
+				if (sword.getRequiredHitType(ctx, this) != hitType) {
+					break;
 				}
+				newList.add(sword);
 			}
 
-			return newList.toArray(new Sword[newList.size()]);
+			return newList;
 		}
 
-		return null;
+		return list;
 	}
 
 	public boolean isOpen() {

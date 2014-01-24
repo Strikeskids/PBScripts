@@ -14,7 +14,6 @@ import java.util.concurrent.Callable;
 public class SmithAnvil extends ArtisanArmourerTask {
 	public static final int WIDGET_INSTRUCTION = 1073;
 	public static final int WIDGET_INSTRUCTION_CHILD = 11;
-
 	private static final int[] ID_ANVIL = {4046};
 	private static final int[] ID_ANVIL_SWORD = {4047, 24664, 24677, 24678, 15520, 20258};
 	private static final int[] ID_ANVIL_TRACK = {24820};
@@ -185,8 +184,11 @@ public class SmithAnvil extends ArtisanArmourerTask {
 							}
 							return false;
 						}
-					}, 300, 6)) {
-						anvil.interact("Smith", "Anvil");
+					}, Random.nextInt(300, 600), Random.nextInt(8, 13))) {
+						sleep(100, 300);
+						if (!ctx.skillingInterface.isOpen() && !makeSword.isOpen()) {
+							anvil.interact("Smith", "Anvil");
+						}
 					}
 					sleep(200, 600);
 				}

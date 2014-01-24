@@ -1,5 +1,8 @@
 package org.logicail.rsbot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -8,12 +11,10 @@ package org.logicail.rsbot;
  */
 public class AreaTest {
 	public static void main(String[] args) {
-		int curses = 21;
-		int normal = 20;
-
-		// 3277
-		System.out.println(curses % 2 != 0); // return 1
-		System.out.println(normal % 2 != 0); // return 0
+		List<String> menu = new ArrayList<String>();
+		menu.add("Talk-to <col=ffff00>Abel");
+		menu.add("Quick-score <col=ffff00>Abel");
+		menu.add("Talk-to <col=ffff00>Abel");
 	}
 }
 

@@ -36,7 +36,7 @@ import javax.swing.*;
 @Manifest(
 		name = "Log Artisan Workshop",
 		description = "Cheap smithing xp at Artisans Workshop",
-		version = 2.06,
+		version = 2.07,
 		authors = {"Logicail"},
 		topic = 1134701
 )
@@ -61,7 +61,6 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	public static final int ID_SMELTER_SWORDS = 29394;
 	public static final int[] ANIMATION_SMITHING = {898, 11062, 15121};
 	public final LogArtisanWorkshopOptions options = new LogArtisanWorkshopOptions();
-
 	private SkillData skillData = null;
 	private int currentLevel = -1;
 	private int startLevel = -1;
@@ -219,8 +218,8 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 				break;
 			case CEREMONIAL_SWORDS:
 				properties.put("Swords Smithed", String.format("%,d (%,d/h)", options.swordsSmithed, (int) (options.swordsSmithed / time)));
-				properties.put("Perfect Swords", String.format("Perfect Swords: %,d (%,d/h)", options.perfectSwords, (int) (options.perfectSwords / time)));
-				properties.put("Broken Swords", String.format("Broken Swords: %,d (%,d/h)", options.brokenSwords, (int) (options.brokenSwords / time)));
+				properties.put("Perfect Swords", String.format("%,d (%,d/h)", options.perfectSwords, (int) (options.perfectSwords / time)));
+				properties.put("Broken Swords", String.format("%,d (%,d/h)", options.brokenSwords, (int) (options.brokenSwords / time)));
 				break;
 			case REPAIR_TRACK:
 				properties.put("Completed Tracks", String.format("%,d (%,d/h)", options.completedTracks, (int) (options.completedTracks / time)));
@@ -302,6 +301,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 //	@Override
 //	public void repaint(Graphics g) {
 //		super.repaint(g);
+//
 //
 //		// Changed to using settings
 //		// Debug incase repairing pipes doeesn't work (Haven't been able to test yet)

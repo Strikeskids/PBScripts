@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Component;
 
 import java.util.concurrent.Callable;
@@ -31,7 +32,6 @@ public enum Sword {
 	Fourteenth(167, 183, 47),
 	Fifteenth(168, 184, 48),
 	Sixteenth(169, 185, 49);
-
 	private final int targetWidgetId;
 	private final int currentWidgetId;
 	private final int buttonWidgetId;
@@ -40,6 +40,21 @@ public enum Sword {
 		this.targetWidgetId = targetWidgetId;
 		this.currentWidgetId = currentWidgetId;
 		this.buttonWidgetId = buttonWidgetId;
+	}
+
+	/**
+	 * Get the number of parts still requiring a hit
+	 *
+	 * @return
+	 */
+	private static int getSwordPartsRemaining(IMethodContext ctx) {
+		int hits = 0;
+		for (Sword sword : Sword.values()) {
+			if (sword.validate(ctx)) {
+				hits++;
+			}
+		}
+		return hits;
 	}
 
 	public boolean clickButton(final IMethodContext ctx, final MakeSword makeSword) {
@@ -52,16 +67,15 @@ public enum Sword {
 					@Override
 					public Boolean call() throws Exception {
 						return ctx.players.local().getAnimation() == -1 &&
-								(makeSword.getCooldown() != cooldown
-										|| current != getCurrent(ctx));
+								makeSword.getCooldown() != cooldown && current != getCurrent(ctx);
 					}
-				});
+				}, Random.nextInt(250, 350), Random.nextInt(18, 25));
 			}
 		}
 		return false;
 	}
 
-	int getCurrent(IMethodContext ctx) {
+	public int getCurrent(IMethodContext ctx) {
 		try {
 			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
 		} catch (Exception e) {
@@ -69,7 +83,7 @@ public enum Sword {
 		}
 	}
 
-	int getTarget(IMethodContext ctx) {
+	public int getTarget(IMethodContext ctx) {
 		try {
 			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
 		} catch (Exception e) {
@@ -98,12 +112,14 @@ public enum Sword {
 			case 2:
 				return HitType.SOFT;
 			case 3:
+			case 4:
 				return HitType.MEDIUM;
 			default:
 				if ((this == Eighth || this == Sixteenth) && hitsNeeded <= 4) {
 					return HitType.MEDIUM; // Don't risk chance of breaking tip
 				}
-				return HitType.HARD; // Ignore chance of 5
+
+				return /*ctx.skills.getRealLevel(Skills.SMITHING) < 95 ?*/ HitType.HARD /*: HitType.MEDIUM*/; // Ignore chance of 5
 		}
 	}
 
@@ -112,10 +128,6 @@ public enum Sword {
 			return 0;
 		}
 		return getTarget(ctx) - getCurrent(ctx);
-	}
-
-	boolean validate(IMethodContext ctx) {
-		return getTarget(ctx) > getCurrent(ctx);
 	}
 
     /*
@@ -128,18 +140,7 @@ public enum Sword {
     Careful (uses 2 cooldown)	0%	0%	  0%	0%	100%  0%
      */
 
-	/**
-	 * Get the number of parts still requiring a hit
-	 *
-	 * @return
-	 */
-	private static int getSwordPartsRemaining(IMethodContext ctx) {
-		int hits = 0;
-		for (Sword sword : Sword.values()) {
-			if (sword.validate(ctx)) {
-				hits++;
-			}
-		}
-		return hits;
+	boolean validate(IMethodContext ctx) {
+		return getTarget(ctx) > getCurrent(ctx);
 	}
 }

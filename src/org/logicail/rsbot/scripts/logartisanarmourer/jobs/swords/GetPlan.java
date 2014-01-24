@@ -2,8 +2,11 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
+import org.powerbot.script.lang.Filter;
+import org.powerbot.script.methods.Menu;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Npc;
 
 import java.util.concurrent.Callable;
@@ -17,6 +20,13 @@ import java.util.concurrent.Callable;
 public class GetPlan extends ArtisanArmourerTask {
 	public static final int[] EGIL_ABEL = {6642, 6647};
 	private final MakeSword makeSword;
+	private final Filter<Menu.Entry> interactFilter = new Filter<Menu.Entry>() {
+		@Override
+		public boolean accept(Menu.Entry entry) {
+			final String action = entry.action;
+			return action.equals("Quick-score") || action.equals("Get-plans");
+		}
+	};
 
 	public GetPlan(LogArtisanWorkshop script, MakeSword makeSword) {
 		super(script);
@@ -51,18 +61,16 @@ public class GetPlan extends ArtisanArmourerTask {
 
 		final int xp = ctx.skills.getExperience(Skills.SMITHING);
 
-		for (Npc egil : ctx.npcs.select().id(EGIL_ABEL).nearest().limit(3).shuffle().first()) {
-			if (ctx.camera.prepare(egil) && egil.click(false) && ctx.menu.isOpen()) {
-				final String[] actions = egil.getActions();
+		for (Npc egil : ctx.npcs.select().id(EGIL_ABEL).nearest()/*.limit(3).shuffle()*/.first()) {
+			if (ctx.camera.prepare(egil) && egil.interact(interactFilter)) {
 				sleep(250, 1000);
-				if (actions.length > 1 && actions[1] != null && egil.interact(actions[1])) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return !ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty() || xp != ctx.skills.getExperience(Skills.SMITHING);
-						}
-					});
-				}
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty() || xp != ctx.skills.getExperience(Skills.SMITHING);
+					}
+				}, Random.nextInt(300, 600), Random.nextInt(9, 12));
+				sleep(250, 1000);
 			}
 		}
 	}
