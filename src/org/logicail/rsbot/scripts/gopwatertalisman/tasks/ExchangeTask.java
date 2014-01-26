@@ -65,6 +65,12 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 				}
 			}
 		} else {
+			if (ctx.depositBox.isOpen()) {
+				ctx.depositBox.close();
+				sleep(222, 888);
+				return;
+			}
+
 			final Npc elriss = ctx.npcs.poll();
 			if (ctx.camera.prepare(elriss) && elriss.interact("Exchange")) {
 				Condition.wait(new Callable<Boolean>() {

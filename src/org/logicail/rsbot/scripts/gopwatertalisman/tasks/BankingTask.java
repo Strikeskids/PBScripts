@@ -43,6 +43,12 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 			}
 		}
 
+		if (ctx.depositBox.isOpen()) {
+			ctx.depositBox.close();
+			sleep(222, 888);
+			return;
+		}
+
 		final int startCount = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).count();
 		if (!ctx.chat.select().text("All").isEmpty() && ctx.chat.poll().select(Random.nextBoolean())) {
 			if (Condition.wait(new Callable<Boolean>() {
