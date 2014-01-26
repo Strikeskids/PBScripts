@@ -128,7 +128,7 @@ public class HousePortal extends NodePath {
 						enteringHouse.set(true);
 					} else {
 						sleep(150, 850);
-						enteringHouse.set(makeInput(openHouse.getPlayerName()));
+						enteringHouse.set(ctx.chat.sendInput(openHouse.getPlayerName()));
 					}
 				} else {
 					if (ctx.camera.prepare(portal) && portal.interact("Enter", "Portal")) {
@@ -181,27 +181,5 @@ public class HousePortal extends NodePath {
 				sleep(400, 1200);
 			}
 		}
-	}
-
-	private boolean makeInput(String input) {
-		final Component textBox = ctx.chat.getInputTextBox();
-		if (textBox.isOnScreen()) {
-			String text = textBox.getText();
-			if (text == null || !text.equalsIgnoreCase(input)) {
-				if (text != null) {
-					for (int i = 0; i <= text.length(); ++i) {
-						ctx.keyboard.send("{VK_BACK_SPACE down}");
-						ctx.keyboard.send("{VK_BACK_SPACE up}");
-					}
-				}
-				ctx.keyboard.send(input);
-				text = textBox.getText();
-			}
-			if (text != null && text.equalsIgnoreCase(text) && textBox.isOnScreen()) {
-				return ctx.keyboard.sendln("");
-			}
-		}
-
-		return false;
 	}
 }

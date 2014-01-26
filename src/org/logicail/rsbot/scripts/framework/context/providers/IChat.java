@@ -38,4 +38,26 @@ public class IChat extends Chat {
 	public boolean isInputWidgetOpen() {
 		return getInputTextBox().isVisible();
 	}
+
+	public boolean sendInput(String input) {
+		final Component textBox = getInputTextBox();
+		if (textBox.isOnScreen()) {
+			String text = textBox.getText();
+			if (text == null || !text.equalsIgnoreCase(input)) {
+				if (text != null) {
+					for (int i = 0; i <= text.length(); ++i) {
+						ctx.keyboard.send("{VK_BACK_SPACE down}");
+						ctx.keyboard.send("{VK_BACK_SPACE up}");
+					}
+				}
+				ctx.keyboard.send(input);
+				text = textBox.getText();
+			}
+			if (text != null && text.equalsIgnoreCase(text) && textBox.isOnScreen()) {
+				return ctx.keyboard.sendln("");
+			}
+		}
+
+		return false;
+	}
 }
