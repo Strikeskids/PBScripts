@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.gopwatertalisman.tasks.BankingTask;
 import org.logicail.rsbot.scripts.gopwatertalisman.tasks.ExchangeTask;
+import org.logicail.rsbot.util.ErrorDialog;
 import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
@@ -11,6 +12,8 @@ import org.powerbot.script.Manifest;
 import org.powerbot.script.util.GeItem;
 import org.powerbot.script.util.Timer;
 
+import java.awt.*;
+import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -64,7 +67,28 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 	@Override
 	public void messaged(MessageEvent messageEvent) {
 		if (messageEvent.getId() == 0 && messageEvent.getMessage().equals("You do not have enough tokens to buy that item.")) {
-			getController().stop();
+			try {
+				final StringBuilder sb = new StringBuilder();
+				final LinkedProperties properties = getPaintInfo();
+				final Enumeration<Object> keys = properties.keys();
+				while (keys.hasMoreElements()) {
+					final Object element = keys.nextElement();
+					sb.append(String.format("  %s: %s\n", element, properties.get(element)));
+				}
+
+				EventQueue.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							new ErrorDialog(getName(), "Stopped because out of tokens\n" + sb.toString());
+						} catch (Exception exception) {
+							exception.printStackTrace();
+						}
+					}
+				});
+			} finally {
+				getController().stop();
+			}
 		}
 	}
 }
