@@ -43,13 +43,14 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 			}
 		}
 
-		if (ctx.depositBox.isOpen()) {
-			ctx.depositBox.close();
+		final int startCount = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).count();
+
+		if (ctx.depositBox.isOpen() && ctx.depositBox.deposit(GOPWaterTalisman.WATER_TALISMAN, 0)) {
+			script.banked.set(script.banked.get() + startCount);
 			sleep(222, 888);
 			return;
 		}
 
-		final int startCount = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).count();
 		if (!ctx.chat.select().text("All").isEmpty() && ctx.chat.poll().select(Random.nextBoolean())) {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
@@ -74,25 +75,29 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 			}
 
 			if (ctx.camera.prepare(depositBox)) {
-				if (ctx.backpack.getSelectedItem().getId() != GOPWaterTalisman.WATER_TALISMAN) {
-					final Item talisman = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll();
-					if (ctx.hud.view(Hud.Window.BACKPACK) && talisman.interact("Use", "Water talisman")) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return ctx.backpack.getSelectedItem().getId() == GOPWaterTalisman.WATER_TALISMAN;
-							}
-						}, Random.nextInt(333, 888), 6);
+				if (Random.nextBoolean() && ctx.depositBox.open()) {
+					return;
+				} else {
+					if (ctx.backpack.getSelectedItem().getId() != GOPWaterTalisman.WATER_TALISMAN) {
+						final Item talisman = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll();
+						if (ctx.hud.view(Hud.Window.BACKPACK) && talisman.interact("Use", "Water talisman")) {
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return ctx.backpack.getSelectedItem().getId() == GOPWaterTalisman.WATER_TALISMAN;
+								}
+							}, Random.nextInt(333, 888), 6);
+						}
 					}
-				}
-				if (ctx.backpack.getSelectedItem().getId() == GOPWaterTalisman.WATER_TALISMAN) {
-					if (depositBox.interact("Use", "Water talisman -> Deposit box")) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return !ctx.chat.select().isEmpty();
-							}
-						}, Random.nextInt(333, 888), 6);
+					if (ctx.backpack.getSelectedItem().getId() == GOPWaterTalisman.WATER_TALISMAN) {
+						if (depositBox.interact("Use", "Water talisman -> Deposit box")) {
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return !ctx.chat.select().isEmpty();
+								}
+							}, Random.nextInt(333, 888), 6);
+						}
 					}
 				}
 			}
