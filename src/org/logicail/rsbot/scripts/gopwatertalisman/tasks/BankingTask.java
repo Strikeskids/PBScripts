@@ -75,9 +75,7 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 			}
 
 			if (ctx.camera.prepare(depositBox)) {
-				if (Random.nextBoolean() && ctx.depositBox.open()) {
-					return;
-				} else {
+				if (!Random.nextBoolean() || !ctx.depositBox.open()) {
 					if (ctx.backpack.getSelectedItem().getId() != GOPWaterTalisman.WATER_TALISMAN) {
 						final Item talisman = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll();
 						if (ctx.hud.view(Hud.Window.BACKPACK) && talisman.interact("Use", "Water talisman")) {
