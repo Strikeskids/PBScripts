@@ -166,8 +166,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 			case 4:
 				if (message.equals("That player is offline, or has privacy mode enabled.")) {
 					housePortal.enteringHouse.set(false);
-					options.status = "Can't enter friends house anymore";
-					log.info("Can't enter friends house anymore");
+					log.info(options.status = "Can't enter friends house anymore");
 
 					getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
 						@Override

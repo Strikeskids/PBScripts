@@ -41,21 +41,21 @@ public class IChat extends Chat {
 
 	public boolean sendInput(String input) {
 		final Component textBox = getInputTextBox();
-		if (textBox.isOnScreen()) {
+		if (textBox.isValid() && textBox.isVisible()) {
 			String text = textBox.getText();
 			if (text == null || !text.equalsIgnoreCase(input)) {
 				if (text != null) {
 					for (int i = 0; i <= text.length(); ++i) {
 						ctx.keyboard.send("{VK_BACK_SPACE down}");
+						sleep(5, 50);
 						ctx.keyboard.send("{VK_BACK_SPACE up}");
+						sleep(5, 50);
 					}
 				}
 				ctx.keyboard.send(input);
 				text = textBox.getText();
 			}
-			if (text != null && text.equalsIgnoreCase(text) && textBox.isOnScreen()) {
-				return ctx.keyboard.sendln("");
-			}
+			return text != null && text.equalsIgnoreCase(input) && textBox.isValid() && textBox.isVisible() && ctx.keyboard.sendln("");
 		}
 
 		return false;
