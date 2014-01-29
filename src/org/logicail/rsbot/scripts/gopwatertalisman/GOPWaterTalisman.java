@@ -22,7 +22,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 26/01/14
  * Time: 19:26
  */
-@Manifest(name = "GOP Exchanger", description = "Exchanges tokens for water talismans", hidden = true)
+@Manifest(
+		name = "GOP Exchanger",
+		description = "Exchanges tokens for water talismans",
+		version = 1.01
+)
 public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implements MessageListener {
 	public static final int ELRISS = 8032;
 	public static final int TOKENS = 13650;

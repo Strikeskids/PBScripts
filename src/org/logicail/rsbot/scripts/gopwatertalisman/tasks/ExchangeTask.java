@@ -44,8 +44,7 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 					}
 				}, Random.nextInt(333, 888), 6)) {
 					int space = 28 - ctx.backpack.select().count();
-					int amount = Random.nextInt(space, (int) (space * Random.nextDouble(1.0, 5.0)));
-					if (ctx.chat.sendInput(Integer.toString(amount))) {
+					if (ctx.chat.sendInput(Integer.toString(space))) {
 						if (Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
