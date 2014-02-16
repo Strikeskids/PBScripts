@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.gopwatertalisman.tasks;
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.gopwatertalisman.GOPWaterTalisman;
+import org.powerbot.script.methods.DepositBox;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
@@ -45,7 +46,7 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 
 		final int startCount = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).count();
 
-		if (ctx.depositBox.isOpen() && ctx.depositBox.deposit(GOPWaterTalisman.WATER_TALISMAN, 0)) {
+		if (ctx.depositBox.isOpen() && ctx.depositBox.deposit(GOPWaterTalisman.WATER_TALISMAN, DepositBox.Amount.ALL)) {
 			script.banked.set(script.banked.get() + startCount);
 			sleep(222, 888);
 			return;
