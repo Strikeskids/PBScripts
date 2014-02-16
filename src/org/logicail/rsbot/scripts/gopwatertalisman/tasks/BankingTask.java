@@ -45,7 +45,7 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 
 		final int startCount = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).count();
 
-		if (ctx.depositBox.isOpen() && ctx.depositBox.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll().interact("Deposit all", "Water talisman")) {
+		if (ctx.depositBox.isOpen() && ctx.depositBox.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll().interact("Deposit-All", "Water talisman")) {
 			script.banked.set(script.banked.get() + startCount);
 			sleep(222, 888);
 			return;
