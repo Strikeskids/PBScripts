@@ -40,4 +40,9 @@ public class TargetableRectangle extends Interactive implements Targetable {
 	public Point getNextPoint() {
 		return new Point(Random.nextInt(rectangle.x + 1, rectangle.x + rectangle.width), Random.nextInt(rectangle.y + 1, rectangle.y + rectangle.height));
 	}
+
+	@Override
+	public void setBounds(int i, int i2, int i3, int i4, int i5, int i6) {
+		
+	}
 }

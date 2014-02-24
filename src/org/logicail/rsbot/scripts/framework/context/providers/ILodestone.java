@@ -128,8 +128,8 @@ public class ILodestone extends IMethodProvider {
 	// Note order important for ordinal usage
 	public static enum Lodestone {
 		// Quest settings
-		BANDIT_CAMP(new Tile(3214, 2954, 0), 2151, 0, 0x7fff, 15, 7),
-		LUNAR_ISLE(new Tile(2085, 3914, 0), 2253, 0, 0xfffff, 190, 61),
+		BANDIT_CAMP(new Tile(3214, 2954, 0)),
+		LUNAR_ISLE(new Tile(2085, 3914, 0)),
 
 		// Setting 3
 		AL_KHARID(new Tile(3297, 3184, 0)),
@@ -154,32 +154,22 @@ public class ILodestone extends IMethodProvider {
 		WILDERNESS_VOLCANO(new Tile(3142, 3636, 0));
 
 		private final Tile location;
-		private final int setting;
 		private final int shift;
-		private final int mask;
-		private final int component;
-		private final int unlockedValue;
 
 		Lodestone(Tile location) {
 			this.location = location;
-			this.setting = ILodestone.SETTING_LODESTONES;
 			this.shift = ordinal() - 2;
-			this.mask = 1;
-			this.component = 38 + ordinal();
-			this.unlockedValue = 1;
-		}
-
-		Lodestone(Tile location, int setting, int shift, int mask, int unlockedValue, int component) {
-			this.location = location;
-			this.setting = setting;
-			this.shift = shift;
-			this.mask = mask;
-			this.component = component;
-			this.unlockedValue = unlockedValue;
 		}
 
 		Component getComponent(MethodContext ctx) {
-			return ctx.widgets.get(TELEPORT_INTERFACE, component);
+			switch (this) {
+				case BANDIT_CAMP:
+					return ctx.widgets.get(TELEPORT_INTERFACE, 7);
+				case LUNAR_ISLE:
+					return ctx.widgets.get(TELEPORT_INTERFACE, 39);
+				default:
+					return ctx.widgets.get(TELEPORT_INTERFACE, 19 + ordinal());
+			}
 		}
 
 		public Tile getLocation() {
@@ -187,7 +177,14 @@ public class ILodestone extends IMethodProvider {
 		}
 
 		public boolean isUnlocked(MethodContext ctx) {
-			return ctx.settings.get(setting, shift, mask) == unlockedValue;
+			switch (this) {
+				case BANDIT_CAMP:
+					return ctx.settings.get(2151, 0, 0x7fff) == 15;
+				case LUNAR_ISLE:
+					return ctx.settings.get(2253, 0, 0xfffff) == 190;
+				default:
+					return ctx.settings.get(ILodestone.SETTING_LODESTONES, shift, 1) == 1;
+			}
 		}
 
 		public boolean isPreviousDestination(MethodContext ctx) {
