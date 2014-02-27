@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Manifest(
 		name = "GOP Exchanger",
 		description = "Exchanges tokens for water talismans",
+		topic = 1160406,
 		version = 1.02
 )
 public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implements MessageListener {
