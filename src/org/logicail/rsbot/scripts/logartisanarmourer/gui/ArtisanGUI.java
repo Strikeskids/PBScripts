@@ -158,8 +158,8 @@ public class ArtisanGUI extends JFrame {
 		});*/
 
 		// Respect
-		respectKill = new JCheckBox("Kill Ancestors");
-		//respectKill.setEnabled(false);
+		respectKill = new JCheckBox("Kill Ancestors (disabled)");
+		respectKill.setEnabled(false);
 
 		tabbedPane = new JTabbedPane();
 		//modeTab = getModeTab();
