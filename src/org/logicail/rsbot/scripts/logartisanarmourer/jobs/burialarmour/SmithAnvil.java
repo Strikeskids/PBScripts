@@ -159,7 +159,14 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			ctx.skillingInterface.cancelProduction();
 		}
 
-		final GameObject anvil = anvilLocation != null ? ctx.objects.select().id(getAnvilId()).at(anvilLocation).poll() : ctx.objects.select().id(getAnvilId()).nearest().limit(2).shuffle().poll();
+		// Sometimes pick a random anvil from the 2 closest
+		// Use the one at the previous location
+		// Otherwise pick a random anvil from the 2 closest
+		final GameObject anvil = Random.nextInt(0, 10) == 0
+				? ctx.objects.select().id(getAnvilId()).nearest().limit(2).shuffle().poll()
+				: anvilLocation != null
+				? ctx.objects.select().id(getAnvilId()).at(anvilLocation).poll()
+				: ctx.objects.select().id(getAnvilId()).nearest().limit(2).shuffle().poll();
 
 		if (anvil.isValid()) {
 			if (anvilLocation == null) {
