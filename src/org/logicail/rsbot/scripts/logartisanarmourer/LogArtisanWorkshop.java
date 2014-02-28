@@ -36,7 +36,7 @@ import javax.swing.*;
 @Manifest(
 		name = "Log Artisan Workshop",
 		description = "Cheap smithing xp at Artisans Workshop",
-		version = 2.07,
+		version = 2.08,
 		authors = {"Logicail"},
 		topic = 1134701
 )

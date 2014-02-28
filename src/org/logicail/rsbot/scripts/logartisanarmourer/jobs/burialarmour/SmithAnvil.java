@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.wrappers.Tile;
 
 import java.util.concurrent.Callable;
 
@@ -147,6 +148,8 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		}
 	}
 
+	private Tile anvilLocation = null;
+
 	public void clickAnvil() {
 		if (ctx.skillingInterface.isOpen()) {
 			return;
@@ -156,7 +159,12 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			ctx.skillingInterface.cancelProduction();
 		}
 
-		for (final GameObject anvil : ctx.objects.select().id(getAnvilId()).nearest().limit(3).shuffle().first()) {
+		final GameObject anvil = anvilLocation != null ? ctx.objects.select().id(getAnvilId()).at(anvilLocation).poll() : ctx.objects.select().id(getAnvilId()).nearest().limit(2).shuffle().poll();
+
+		if (anvil.isValid()) {
+			if (anvilLocation == null) {
+				anvilLocation = anvil.getLocation();
+			}
 			if (ctx.camera.prepare(anvil)) {
 				options.status = "Clicking on anvil";
 				if (anvil.interact("Smith", "Anvil")) {
