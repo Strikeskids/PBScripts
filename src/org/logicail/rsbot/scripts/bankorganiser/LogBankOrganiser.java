@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
  * Date: 02/03/14
  * Time: 14:05
  */
-@Manifest(name = "Log Bank Organiser", description = "Organises your bank")
+@Manifest(name = "Log Bank Organiser", description = "Organises your bank", hidden = true)
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
 
