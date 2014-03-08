@@ -3,10 +3,12 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.lang.ItemQuery;
 import org.powerbot.script.methods.Bank;
+import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Item;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,6 +32,19 @@ public class IBank extends Bank {
 
 	public Component getWidget() {
 		return ctx.widgets.get(WIDGET, WIDGET_BOUNDS);
+	}
+
+	public boolean isInsertMode() {
+		return ctx.settings.get(161, 1) == 1;
+	}
+
+	public boolean setSwapMode(final boolean insert) {
+		return isInsertMode() == insert || (ctx.widgets.get(762, 8).click() && Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return isInsertMode() == insert;
+			}
+		}));
 	}
 
 

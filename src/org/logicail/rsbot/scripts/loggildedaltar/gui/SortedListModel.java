@@ -16,7 +16,7 @@ public class SortedListModel extends DefaultListModel {
 	public void addElement(Object obj) {
 		String str = obj.toString();
 		int index = getSize();
-		while (index > 0 && ((String) elementAt(index - 1)).compareTo(str) >= 0) {
+		while (index > 0 && elementAt(index - 1).toString().compareTo(str) >= 0) {
 			index--;
 		}
 		super.add(index, obj);

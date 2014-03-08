@@ -11,7 +11,9 @@ import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Item;
 
 import java.awt.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -93,6 +95,9 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 		if (!createTabs()) {
 			return;
 		}
+		
+		// Set bank to swap mode
+		ctx.bank.setSwapMode(false);
 
 		for (int i = 0; i < mapping.size(); i++) {
 			final LinkedHashSet<Integer> set = mapping.get(i);

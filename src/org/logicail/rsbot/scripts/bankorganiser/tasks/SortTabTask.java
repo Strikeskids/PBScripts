@@ -57,10 +57,12 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			}
 		}
 
+		// Set bank to swap mode
+		ctx.bank.setSwapMode(false);
+
 		// extra for tab0
 		// Categorys then rest sorted alphabetically
 
-		// Set bank to insert mode
 
 		for (int i = 0; i < mappingList.size(); i++) {
 			if (sorters == null) {
