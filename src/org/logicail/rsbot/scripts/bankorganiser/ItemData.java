@@ -1,6 +1,8 @@
 package org.logicail.rsbot.scripts.bankorganiser;
 
 import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
+import org.logicail.rsbot.scripts.bankorganiser.tasks.ItemSorter;
+import org.powerbot.script.wrappers.Item;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class ItemData {
 	private static String ITEMDATA_ADDRESS = "http://logicail.co.uk/resources/items.dat";
 	private static int version = -1;
 	private static boolean loaded;
+	private static Comparator<? super Item> sorter = null;
 
 	public static boolean loaded() {
 		return loaded;
@@ -67,6 +70,14 @@ public class ItemData {
 					categoryToItems.get(category).add(id);
 				}
 			}
+
+			LinkedHashSet<Integer> set = new LinkedHashSet<Integer>();
+			for (Map.Entry<String, LinkedHashSet<Integer>> entry : categoryToItems.entrySet()) {
+				set.addAll(entry.getValue());
+			}
+
+			sorter = new ItemSorter(new ArrayList<Integer>(set));
+
 			loaded = true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -91,5 +102,13 @@ public class ItemData {
 		}
 
 		return result;
+	}
+
+	public static int getVersion() {
+		return version;
+	}
+
+	public static Comparator<? super Item> getSorter() {
+		return sorter;
 	}
 }

@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.bankorganiser.tasks;
 
-import org.logicail.rsbot.scripts.bankorganiser.ItemData;
 import org.logicail.rsbot.scripts.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.framework.context.providers.IBank;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
@@ -12,7 +11,6 @@ import org.powerbot.script.wrappers.Item;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -147,29 +145,5 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 		}
 
 		return true;
-	}
-
-	class ItemSorter implements Comparator<Item> {
-		public int size() {
-			return order.size();
-		}
-
-		private final List<Integer> order;
-
-		ItemSorter(List<Integer> order) {
-			this.order = order;
-		}
-
-		@Override
-		public int compare(Item lhs, Item rhs) {
-			final int indexlhs = order.indexOf(ItemData.getId(lhs.getId()));
-			final int indexrhs = order.indexOf(ItemData.getId(rhs.getId()));
-
-			if (indexlhs == -1 && indexrhs == -1) {
-				return lhs.getName().compareTo(rhs.getName());
-			}
-
-			return indexlhs - indexrhs;
-		}
 	}
 }

@@ -11,9 +11,7 @@ import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Item;
 
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -112,8 +110,9 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 						final Item item = ctx.bank.getItemsInTab(sortingTab).id(integer).poll();
 						if (item.isValid()) {
 							//System.out.println("Remove from tab");
+							script.status = "Remove '" + item.getName() + "' from tab";
 							move(item, IBank.BankTab.NONE);
-							sleep(500, 1000);
+							sleep(100, 300);
 							return;
 						}
 					}
@@ -125,9 +124,9 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 				public boolean accept(Item item) {
 					return set.contains(ItemData.getId(item.getId())) && !alreadyHave.contains(item.getId());
 				}
-			})) {
+			}).sort(ItemData.getSorter())) {
 				move(item, sortingTab);
-				sleep(500, 1000);
+				sleep(100, 500);
 				return;
 			}
 		}
@@ -141,26 +140,27 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	private boolean createTabs() {
 		cleanUpMapping();
 
-		final int haveTabs = ctx.bank.getNumberOfTabs() + 1;
-		final int needTabs = mapping.size();
+//		final int haveTabs = ctx.bank.getNumberOfTabs() + 1;
+//		final int needTabs = mapping.size();
+//
+//		if (haveTabs < needTabs) {
+//			for (int i = haveTabs; i < mapping.size(); i++) {
+//				final LinkedHashSet<Integer> set = mapping.get(i);
+//				final Item item = ctx.bank.select().select(new Filter<Item>() {
+//					@Override
+//					public boolean accept(Item item) {
+//						return set.contains(ItemData.getId(item.getId()));
+//					}
+//				}).reverse().poll();
+//				if (item.isValid()) {
+//					move(item, getNextTab());
+//					return ctx.bank.getNumberOfTabs() >= needTabs;
+//				}
+//			}
+//		}
 
-		if (haveTabs < needTabs) {
-			for (int i = haveTabs; i < mapping.size(); i++) {
-				final LinkedHashSet<Integer> set = mapping.get(i);
-				final Item item = ctx.bank.select().select(new Filter<Item>() {
-					@Override
-					public boolean accept(Item item) {
-						return set.contains(ItemData.getId(item.getId()));
-					}
-				}).poll();
-				if (item.isValid()) {
-					move(item, getNextTab());
-					return ctx.bank.getNumberOfTabs() >= needTabs;
-				}
-			}
-		}
-
-		return ctx.bank.getNumberOfTabs() + 1 >= needTabs;
+//		return ctx.bank.getNumberOfTabs() + 1 >= needTabs;
+		return true;
 	}
 
 	public void cleanUpMapping() {
@@ -176,7 +176,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 						public boolean accept(Item item) {
 							return next.contains(ItemData.getId(item.getId()));
 						}
-					}).isEmpty()) {
+					}).count() <= 1) {
 						iterator.remove();
 						//System.out.println("Remove tab " + i + " no matching items");
 					}
@@ -204,7 +204,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	 * @param tab
 	 */
 	private boolean move(final Item item, final IBank.BankTab tab) {
-		script.status = "Move '" + item.getName() + "' to tab " + tab.ordinal();
+		script.status = "Move '" + item.getName() + "' to tab " + (tab.ordinal() + 1);
 		final int id = item.getId();
 
 		Component destination = tab.getWidget(ctx);

@@ -190,7 +190,7 @@ public class BankOrganiserInterface extends JFrame {
 		for (int i = 0; i < tabs.size(); i++) {
 			JList tab = tabs.get(i);
 			tab.addMouseListener(new MenuAdapter(this, tab, tabs, i));
-			tab.setTransferHandler(new TabTransferHandler());
+			tab.setTransferHandler(new ListTransferHandler());
 			tab.setDropMode(DropMode.INSERT);
 			tab.setDragEnabled(true);
 		}
@@ -309,6 +309,7 @@ public class BankOrganiserInterface extends JFrame {
 			i++;
 		}
 
+		settings.put("version", ItemData.getVersion() + "");
 		settings.put("Tabs", object.toString());
 
 		try {
@@ -409,7 +410,6 @@ public class BankOrganiserInterface extends JFrame {
 		if (settings.containsKey("Tabs")) {
 			final String json = settings.get("Tabs").toString();
 			final JsonObject object = JsonObject.readFrom(json);
-
 
 			for (int i = 1; i < tabs.size(); i++) {
 				JList tab = tabs.get(i);

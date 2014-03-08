@@ -21,4 +21,12 @@ public class SortedListModel extends DefaultListModel {
 		}
 		super.add(index, obj);
 	}
+
+	@Override
+	public void add(int index, Object element) {
+		if (contains(element)) {
+			return;
+		}
+		addElement(element);
+	}
 }

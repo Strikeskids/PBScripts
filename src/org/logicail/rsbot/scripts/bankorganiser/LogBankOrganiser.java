@@ -5,6 +5,8 @@ import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.Manifest;
+import org.powerbot.script.methods.Game;
+import org.powerbot.script.util.Random;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +30,18 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 		map.put("Number of Tabs", ctx.bank.getNumberOfTabs());
 
 		return map;
+	}
+
+	@Override
+	public int poll() {
+		try {
+			if (ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+				tree.run();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Random.nextInt(100, 300);
 	}
 
 	@Override
