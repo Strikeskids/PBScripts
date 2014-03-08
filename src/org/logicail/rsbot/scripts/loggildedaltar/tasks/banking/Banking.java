@@ -31,8 +31,6 @@ public class Banking extends Branch<LogGildedAltar> {
 		super(script);
 		options = script.options;
 
-		//if(options.useBOB) { Don't use since useBob will be disabled if level requirement not met
-
 		add(new BankBob(this));
 		add(new BankOpen(this));
 		add(new BankWithdraw(this));

@@ -3,9 +3,11 @@ package org.logicail.rsbot.scripts.bankorganiser;
 import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.Manifest;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.LinkedHashMap;
 
 /**
@@ -16,11 +18,14 @@ import java.util.LinkedHashMap;
  */
 @Manifest(name = "Log Bank Organiser", description = "Organises your bank")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
+	public String status = "";
+
 	@Override
 	public LinkedHashMap<Object, Object> getPaintInfo() {
 		final LinkedHashMap<Object, Object> map = new LinkedHashMap<Object, Object>();
 
-		map.put("Status", "");
+		map.put("Status", status);
+		map.put("Number of Tabs", ctx.bank.getNumberOfTabs());
 
 		return map;
 	}
@@ -29,6 +34,16 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public void start() {
 		ItemData.getId(0);
 		if (!ItemData.loaded()) {
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						new ErrorDialog("Error", "Failed to load category date");
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
+				}
+			});
 			getController().stop();
 			return;
 		}

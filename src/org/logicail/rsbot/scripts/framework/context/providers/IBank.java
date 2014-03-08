@@ -57,6 +57,16 @@ public class IBank extends Bank {
 		return tabs;
 	}
 
+	public int getNumberOfTabs() {
+		int count = 0;
+		for (int i : getTabCount()) {
+			if (i > 0) {
+				count++;
+			}
+		}
+
+		return count;
+	}
 
 	private static final int[][] TAB_COUNT = {
 			{108, 0}, {108, 10}, {108, 20},
@@ -88,15 +98,11 @@ public class IBank extends Bank {
 					x++;
 				}
 
-				System.out.println();
-				System.out.println("Skip " + skip);
-				System.out.println("Take " + take);
-
 				return skip(select(), skip).limit(take);
 		}
 	}
 
-	private ItemQuery<Item> skip(ItemQuery<Item> query, int count) {
+	public static ItemQuery<Item> skip(ItemQuery<Item> query, int count) {
 		for (int i = 0; i < count; i++) {
 			query.poll();
 		}
@@ -116,11 +122,32 @@ public class IBank extends Bank {
 	}
 
 	public enum BankTab {
-		NONE(-1), TWO(0), THREE(1), FOUR(2), FIVE(3), SIX(4), SEVEN(5), EIGHT(6);
+		NONE(-1, 37),
+		TWO(0, 35),
+		THREE(1, 33),
+		FOUR(2, 31),
+		FIVE(3, 29),
+		SIX(4, 27),
+		SEVEN(5, 25),
+		EIGHT(6, 23),
+		NINE(7, 21);
 		private final int i;
+		private final int bankWidget;
 
-		BankTab(int i) {
+		BankTab(int i, int bankWidget) {
 			this.i = i;
+			this.bankWidget = bankWidget;
+		}
+
+		public boolean exists(IMethodContext ctx) {
+			if (this == NONE) {
+				return true;
+			}
+			return ctx.bank.getNumberOfTabs() >= ordinal();
+		}
+
+		public Component getWidget(IMethodContext ctx) {
+			return ctx.widgets.get(Bank.WIDGET, bankWidget);
 		}
 
 		public int getI() {

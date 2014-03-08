@@ -65,12 +65,14 @@ public class TabTransferHandler extends TransferHandler {
 					listModel.add(index++, values[i]);
 				}
 			} else {
-				// If the items go beyond the end of the current
-				// list, add them in.
-				if (index < listModel.getSize()) {
-					listModel.set(index++, values[i]);
+				if (listModel instanceof SortedListModel) {
+					listModel.addElement(values[i]);
 				} else {
-					listModel.add(index++, values[i]);
+					if (index < listModel.getSize()) {
+						listModel.set(index++, values[i]);
+					} else {
+						listModel.add(index++, values[i]);
+					}
 				}
 			}
 		}
@@ -83,8 +85,13 @@ public class TabTransferHandler extends TransferHandler {
 		DefaultListModel listModel = (DefaultListModel) source.getModel();
 
 		if (action == TransferHandler.MOVE) {
-			for (int i = indices.length - 1; i >= 0; i--) {
-				listModel.remove(indices[i]);
+			for (Object o : source.getSelectedValues()) {
+				final int i = listModel.lastIndexOf(o);
+				if (i > -1) {
+					if (listModel.indexOf(o) != i) {
+						listModel.remove(i);
+					}
+				}
 			}
 		}
 

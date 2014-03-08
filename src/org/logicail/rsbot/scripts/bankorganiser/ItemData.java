@@ -1,5 +1,7 @@
 package org.logicail.rsbot.scripts.bankorganiser;
 
+import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -15,7 +17,7 @@ import java.util.*;
 public class ItemData {
 	public static final Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
 	private static final Map<Integer, String> itemToCategory = new HashMap<Integer, String>();
-	private static final Map<String, Set<Integer>> categoryToItems = new LinkedHashMap<String, Set<Integer>>();
+	private static final Map<String, LinkedHashSet<Integer>> categoryToItems = new LinkedHashMap<String, LinkedHashSet<Integer>>();
 	private static String ITEMDATA_ADDRESS = "http://logicail.co.uk/resources/items.dat";
 	private static int version = -1;
 	private static boolean loaded;
@@ -39,8 +41,8 @@ public class ItemData {
 			connection.addRequestProperty("User-Agent", useragent);
 			connection.setRequestProperty("Connection", "close");
 
-			connection.setConnectTimeout(3000);
-			connection.setReadTimeout(3000);
+			connection.setConnectTimeout(10000);
+			connection.setReadTimeout(10000);
 
 			connection.setDoInput(true);
 			connection.setDoOutput(false);
@@ -54,13 +56,13 @@ public class ItemData {
 			}
 			int numberCategories = data.readInt();
 			for (int i = 0; i < numberCategories; i++) {
-				final String category = data.readUTF();
+				final String category = BankOrganiserInterface.prettyName(data.readUTF());
 				final int ids = data.readInt();
 				for (int j = 0; j < ids; j++) {
 					final int id = data.readUnsignedShort();
 					itemToCategory.put(id, category);
 					if (!categoryToItems.containsKey(category)) {
-						categoryToItems.put(category, new HashSet<Integer>());
+						categoryToItems.put(category, new LinkedHashSet<Integer>());
 					}
 					categoryToItems.get(category).add(id);
 				}
@@ -77,5 +79,17 @@ public class ItemData {
 
 	public static int getId(int id) {
 		return mapping.containsKey(id) ? mapping.get(id) : id;
+	}
+
+	public static LinkedHashSet<Integer> getData(List<String> categories) {
+		LinkedHashSet<Integer> result = new LinkedHashSet<Integer>();
+
+		for (String category : categories) {
+			if (categoryToItems.containsKey(category)) {
+				result.addAll(categoryToItems.get(category));
+			}
+		}
+
+		return result;
 	}
 }

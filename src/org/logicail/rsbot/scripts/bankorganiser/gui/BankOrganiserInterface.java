@@ -5,6 +5,11 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.logicail.rsbot.scripts.bankorganiser.ItemData;
 import org.logicail.rsbot.scripts.bankorganiser.LogBankOrganiser;
+import org.logicail.rsbot.scripts.bankorganiser.tasks.MoveToTabTask;
+import org.logicail.rsbot.scripts.bankorganiser.tasks.OpenBank;
+import org.logicail.rsbot.scripts.bankorganiser.tasks.SortTabTask;
+import org.logicail.rsbot.scripts.framework.context.providers.IBank;
+import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.SortedListModel;
 
 import javax.swing.*;
@@ -29,6 +34,7 @@ import java.util.List;
  */
 public class BankOrganiserInterface extends JFrame {
 	private static final String SETTINGS_INI = "LogBankOrganiser.ini";
+	private static final int MIN_TAB_WIDTH = 190;
 	private final LogBankOrganiser script;
 	private JTabbedPane tabbedPane;
 
@@ -56,7 +62,7 @@ public class BankOrganiserInterface extends JFrame {
 	private boolean startPressed;
 	private JButton loadButton;
 	private JButton saveButton;
-	private List<JList> tabs = new ArrayList<JList>(8);
+	private final List<JList> tabs = new ArrayList<JList>(8);
 
 	public BankOrganiserInterface(LogBankOrganiser script) {
 		this.script = script;
@@ -80,8 +86,8 @@ public class BankOrganiserInterface extends JFrame {
 		load();
 
 		pack();
-		setVisible(true);
 		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 
 	private JComponent getBottomPanel() {
@@ -91,10 +97,6 @@ public class BankOrganiserInterface extends JFrame {
 		gbc.weightx = 1;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		JLabel label = new JLabel("Instructions..............", JLabel.CENTER);
-		label.setFont(label.getFont().deriveFont(Font.BOLD));
-		inner.add(label, gbc);
 		gbc.gridwidth = 1;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 2, 2, 2);
@@ -115,13 +117,34 @@ public class BankOrganiserInterface extends JFrame {
 		inner.setBorder(new EmptyBorder(10, 0, 10, 0));
 
 
-		tabbedPane.addTab("Categories", categoryTab);
+		//tabbedPane.addTab("Categories", categoryTab);
 //		tabbedPane.addTab("House", houseTab);
 //		tabbedPane.addTab("Banking", bankTab);
 //		tabbedPane.addTab("Summoning", getSummoningTab());
 //		tabbedPane.addTab("Other", getOtherTab());
 
-		inner.add(tabbedPane, BorderLayout.CENTER);
+
+		JPanel instructions = new JPanel(new BorderLayout());
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
+		sb.append("<strong><u>Instructions</u></strong>");
+		sb.append("<p>\u2022 Drag or right click on categories to move them to your desired tab</p>");
+		sb.append("<p>\u2022 Drag categories to reorder them within a tab</p>");
+		sb.append("<p>\u2022 Each tab will be ordered with each category in alphabetical order,<br>&nbsp;&nbsp;&nbsp;&nbsp;i.e. Arrows, Bolts. Will order all the Arrows alphabetically followed by the Bolts alphabetically</p>");
+		sb.append("<p>\u2022 Items that could not be categorised will be moved to \"Tab 0\"</p>");
+		sb.append("<p></p>");
+		sb.append("<strong><u>After clicking start</u></strong>");
+		sb.append("<p>\u2022 The script will move all items to the correct tabs</p>");
+		sb.append("<p>\u2022 Once the items are on the correct tabs it will then sort each tab</p>");
+		sb.append("<br></html");
+		final JLabel textArea = new JLabel(sb.toString());
+
+		instructions.add(textArea, BorderLayout.CENTER);
+
+		inner.add(instructions, BorderLayout.NORTH);
+
+		inner.add(categoryTab, BorderLayout.CENTER);
+
 		return inner;
 	}
 
@@ -137,22 +160,6 @@ public class BankOrganiserInterface extends JFrame {
 		return inner;
 	}
 
-	private String prettyName(String value) {
-		if (value == null) {
-			return "null";
-		}
-
-		StringBuilder sb = new StringBuilder(value.length());
-		if (value.length() > 0) {
-			sb.append(Character.toUpperCase(value.charAt(0)));
-		}
-		if (value.length() > 1) {
-			sb.append(value.substring(1).toLowerCase());
-		}
-
-		return sb.toString().replace('_', ' ');
-	}
-
 	private void initComponents() {
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -166,7 +173,8 @@ public class BankOrganiserInterface extends JFrame {
 		});
 
 		for (String category : ItemData.getCategorys()) {
-			tab0model.addElement(prettyName(category));
+			//tab0model.addElement(prettyName(category));
+			tab0model.addElement(category);
 		}
 
 		tabs.add(tab0 = new JList(tab0model));
@@ -192,9 +200,7 @@ public class BankOrganiserInterface extends JFrame {
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (script != null) {
-					startPressed = true;
-				}
+				start();
 			}
 		});
 		loadButton = new JButton("Load Settings");
@@ -220,8 +226,8 @@ public class BankOrganiserInterface extends JFrame {
 		JPanel uncategorised = new JPanel(new BorderLayout());
 		uncategorised.setBorder(new CompoundBorder(new TitledBorder("Tab 0 (uncategorised)"), new EmptyBorder(5, 5, 5, 5)));
 		JScrollPane uncategorisedScrollPane = new JScrollPane(tab0);
-		uncategorised.setPreferredSize(new Dimension(200, 100));
-		uncategorised.setMinimumSize(new Dimension(200, 100));
+		uncategorised.setPreferredSize(new Dimension(MIN_TAB_WIDTH, 100));
+		uncategorised.setMinimumSize(new Dimension(MIN_TAB_WIDTH, 100));
 		uncategorised.add(uncategorisedScrollPane);
 		panel.add(uncategorised, BorderLayout.WEST);
 
@@ -250,8 +256,8 @@ public class BankOrganiserInterface extends JFrame {
 
 		panel.add(scroll, BorderLayout.CENTER);
 
-		tabs.setPreferredSize(new Dimension(9 * 200, 100));
-		tabs.setMinimumSize(new Dimension(9 * 200, 100));
+		tabs.setPreferredSize(new Dimension(8 * MIN_TAB_WIDTH, 100));
+		tabs.setMinimumSize(new Dimension(8 * MIN_TAB_WIDTH, 100));
 
 		return panel;
 	}
@@ -268,24 +274,29 @@ public class BankOrganiserInterface extends JFrame {
 		}
 	}
 
+	public static String prettyName(String value) {
+		if (value == null) {
+			return "null";
+		}
+
+		StringBuilder sb = new StringBuilder(value.length());
+		if (value.length() > 0) {
+			sb.append(Character.toUpperCase(value.charAt(0)));
+		}
+		if (value.length() > 1) {
+			sb.append(value.substring(1).toLowerCase());
+		}
+
+		return sb.toString().replace('_', ' ');
+	}
+
 	private void save() {
 		if (script == null) {
 			return;
 		}
 
 		final Properties settings = new Properties();
-		LinkedHashMap<Integer, List<String>> map = new LinkedHashMap<Integer, List<String>>();
-
-		for (int i = 1; i < tabs.size(); i++) {
-			JList tab = tabs.get(i);
-			DefaultListModel model = (DefaultListModel) tab.getModel();
-			if (!map.containsKey(i)) {
-				map.put(i, new ArrayList<String>());
-			}
-			for (Object o : model.toArray()) {
-				map.get(i).add(String.valueOf(o));
-			}
-		}
+		LinkedHashMap<Integer, List<String>> map = getTabContents(1);
 
 		JsonObject object = new JsonObject();
 		int i = 1;
@@ -307,6 +318,64 @@ public class BankOrganiserInterface extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void start() {
+		if (script == null) {
+			return;
+		}
+
+		if (startPressed) {
+			script.getController().stop();
+		}
+
+		script.tree.clear();
+
+		script.status = "";
+
+		List<Node<LogBankOrganiser>> nodes = new ArrayList<Node<LogBankOrganiser>>();
+
+		nodes.add(new OpenBank(script));
+
+		final IBank.BankTab[] bankTabs = IBank.BankTab.values();
+
+		List<LinkedHashSet<Integer>> result = new ArrayList<LinkedHashSet<Integer>>();
+
+		LinkedHashMap<Integer, List<String>> map = getTabContents(0);
+		int i = 0;
+		for (Map.Entry<Integer, List<String>> entry : map.entrySet()) {
+			if (i > 0 && entry.getValue().isEmpty()) {
+				continue;
+			}
+			result.add(ItemData.getData(entry.getValue()));
+			i++;
+		}
+
+		final MoveToTabTask moveToTabTask = new MoveToTabTask(script, result);
+		nodes.add(moveToTabTask);
+		nodes.add(new SortTabTask(script, moveToTabTask));
+
+		for (Node<LogBankOrganiser> node : nodes) {
+			script.tree.add(node);
+		}
+
+		startPressed = true;
+	}
+
+	private LinkedHashMap<Integer, List<String>> getTabContents(int start) {
+		LinkedHashMap<Integer, List<String>> map = new LinkedHashMap<Integer, List<String>>();
+
+		for (int i = start; i < tabs.size(); i++) {
+			JList tab = tabs.get(i);
+			DefaultListModel model = (DefaultListModel) tab.getModel();
+			if (!map.containsKey(i)) {
+				map.put(i, new ArrayList<String>());
+			}
+			for (Object o : model.toArray()) {
+				map.get(i).add(String.valueOf(o));
+			}
+		}
+		return map;
 	}
 
 	private void load() {
@@ -367,17 +436,6 @@ public class BankOrganiserInterface extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				BankOrganiserInterface gui = new BankOrganiserInterface(null);
-				gui.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-				gui.setVisible(true);
-			}
-		});
-	}
-
 	public void moveToTab(JList source, JList destination) {
 		for (Object o : source.getSelectedValues()) {
 			final ListModel sourceModel = source.getModel();
@@ -397,5 +455,16 @@ public class BankOrganiserInterface extends JFrame {
 
 	private boolean remove(ListModel model, Object element) {
 		return ((DefaultListModel) model).removeElement(element);
+	}
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				BankOrganiserInterface gui = new BankOrganiserInterface(null);
+				gui.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+				gui.setVisible(true);
+			}
+		});
 	}
 }
