@@ -8,7 +8,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomSto
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleLodestone;
-import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
@@ -17,6 +16,7 @@ import org.powerbot.script.util.SkillData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -54,8 +54,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	private SkillData skillData = null;
 
 	@Override
-	public LinkedProperties getPaintInfo() {
-		final LinkedProperties properties = new LinkedProperties();
+	public LinkedHashMap<Object, Object> getPaintInfo() {
+		final LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
 		properties.put("Not everything tested", "Report errors on forum");
 
 		if (ctx.game.isLoggedIn()) {

@@ -1,13 +1,13 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.powerbot.event.PaintListener;
-import org.powerbot.script.AbstractScript;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Painter extends IMethodProvider implements PaintListener {
 	// Public encase want to load custom font
@@ -19,14 +19,14 @@ public class Painter extends IMethodProvider implements PaintListener {
 	private final String title;
 	private final Point location = new Point(50, 220);
 	private final Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
-	private LinkedProperties properties;
+	private LinkedHashMap<Object, Object> properties;
 
-	public Painter(IMethodContext context, AbstractScript script) {
-		super(context);
+	public Painter(LogicailScript script) {
+		super(script.ctx);
 		title = String.format("%s v%s", script.getName(), script.getVersion());
 	}
 
-	public Painter properties(LinkedProperties properties) {
+	public Painter properties(LinkedHashMap<Object, Object> properties) {
 		this.properties = properties;
 		return this;
 	}
@@ -57,17 +57,15 @@ public class Painter extends IMethodProvider implements PaintListener {
 
 		y += 10;
 		g.drawLine(x - 5, y, x + backgroundRectangle.width - 15, y);
-		y += 15;
+		y += 20;
 
 		// Properties
 		if (properties != null) {
 			g.setFont(FONT_SMALL);
 			g.setColor(Color.WHITE);
-			final Enumeration<Object> keys = properties.keys();
 			fontMetrics = g.getFontMetrics();
-			while (keys.hasMoreElements()) {
-				final Object element = keys.nextElement();
-				final String string = String.format("%s: %s", element, properties.get(element));
+			for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+				final String string = String.format("%s: %s", entry.getKey(), entry.getValue());
 				width = Math.max(width, fontMetrics.stringWidth(string));
 				g.drawString(string, x, y);
 				y += 15;
@@ -78,7 +76,7 @@ public class Painter extends IMethodProvider implements PaintListener {
 
 		// Resize background
 		backgroundRectangle.width = width + 20;
-		backgroundRectangle.height = y - location.y;
+		backgroundRectangle.height = y - location.y - 5;
 	}
 
 	private void drawMouse(Graphics2D g2d) {

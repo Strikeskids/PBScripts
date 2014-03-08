@@ -95,4 +95,8 @@ public class Link extends MethodProvider {
 
 		return true;
 	}
+
+	public int getId() {
+		return id;
+	}
 }

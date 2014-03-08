@@ -5,7 +5,6 @@ import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.gopwatertalisman.tasks.BankingTask;
 import org.logicail.rsbot.scripts.gopwatertalisman.tasks.ExchangeTask;
 import org.logicail.rsbot.util.ErrorDialog;
-import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
@@ -13,7 +12,8 @@ import org.powerbot.script.util.GeItem;
 import org.powerbot.script.util.Timer;
 
 import java.awt.*;
-import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -46,8 +46,8 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 	}
 
 	@Override
-	public LinkedProperties getPaintInfo() {
-		final LinkedProperties properties = new LinkedProperties();
+	public LinkedHashMap<Object, Object> getPaintInfo() {
+		final LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
 
 		final long runtime = getRuntime();
 		final float time = runtime / 3600000f;
@@ -74,11 +74,9 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 		if (messageEvent.getId() == 0 && messageEvent.getMessage().equals("You do not have enough tokens to buy that item.")) {
 			try {
 				final StringBuilder sb = new StringBuilder();
-				final LinkedProperties properties = getPaintInfo();
-				final Enumeration<Object> keys = properties.keys();
-				while (keys.hasMoreElements()) {
-					final Object element = keys.nextElement();
-					sb.append(String.format("  %s: %s\n", element, properties.get(element)));
+				final LinkedHashMap<Object, Object> properties = getPaintInfo();
+				for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+					sb.append(String.format("  %s: %s\n", entry.getKey(), entry.getValue()));
 				}
 
 				EventQueue.invokeLater(new Runnable() {

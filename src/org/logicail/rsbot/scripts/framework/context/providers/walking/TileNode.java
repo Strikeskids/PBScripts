@@ -13,6 +13,11 @@ import java.util.HashSet;
  */
 public class TileNode implements Locatable {
 	private final int id;
+
+	public int getId() {
+		return id;
+	}
+
 	private Tile location;
 
 	private HashSet<Link> neighbours = new HashSet<Link>();
@@ -53,5 +58,13 @@ public class TileNode implements Locatable {
 
 	public void add(Link link) {
 		neighbours.add(link);
+	}
+
+	@Override
+	public String toString() {
+		return "TileNode{" +
+				"id=" + id +
+				", location=" + location +
+				'}';
 	}
 }

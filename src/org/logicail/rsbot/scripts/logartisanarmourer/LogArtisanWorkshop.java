@@ -21,7 +21,6 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.LayTracks;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.TakeIngots;
 import org.logicail.rsbot.util.ErrorDialog;
-import org.logicail.rsbot.util.LinkedProperties;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
@@ -32,6 +31,7 @@ import org.powerbot.script.wrappers.Area;
 import org.powerbot.script.wrappers.Tile;
 
 import javax.swing.*;
+import java.util.LinkedHashMap;
 
 @Manifest(
 		name = "Log Artisan Workshop",
@@ -185,8 +185,8 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	}
 
 	@Override
-	public LinkedProperties getPaintInfo() {
-		LinkedProperties properties = new LinkedProperties();
+	public LinkedHashMap<Object, Object> getPaintInfo() {
+		LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
 
 		if (ctx.game.isLoggedIn()) {
 			if (skillData == null) {

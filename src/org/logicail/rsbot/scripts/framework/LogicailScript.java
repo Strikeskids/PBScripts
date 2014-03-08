@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.framework;
 
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.tasks.Tree;
-import org.logicail.rsbot.util.LinkedProperties;
 import org.logicail.rsbot.util.Painter;
 import org.powerbot.event.PaintListener;
 import org.powerbot.script.PollingScript;
@@ -28,7 +27,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 		this.ctx = new IMethodContext(super.ctx, this);
 
 		tree = new Tree<T>((T) this);
-		paint = new Painter(ctx, this);
+		paint = new Painter(this);
 
 		getExecQueue(State.STOP).add(new Runnable() {
 			@Override
@@ -48,7 +47,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	 *
 	 * @return
 	 */
-	public abstract LinkedProperties getPaintInfo();
+	public abstract java.util.LinkedHashMap<Object, Object> getPaintInfo();
 
 	@Override
 	public int poll() {
@@ -66,13 +65,4 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	public void repaint(Graphics g) {
 		paint.properties(getPaintInfo()).repaint(g);
 	}
-
-	/**
-	 * Submit task to executor (runs separate to script poll)
-	 *
-	 * @param task
-	 */
-	/*public void submit(Runnable task) {
-		ctx.submit(task);
-	}*/
 }

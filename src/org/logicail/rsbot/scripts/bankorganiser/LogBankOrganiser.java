@@ -1,0 +1,53 @@
+package org.logicail.rsbot.scripts.bankorganiser;
+
+import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
+import org.logicail.rsbot.scripts.framework.LogicailScript;
+import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.powerbot.script.Manifest;
+
+import javax.swing.*;
+import java.util.LinkedHashMap;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Logicail
+ * Date: 02/03/14
+ * Time: 14:05
+ */
+@Manifest(name = "Log Bank Organiser", description = "Organises your bank")
+public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
+	@Override
+	public LinkedHashMap<Object, Object> getPaintInfo() {
+		final LinkedHashMap<Object, Object> map = new LinkedHashMap<Object, Object>();
+
+		map.put("Status", "");
+
+		return map;
+	}
+
+	@Override
+	public void start() {
+		ItemData.getId(0);
+		if (!ItemData.loaded()) {
+			getController().stop();
+			return;
+		}
+
+		getController().getExecutor().offer(new Task<LogBankOrganiser>(this) {
+			@Override
+			public void run() {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							gui = new BankOrganiserInterface(LogBankOrganiser.this);
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							getController().stop();
+						}
+					}
+				});
+			}
+		});
+	}
+}

@@ -26,18 +26,6 @@ public class BrokenPipes extends RespectTask {
 			new Pipe(29762, 16),
 	};
 
-	/*public static int getNumFaces(AbstractModel model) {
-		if (model == null) {
-			return -1;
-		}
-
-		if (model instanceof ModelCapture) {
-			return ((ModelCapture) model).getFaces();
-		}
-
-		return Math.min(model.getIndices1().length, Math.min(model.getIndices2().length, model.getIndices3().length));
-	}*/
-
 	public BrokenPipes(LogArtisanWorkshop script) {
 		super(script);
 	}
@@ -57,7 +45,7 @@ public class BrokenPipes extends RespectTask {
 	private Pipe getPipe() {
 		for (Pipe pipe : pipes) {
 			final GameObject object = pipe.get();
-			if (object.getId() > -1) {
+			if (object.isValid()) {
 				return pipe;
 			}
 		}
@@ -68,21 +56,20 @@ public class BrokenPipes extends RespectTask {
 	public void run() {
 		final Pipe pipe = getPipe();
 		if (pipe != null) {
-			for (GameObject object : ctx.objects.first()) {
-				if (ctx.camera.prepare(object) && object.interact("Mend")) {
-					options.status = "Repairing pipe";
-					options.isSmithing = false;
-					sleep(1000, 2000);
+			final GameObject object = pipe.get();
+			if (ctx.camera.prepare(object) && object.interact("Mend")) {
+				options.status = "Repairing pipe";
+				options.isSmithing = false;
+				sleep(1000, 2000);
 
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return !pipe.needsFixing();
-						}
-					}, Random.nextInt(600, 800), Random.nextInt(8, 13));
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !pipe.needsFixing();
+					}
+				}, Random.nextInt(600, 800), Random.nextInt(8, 13));
 
-					sleep(50, 500);
-				}
+				sleep(50, 500);
 			}
 		}
 	}

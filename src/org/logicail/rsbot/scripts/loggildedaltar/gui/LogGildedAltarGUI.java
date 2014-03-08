@@ -36,15 +36,9 @@ import java.util.List;
  * Time: 12:49
  */
 public class LogGildedAltarGUI extends JFrame {
-	private final Comparator<Path> pathComparator = new Comparator<Path>() {
-		@Override
-		public int compare(Path o1, Path o2) {
-			return o1.getName().compareTo(o2.getName());
-		}
-	};
-	private final SortedListModel<Path> houseDisabledModel = new SortedListModel<Path>(pathComparator);
+	private final DefaultListModel houseDisabledModel = new SortedListModel();
 	private final DefaultListModel houseEnabledModel = new DefaultListModel();
-	private final SortedListModel<Path> bankDisabledModel = new SortedListModel<Path>(pathComparator);
+	private final DefaultListModel bankDisabledModel = new SortedListModel();
 	private final DefaultListModel bankEnabledModel = new DefaultListModel();
 	private final LogGildedAltar script;
 	private final LogGildedAltarOptions options;
@@ -107,13 +101,13 @@ public class LogGildedAltarGUI extends JFrame {
 						if (p.isEnabledByDefault())
 							bankEnabledModel.addElement(p);
 						else
-							bankDisabledModel.add(p);
+							bankDisabledModel.addElement(p);
 						break;
 					case HOME:
 						if (p.isEnabledByDefault())
 							houseEnabledModel.addElement(p);
 						else
-							houseDisabledModel.add(p);
+							houseDisabledModel.addElement(p);
 						break;
 				}
 			}
@@ -538,7 +532,7 @@ public class LogGildedAltarGUI extends JFrame {
 		bankTab = getBankingTab();
 	}
 
-	private void add(JList listDisabled, SortedListModel<Path> disabledModel, DefaultListModel enabledModel) {
+	private void add(JList listDisabled, DefaultListModel disabledModel, DefaultListModel enabledModel) {
 		int index = listDisabled.getSelectedIndex();
 		if (index > -1) {
 			Path selectedValue = (Path) listDisabled.getSelectedValue();
@@ -878,11 +872,11 @@ public class LogGildedAltarGUI extends JFrame {
 		return sb.toString().replace('_', ' ');
 	}
 
-	private void remove(JList listEnabled, SortedListModel<Path> disabledModel, DefaultListModel enabledModel) {
+	private void remove(JList listEnabled, DefaultListModel disabledModel, DefaultListModel enabledModel) {
 		int index = listEnabled.getSelectedIndex();
 		if (listEnabled.getSelectedIndex() > -1) {
 			Path selectedValue = (Path) listEnabled.getSelectedValue();
-			disabledModel.add(selectedValue);
+			disabledModel.addElement(selectedValue);
 			enabledModel.removeElement(selectedValue);
 			if (index > 0 && index >= enabledModel.getSize())
 				listEnabled.setSelectedIndex(index - 1);
@@ -1229,10 +1223,10 @@ public class LogGildedAltarGUI extends JFrame {
 					if (p.isEnabledInList()) {
 						switch (p.getPathType()) {
 							case BANK:
-								bankDisabledModel.add(p);
+								bankDisabledModel.addElement(p);
 								break;
 							case HOME:
-								houseDisabledModel.add(p);
+								houseDisabledModel.addElement(p);
 								break;
 						}
 					}
