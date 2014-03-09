@@ -107,18 +107,18 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 		script.getController().stop();
 	}
 
-	private boolean swap(final Item item, Item d) {
-		script.status = "Swap '" + item.getName() + "' and " + d.getName();
+	private boolean swap(final Item item, Item destination) {
+		script.status = "Swap '" + item.getName() + "' and '" + destination.getName() + "'";
 		final int id = item.getId();
 
-		Component destination = d.getComponent();
+		Component destinationComponent = destination.getComponent();
 
-		if (!destination.isValid()) {
+		if (!destinationComponent.isValid()) {
 			return false;
 		}
 
-		final Component value = this.ctx.widgets.get(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
-		if (!value.isValid() || !item.isValid()) {
+		final Component bankContainer = this.ctx.widgets.get(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
+		if (!bankContainer.isValid() || !item.isValid()) {
 			return false;
 		}
 		final Component component = item.getComponent();
@@ -130,12 +130,18 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 		}, 200, 10)) {
 			return false;
 		}
-		final Rectangle viewportRect = value.getViewportRect();
+		final Rectangle viewportRect = bankContainer.getViewportRect();
 		if (!viewportRect.contains(component.getViewportRect()) && !this.ctx.widgets.scroll(component, this.ctx.widgets.get(762, 40), viewportRect.contains(this.ctx.mouse.getLocation()))) {
 			return false;
 		}
 
-		if (!ctx.mouse.drag(item.getNextPoint(), destination.getNextPoint(), true) || !Condition.wait(new Callable<Boolean>() {
+		if (!viewportRect.contains(destinationComponent.getViewportRect())) {
+			// Got to handle destination not on screen
+			script.status = "Can't move item, not both in view!";
+			return false;
+		}
+
+		if (!ctx.mouse.drag(item.getNextPoint(), destinationComponent.getNextPoint(), true) || !Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return item.getComponent().getItemId() != id;

@@ -6,6 +6,7 @@ import org.powerbot.script.methods.Bank;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Item;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -39,6 +40,9 @@ public class IBank extends Bank {
 	}
 
 	public boolean setSwapMode(final boolean insert) {
+		if (true) {
+			throw new NotImplementedException();
+		}
 		return isInsertMode() == insert || (ctx.widgets.get(762, 8).click() && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
