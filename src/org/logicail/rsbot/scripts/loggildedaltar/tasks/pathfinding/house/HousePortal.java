@@ -7,14 +7,11 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttri
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.logicail.rsbot.util.DoorOpener;
-import org.powerbot.script.lang.BasicNamedQuery;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.ChatOption;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,18 +80,7 @@ public class HousePortal extends NodePath {
 	@Override
 	protected boolean doSmall() {
 		if (LocationAttribute.YANILLE_HOUSE.isInLargeArea(ctx)) {
-			final Tile location = ctx.players.local().getLocation();
-			if (location.x < 2539 && location.y > 3072 && location.y < 3112) {
-				BasicNamedQuery<GameObject> door = script.yanilleLodestone.nextDoor();
-				if (!door.isEmpty()) {
-					door.each(new DoorOpener(ctx));
-					door = script.yanilleLodestone.nextDoor();
-				}
-
-				if (door.isEmpty()) {
-					enterPortal();
-				}
-			}
+			enterPortal();
 		}
 
 		return super.doSmall();
