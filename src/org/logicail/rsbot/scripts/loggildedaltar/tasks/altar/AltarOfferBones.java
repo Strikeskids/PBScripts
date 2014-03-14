@@ -22,7 +22,6 @@ import java.util.concurrent.Callable;
  */
 public class AltarOfferBones extends LogGildedAltarTask {
 	private static final int ANIMATION_OFFERING = 3705;
-	private int nextOfferingTime = Random.nextInt(4000, 6000);
 
 	public AltarOfferBones(LogGildedAltar script) {
 		super(script);
@@ -35,14 +34,20 @@ public class AltarOfferBones extends LogGildedAltarTask {
 
 	@Override
 	public boolean isValid() {
-		return AnimationMonitor.timeSinceAnimation(ANIMATION_OFFERING) > nextOfferingTime
-				&& !getBackpackOffering().isEmpty()
+		return !getBackpackOffering().isEmpty()
 				&& ctx.players.local().getAnimation() != ANIMATION_OFFERING;
 	}
 
 	@Override
 	public void run() {
-		nextOfferingTime = Random.nextGaussian(4000, 6000, 1000);
+		if (Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+			}
+		}, 50, 20)) {
+			return;
+		}
 
 		// Check if current house has altar
 		if (options.useOtherHouse.get() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
@@ -78,7 +83,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		script.log.info(options.status);
 
 		final GameObject altar = script.altarTask.getAltar();
-		if (altar.isValid() && !altar.isOnScreen()) {
+		if (altar.isValid() && !altar.isInViewport()) {
 			ctx.camera.turnTo(altar);
 		}
 

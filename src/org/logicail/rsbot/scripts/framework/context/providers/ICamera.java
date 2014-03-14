@@ -42,7 +42,7 @@ public class ICamera extends Camera {
 		}
 
 		final Interactive targetable = (Interactive) locatable;
-		if (targetable.isOnScreen()) {
+		if (targetable.isInViewport()) {
 			return true;
 		}
 
@@ -61,14 +61,14 @@ public class ICamera extends Camera {
 			}
 		}
 
-		if (!targetable.isOnScreen()) {
+		if (!targetable.isInViewport()) {
 			ctx.camera.turnTo(locatable);
-			if (targetable.isOnScreen()) {
+			if (targetable.isInViewport()) {
 				return true;
 			}
 		} else return true;
 
-		if (!targetable.isOnScreen()) {
+		if (!targetable.isInViewport()) {
 			final Tile tile = getReachableTile(locatable);
 			if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(tile)) {
 				Condition.wait(new Callable<Boolean>() {
@@ -82,7 +82,7 @@ public class ICamera extends Camera {
 			ctx.camera.setPitch(Random.nextInt(0, 40));
 		}
 
-		return targetable.isOnScreen();
+		return targetable.isInViewport();
 	}
 
 	private Tile getReachableTile(Locatable locatable) {

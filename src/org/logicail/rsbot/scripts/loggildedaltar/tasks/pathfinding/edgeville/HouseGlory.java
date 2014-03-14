@@ -10,10 +10,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePa
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.ChatOption;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Player;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.wrappers.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +24,7 @@ import java.util.concurrent.Callable;
  */
 public class HouseGlory extends NodePath {
 	private static final int MOUNTED_GLORY = 13523;
+	private static final int[] MOUNTED_GLORY_BOUNDS_RIGHT = {-100, 100, -840, -584, 128, 256};
 
 	public HouseGlory(LogGildedAltar script) {
 		super(script, Path.EDGEVILLE_MOUNTED_AMULET_OF_GLORY);
@@ -56,7 +54,8 @@ public class HouseGlory extends NodePath {
 					}
 					return Double.compare(IMovement.Euclidean(o1, local), IMovement.Euclidean(o2, local));
 				}
-			}).poll();
+			}).each(Interactive.doSetBounds(MOUNTED_GLORY_BOUNDS_RIGHT)).poll();
+
 			if (!mountedGlory.isValid()) return;
 			final Room gloryRoom = script.roomStorage.getRoom(mountedGlory);
 			final List<Tile> tiles = ctx.movement.getTilesNear(gloryRoom.getArea(), mountedGlory, 3);
@@ -141,7 +140,9 @@ public class HouseGlory extends NodePath {
 		} else {
 			if (!locationAttribute.isInLargeArea(ctx)) {
 				if (ILodestone.Lodestone.EDGEVILLE.isUnlocked(ctx)) {
-					ctx.lodestones.teleport(ILodestone.Lodestone.EDGEVILLE);
+					if (ctx.players.local().getAnimation() == -1) {
+						ctx.lodestones.teleport(ILodestone.Lodestone.EDGEVILLE);
+					}
 				}
 			} else if (!locationAttribute.isInSmallArea(ctx)) {
 				doSmall();

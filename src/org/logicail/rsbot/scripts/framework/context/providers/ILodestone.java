@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.powerbot.script.methods.Game;
 import org.powerbot.script.methods.Menu;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.methods.MethodProvider;
@@ -22,7 +23,7 @@ import java.util.concurrent.Callable;
  */
 public class ILodestone extends IMethodProvider {
 	private final static int TELEPORT_INTERFACE = 1092;
-	private final static int TELEPORT_INTERFACE_HOVERED = 61;
+	private final static int TELEPORT_INTERFACE_HOVERED = 42;
 	private final static int TELEPORT_INTERFACE_CHILD = 38;
 	private final static int OPEN_TELEPORT_INTERFACE = 1465;
 	private final static int OPEN_TELEPORT_INTERFACE_CHILD = 10;
@@ -97,7 +98,7 @@ public class ILodestone extends IMethodProvider {
 			}
 		}
 
-		return interacted && (interruptible || Condition.wait(new TeleportCondition(ctx, lodestone), Random.nextInt(400, 600), Random.nextInt(33, 40)));
+		return interacted && (interruptible || Condition.wait(new TeleportCondition(ctx, lodestone), 500, Random.nextInt(33, 40)));
 	}
 
 	private Lodestone getHighlightedLodestone() {
@@ -109,6 +110,10 @@ public class ILodestone extends IMethodProvider {
 			final int y = point.y + 5;
 			for (Lodestone lodestone : Lodestone.values()) {
 				final Point absoluteLocation = lodestone.getComponent(ctx).getAbsoluteLocation();
+				//if (lodestone == Lodestone.EDGEVILLE) {
+				//	System.out.println("x == absoluteLocation.x && y == absoluteLocation.y");
+				//	System.out.println(x + " == " + absoluteLocation.x + " && " + y + " == " + absoluteLocation.y);
+				//}
 				if (x == absoluteLocation.x && y == absoluteLocation.y) {
 					return lodestone;
 				}
@@ -164,9 +169,9 @@ public class ILodestone extends IMethodProvider {
 		Component getComponent(MethodContext ctx) {
 			switch (this) {
 				case BANDIT_CAMP:
-					return ctx.widgets.get(TELEPORT_INTERFACE, 7);
+					return ctx.widgets.get(TELEPORT_INTERFACE, 9);
 				case LUNAR_ISLE:
-					return ctx.widgets.get(TELEPORT_INTERFACE, 39);
+					return ctx.widgets.get(TELEPORT_INTERFACE, 20);
 				default:
 					return ctx.widgets.get(TELEPORT_INTERFACE, 19 + ordinal());
 			}
@@ -203,7 +208,7 @@ public class ILodestone extends IMethodProvider {
 		@Override
 		public Boolean call() throws Exception {
 			final Player local = ctx.players.local();
-			return local != null && local.getAnimation() == -1 && ctx.movement.getDistance(local, lodestone.getLocation()) < 10;
+			return local != null && local.getAnimation() == -1 && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && lodestone.getLocation().getMatrix(ctx).isOnMap();
 		}
 	}
 }

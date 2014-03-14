@@ -64,7 +64,7 @@ public class YanillePortalWalk extends NodePath {
 				}
 			}
 
-			return new TilePath(ctx, PATH_TO_PORTAL).randomize(2, 2).traverse();
+			return new TilePath(ctx, PATH_TO_PORTAL).randomize(1, 2).traverse();
 		}
 	}
 

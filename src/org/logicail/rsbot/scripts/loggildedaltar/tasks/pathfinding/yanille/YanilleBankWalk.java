@@ -67,7 +67,7 @@ public class YanilleBankWalk extends NodePath {
 				}
 			}
 
-			return new TilePath(ctx, PATH_TO_BANK).randomize(2, 2).traverse();
+			return new TilePath(ctx, PATH_TO_BANK).randomize(1, 1).traverse();
 		}
 	}
 

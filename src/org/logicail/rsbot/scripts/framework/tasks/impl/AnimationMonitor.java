@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AnimationMonitor<T extends LogicailScript<T>> extends LoopTask<T> {
 	private static final Map<Integer, Long> map = new ConcurrentHashMap<Integer, Long>();
+	private long nextClear = System.currentTimeMillis() + 600000;
 
 	/**
 	 * Time since since animation
@@ -50,6 +51,11 @@ public class AnimationMonitor<T extends LogicailScript<T>> extends LoopTask<T> {
 
 	public int loop() {
 		try {
+			if (System.currentTimeMillis() > nextClear) {
+				nextClear = System.currentTimeMillis() + 600000;
+				map.clear();
+			}
+
 			if (ctx.game.isLoggedIn()) {
 				put(ctx.players.local().getAnimation());
 			}
