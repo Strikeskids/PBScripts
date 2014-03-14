@@ -32,6 +32,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 		getExecQueue(State.STOP).add(new Runnable() {
 			@Override
 			public void run() {
+				tree.clear();
 				try {
 					if (gui != null && gui.isVisible()) {
 						gui.dispose();
