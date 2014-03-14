@@ -81,23 +81,14 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 		return false;
 	}
 
-//	private ItemQuery<Item> getItemsInWrongTab(IBank.BankTab tab, final HashSet<Integer> correctIds) {
-//		return ctx.bank.getItemsInTab(tab).select(new Filter<Item>() {
-//			@Override
-//			public boolean accept(Item item) {
-//				return !correctIds.contains(ItemData.getId(item.getId()));
-//			}
-//		});
-//	}
-
 	@Override
 	public void run() {
-		if (!createTabs()) {
+		cleanUpMapping();
+
+		// Set bank to swap mode
+		if (!ctx.bank.setSwapMode(false)) {
 			return;
 		}
-		
-		// Set bank to swap mode
-		ctx.bank.setSwapMode(false);
 
 		for (int i = 0; i < mapping.size(); i++) {
 			final LinkedHashSet<Integer> set = mapping.get(i);
@@ -137,36 +128,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 		}
 	}
 
-	boolean removedInvalidTabs = false;
-
-	/**
-	 * Setup tabs
-	 */
-	private boolean createTabs() {
-		cleanUpMapping();
-
-//		final int haveTabs = ctx.bank.getNumberOfTabs() + 1;
-//		final int needTabs = mapping.size();
-//
-//		if (haveTabs < needTabs) {
-//			for (int i = haveTabs; i < mapping.size(); i++) {
-//				final LinkedHashSet<Integer> set = mapping.get(i);
-//				final Item item = ctx.bank.select().select(new Filter<Item>() {
-//					@Override
-//					public boolean accept(Item item) {
-//						return set.contains(ItemData.getId(item.getId()));
-//					}
-//				}).reverse().poll();
-//				if (item.isValid()) {
-//					move(item, getNextTab());
-//					return ctx.bank.getNumberOfTabs() >= needTabs;
-//				}
-//			}
-//		}
-
-//		return ctx.bank.getNumberOfTabs() + 1 >= needTabs;
-		return true;
-	}
+	private boolean removedInvalidTabs = false;
 
 	public void cleanUpMapping() {
 		// Remove tabs you have no items for

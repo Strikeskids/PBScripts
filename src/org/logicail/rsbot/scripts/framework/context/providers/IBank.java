@@ -6,7 +6,6 @@ import org.powerbot.script.methods.Bank;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Component;
 import org.powerbot.script.wrappers.Item;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -20,6 +19,8 @@ import java.util.concurrent.Callable;
 public class IBank extends Bank {
 	public static final int WIDGET_BANK_ITEMS = 54;
 	private static final int WIDGET_BOUNDS = 48;
+	public static final int BANK_SWAP_MODE_BUTTON = 4;
+	private static final int SETTING_SWAP_MODE = 161;
 
 	/**
 	 * Backpack when bank is open
@@ -36,14 +37,11 @@ public class IBank extends Bank {
 	}
 
 	public boolean isInsertMode() {
-		return ctx.settings.get(161, 1) == 1;
+		return ctx.settings.get(SETTING_SWAP_MODE, 1) == 1;
 	}
 
 	public boolean setSwapMode(final boolean insert) {
-		if (true) {
-			throw new NotImplementedException();
-		}
-		return isInsertMode() == insert || (ctx.widgets.get(762, 8).click() && Condition.wait(new Callable<Boolean>() {
+		return isInsertMode() == insert || (ctx.widgets.get(Bank.WIDGET, BANK_SWAP_MODE_BUTTON).click() && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return isInsertMode() == insert;
@@ -79,9 +77,10 @@ public class IBank extends Bank {
 	public int getNumberOfTabs() {
 		int count = 0;
 		for (int i : getTabCount()) {
-			if (i > 0) {
-				count++;
+			if (i == 0) {
+				break;
 			}
+			count++;
 		}
 
 		return count;

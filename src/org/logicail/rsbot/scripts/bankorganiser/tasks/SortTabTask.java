@@ -57,8 +57,10 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			}
 		}
 
-		// Set bank to swap mode
-		ctx.bank.setSwapMode(false);
+		// Set bank to insert mode
+		if (!ctx.bank.setSwapMode(true)) {
+			return;
+		}
 
 		// extra for tab0
 		// Categorys then rest sorted alphabetically
@@ -109,6 +111,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 
 	private boolean swap(final Item item, Item destination) {
 		script.status = "Swap '" + item.getName() + "' and '" + destination.getName() + "'";
+
 		final int id = item.getId();
 
 		Component destinationComponent = destination.getComponent();
@@ -117,27 +120,27 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			return false;
 		}
 
-		final Component bankContainer = this.ctx.widgets.get(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
+		final Component bankContainer = ctx.widgets.get(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
 		if (!bankContainer.isValid() || !item.isValid()) {
 			return false;
 		}
-		final Component component = item.getComponent();
-		if (component.getRelativeLocation().y == 0 && !ctx.bank.setCurrentTab(0) && Condition.wait(new Callable<Boolean>() {
+		final Component itemComponent = item.getComponent();
+		if (itemComponent.getRelativeLocation().y == 0 && !ctx.bank.setCurrentTab(0) && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return component.getRelativeLocation().y != 0;
+				return itemComponent.getRelativeLocation().y != 0;
 			}
 		}, 200, 10)) {
 			return false;
 		}
 		final Rectangle viewportRect = bankContainer.getViewportRect();
-		if (!viewportRect.contains(component.getViewportRect()) && !this.ctx.widgets.scroll(component, this.ctx.widgets.get(762, 40), viewportRect.contains(this.ctx.mouse.getLocation()))) {
+		if (!viewportRect.contains(itemComponent.getViewportRect()) && !ctx.widgets.scroll(itemComponent, ctx.widgets.get(Bank.WIDGET, Bank.COMPONENT_SCROLL_BAR), viewportRect.contains(ctx.mouse.getLocation()))) {
 			return false;
 		}
 
 		if (!viewportRect.contains(destinationComponent.getViewportRect())) {
 			// Got to handle destination not on screen
-			script.status = "Can't move item, not both in view!";
+			System.out.println("Can't move item, not both in view!");
 			return false;
 		}
 
