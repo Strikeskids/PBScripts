@@ -24,7 +24,7 @@ public class ISummoning extends Summoning {
 	public static final int WIDGET_STORE_CLOSE_BUTTON = 21;
 	public static final int WIDGET_STORE_CLOSE_BUTTON_CHILD = 1;
 	public static final int WIDGET_ORB = 1430;
-	public static final int WIDGET_ORB_BUTTON = 5;
+	public static final int WIDGET_ORB_BUTTON = 109;
 	protected final IMethodContext ctx;
 	private final IItemStore familiar;
 	private final IItemStore backpack;

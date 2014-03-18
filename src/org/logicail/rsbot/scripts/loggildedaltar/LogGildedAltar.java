@@ -7,7 +7,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleLodestone;
 import org.powerbot.event.MessageEvent;
 import org.powerbot.event.MessageListener;
 import org.powerbot.script.Manifest;
@@ -30,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.2,
+		version = 6.21,
 		topic = 1141536,
 		authors = {"Logicail"}
 )
@@ -40,7 +39,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	public final HouseHandler houseHandler = new HouseHandler(this);
 	public final HousePortal housePortal = new HousePortal(this);
 	public final RoomStorage roomStorage = new RoomStorage(this);
-	public final YanilleLodestone yanilleLodestone = new YanilleLodestone(this);
 	public final AtomicLong nextSummon = new AtomicLong();
 	public final AtomicBoolean familiarFailed = new AtomicBoolean();
 	private final AtomicInteger currentLevel = new AtomicInteger(-1);
