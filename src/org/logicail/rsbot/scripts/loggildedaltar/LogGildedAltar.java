@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.23,
+		version = 6.231,
 		topic = 1141536,
 		authors = {"Logicail"}
 )
@@ -182,6 +182,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 					options.timesBob.incrementAndGet();
 					options.usedBOB.set(false);
 				} else if (message.contains("your offering.")) {
+					options.TimeLastOffering.set(System.currentTimeMillis());
 					options.bonesOffered.incrementAndGet();
 				}
 		}

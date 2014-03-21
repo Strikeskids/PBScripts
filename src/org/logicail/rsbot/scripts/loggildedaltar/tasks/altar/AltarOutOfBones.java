@@ -56,9 +56,6 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 			options.status = ("Out of bones banking");
 			script.log.info(options.status);
 			script.bankingTask.setBanking();
-		} else {
-			options.TimeLastOffering.set(System.currentTimeMillis());
-			options.status = "Offering bones";
 		}
 	}
 }
