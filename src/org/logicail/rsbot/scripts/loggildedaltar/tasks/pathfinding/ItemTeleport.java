@@ -93,7 +93,12 @@ public class ItemTeleport extends NodePath {
 			}
 
 			if (action.startsWith("Teleport") || action.startsWith("Rub")) {
-				return ctx.combatBar.setExpanded(true) && item.interact(action) && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
+				if (ctx.combatBar.setExpanded(true) && item.hover()) {
+					if (ctx.menu.indexOf(Menu.filter("Operate")) > -1) {
+						return item.interact("Operate") && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
+					}
+				}
+				return item.interact(action) && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
 			}
 		}
 
