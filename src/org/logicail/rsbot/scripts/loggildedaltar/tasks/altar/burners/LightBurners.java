@@ -23,6 +23,8 @@ public class LightBurners extends BurnerAbstract {
 		super(burnersTask);
 	}
 
+	private static final int[] BURNER_BOUNDS = {-128, 128, -556, 0, -128, 128};
+
 	@Override
 	public String toString() {
 		return "LightBurners";
@@ -62,26 +64,41 @@ public class LightBurners extends BurnerAbstract {
 
 		if (!burner.isValid()) {
 			burner = burnersTask.getUnlitLanterns(room).shuffle().poll();
+			if (!burner.isValid()) {
+				return;
+			}
 		}
 
-		if (burner.isValid()) {
-			ctx.camera.turnTo(burner);
+		burner.setBounds(BURNER_BOUNDS);
 
-			if (!burner.isOnScreen()) {
-				options.status = "Walking to incense burner";
-				ctx.movement.walk(burner.getLocation().randomize(1, 1));
-			}
+		ctx.camera.turnTo(burner);
 
-			if (burner.isOnScreen() && burner.interact("Light", "Incense burner")) {
-				sleep(100, 200);
-				final GameObject finalBurner = burner;
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !finalBurner.isValid();
+		if (!burner.isInViewport()) {
+			options.status = "Walking to incense burner";
+			ctx.movement.walk(burner.getLocation().randomize(1, 1));
+			sleep(333, 1200);
+		}
+
+		if (burner.isValid() && burner.isInViewport() && burner.interact("Light", "Incense burner")) {
+			final long start = System.currentTimeMillis();
+			final GameObject finalBurner = burner;
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					if (!finalBurner.isValid()) {
+						return true;
 					}
-				}, Random.nextInt(300, 500), Random.nextInt(6, 12));
-			}
+
+					if (System.currentTimeMillis() - start > 1000) {
+						if (IMovement.Euclidean(finalBurner, ctx.players.local()) < 2) {
+							return ctx.players.local().isIdle();
+						}
+					}
+
+					return false;
+				}
+			}, 300, Random.nextInt(6, 10));
 		}
+
 	}
 }
