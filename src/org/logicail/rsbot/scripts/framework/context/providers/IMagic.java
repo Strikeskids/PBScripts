@@ -36,7 +36,7 @@ public class IMagic extends IMethodProvider {
 					}
 				}, 250, 6);
 			}
-			
+
 			return component.isValid() && component.isVisible() && component.interact("Cast");
 		}
 		return false;

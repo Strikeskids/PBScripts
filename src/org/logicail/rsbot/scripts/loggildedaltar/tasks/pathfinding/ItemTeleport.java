@@ -108,7 +108,12 @@ public class ItemTeleport extends NodePath {
 			}
 		}, 300, Random.nextInt(10, 15));
 
-		return ctx.chat.select().text(destination).poll().select(Random.nextBoolean());
+		return ctx.chat.select().select(new Filter<ChatOption>() {
+			@Override
+			public boolean accept(ChatOption chatOption) {
+				return chatOption.getText().contains(destination);
+			}
+		}).poll().select(Random.nextBoolean());
 	}
 
 	private static boolean itemTeleport(final IMethodContext ctx, final Item item, Hud.Window window, String destination, int tries) {
