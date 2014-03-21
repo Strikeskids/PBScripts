@@ -87,18 +87,18 @@ public class ItemTeleport extends NodePath {
 			return false;
 		}
 
-		for (String action : actions) {
+		for (final String action : actions) {
 			if (action == null) {
 				continue;
 			}
 
 			if (action.startsWith("Teleport") || action.startsWith("Rub")) {
-				if (ctx.combatBar.setExpanded(true) && item.hover()) {
-					if (ctx.menu.indexOf(Menu.filter("Operate")) > -1) {
-						return item.interact("Operate") && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
+				return ctx.combatBar.setExpanded(true) && item.interact(new Filter<Menu.Entry>() {
+					@Override
+					public boolean accept(Menu.Entry entry) {
+						return entry.action.equals(action) || entry.action.equals("Operate");
 					}
-				}
-				return item.interact(action) && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
+				}) && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
 			}
 		}
 
