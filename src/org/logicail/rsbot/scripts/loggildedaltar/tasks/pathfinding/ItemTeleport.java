@@ -4,12 +4,12 @@ import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.lang.Filter;
-import org.powerbot.script.lang.ItemQuery;
 import org.powerbot.script.methods.Equipment;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.methods.Menu;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
+import org.powerbot.script.wrappers.Action;
 import org.powerbot.script.wrappers.ChatOption;
 import org.powerbot.script.wrappers.Item;
 import org.powerbot.script.wrappers.Tile;
@@ -45,76 +45,127 @@ public class ItemTeleport extends NodePath {
 	 * @return
 	 */
 	public static boolean useItemTeleport(IMethodContext ctx, String destination, int tries, int... ids) {
-		// TODO Check action bar
-
-		if (ctx.hud.isVisible(Hud.Window.WORN_EQUIPMENT)) {
-			return itemTeleport(ctx, ctx.equipment.select().id(ids), Hud.Window.WORN_EQUIPMENT, destination, tries)
-					|| itemTeleport(ctx, ctx.backpack.select().id(ids), Hud.Window.BACKPACK, destination, tries);
+		if (itemTeleport(ctx, ctx.combatBar.select().id(ids).poll(), destination, tries)) {
+			return true;
 		}
 
-		return itemTeleport(ctx, ctx.backpack.select().id(ids), Hud.Window.BACKPACK, destination, tries)
-				|| itemTeleport(ctx, ctx.equipment.select().id(ids), Hud.Window.WORN_EQUIPMENT, destination, tries);
+
+		if (ctx.hud.isVisible(Hud.Window.WORN_EQUIPMENT)) {
+			return itemTeleport(ctx, ctx.equipment.select().id(ids).poll(), Hud.Window.WORN_EQUIPMENT, destination, tries)
+					|| itemTeleport(ctx, ctx.backpack.select().id(ids).poll(), Hud.Window.BACKPACK, destination, tries);
+		}
+
+		return itemTeleport(ctx, ctx.backpack.select().id(ids).poll(), Hud.Window.BACKPACK, destination, tries)
+				|| itemTeleport(ctx, ctx.equipment.select().id(ids).poll(), Hud.Window.WORN_EQUIPMENT, destination, tries);
 	}
 
-	private static boolean itemTeleport(final IMethodContext ctx, ItemQuery<Item> query, Hud.Window window, String destination, int tries) {
-		for (final Item item : query.first()) {
-			final String lowercase = destination.toLowerCase();
+	private static boolean itemTeleport(final IMethodContext ctx, Action action, String destination, int tries) {
+		if (action.getType() != Action.Type.ITEM) {
+			return false;
+		}
+		if (!ctx.combatBar.setExpanded(true)) {
+			return false;
+		}
 
-			if (!ctx.hud.isVisible(window)) {
-				ctx.hud.view(window);
-				ctx.game.sleep(100, 600);
-			}
+		final String lowercase = destination.toLowerCase();
 
-			if (window == Hud.Window.BACKPACK && !ctx.backpack.scroll(item)) {
-				return false;
-			}
+		final Tile startLocation = ctx.players.local().getLocation();
+		final TeleportSucceeded teleportSucceeded = new TeleportSucceeded(ctx, startLocation);
 
-			final Tile startLocation = ctx.players.local().getLocation();
-			final TeleportSucceeded teleportSucceeded = new TeleportSucceeded(ctx, startLocation);
+		final Item item = new Item(ctx, action.getComponent());
 
-			if (item.contains(ctx.mouse.getLocation()) || item.hover()) {
-				System.out.println(item.getName());
-				final Filter<Menu.Entry> filter = new Filter<Menu.Entry>() {
+		if (item.contains(ctx.mouse.getLocation()) || item.hover()) {
+			final Filter<Menu.Entry> filter = new Filter<Menu.Entry>() {
+				@Override
+				public boolean accept(Menu.Entry entry) {
+					return entry.action.toLowerCase().contains(lowercase) && entry.option.contains(item.getName());
+				}
+			};
+
+			if (ctx.menu.indexOf(filter) > -1) {
+				return item.interact(filter) && Condition.wait(teleportSucceeded, 600, tries);
+			} else {
+				final Filter<Menu.Entry> filterTeleportRub = new Filter<Menu.Entry>() {
 					@Override
 					public boolean accept(Menu.Entry entry) {
-						return entry.action.toLowerCase().contains(lowercase) && entry.option.contains(item.getName());
+						return (entry.action.startsWith("Teleport") || entry.action.startsWith("Rub")) && entry.option.contains(item.getName());
 					}
 				};
 
-				if (ctx.menu.indexOf(filter) > -1) {
-					if (item.interact(filter)) {
-						ctx.game.sleep(100, 600);
-						return Condition.wait(teleportSucceeded, 600, tries);
-					}
-					break;
-				} else {
-					final Filter<Menu.Entry> filterTeleportRub = new Filter<Menu.Entry>() {
-						@Override
-						public boolean accept(Menu.Entry entry) {
-							return (entry.action.startsWith("Teleport") || entry.action.startsWith("Rub")) && entry.option.contains(item.getName());
-						}
-					};
-
-					if (ctx.menu.indexOf(filterTeleportRub) > -1) {
-						if (window == Hud.Window.BACKPACK && !ctx.backpack.scroll(item)) {
-							return false;
-						}
-						if (item.interact(filterTeleportRub)) {
-							final String finalDestination = destination;
-							if (Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									return !ctx.chat.select().text(finalDestination).isEmpty(); // TODO TeleportOption
-								}
-							}, Random.nextInt(200, 500), Random.nextInt(10, 15))) {
-								for (ChatOption option : ctx.chat.select().text(finalDestination).first()) {
-									if (option.select(Random.nextBoolean())) {
-										return Condition.wait(teleportSucceeded, 600, tries);
-									}
+				if (ctx.menu.indexOf(filterTeleportRub) > -1) {
+					if (item.interact(filterTeleportRub)) {
+						final String finalDestination = destination;
+						if (Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !ctx.chat.select().text(finalDestination).isEmpty(); // TODO TeleportOption
+							}
+						}, Random.nextInt(200, 500), Random.nextInt(10, 15))) {
+							for (ChatOption option : ctx.chat.select().text(finalDestination).first()) {
+								if (option.select(Random.nextBoolean())) {
+									return Condition.wait(teleportSucceeded, 600, tries);
 								}
 							}
 						}
-						break;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean itemTeleport(final IMethodContext ctx, final Item item, Hud.Window window, String destination, int tries) {
+		final String lowercase = destination.toLowerCase();
+
+		if (!ctx.hud.isVisible(window)) {
+			ctx.hud.view(window);
+			ctx.game.sleep(100, 600);
+		}
+
+		if (window == Hud.Window.BACKPACK && !ctx.backpack.scroll(item)) {
+			return false;
+		}
+
+		final Tile startLocation = ctx.players.local().getLocation();
+		final TeleportSucceeded teleportSucceeded = new TeleportSucceeded(ctx, startLocation);
+
+		if (item.contains(ctx.mouse.getLocation()) || item.hover()) {
+			final Filter<Menu.Entry> filter = new Filter<Menu.Entry>() {
+				@Override
+				public boolean accept(Menu.Entry entry) {
+					return entry.action.toLowerCase().contains(lowercase) && entry.option.contains(item.getName());
+				}
+			};
+
+			if (ctx.menu.indexOf(filter) > -1) {
+				return item.interact(filter) && Condition.wait(teleportSucceeded, 600, tries);
+			} else {
+				final Filter<Menu.Entry> filterTeleportRub = new Filter<Menu.Entry>() {
+					@Override
+					public boolean accept(Menu.Entry entry) {
+						return (entry.action.startsWith("Teleport") || entry.action.startsWith("Rub")) && entry.option.contains(item.getName());
+					}
+				};
+
+				if (ctx.menu.indexOf(filterTeleportRub) > -1) {
+					if (window == Hud.Window.BACKPACK && !ctx.backpack.scroll(item)) {
+						return false;
+					}
+					if (item.interact(filterTeleportRub)) {
+						final String finalDestination = destination;
+						if (Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !ctx.chat.select().text(finalDestination).isEmpty(); // TODO TeleportOption
+							}
+						}, Random.nextInt(200, 500), Random.nextInt(10, 15))) {
+							for (ChatOption option : ctx.chat.select().text(finalDestination).first()) {
+								if (option.select(Random.nextBoolean())) {
+									return Condition.wait(teleportSucceeded, 600, tries);
+								}
+							}
+						}
 					}
 				}
 			}

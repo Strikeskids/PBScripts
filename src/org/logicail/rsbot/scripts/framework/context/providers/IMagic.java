@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import com.sk.methods.action.Action;
 import com.sk.methods.action.structure.Spell;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
@@ -19,11 +18,8 @@ public class IMagic extends IMethodProvider {
 
 	public boolean cast(Spell spell) {
 		if (spell.getSpellbook().isOpen(ctx)) {
-			if (!ctx.actionBar.select().id(spell.getId()).isEmpty()) {
-				final Action poll = ctx.actionBar.poll();
-				if (poll.select()) {
-					return true;
-				}
+			if (ctx.combatBar.select().id(spell.getId()).poll().select()) {
+				return true;
 			}
 
 			if (!spell.getWindow().isOpen(ctx)) {

@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.framework.context;
 
 import com.sk.methods.Combat;
 import com.sk.methods.SkKeyboard;
-import com.sk.methods.action.ActionBar;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
 import org.logicail.rsbot.util.ErrorDialog;
@@ -37,7 +36,7 @@ public class IMethodContext extends MethodContext {
 	public final IBank bank;
 	// SK
 	public final SkKeyboard keyboard;
-	public final ActionBar actionBar;
+	//public final ActionBar actionBar;
 	public final Combat combat;
 	// SK
 	public final String useragent;
@@ -87,7 +86,7 @@ public class IMethodContext extends MethodContext {
 
 		/*super.keyboard =*/
 		this.keyboard = new SkKeyboard(this);
-		actionBar = new ActionBar(this);
+		//actionBar = new ActionBar(this);
 		combat = new Combat(this);
 
 		magic = new IMagic(this);

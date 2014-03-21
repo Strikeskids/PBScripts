@@ -78,7 +78,6 @@ public class HouseTeleportStaff extends NodePath {
 
 		if (!ctx.equipment.select().id(staff).isEmpty()) {
 			if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.magic.cast(StandardSpell.HOUSE_TELEPORT)) {
-				sleep(200, 800);
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
