@@ -44,7 +44,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 			case EDGEVILLE_MOUNTED_AMULET_OF_GLORY:
 				return new HouseGlory(script);
 			case CASTLE_WARS_RING_OF_DUELING:
-				return new ItemTeleport(script, path, "Castle Wars", Equipment.Slot.RING, 2566, 2564, 2562, 2560, 2558, 2556, 2554, 2552);
+				return new ItemTeleport(script, path, "Castle Wars Arena.", Equipment.Slot.RING, 2566, 2564, 2562, 2560, 2558, 2556, 2554, 2552);
 			case LUNAR_ISLE_LODESTONE:
 				return new LodestoneTeleport(script, Path.LUNAR_ISLE_LODESTONE, ILodestone.Lodestone.LUNAR_ISLE);
 			case BURTHORPE_LODESTONE:

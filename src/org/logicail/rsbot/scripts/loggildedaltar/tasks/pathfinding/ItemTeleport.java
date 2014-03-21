@@ -15,6 +15,7 @@ import org.powerbot.script.wrappers.Item;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -49,7 +50,6 @@ public class ItemTeleport extends NodePath {
 			return true;
 		}
 
-
 		if (ctx.hud.isVisible(Hud.Window.WORN_EQUIPMENT)) {
 			return itemTeleport(ctx, ctx.equipment.select().id(ids).poll(), Hud.Window.WORN_EQUIPMENT, destination, tries)
 					|| itemTeleport(ctx, ctx.backpack.select().id(ids).poll(), Hud.Window.BACKPACK, destination, tries);
@@ -59,60 +59,56 @@ public class ItemTeleport extends NodePath {
 				|| itemTeleport(ctx, ctx.equipment.select().id(ids).poll(), Hud.Window.WORN_EQUIPMENT, destination, tries);
 	}
 
-	private static boolean itemTeleport(final IMethodContext ctx, Action action, String destination, int tries) {
-		if (action.getType() != Action.Type.ITEM) {
+	private static boolean itemTeleport(final IMethodContext ctx, Action actionItem, String destination, int tries) {
+		if (actionItem.getType() != Action.Type.ITEM) {
 			return false;
 		}
-		if (!ctx.combatBar.setExpanded(true)) {
-			return false;
-		}
-
-		final String lowercase = destination.toLowerCase();
 
 		final Tile startLocation = ctx.players.local().getLocation();
 		final TeleportSucceeded teleportSucceeded = new TeleportSucceeded(ctx, startLocation);
+		final Item item = new Item(ctx, actionItem.getComponent());
 
-		final Item item = new Item(ctx, action.getComponent());
+		final ArrayList<String> actions = new ArrayList<String>();
+		final String[] groundActions = item.getGroundActions();
+		if (groundActions != null) {
+			Collections.addAll(actions, groundActions);
+		}
+		final String[] itemActions = item.getActions();
+		if (itemActions != null) {
+			Collections.addAll(actions, itemActions);
+		}
 
-		if (item.contains(ctx.mouse.getLocation()) || item.hover()) {
-			final Filter<Menu.Entry> filter = new Filter<Menu.Entry>() {
-				@Override
-				public boolean accept(Menu.Entry entry) {
-					return entry.action.toLowerCase().contains(lowercase) && entry.option.contains(item.getName());
+		if (actions.contains("Operate")) {
+			if (actionItem.select(true)) {
+				if (chatDestination(ctx, destination)) {
+					return Condition.wait(teleportSucceeded, 600, tries);
 				}
-			};
+			}
+			return false;
+		}
 
-			if (ctx.menu.indexOf(filter) > -1) {
-				return item.interact(filter) && Condition.wait(teleportSucceeded, 600, tries);
-			} else {
-				final Filter<Menu.Entry> filterTeleportRub = new Filter<Menu.Entry>() {
-					@Override
-					public boolean accept(Menu.Entry entry) {
-						return (entry.action.startsWith("Teleport") || entry.action.startsWith("Rub")) && entry.option.contains(item.getName());
-					}
-				};
+		for (String action : actions) {
+			if (action == null) {
+				continue;
+			}
 
-				if (ctx.menu.indexOf(filterTeleportRub) > -1) {
-					if (item.interact(filterTeleportRub)) {
-						final String finalDestination = destination;
-						if (Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return !ctx.chat.select().text(finalDestination).isEmpty(); // TODO TeleportOption
-							}
-						}, Random.nextInt(200, 500), Random.nextInt(10, 15))) {
-							for (ChatOption option : ctx.chat.select().text(finalDestination).first()) {
-								if (option.select(Random.nextBoolean())) {
-									return Condition.wait(teleportSucceeded, 600, tries);
-								}
-							}
-						}
-					}
-				}
+			if (action.startsWith("Teleport") || action.startsWith("Rub")) {
+				return ctx.combatBar.setExpanded(true) && item.interact(action) && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
 			}
 		}
 
 		return false;
+	}
+
+	private static boolean chatDestination(final IMethodContext ctx, final String destination) {
+		Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return !ctx.chat.select().isEmpty();
+			}
+		}, 300, Random.nextInt(10, 15));
+
+		return ctx.chat.select().text(destination).poll().select(Random.nextBoolean());
 	}
 
 	private static boolean itemTeleport(final IMethodContext ctx, final Item item, Hud.Window window, String destination, int tries) {
@@ -121,6 +117,10 @@ public class ItemTeleport extends NodePath {
 		if (!ctx.hud.isVisible(window)) {
 			ctx.hud.view(window);
 			ctx.game.sleep(100, 600);
+		}
+
+		if (!item.isValid()) {
+			return false;
 		}
 
 		if (window == Hud.Window.BACKPACK && !ctx.backpack.scroll(item)) {
