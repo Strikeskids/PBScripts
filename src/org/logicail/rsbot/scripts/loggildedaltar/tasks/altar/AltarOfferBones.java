@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
-import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.OpenHouse;
@@ -43,9 +42,9 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		if (Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+				return ctx.players.local().getAnimation() != -1;
 			}
-		}, 50, 20)) {
+		}, 100, 15)) {
 			return;
 		}
 
@@ -91,24 +90,15 @@ public class AltarOfferBones extends LogGildedAltarTask {
 			Item selectedItem = ctx.backpack.getSelectedItem();
 			if (selectedItem.getId() == options.offering.getId()) {
 				if (altar.interact("Use", selectedItem.getName() + " -> Altar") || altar.getLocation().getMatrix(ctx).interact("Use", selectedItem.getName() + " -> Altar")) {
-					putAnimation();
+					options.TimeLastOffering.set(System.currentTimeMillis());
+					options.status = "Offering bones";
 				} else {
 					script.log.info("Couldn't interact with altar");
 				}
 			}
 		} else if (altar.interact("Offer", "Altar")) {
-			putAnimation();
-		}
-	}
-
-	private void putAnimation() {
-		if (Condition.wait(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
-			}
-		})) {
-			AnimationMonitor.put(ANIMATION_OFFERING);
+			options.TimeLastOffering.set(System.currentTimeMillis());
+			options.status = "Offering bones";
 		}
 	}
 

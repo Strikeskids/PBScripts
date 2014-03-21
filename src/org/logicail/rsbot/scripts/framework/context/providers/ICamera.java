@@ -41,8 +41,12 @@ public class ICamera extends Camera {
 			return false;
 		}
 
-		final Interactive targetable = (Interactive) locatable;
-		if (targetable.isInViewport()) {
+		final Interactive interactive = (Interactive) locatable;
+		if (!interactive.isValid()) {
+			return false;
+		}
+
+		if (interactive.isInViewport()) {
 			return true;
 		}
 
@@ -54,27 +58,27 @@ public class ICamera extends Camera {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return targetable.isOnScreen() || locatable.getLocation().distanceTo(ctx.players.local()) <= distance;
+						return interactive.isInViewport() || locatable.getLocation().distanceTo(ctx.players.local()) <= distance;
 					}
 				});
 				sleep(250, 1000);
 			}
 		}
 
-		if (!targetable.isInViewport()) {
+		if (!interactive.isInViewport()) {
 			ctx.camera.turnTo(locatable);
-			if (targetable.isInViewport()) {
+			if (interactive.isInViewport()) {
 				return true;
 			}
 		} else return true;
 
-		if (!targetable.isInViewport()) {
+		if (!interactive.isInViewport()) {
 			final Tile tile = getReachableTile(locatable);
 			if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(tile)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return targetable.isOnScreen() || locatable.getLocation().distanceTo(ctx.players.local()) <= 4;
+						return interactive.isInViewport() || locatable.getLocation().distanceTo(ctx.players.local()) <= 4;
 					}
 				});
 				sleep(250, 1000);
@@ -82,7 +86,7 @@ public class ICamera extends Camera {
 			ctx.camera.setPitch(Random.nextInt(0, 40));
 		}
 
-		return targetable.isInViewport();
+		return interactive.isInViewport();
 	}
 
 	private Tile getReachableTile(Locatable locatable) {

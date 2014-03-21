@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.banking;
 
-import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.wrappers.Locatable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +36,8 @@ public class BankOpen extends BankingAbstract {
 		}
 
 		if (!ctx.bank.open()) {
-			ctx.camera.setAngle(Random.nextInt(0, 360));
+			final Locatable nearest = ctx.bank.getNearest();
+			ctx.camera.prepare(nearest);
 		}
 	}
 }

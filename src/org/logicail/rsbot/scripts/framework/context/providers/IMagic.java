@@ -3,7 +3,10 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 import com.sk.methods.action.structure.Spell;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Component;
+
+import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,12 +25,18 @@ public class IMagic extends IMethodProvider {
 				return true;
 			}
 
+			final Component component = spell.getComponent(ctx);
+
 			if (!spell.getWindow().isOpen(ctx)) {
 				spell.getWindow().open(ctx);
-				sleep(100, 300);
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return component.isValid() && component.isVisible();
+					}
+				}, 250, 6);
 			}
-
-			final Component component = spell.getComponent(ctx);
+			
 			return component.isValid() && component.isVisible() && component.interact("Cast");
 		}
 		return false;
