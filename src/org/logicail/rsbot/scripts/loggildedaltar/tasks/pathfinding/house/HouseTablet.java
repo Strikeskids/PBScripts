@@ -53,7 +53,7 @@ public class HouseTablet extends MagicTablet {
 			}
 		}
 
-		final Item tablet = ctx.backpack.poll();
+		final Item tablet = ctx.backpack.select().id(tabletID).poll();
 		// Move the tablet to 3 slot (after marrentil)
 			/*final int index = ctx.backpack.indexOf(tabletID);
 			final Item itemAt = ctx.backpack.getItemAt(4);
@@ -68,8 +68,8 @@ public class HouseTablet extends MagicTablet {
 				});
 				tablet = Inventory.getItem(tabletID);
 			}*/
-		if (tablet.isValid()) {
-			if (ctx.hud.view(Hud.Window.BACKPACK)) {
+		if (ctx.hud.view(Hud.Window.BACKPACK)) {
+			if (tablet.isValid()) {
 				sleep(100, 350);
 				if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && tablet.interact("Break")) {
 					Condition.wait(new Callable<Boolean>() {
