@@ -3,11 +3,8 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 import com.sk.methods.action.structure.Spell;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
-import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Action;
 import org.powerbot.script.wrappers.Component;
-
-import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,23 +20,14 @@ public class IMagic extends IMethodProvider {
 	public boolean cast(Spell spell) {
 		if (spell.getSpellbook().isOpen(ctx)) {
 			final Action action = ctx.combatBar.select().id(spell.getId()).poll();
-			if (ctx.combatBar.setExpanded(true) && action.getComponent().interact("Cast")) {
+			if (action.isValid() && ctx.combatBar.setExpanded(true) && action.getComponent().interact("Cast")) {
 				return true;
 			}
 
-			final Component component = spell.getComponent(ctx);
-
-			if (!spell.getWindow().isOpen(ctx)) {
-				spell.getWindow().open(ctx);
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return component.isValid() && component.isVisible();
-					}
-				}, 250, 6);
+			if (spell.getWindow().open(ctx)) {
+				final Component component = spell.getComponent(ctx);
+				return component.isValid() && component.isVisible() && component.interact("Cast");
 			}
-
-			return component.isValid() && component.isVisible() && component.interact("Cast");
 		}
 		return false;
 	}

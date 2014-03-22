@@ -41,16 +41,14 @@ public class HouseTablet extends MagicTablet {
 		}
 
 		final Action poll = ctx.combatBar.select().id(tabletID).poll();
-		if (poll.isValid()) {
-			if (ctx.combatBar.setExpanded(true) && poll.getComponent().interact("Break")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
-					}
-				});
-				return;
-			}
+		if (poll.isValid() && ctx.combatBar.setExpanded(true) && poll.getComponent().interact("Break")) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
+				}
+			});
+			return;
 		}
 
 		final Item tablet = ctx.backpack.select().id(tabletID).poll();
