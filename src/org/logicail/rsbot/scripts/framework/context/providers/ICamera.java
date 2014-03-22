@@ -60,8 +60,8 @@ public class ICamera extends Camera {
 					public Boolean call() throws Exception {
 						return interactive.isInViewport() || locatable.getLocation().distanceTo(ctx.players.local()) <= distance;
 					}
-				});
-				sleep(250, 1000);
+				}, 100, (int) Math.max(currentDistance * 10, 10));
+				sleep(100, 600);
 			}
 		}
 
@@ -80,8 +80,8 @@ public class ICamera extends Camera {
 					public Boolean call() throws Exception {
 						return interactive.isInViewport() || locatable.getLocation().distanceTo(ctx.players.local()) <= 4;
 					}
-				});
-				sleep(250, 1000);
+				}, 100, (int) Math.max(currentDistance * 10, 10));
+				sleep(100, 600);
 			}
 			ctx.camera.setPitch(Random.nextInt(0, 40));
 		}

@@ -59,7 +59,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Random.nextInt(200, 600);
+		return Random.nextInt(100, 400);
 	}
 
 	@Override

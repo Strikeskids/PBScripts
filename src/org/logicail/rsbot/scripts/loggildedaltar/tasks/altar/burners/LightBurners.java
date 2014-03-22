@@ -119,6 +119,5 @@ public class LightBurners extends BurnerAbstract {
 				}
 			}, 100, 20);
 		}
-
 	}
 }

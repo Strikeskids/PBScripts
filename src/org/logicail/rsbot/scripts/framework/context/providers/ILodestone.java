@@ -64,17 +64,14 @@ public class ILodestone extends IMethodProvider {
 			if (lodestone.isPreviousDestination(ctx)) {
 				if (mapButton.interact("Previous destination")) {
 					interacted = true;
-					sleep(100, 500);
 				}
 			} else if (mapButton.interact("Teleport")) {
-				if (Condition.wait(new Callable<Boolean>() {
+				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return isOpen();
 					}
-				}, Random.nextInt(200, 400), Random.nextInt(5, 10))) {
-					sleep(100, 500);
-				}
+				}, 300, 7);
 			}
 		}
 
@@ -90,7 +87,7 @@ public class ILodestone extends IMethodProvider {
 					}
 					return ctx.menu.indexOf(Menu.filter("Teleport")) > -1;
 				}
-			}, Random.nextInt(100, 200), Random.nextInt(5, 10))) {
+			}, 150, 7)) {
 				sleep(100, 500);
 				if (ctx.menu.click(Menu.filter("Teleport"))) {
 					interacted = true;
@@ -98,7 +95,7 @@ public class ILodestone extends IMethodProvider {
 			}
 		}
 
-		return interacted && (interruptible || Condition.wait(new TeleportCondition(ctx, lodestone), 500, Random.nextInt(33, 40)));
+		return interacted && (interruptible || Condition.wait(new TeleportCondition(ctx, lodestone), 250, Random.nextInt(70, 80)));
 	}
 
 	private Lodestone getHighlightedLodestone() {

@@ -5,7 +5,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
 
 import java.util.concurrent.Callable;
 
@@ -31,7 +30,7 @@ public class TaverleyLodestone extends LodestoneTeleport {
 					public Boolean call() throws Exception {
 						return lodestone.getLocation().getMatrix(ctx).isOnMap() || script.houseTask.isInHouse();
 					}
-				}, Random.nextInt(120, 160), 100)) {
+				}, 150, 110)) {
 					sleep(250, 1250);
 					if (script.houseTask.isInHouse()) {
 						options.status = ("Interrupting lodestone teleport");

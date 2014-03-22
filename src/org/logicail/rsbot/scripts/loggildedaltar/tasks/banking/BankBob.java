@@ -74,7 +74,7 @@ public class BankBob extends BankingAbstract {
 					public Boolean call() throws Exception {
 						return script.familiarFailed.get() || !ctx.chat.select().text("Store").isEmpty();
 					}
-				}, Random.nextInt(300, 600), 10);
+				}, 200, 20);
 				sleep(100, 800);
 				final ChatOption option = ctx.chat.select().text("Store").poll();
 				if (option.isValid()) {
@@ -84,7 +84,7 @@ public class BankBob extends BankingAbstract {
 							public Boolean call() throws Exception {
 								return ctx.summoning.isOpen();
 							}
-						}, Random.nextInt(550, 650), Random.nextInt(4, 12));
+						}, 200, 9);
 					}
 				} else {
 					final Npc npc = ctx.summoning.getNpc();
@@ -96,7 +96,7 @@ public class BankBob extends BankingAbstract {
 								public Boolean call() throws Exception {
 									return IMovement.Euclidean(npc, ctx.players.local()) < distance;
 								}
-							}, Random.nextInt(200, 400), 10)) {
+							}, 250, 10)) {
 								sleep(100, 600);
 								return;
 							}
@@ -113,7 +113,7 @@ public class BankBob extends BankingAbstract {
 								public Boolean call() throws Exception {
 									return IMovement.Euclidean(tile, ctx.players.local()) < 2.5;
 								}
-							}, Random.nextInt(400, 650), Random.nextInt(10, 15)) || !start.equals(start)) {
+							}, 300, Random.nextInt(10, 15)) || !start.equals(start)) {
 								if (ctx.summoning.open() || !script.familiarFailed.get()) {
 									break;
 								}

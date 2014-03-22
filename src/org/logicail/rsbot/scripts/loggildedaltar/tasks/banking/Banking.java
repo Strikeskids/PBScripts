@@ -47,7 +47,7 @@ public class Banking extends Branch<LogGildedAltar> {
 		if (nearest != Tile.NIL) {
 			final Tile location = nearest.getLocation();
 			final TileMatrix tileMatrix = location.getMatrix(ctx);
-			if (tileMatrix.isOnScreen()) {
+			if (tileMatrix.isInViewport()) {
 				return true;
 			}
 			final Tile tile = new LogicailArea(location.derive(-2, -2), location.derive(3, 3)).getRandomReachable(ctx, 6);

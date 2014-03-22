@@ -92,7 +92,7 @@ public class ISummoning extends Summoning {
 						return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
 					}
 				}) && ctx.chat.waitForInputWidget()) {
-					sleep(800, 1200);
+					sleep(500, 1200);
 					if (amount == 0) {
 						amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
 					}
@@ -156,16 +156,20 @@ public class ISummoning extends Summoning {
 		if (bank.isValid()) {
 			final Component orb = ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
 			if (bank.getBoundingRect().intersects(orb.getBoundingRect())) {
-				sleep(50, 250);
 				ctx.bank.close();
-				sleep(200, 1000);
+				sleep(50, 500);
 			}
 		}
 	}
 
 	@Override
 	public boolean dismissFamiliar() {
-		return isFamiliarSummoned() && select(Option.DISMISS);
+		return isFamiliarSummoned() && select(Option.DISMISS) && Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return !isFamiliarSummoned();
+			}
+		}, 50, 20);
 	}
 
 	public IItemStore getFamiliarStore() {
@@ -216,7 +220,7 @@ public class ISummoning extends Summoning {
 		final Item pouch = ctx.backpack.shuffle().poll();
 		if (ctx.hud.view(Hud.Window.BACKPACK)) {
 			sleep(200, 800);
-			return pouch.isValid() && pouch.interact("Summon");
+			return pouch.isValid() && ctx.backpack.scroll(pouch) && pouch.interact("Summon");
 		}
 
 		return false;

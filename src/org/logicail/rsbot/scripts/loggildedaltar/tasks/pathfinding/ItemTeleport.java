@@ -78,21 +78,12 @@ public class ItemTeleport extends NodePath {
 			Collections.addAll(actions, itemActions);
 		}
 
-		if (actions.contains("Operate")) {
-			if (actionItem.select(true)) {
-				if (chatDestination(ctx, destination)) {
-					return Condition.wait(teleportSucceeded, 600, tries);
-				}
-			}
-			return false;
-		}
-
 		for (final String action : actions) {
 			if (action == null) {
 				continue;
 			}
 
-			if (action.startsWith("Teleport") || action.startsWith("Rub")) {
+			if (action.startsWith("Teleport") || action.startsWith("Rub") || action.equals("Cast")) {
 				return ctx.combatBar.setExpanded(true) && item.interact(new Filter<Menu.Entry>() {
 					@Override
 					public boolean accept(Menu.Entry entry) {

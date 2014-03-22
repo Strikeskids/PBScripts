@@ -8,6 +8,7 @@ import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Component;
+import org.powerbot.script.wrappers.Interactive;
 import org.powerbot.script.wrappers.Item;
 
 import java.awt.*;
@@ -214,31 +215,26 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 		setCategory(categoryIndex);
 
 		if (Random.nextBoolean() && Random.nextBoolean()) {
-			if (!select().select(new Filter<Item>() {
-				@Override
-				public boolean accept(Item item) {
-					return item.isOnScreen();
-				}
-			}).isEmpty()) {
-				for (Item item : shuffle().first()) {
-					if (item.interact("Select")) {
-						sleep(250, 1000);
+			final Item poll = select().select(Interactive.areOnScreen()).shuffle().poll();
+			if (poll.isValid() && poll.interact("Select")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return getSelectedItem().getId() == poll.getId();
 					}
-				}
+				}, 150, 8);
 			}
 		}
 
-		for (Item item : select().id(itemId).first()) {
-			if (item.isOnScreen() || ctx.widgets.scroll(item.getComponent(), ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_SCROLLBAR_PARENT), true)) {
-				if (item.interact("Select")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return getSelectedItem().getId() == itemId;
-						}
-					});
+
+		final Item poll = select().id(itemId).poll();
+		if ((poll.isOnScreen() || ctx.widgets.scroll(poll.getComponent(), ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_SCROLLBAR_PARENT), true)) && poll.interact("Select")) {
+			return Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return getSelectedItem().getId() == itemId;
 				}
-			}
+			}, 150, 8);
 		}
 
 		return getSelectedItem().getId() == itemId;

@@ -6,6 +6,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.powerbot.script.methods.Game;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.wrappers.Action;
 import org.powerbot.script.wrappers.Item;
 
 import java.util.concurrent.Callable;
@@ -39,8 +40,21 @@ public class HouseTablet extends MagicTablet {
 			return;
 		}
 
-		for (Item tablet : ctx.backpack.first()) {
-			// Move the tablet to 3 slot (after marrentil)
+		final Action poll = ctx.combatBar.select().id(tabletID).poll();
+		if (poll.isValid()) {
+			if (ctx.combatBar.setExpanded(true) && poll.getComponent().interact("Break")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
+					}
+				});
+				return;
+			}
+		}
+
+		final Item tablet = ctx.backpack.poll();
+		// Move the tablet to 3 slot (after marrentil)
 			/*final int index = ctx.backpack.indexOf(tabletID);
 			final Item itemAt = ctx.backpack.getItemAt(4);
 
@@ -54,7 +68,7 @@ public class HouseTablet extends MagicTablet {
 				});
 				tablet = Inventory.getItem(tabletID);
 			}*/
-
+		if (tablet.isValid()) {
 			if (ctx.hud.view(Hud.Window.BACKPACK)) {
 				sleep(100, 350);
 				if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && tablet.interact("Break")) {

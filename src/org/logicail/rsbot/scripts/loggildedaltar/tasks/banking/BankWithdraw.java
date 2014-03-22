@@ -49,7 +49,7 @@ public class BankWithdraw extends BankingAbstract {
 				sleep(200, 800);
 				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
 			}
-			sleep(200, 800);
+			sleep(50, 400);
 		}
 	}
 
@@ -97,7 +97,6 @@ public class BankWithdraw extends BankingAbstract {
 				if (familiar != null && familiar != options.beastOfBurden) {
 					options.status = "Dismiss wrong familiar";
 					ctx.summoning.dismissFamiliar();
-					sleep(200, 800);
 					return;
 				}
 			}
@@ -193,7 +192,7 @@ public class BankWithdraw extends BankingAbstract {
 				options.status = "Withdraw clean marrentil";
 				if (ctx.backpack.isFull()) {
 					ctx.bank.deposit(options.offering.getId(), 1);
-					sleep(200, 600);
+					sleep(100, 500);
 				}
 				int tries = 5;
 				while (ctx.backpack.select().id(Banking.ID_MARRENTIL).count() < 2 && !ctx.bank.select().id(Banking.ID_MARRENTIL).isEmpty()) {
@@ -261,12 +260,14 @@ public class BankWithdraw extends BankingAbstract {
 						for (Item item : ctx.bank.select().id(id).first()) {
 							if (ctx.bank.withdraw(id, Math.min(item.getStackSize(), bankRequiredItem.getQuantity()))) {// Possible bug, if quantity > 1
 								success = true;
-								sleep(200, 600);
+								sleep(100, 500);
 								if (bankRequiredItem.equip()) {
 									if (ctx.equipment.equip(id)) {
-										sleep(100, 300);
-										ctx.bank.open();
-										sleep(300, 900);
+										if (!ctx.bank.isEmpty()) {
+											sleep(100, 300);
+											ctx.bank.open();
+											sleep(300, 900);
+										}
 										if (!ctx.bank.isOpen()) {
 											return;
 										}

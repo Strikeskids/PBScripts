@@ -6,7 +6,6 @@ import org.powerbot.script.methods.Equipment;
 import org.powerbot.script.methods.Hud;
 import org.powerbot.script.methods.Menu;
 import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Item;
 
 import java.util.concurrent.Callable;
@@ -39,7 +38,7 @@ public class IEquipment extends Equipment {
 			item = ctx.backpack.select().id(ids).poll();
 			if (item.getId() > -1) {
 				if (!ctx.hud.isVisible(Hud.Window.BACKPACK) && ctx.hud.view(Hud.Window.BACKPACK)) {
-					sleep(200, 800);
+					sleep(100, 600);
 				}
 				if (!ctx.backpack.scroll(item)) {
 					return false;
@@ -59,8 +58,7 @@ public class IEquipment extends Equipment {
 					public Boolean call() throws Exception {
 						return !select().id(ids).isEmpty();
 					}
-				}, Random.nextInt(300, 800), 5);
-				sleep(100, 300);
+				}, 200, 10);
 			}
 		}
 

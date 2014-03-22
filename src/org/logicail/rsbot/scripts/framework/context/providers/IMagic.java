@@ -4,6 +4,7 @@ import com.sk.methods.action.structure.Spell;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
 import org.powerbot.script.util.Condition;
+import org.powerbot.script.wrappers.Action;
 import org.powerbot.script.wrappers.Component;
 
 import java.util.concurrent.Callable;
@@ -21,7 +22,8 @@ public class IMagic extends IMethodProvider {
 
 	public boolean cast(Spell spell) {
 		if (spell.getSpellbook().isOpen(ctx)) {
-			if (ctx.combatBar.select().id(spell.getId()).poll().select()) {
+			final Action action = ctx.combatBar.select().id(spell.getId()).poll();
+			if (ctx.combatBar.setExpanded(true) && action.getComponent().interact("Cast")) {
 				return true;
 			}
 
