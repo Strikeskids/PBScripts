@@ -198,7 +198,7 @@ public class BankWithdraw extends BankingAbstract {
 				int tries = 5;
 				while (ctx.backpack.select().id(Banking.ID_MARRENTIL).count() < 2 && !ctx.bank.select().id(Banking.ID_MARRENTIL).isEmpty()) {
 					if (ctx.bank.withdraw(Banking.ID_MARRENTIL, 1)) {
-						sleep(200, 400);
+						sleep(50, 200);
 					}
 					if (--tries <= 0) {
 						break;

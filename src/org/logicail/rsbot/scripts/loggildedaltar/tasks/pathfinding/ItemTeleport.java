@@ -162,21 +162,7 @@ public class ItemTeleport extends NodePath {
 					if (window == Hud.Window.BACKPACK && !ctx.backpack.scroll(item)) {
 						return false;
 					}
-					if (item.interact(filterTeleportRub)) {
-						final String finalDestination = destination;
-						if (Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return !ctx.chat.select().text(finalDestination).isEmpty(); // TODO TeleportOption
-							}
-						}, Random.nextInt(200, 500), Random.nextInt(10, 15))) {
-							for (ChatOption option : ctx.chat.select().text(finalDestination).first()) {
-								if (option.select(Random.nextBoolean())) {
-									return Condition.wait(teleportSucceeded, 600, tries);
-								}
-							}
-						}
-					}
+					return item.interact(filterTeleportRub) && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
 				}
 			}
 		}

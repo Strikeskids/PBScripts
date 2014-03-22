@@ -42,9 +42,11 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		if (Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return ctx.players.local().getAnimation() != -1;
+				return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
 			}
-		}, 100, 15)) {
+		}, 100, 20)) {
+			options.TimeLastOffering.set(System.currentTimeMillis());
+			sleep(200, 600);
 			return;
 		}
 
@@ -90,15 +92,29 @@ public class AltarOfferBones extends LogGildedAltarTask {
 			Item selectedItem = ctx.backpack.getSelectedItem();
 			if (selectedItem.getId() == options.offering.getId()) {
 				if (altar.interact("Use", selectedItem.getName() + " -> Altar") || altar.getLocation().getMatrix(ctx).interact("Use", selectedItem.getName() + " -> Altar")) {
-					options.TimeLastOffering.set(System.currentTimeMillis());
-					options.status = "Offering bones";
+					if (Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+						}
+					}, 100, 20)) {
+						options.TimeLastOffering.set(System.currentTimeMillis());
+						options.status = "Offering bones";
+					}
 				} else {
 					script.log.info("Couldn't interact with altar");
 				}
 			}
 		} else if (altar.interact("Offer", "Altar")) {
-			options.TimeLastOffering.set(System.currentTimeMillis());
-			options.status = "Offering bones";
+			if (Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+				}
+			}, 100, 20)) {
+				options.TimeLastOffering.set(System.currentTimeMillis());
+				options.status = "Offering bones";
+			}
 		}
 	}
 
