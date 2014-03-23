@@ -123,7 +123,7 @@ public class HousePortal extends NodePath {
 							public Boolean call() throws Exception {
 								return !ctx.chat.select().text("Go to a friend's house.").isEmpty();
 							}
-						})) {
+						}, 200, 20)) {
 							return; // recall enterPortal
 						}
 					}
@@ -161,8 +161,6 @@ public class HousePortal extends NodePath {
 						}
 					}
 				}
-
-				sleep(400, 1200);
 			}
 		}
 	}
