@@ -67,12 +67,12 @@ public class HousePortal extends NodePath {
 
 		if (locationAttribute.isInSmallArea(ctx)) {
 			enterPortal();
-			sleep(200, 800);
+			sleep(100, 500);
 		} else if (locationAttribute.isInLargeArea(ctx)) {
 			// never gonna happen , getPortalLocation only if in area
 			doSmall();
 			if (ctx.players.local().isInMotion()) {
-				sleep(300, 1600);
+				sleep(250, 1200);
 			}
 		}
 	}
@@ -124,7 +124,6 @@ public class HousePortal extends NodePath {
 								return !ctx.chat.select().text("Go to a friend's house.").isEmpty();
 							}
 						})) {
-							sleep(100, 650);
 							return; // recall enterPortal
 						}
 					}
@@ -135,7 +134,7 @@ public class HousePortal extends NodePath {
 					for (final ChatOption option : ctx.chat.first()) {
 						if (option.select(Random.nextBoolean())) {
 							if (ctx.chat.waitForInputWidget()) {
-								sleep(50, 550);
+								sleep(50, 400);
 								return;
 							}
 						}
