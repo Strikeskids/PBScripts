@@ -5,7 +5,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
 
 import java.util.concurrent.Callable;
 
@@ -40,7 +39,7 @@ public class YanilleLodestone extends LodestoneTeleport {
 				public Boolean call() throws Exception {
 					return ctx.players.local().isInMotion();
 				}
-			}, 600, Random.nextInt(4, 8))) {
+			}, 100, 10)) {
 				return Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

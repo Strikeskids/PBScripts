@@ -7,6 +7,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.wrapper;
  */
 public enum Offering {
 	ACCURSED_ASHES("Accursed ashes", 20266, 43.7),
+	AIRUT("Airut bones", 30209, 463.7),
 	BABYDRAGON("Babydragon bones", 534, 105),
 	BIG("Big bones", 532, 52.5),
 	BONES("Bones", 526, 15.7),
