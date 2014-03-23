@@ -3,7 +3,6 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.powerbot.script.methods.Chat;
 import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Component;
 
 import java.util.concurrent.Callable;
@@ -32,7 +31,7 @@ public class IChat extends Chat {
 			public Boolean call() throws Exception {
 				return isInputWidgetOpen();
 			}
-		}, Random.nextInt(400, 800), Random.nextInt(4, 9));
+		}, 250, 10);
 	}
 
 	public boolean isInputWidgetOpen() {

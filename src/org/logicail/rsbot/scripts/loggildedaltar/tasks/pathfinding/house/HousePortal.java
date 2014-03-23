@@ -133,10 +133,9 @@ public class HousePortal extends NodePath {
 				if (options.useOtherHouse.get()) {
 					for (final ChatOption option : ctx.chat.first()) {
 						if (option.select(Random.nextBoolean())) {
-							if (ctx.chat.waitForInputWidget()) {
-								sleep(50, 400);
-								return;
-							}
+							ctx.chat.waitForInputWidget();
+							sleep(50, 400);
+							return;
 						}
 					}
 				} else {
