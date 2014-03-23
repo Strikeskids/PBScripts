@@ -156,6 +156,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				}
 				break;
 			case 2:
+			case 9:
 				if (options.detectHouses.get()) {
 					//log.info("Chat[2]: " + message);
 					houseHandler.parseHouses(message);
