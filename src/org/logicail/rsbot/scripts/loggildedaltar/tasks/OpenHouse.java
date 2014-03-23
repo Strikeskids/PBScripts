@@ -28,6 +28,10 @@ public class OpenHouse implements Comparable<OpenHouse> {
 		return playerName;
 	}
 
+	public String getPlayerNameClean() {
+		return playerName.toLowerCase().replace("_", " ");
+	}
+
 	public long getSuccess() {
 		return success;
 	}
