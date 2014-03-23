@@ -110,8 +110,12 @@ public class HousePortal extends NodePath {
 				if (options.useOtherHouse.get() && ctx.chat.isInputWidgetOpen()) {
 					script.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
 					Component previous = ctx.widgets.get(IChat.WIDGET_INPUT, 1).getChild(0);
-					if (previous.isValid() && previous.isVisible() && previous.getText().toLowerCase().equals("last name entered: " + openHouse.getPlayerNameClean()) && previous.interact("Use:")) {
-						enteringHouse.set(true);
+					if (previous.isValid() && previous.isVisible() && previous.getText().toLowerCase().equals("last name entered: " + openHouse.getPlayerNameClean())) {
+						if (previous.interact("Use:")) {
+							enteringHouse.set(true);
+						} else {
+							return;
+						}
 					} else {
 						sleep(150, 850);
 						enteringHouse.set(ctx.chat.sendInput(openHouse.getPlayerNameClean()));
