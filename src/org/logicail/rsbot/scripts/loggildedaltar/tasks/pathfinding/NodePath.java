@@ -5,7 +5,6 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.Tile;
 
 import java.util.ArrayList;
@@ -71,11 +70,11 @@ public abstract class NodePath extends LogGildedAltarTask {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return location.isInSmallArea(ctx);
+					return location.isInSmallArea(ctx) || tile.distanceTo(ctx.players.local()) < 4;
 				}
-			}, Random.nextInt(550, 650), Random.nextInt(9, 12));
+			}, 200, 25);
 		}
-		sleep(250, 1250);
+		sleep(200, 800);
 		return location.isInSmallArea(ctx);
 	}
 }

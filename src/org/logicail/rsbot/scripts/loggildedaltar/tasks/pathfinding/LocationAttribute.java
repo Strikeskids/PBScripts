@@ -3,8 +3,10 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 import org.logicail.rsbot.scripts.framework.context.IMethodContext;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Timer;
+import org.powerbot.script.util.Condition;
 import org.powerbot.script.wrappers.Tile;
+
+import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,7 +31,8 @@ public enum LocationAttribute {
 					new Tile(2632, 3084, 0), new Tile(2632, 3161, 0),
 					new Tile(2619, 3161, 0), new Tile(2619, 3138, 0),
 					new Tile(2609, 3107, 0)),
-			new LogicailArea(new Tile(2619, 3159, 0), new Tile(2628, 3151, 0))),
+			new LogicailArea(new Tile(2619, 3159, 0), new Tile(2628, 3151, 0))
+	),
 
 	/*
 	// orig new LogicailArea(new Tile(3089, 3501, 0), new Tile(3099, 3487, 0))
@@ -43,7 +46,8 @@ public enum LocationAttribute {
 	EDGEVILLE(new LogicailArea(new Tile(3091, 3500, 0), new Tile(3091, 3488, 0), new Tile(3095, 3488, 0),
 			new Tile(3095, 3496, 0), new Tile(3099, 3496, 0), new Tile(3099, 3500, 0)),
 			new LogicailArea(new Tile(3059, 3521, 0), new Tile(3135, 3480, 0)),
-			new LogicailArea(new Tile(3124, 3518, 0), new Tile(3131, 3513, 0))),
+			new LogicailArea(new Tile(3124, 3518, 0), new Tile(3131, 3513, 0))
+	),
 
 	LUNAR_ISLE(new LogicailArea(new Tile(2097, 3920, 0), new Tile(2102, 3916, 0)),
 			new LogicailArea(new Tile(2073, 3928, 0), new Tile(2120, 3903, 0)),
@@ -131,16 +135,13 @@ public enum LocationAttribute {
 		return largeArea.contains(ctx.players.local());
 	}
 
-	private void waitUntilMapReady(IMethodContext ctx) {
-		if (ctx.game.getClientState() != Game.INDEX_MAP_LOADED) {
-			Timer t = new Timer(2000);
-			while (t.isRunning()) {
-				if (ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
-					break;
-				}
-				ctx.game.sleep(100, 200);
+	private void waitUntilMapReady(final IMethodContext ctx) {
+		Condition.wait(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return ctx.game.getClientState() == Game.INDEX_MAP_LOADED;
 			}
-		}
+		}, 50, 20);
 	}
 
 	public boolean isInObeliskArea(IMethodContext ctx) {
