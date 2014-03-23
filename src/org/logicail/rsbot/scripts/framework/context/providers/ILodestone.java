@@ -205,7 +205,7 @@ public class ILodestone extends IMethodProvider {
 		@Override
 		public Boolean call() throws Exception {
 			final Player local = ctx.players.local();
-			return local != null && local.getAnimation() == -1 && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && IMovement.Euclidean(lodestone.getLocation(), local) < 10;
+			return local != null && local.getAnimation() == -1 && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && lodestone.getLocation().getMatrix(ctx).isOnMap();
 		}
 	}
 }

@@ -153,7 +153,7 @@ public class HousePortal extends NodePath {
 					public Boolean call() throws Exception {
 						return !enteringHouse.get() || (script.houseTask.isInHouse() && script.houseTask.isLoadingHouse());
 					}
-				}, 200, 10)) {
+				}, 200, 15)) {
 					if (enteringHouse.get()) {
 						options.status = "Entered house";
 						if (options.useOtherHouse.get() && openHouse != null) {
