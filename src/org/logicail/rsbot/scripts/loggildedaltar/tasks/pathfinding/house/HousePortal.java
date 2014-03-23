@@ -67,13 +67,9 @@ public class HousePortal extends NodePath {
 
 		if (locationAttribute.isInSmallArea(ctx)) {
 			enterPortal();
-			sleep(100, 500);
 		} else if (locationAttribute.isInLargeArea(ctx)) {
 			// never gonna happen , getPortalLocation only if in area
 			doSmall();
-			if (ctx.players.local().isInMotion()) {
-				sleep(250, 1200);
-			}
 		}
 	}
 
