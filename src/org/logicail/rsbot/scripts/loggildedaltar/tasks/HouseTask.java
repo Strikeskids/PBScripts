@@ -240,7 +240,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 			}
 		}
 
-		return close();
+		return (useOtherHouse && isTeleportPortal()) || (!useOtherHouse && isTeleportInHouse()) && close();
 	}
 
 	public boolean close() {
