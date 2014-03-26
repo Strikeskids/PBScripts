@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
+import org.powerbot.script.methods.Hud;
 import org.powerbot.script.util.Condition;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.wrappers.GameObject;
@@ -91,38 +92,36 @@ public class DepositOre extends ArtisanArmourerTask {
 	}
 
 	private void depositOre(final int oreId) {
-		for (Item item : ctx.backpack.select().id(oreId).first()) {
-			options.isSmithing = false;
-			//ArtisanArmourer.setStatus("Searching for smelter");
+		final Item item = ctx.backpack.select().id(oreId).poll();
 
-			for (GameObject smelter : ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanWorkshop.ID_SMELTER : LogArtisanWorkshop.ID_SMELTER_SWORDS).first()) {
-				ctx.camera.turnTo(smelter);
-				if (!smelter.isOnScreen()) {
-					break;
+		options.isSmithing = false;
+		//ArtisanArmourer.setStatus("Searching for smelter");
+
+		final GameObject smelter = ctx.objects.select().id(options.mode == Mode.BURIAL_ARMOUR ? LogArtisanWorkshop.ID_SMELTER : LogArtisanWorkshop.ID_SMELTER_SWORDS).poll();
+
+		if (!ctx.camera.prepare(smelter)) {
+			return;
+		}
+
+		final int count = item.getStackSize();
+		options.status = "Depositing ore in smelter";
+
+		if (ctx.hud.view(Hud.Window.BACKPACK) && item.interact("Use", item.getName())) {
+			if (Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.backpack.getSelectedItem().getId() == oreId;
 				}
-
-				final int count = item.getStackSize();
-				options.status = "Depositing ore in smelter";
-
-				if (item.interact("Use", item.getName())) {
-					if (Condition.wait(new Callable<Boolean>() {
+			})) {
+				sleep(100, 500);
+				if (smelter.interact("Use", item.getName() + " -> Smelter")) {
+					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.backpack.getSelectedItem().getId() == oreId;
+							return item.getStackSize() < count;
 						}
-					})) {
-						sleep(100, 500);
-						if (smelter.interact("Use", item.getName() + " -> Smelter")) {
-							Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									Item poll = ctx.backpack.select().id(oreId).poll();
-									return poll.getStackSize() < count;
-								}
-							});
-							sleep(100, 1000);
-						}
-					}
+					});
+					sleep(100, 1000);
 				}
 			}
 		}
