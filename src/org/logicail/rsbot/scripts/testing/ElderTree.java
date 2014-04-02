@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.testing;
 
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.ClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,8 +41,8 @@ public enum ElderTree {
 	 * @param ctx
 	 * @return <tt>true</tt> if tree can be cut
 	 */
-	public boolean hasBranches(MethodContext ctx) {
-		return ctx.settings.get(settingAvailable, activeShift, 1) == 0;
+	public boolean hasBranches(ClientContext ctx) {
+		return ctx.varpbits.varpbit(settingAvailable, activeShift, 1) == 0;
 	}
 
 	/**
@@ -57,8 +57,8 @@ public enum ElderTree {
 	 * <tt>1-10</tt> minutes until tree is available again
 	 * @see #hasBranches
 	 */
-	public int getTime(MethodContext ctx) {
-		return ctx.settings.get(settingTime, timeShift, 0xf);
+	public int getTime(ClientContext ctx) {
+		return ctx.varpbits.varpbit(settingTime, timeShift, 0xf);
 	}
 
 	public Tile getLocation() {

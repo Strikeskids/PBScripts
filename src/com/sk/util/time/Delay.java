@@ -1,6 +1,7 @@
 package com.sk.util.time;
 
-import org.powerbot.script.util.Random;
+
+import org.powerbot.script.Random;
 
 public class Delay {
 	public static void sleep(long updatePeriod) {

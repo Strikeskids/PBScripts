@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.providers.walking;
 
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.methods.MethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 27/02/14
  * Time: 18:10
  */
-public class Link extends MethodProvider {
+public class Link extends IClientAccessor {
 	public final int id;
 	public final int startNodeId;
 	public final int endNodeId;
@@ -21,7 +21,7 @@ public class Link extends MethodProvider {
 	private TileNode endNode;
 	private List<Requirement> requirements = null;
 
-	public Link(MethodContext ctx, int id, int startNodeId, int endNodeId, double cost) {
+	public Link(IClientContext ctx, int id, int startNodeId, int endNodeId, double cost) {
 		super(ctx);
 		this.id = id;
 		this.startNodeId = startNodeId;
@@ -88,7 +88,7 @@ public class Link extends MethodProvider {
 		}
 
 		for (Requirement requirement : requirements) {
-			if (!requirement.isValid(ctx)) {
+			if (!requirement.valid(ctx)) {
 				return false;
 			}
 		}

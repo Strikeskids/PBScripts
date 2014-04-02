@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers.walking;
 
-import org.powerbot.script.methods.MethodContext;
+import org.powerbot.script.rt6.ClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,5 +9,5 @@ import org.powerbot.script.methods.MethodContext;
  * Time: 18:13
  */
 public interface Requirement {
-	public boolean isValid(MethodContext ctx);
+	public boolean valid(ClientContext ctx);
 }

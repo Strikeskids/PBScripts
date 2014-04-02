@@ -1,8 +1,8 @@
 package org.logicail.rsbot.scripts.framework.context.providers.walking;
 
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.methods.MethodProvider;
-import org.powerbot.script.wrappers.Tile;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Tile;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -16,12 +16,12 @@ import java.util.HashMap;
  * Date: 27/02/14
  * Time: 18:18
  */
-public class IWeb extends MethodProvider {
+public class IWeb extends IClientAccessor {
 	private HashMap<Integer, Link> links = new HashMap<Integer, Link>();
 	private HashMap<Integer, TileNode> nodes = new HashMap<Integer, TileNode>();
 	private int version;
 
-	public IWeb(MethodContext ctx) {
+	public IWeb(IClientContext ctx) {
 		super(ctx);
 	}
 
@@ -100,7 +100,7 @@ public class IWeb extends MethodProvider {
 						nodes.put(id, node);
 					}
 
-					node.setLocation(new Tile(in.readInt(), in.readInt(), in.readInt()));
+					node.tile(new Tile(in.readInt(), in.readInt(), in.readInt()));
 
 					// Add neighbours to node
 					int linkedLinkCount = in.readInt();

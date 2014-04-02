@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 @Script.Manifest(
 		name = "Log Bank Organiser",
 		description = "Organises your bank",
-		properties = "hidden=true;")
+		properties = "hidden=true;client=6;")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
 

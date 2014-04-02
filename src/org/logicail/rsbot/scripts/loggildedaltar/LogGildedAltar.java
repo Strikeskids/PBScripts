@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Script.Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		properties = "topic=1141536;version=7.00"
+		properties = "topic=1141536;client=6;version=7.00"
 
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {

@@ -1,7 +1,7 @@
 package com.sk.util.time;
 
 import com.sk.util.Condition;
-import org.powerbot.script.util.Timer;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 
 public abstract class TimeAfterCondition extends Timer implements Condition, Waitable {
 	public TimeAfterCondition(long repeat) {
@@ -12,23 +12,23 @@ public abstract class TimeAfterCondition extends Timer implements Condition, Wai
 	public boolean waitFor(long maxTime) {
 		reset();
 		boolean ret = false;
-		for (Timer end = new Timer(maxTime); end.isRunning() && !(ret = this.isRunning()); Delay.sleep(30, 50))
+		for (Timer end = new Timer(maxTime); end.running() && !(ret = this.running()); Delay.sleep(30, 50))
 			;
 		return ret;
 	}
 
 	@Override
-	public boolean isRunning() {
+	public boolean running() {
 		if (check())
 			reset();
-		return super.isRunning();
+		return super.running();
 	}
 
 	@Override
 	public boolean waitFor(long maxTime, long delay) {
 		reset();
 		boolean ret = false;
-		for (Timer end = new Timer(maxTime); end.isRunning() && !(ret = this.isRunning()); Delay.sleep(delay))
+		for (Timer end = new Timer(maxTime); end.running() && !(ret = this.running()); Delay.sleep(delay))
 			;
 		return ret;
 	}

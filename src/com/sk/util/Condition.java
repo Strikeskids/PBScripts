@@ -1,6 +1,6 @@
 package com.sk.util;
 
-import org.powerbot.script.wrappers.Validatable;
+import org.powerbot.script.Validatable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +94,7 @@ public interface Condition {
 
 			@Override
 			public boolean check() {
-				return src.isValid();
+				return src.valid();
 			}
 		}
 	}

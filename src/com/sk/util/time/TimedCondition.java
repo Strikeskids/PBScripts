@@ -1,7 +1,7 @@
 package com.sk.util.time;
 
 import com.sk.util.Condition;
-import org.powerbot.script.util.Timer;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 
 public abstract class TimedCondition implements Condition, Waitable {
 	public TimedCondition() {
@@ -9,7 +9,7 @@ public abstract class TimedCondition implements Condition, Waitable {
 
 	@Override
 	public boolean waitFor(long maxTime) {
-		for (Timer end = new Timer(maxTime); end.isRunning(); ) {
+		for (Timer end = new Timer(maxTime); end.running(); ) {
 			if (this.check())
 				return true;
 			Delay.sleep(50, 100);
@@ -19,7 +19,7 @@ public abstract class TimedCondition implements Condition, Waitable {
 
 	@Override
 	public boolean waitFor(long maxTime, long delay) {
-		for (Timer end = new Timer(maxTime); end.isRunning(); ) {
+		for (Timer end = new Timer(maxTime); end.running(); ) {
 			if (this.check())
 				return true;
 			Delay.sleep(delay);

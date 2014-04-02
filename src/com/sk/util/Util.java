@@ -1,6 +1,7 @@
 package com.sk.util;
 
-import org.powerbot.script.lang.AbstractQuery;
+import org.powerbot.script.AbstractQuery;
+import org.powerbot.script.rt6.ClientContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +26,9 @@ public class Util {
 		return input;
 	}
 
-	public static <T extends AbstractQuery<T, K>, K> K get(AbstractQuery<T, K> input) {
+	public static <T extends AbstractQuery<T, K, ClientContext>, K> K get(AbstractQuery<T, K, ClientContext> input) {
 		for (K ret : input)
 			return ret;
-		return input.getNil();
+		return input.nil();
 	}
 }

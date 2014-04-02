@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.providers.walking;
 
-import org.powerbot.script.wrappers.Locatable;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Locatable;
+import org.powerbot.script.Tile;
 
 import java.util.HashSet;
 
@@ -27,11 +27,11 @@ public class TileNode implements Locatable {
 	}
 
 	@Override
-	public Tile getLocation() {
+	public Tile tile() {
 		return location;
 	}
 
-	public void setLocation(Tile location) {
+	public void tile(Tile location) {
 		this.location = location;
 	}
 

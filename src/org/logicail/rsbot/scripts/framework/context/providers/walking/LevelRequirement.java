@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers.walking;
 
-import org.powerbot.script.methods.MethodContext;
+import org.powerbot.script.rt6.ClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,7 +43,7 @@ public class LevelRequirement implements Requirement {
 	}
 
 	@Override
-	public boolean isValid(MethodContext ctx) {
-		return ctx.skills.getLevel(skill) >= level;
+	public boolean valid(ClientContext ctx) {
+		return ctx.skills.level(skill) >= level;
 	}
 }
