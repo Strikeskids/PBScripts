@@ -1,9 +1,10 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.methods.Chat;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Component;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Chat;
+import org.powerbot.script.rt6.Component;
 
 import java.util.concurrent.Callable;
 
@@ -17,12 +18,12 @@ public class IChat extends Chat {
 	public static final int WIDGET_INPUT = 1469;
 	public static final int WIDGET_INPUT_TEXT_CHILD = 3;
 
-	public IChat(IMethodContext context) {
+	public IChat(IClientContext context) {
 		super(context);
 	}
 
 	public Component getInputTextBox() {
-		return ctx.widgets.get(WIDGET_INPUT, WIDGET_INPUT_TEXT_CHILD);
+		return ctx.widgets.component(WIDGET_INPUT, WIDGET_INPUT_TEXT_CHILD);
 	}
 
 	public boolean waitForInputWidget() {
@@ -35,26 +36,26 @@ public class IChat extends Chat {
 	}
 
 	public boolean isInputWidgetOpen() {
-		return getInputTextBox().isVisible();
+		return getInputTextBox().visible();
 	}
 
 	public boolean sendInput(String input) {
 		final Component textBox = getInputTextBox();
-		if (textBox.isValid() && textBox.isVisible()) {
-			String text = textBox.getText();
+		if (textBox.valid() && textBox.visible()) {
+			String text = textBox.text();
 			if (text == null || !text.equalsIgnoreCase(input)) {
 				if (text != null) {
 					for (int i = 0; i <= text.length(); ++i) {
 						ctx.keyboard.send("{VK_BACK_SPACE down}");
-						sleep(5, 50);
+						Condition.sleep(Random.nextInt(5, 50));
 						ctx.keyboard.send("{VK_BACK_SPACE up}");
-						sleep(5, 50);
+						Condition.sleep(Random.nextInt(5, 50));
 					}
 				}
 				ctx.keyboard.send(input);
-				text = textBox.getText();
+				text = textBox.text();
 			}
-			return text != null && text.equalsIgnoreCase(input) && textBox.isValid() && textBox.isVisible() && ctx.keyboard.sendln("");
+			return text != null && text.equalsIgnoreCase(input) && textBox.valid() && textBox.visible() && ctx.keyboard.sendln("");
 		}
 
 		return false;

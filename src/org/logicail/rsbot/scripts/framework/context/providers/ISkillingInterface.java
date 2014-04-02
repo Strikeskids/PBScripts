@@ -1,15 +1,15 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.util.TargetableRectangle;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.util.Timer;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.Interactive;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Interactive;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.ItemQuery;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * Date: 24/12/13
  * Time: 19:01
  */
-public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.powerbot.script.wrappers.Item> {
+public class ISkillingInterface extends ItemQuery<Item> {
 	private static final int WIDGET_MAIN = 1370;
 	private static final int WIDGET_MAIN_ACTION = 40;
 	private static final int WIDGET_MAIN_ACTION_TOOLTIP = 37;
@@ -41,10 +41,10 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	private static final int WIDGET_PRODUCTION_MAIN = 1251;
 	private static final int WIDGET_PRODUCTION_PROGRESS = 33;
 	private static final int WIDGET_PRODUCTION_CANCEL = 48;
-	protected final IMethodContext ctx;
+	protected final IClientContext ctx;
 
 
-	public ISkillingInterface(IMethodContext context) {
+	public ISkillingInterface(IClientContext context) {
 		super(context);
 		ctx = context;
 	}
@@ -62,13 +62,13 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 				}
 			}
 
-			if (ctx.widgets.get(WIDGET_PRODUCTION_MAIN, WIDGET_PRODUCTION_CANCEL).interact("Cancel") && Condition.wait(new Callable<Boolean>() {
+			if (ctx.widgets.component(WIDGET_PRODUCTION_MAIN, WIDGET_PRODUCTION_CANCEL).interact("Cancel") && Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return !isProductionInterfaceOpen();
 				}
 			})) {
-				sleep(100, 600);
+				ctx.sleep(250);
 			}
 		}
 
@@ -76,10 +76,10 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	}
 
 	public boolean isProductionComplete() {
-		final Component component = ctx.widgets.get(WIDGET_PRODUCTION_MAIN, WIDGET_PRODUCTION_PROGRESS);
+		final Component component = ctx.widgets.component(WIDGET_PRODUCTION_MAIN, WIDGET_PRODUCTION_PROGRESS);
 
-		if (component.isValid() && component.isVisible()) {
-			final String[] split = component.getText().split("/");
+		if (component.valid() && component.visible()) {
+			final String[] split = component.text().split("/");
 			return split.length == 2 && split[0].equals(split[1]);
 		}
 
@@ -87,8 +87,8 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	}
 
 	public boolean isProductionInterfaceOpen() {
-		Component component = ctx.widgets.get(WIDGET_PRODUCTION_MAIN, 5);
-		return component.isValid() && component.isVisible();
+		Component component = ctx.widgets.component(WIDGET_PRODUCTION_MAIN, 5);
+		return component.valid() && component.visible();
 	}
 
 	public boolean close() {
@@ -107,8 +107,8 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 			});
 		} else*/
 		{
-			Component closeButton = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_CLOSE_BUTTON);
-			if (closeButton.isValid() && closeButton.interact("Close")) {
+			Component closeButton = ctx.widgets.component(WIDGET_MAIN, WIDGET_MAIN_CLOSE_BUTTON);
+			if (closeButton.valid() && closeButton.interact("Close")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -122,17 +122,17 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	}
 
 	public boolean isOpen() {
-		return ctx.widgets.get(WIDGET_MAIN, 0).isValid();
+		return ctx.widgets.component(WIDGET_MAIN, 0).valid();
 	}
 
 	@Override
 	protected List<Item> get() {
 		List<Item> items = new LinkedList<Item>();
 
-		final Component[] children = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_MAIN_ITEMS).getChildren();
+		final Component[] children = ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_MAIN_ITEMS).components();
 		if (children != null && children.length > 0) {
 			for (Component child : children) {
-				if (child.getItemId() != -1) {
+				if (child.itemId() != -1) {
 					items.add(new Item(ctx, child));
 				}
 			}
@@ -144,7 +144,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	public String getAction() {
 		try {
 			if (isOpen()) {
-				return ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_ACTION).getChild(0).getText();
+				return ctx.widgets.component(WIDGET_MAIN, WIDGET_MAIN_ACTION).component(0).text();
 			}
 		} catch (Exception ignored) {
 		}
@@ -153,16 +153,16 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	}
 
 	public Item getSelectedItem() {
-		Component component = ctx.widgets.get(WIDGET_MAIN, WIDGET_INTERFACE_MAIN_SELECTED_ITEM);
-		if (component.isValid()) {
+		Component component = ctx.widgets.component(WIDGET_MAIN, WIDGET_INTERFACE_MAIN_SELECTED_ITEM);
+		if (component.valid()) {
 			return new Item(ctx, component);
 		}
-		return getNil();
+		return nil();
 	}
 
 	@Override
-	public Item getNil() {
-		return ctx.backpack.getNil();
+	public Item nil() {
+		return ctx.backpack.nil();
 	}
 
 	public boolean select(final String categoryString, final int itemId) {
@@ -174,7 +174,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 		}), itemId);
 	}
 
-	public int getCategoryIndexOf(org.powerbot.script.lang.Filter<String> filter) {
+	public int getCategoryIndexOf(Filter<String> filter) {
 		final String[] categorys = getCategorys();
 
 		for (int i = 0; i < categorys.length; i++) {
@@ -190,10 +190,10 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	public String[] getCategorys() {
 		List<String> list = new LinkedList<String>();
 
-		final Component[] options = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 62).getChildren();
+		final Component[] options = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 62).components();
 
 		for (Component option : options) {
-			final String text = option.getText();
+			final String text = option.text();
 			if (isOpen() && !text.isEmpty()) {
 				list.add(text);
 			}
@@ -208,19 +208,19 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 			return false;
 		}
 
-		if (getSelectedItem().getId() == itemId) {
+		if (getSelectedItem().id() == itemId) {
 			return true;
 		}
 
 		setCategory(categoryIndex);
 
 		if (Random.nextBoolean() && Random.nextBoolean()) {
-			final Item poll = select().select(Interactive.areOnScreen()).shuffle().poll();
-			if (poll.isValid() && poll.interact("Select")) {
+			final Item poll = select().select(Interactive.areInViewport()).shuffle().poll();
+			if (poll.valid() && poll.interact("Select")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return getSelectedItem().getId() == poll.getId();
+						return getSelectedItem().id() == poll.id();
 					}
 				}, 150, 8);
 			}
@@ -228,16 +228,16 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 
 
 		final Item poll = select().id(itemId).poll();
-		if ((poll.isOnScreen() || ctx.widgets.scroll(poll.getComponent(), ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_SCROLLBAR_PARENT), true)) && poll.interact("Select")) {
+		if ((poll.inViewport() || ctx.widgets.scroll(poll.component(), ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_SCROLLBAR_PARENT), true)) && poll.interact("Select")) {
 			return Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return getSelectedItem().getId() == itemId;
+					return getSelectedItem().id() == itemId;
 				}
 			}, 150, 8);
 		}
 
-		return getSelectedItem().getId() == itemId;
+		return getSelectedItem().id() == itemId;
 	}
 
 	private boolean setCategory(int index) {
@@ -250,19 +250,19 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 				return true;
 			}
 
-			Component child = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY).getChild(0);
-			if (child.isValid() && child.click(true)) {
+			Component child = ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY).component(0);
+			if (child.valid() && child.click(true)) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return getCategoryRectangle(ctx, target) != null;
 					}
 				})) {
-					sleep(250, 750);
+					ctx.sleep(400);
 					TargetableRectangle rectangle = getCategoryRectangle(ctx, target);
-					if (rectangle != null && ctx.mouse.move(rectangle)) {
-						sleep(200, 500);
-						if (rectangle.contains(ctx.mouse.getLocation()) && ctx.menu.click(org.powerbot.script.methods.Menu.filter("Select"))) {
+					if (rectangle != null && ctx.mouse.move(rectangle.nextPoint())) {
+						ctx.sleep(400);
+						if (rectangle.contains(ctx.mouse.getLocation()) && ctx.menu.click(org.powerbot.script.rt6.Menu.filter("Select"))) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
@@ -270,7 +270,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 								}
 							});
 						}
-						sleep(200, 600);
+						ctx.sleep(400);
 					}
 				}
 			}
@@ -286,11 +286,11 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	public String getCategory() {
 		try {
 			if (isOpen()) {
-				Component component = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 51);
-				if (component.getChildren().length > 0) {
-					return component.getChild(0).getText().toLowerCase();
+				Component component = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 51);
+				if (component.childrenCount() > 0) {
+					return component.component(0).text().toLowerCase();
 				} else {
-					return ctx.widgets.get(WIDGET_INTERFACE_MAIN, 49).getText().toLowerCase();
+					return ctx.widgets.component(WIDGET_INTERFACE_MAIN, 49).text().toLowerCase();
 				}
 			}
 		} catch (Exception ignored) {
@@ -298,13 +298,13 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 		return "";
 	}
 
-	public TargetableRectangle getCategoryRectangle(MethodContext ctx, String text) {
-		final Component widgetChild = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY_MENU);
-		final Component[] options = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 62).getChildren();
+	public TargetableRectangle getCategoryRectangle(IClientContext ctx, String text) {
+		final Component widgetChild = ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY_MENU);
+		final Component[] options = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 62).components();
 
 		for (int i = 0; i < options.length; i++) {
-			if (options[i].isValid() && options[i].getText().equalsIgnoreCase(text)) {
-				Rectangle rectangle = widgetChild.getBoundingRect();
+			if (options[i].valid() && options[i].text().equalsIgnoreCase(text)) {
+				Rectangle rectangle = widgetChild.boundingRect();
 				rectangle.x += 4;
 				rectangle.y += i * 15 + 7;
 				rectangle.width -= 9;
@@ -349,7 +349,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 		if (currentQuantity != -1) {
 			final Timer t = new Timer(Math.abs(targetQuantity - currentQuantity) * Random.nextInt(2000, 3000));
 			if (targetQuantity > currentQuantity) {
-				while (t.isRunning() && targetQuantity > currentQuantity) {
+				while (t.running() && targetQuantity > currentQuantity) {
 					if (!isOpen()) {
 						break;
 					}
@@ -357,12 +357,12 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 						return true;
 					}
 					if (increaseQuantity()) {
-						sleep(100, 400);
+						ctx.sleep(200);
 					}
 					currentQuantity = getQuantity();
 				}
 			} else {
-				while (t.isRunning() && currentQuantity > targetQuantity) {
+				while (t.running() && currentQuantity > targetQuantity) {
 					if (!isOpen()) {
 						break;
 					}
@@ -370,7 +370,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 						return true;
 					}
 					if (decreaseQuantity()) {
-						sleep(100, 400);
+						ctx.sleep(200);
 					}
 					currentQuantity = getQuantity();
 				}
@@ -382,8 +382,8 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 
 	private boolean decreaseQuantity() {
 		final int currentQuantity = getQuantity();
-		Component component = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_QUANTITY_DECREASE);
-		if (component.isValid() && component.interact("Decrease")) {
+		Component component = ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_QUANTITY_DECREASE);
+		if (component.valid() && component.interact("Decrease")) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
@@ -395,10 +395,10 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	}
 
 	public int getQuantity() {
-		Component quantity = ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_QUANTITY);
-		if (quantity.isValid()) {
+		Component quantity = ctx.widgets.component(WIDGET_MAIN, WIDGET_MAIN_QUANTITY);
+		if (quantity.valid()) {
 			try {
-				return Integer.parseInt(quantity.getText());
+				return Integer.parseInt(quantity.text());
 			} catch (Exception ignored) {
 			}
 		}
@@ -406,9 +406,9 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	}
 
 	public int getQuantityPercent() {
-		Component component = ctx.widgets.get(WIDGET_INTERFACE_MAIN, 148);
-		if (component.isValid()) {
-			final int x = component.getRelativeLocation().x;
+		Component component = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 148);
+		if (component.valid()) {
+			final int x = component.relativePoint().x;
 			if (x > 0) {
 				return (int) (x * 100 / 151D);
 			}
@@ -419,8 +419,8 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 
 	private boolean increaseQuantity() {
 		final int currentQuantity = getQuantity();
-		Component component = ctx.widgets.get(WIDGET_INTERFACE_MAIN, WIDGET_QUANTITY_INCREASE);
-		if (component.isValid() && component.interact("Increase")) {
+		Component component = ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_QUANTITY_INCREASE);
+		if (component.valid() && component.interact("Increase")) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
@@ -438,7 +438,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	public boolean start() {
 		if (canStart()) {
 			Component startButton = getStartButton();
-			return startButton.isValid() && startButton.interact(startButton.getTooltip());
+			return startButton.valid() && startButton.interact(startButton.tooltip());
 		}
 		return false;
 	}
@@ -446,9 +446,9 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	public boolean canStart() {
 		final Component startButton = getStartButton();
 
-		if (startButton.isValid()) {
+		if (startButton.valid()) {
 			final Pattern pattern = Pattern.compile("Make (\\d+) ");
-			final Matcher matcher = pattern.matcher(startButton.getTooltip());
+			final Matcher matcher = pattern.matcher(startButton.tooltip());
 			if (matcher.find()) {
 				return Integer.parseInt(matcher.group(1)) > 0;
 			}
@@ -458,7 +458,7 @@ public class ISkillingInterface extends org.powerbot.script.lang.ItemQuery<org.p
 	}
 
 	private Component getStartButton() {
-		return ctx.widgets.get(WIDGET_MAIN, WIDGET_MAIN_ACTION_TOOLTIP);
+		return ctx.widgets.component(WIDGET_MAIN, WIDGET_MAIN_ACTION_TOOLTIP);
 	}
 }
 

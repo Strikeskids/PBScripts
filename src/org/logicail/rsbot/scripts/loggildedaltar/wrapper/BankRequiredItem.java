@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.wrapper;
 
-import org.powerbot.script.methods.Equipment;
+import org.powerbot.script.rt6.Equipment;
 
 /**
  * Created with IntelliJ IDEA.

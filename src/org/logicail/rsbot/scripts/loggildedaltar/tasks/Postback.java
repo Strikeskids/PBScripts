@@ -4,7 +4,6 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.IOUtil;
-import org.powerbot.script.methods.Environment;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -118,8 +117,8 @@ public class Postback extends LogGildedAltarTask {
 
 		JsonObject json = new JsonObject();
 		json.add("script", script.getName());
-		json.add("userid", Environment.getUserId());
-		json.add("username", Environment.getDisplayName());
+		json.add("userid", ctx.property("user.id"));
+		json.add("username", ctx.property("user.name"));
 		final long timeRunning = script.getRuntime() / 1000;
 		json.add("timerunning", timeRunning - previousTimeRunning);
 		final int experience = script.experience();
@@ -147,8 +146,8 @@ public class Postback extends LogGildedAltarTask {
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
 			connection.setRequestProperty("Connection", "close");
 
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
+			connection.setConnectTimeout(3000);
+			connection.setReadTimeout(3000);
 
 			connection.setUseCaches(false);
 			connection.setDoInput(true);
@@ -172,10 +171,10 @@ public class Postback extends LogGildedAltarTask {
 							final JsonObject jsonObject = JsonObject.readFrom(read);
 							final JsonValue latest_version = jsonObject.get("latest_version");
 							if (latest_version != null && latest_version.isNumber()) {
-								final double latest_version_double = latest_version.asDouble();
-								if (latest_version_double > script.getVersion()) {
-									script.options.newVersionAvailable.set(true);
-								}
+								//final double latest_version_double = latest_version.asDouble();
+								//if (latest_version_double > script.getVersion()) {
+								//	script.options.newVersionAvailable.set(true);
+								//}
 							}
 						}
 					}

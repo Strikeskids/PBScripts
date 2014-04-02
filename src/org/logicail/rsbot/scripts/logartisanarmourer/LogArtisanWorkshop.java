@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
+import org.logicail.rsbot.scripts.framework.util.SkillData;
 import org.logicail.rsbot.scripts.logartisanarmourer.gui.ArtisanGUI;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.DepositOre;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.MakeIngots;
@@ -21,24 +22,16 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.LayTracks;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.TakeIngots;
 import org.logicail.rsbot.util.ErrorDialog;
-import org.powerbot.event.MessageEvent;
-import org.powerbot.event.MessageListener;
-import org.powerbot.script.Manifest;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.util.SkillData;
-import org.powerbot.script.util.Timer;
-import org.powerbot.script.wrappers.Area;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.*;
+import org.powerbot.script.rt6.Skills;
 
 import javax.swing.*;
 import java.util.LinkedHashMap;
 
-@Manifest(
+@Script.Manifest(
 		name = "Log Artisan Workshop",
 		description = "Cheap smithing xp at Artisans Workshop",
-		version = 2.08,
-		authors = {"Logicail"},
-		topic = 1134701
+		properties = "topic=1134701;"
 )
 public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> implements MessageListener {
 	public static final int[] INGOT_IDS = {20632, 20633, 20634, 20635, 20636,
@@ -124,7 +117,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	public void createTree() {
 		// Check have required level
 		try {
-			if (ctx.skills.getRealLevel(Skills.SMITHING) < getRequiredLevel()) {
+			if (ctx.skills.realLevel(Skills.SMITHING) < getRequiredLevel()) {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
@@ -135,7 +128,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 						}
 					}
 				});
-				getController().stop();
+				ctx.controller.stop();
 				return;
 			}
 		} catch (NullPointerException ignored) {
@@ -188,11 +181,11 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	public LinkedHashMap<Object, Object> getPaintInfo() {
 		LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
 
-		if (ctx.game.isLoggedIn()) {
+		if (ctx.game.loggedIn()) {
 			if (skillData == null) {
 				skillData = new SkillData(ctx);
 			}
-			currentLevel = ctx.skills.getRealLevel(Skills.SMITHING);
+			currentLevel = ctx.skills.realLevel(Skills.SMITHING);
 			if (startLevel == -1) {
 				startLevel = currentLevel;
 			}
@@ -201,10 +194,10 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 		final long runtime = getRuntime();
 
 		properties.put("Status", options.status);
-		properties.put("Time Running", Timer.format(runtime));
+		properties.put("Time Running", org.logicail.rsbot.scripts.framework.util.Timer.format(runtime));
 
 		if (skillData != null) {
-			properties.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
+			properties.put("TTL", org.logicail.rsbot.scripts.framework.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
 			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
 			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.SMITHING)));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
@@ -325,9 +318,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 
 	@Override
 	public void start() {
-		super.start();
-
-		getController().getExecutor().offer(new Task<LogArtisanWorkshop>(this) {
+		ctx.controller().offer(new Task<LogArtisanWorkshop>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {

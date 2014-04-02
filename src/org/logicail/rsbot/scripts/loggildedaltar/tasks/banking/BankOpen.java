@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.banking;
 
-import org.powerbot.script.wrappers.Item;
-import org.powerbot.script.wrappers.Locatable;
+import org.powerbot.script.Locatable;
+import org.powerbot.script.rt6.Item;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +21,7 @@ public class BankOpen extends BankingAbstract {
 
 	@Override
 	public boolean isValid() {
-		return !ctx.bank.isOpen();
+		return !ctx.bank.opened();
 	}
 
 	@Override
@@ -32,11 +32,11 @@ public class BankOpen extends BankingAbstract {
 			if (ctx.backpack.isFull()) {
 				break;
 			}
-			ctx.equipment.unequip(item.getId());
+			ctx.equipment.unequip(item.id());
 		}
 
 		if (!ctx.bank.open()) {
-			final Locatable nearest = ctx.bank.getNearest();
+			final Locatable nearest = ctx.bank.nearest();
 			ctx.camera.prepare(nearest);
 		}
 	}

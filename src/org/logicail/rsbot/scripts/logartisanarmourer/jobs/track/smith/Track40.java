@@ -2,8 +2,8 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.SmithTrack;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.concurrent.Callable;
 
@@ -49,7 +49,7 @@ public class Track40 extends AbstractTrack {
 					if (!ctx.backpack.select().id(SmithTrack.PARTS).isEmpty()) {
 						script.log.info("Deposit partial tracks/parts");
 						ctx.skillingInterface.close();
-						sleep(200, 1000);
+						sleep(400);
 						for (GameObject minecart : ctx.objects.select().id(LogArtisanWorkshop.ID_MINE_CART).nearest().limit(3).shuffle().first()) {
 							if (ctx.camera.prepare(minecart) && minecart.interact("Deposit-components", "Mine cart")) {
 								Condition.wait(new Callable<Boolean>() {
@@ -59,11 +59,11 @@ public class Track40 extends AbstractTrack {
 									}
 								});
 							} else {
-								ctx.movement.stepTowards(minecart);
-								sleep(1000, 2000);
+								ctx.movement.step(minecart);
+								sleep(1000);
 							}
 						}
-						sleep(250, 1000);
+						sleep(300);
 					} else {
 						script.log.info("Make Rails");
 						smithTrack.smith(smithTrack.getRails());

@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
-import org.powerbot.script.methods.Game;
+import org.powerbot.script.rt6.Game;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +22,7 @@ public class AltarHouseLoading extends LogGildedAltarTask {
 
 	@Override
 	public boolean isValid() {
-		return ctx.game.getClientState() == Game.INDEX_MAP_LOADING || script.houseTask.isLoadingHouse();
+		return ctx.game.clientState() == Game.INDEX_MAP_LOADING || script.houseTask.isLoadingHouse();
 	}
 
 	@Override

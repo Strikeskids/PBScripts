@@ -1,11 +1,11 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.lang.ItemQuery;
-import org.powerbot.script.methods.Bank;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.Item;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.Bank;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.ItemQuery;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -27,21 +27,21 @@ public class IBank extends Bank {
 	 */
 	public final IItemStore backpack;
 
-	public IBank(IMethodContext ctx) {
+	public IBank(IClientContext ctx) {
 		super(ctx);
-		backpack = new IItemStore(ctx, ctx.widgets.get(WIDGET, WIDGET_BANK_ITEMS));
+		backpack = new IItemStore(ctx, ctx.widgets.component(WIDGET, WIDGET_BANK_ITEMS));
 	}
 
-	public Component getWidget() {
-		return ctx.widgets.get(WIDGET, WIDGET_BOUNDS);
+	public org.powerbot.script.rt6.Component getWidget() {
+		return ctx.widgets.component(WIDGET, WIDGET_BOUNDS);
 	}
 
 	public boolean isInsertMode() {
-		return ctx.settings.get(SETTING_SWAP_MODE, 1) == 1;
+		return ctx.varpbits.varpbit(SETTING_SWAP_MODE, 1) == 1;
 	}
 
 	public boolean setSwapMode(final boolean insert) {
-		return isInsertMode() == insert || (ctx.widgets.get(Bank.WIDGET, BANK_SWAP_MODE_BUTTON).click() && Condition.wait(new Callable<Boolean>() {
+		return isInsertMode() == insert || (ctx.widgets.component(Bank.WIDGET, BANK_SWAP_MODE_BUTTON).click() && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return isInsertMode() == insert;
@@ -51,7 +51,7 @@ public class IBank extends Bank {
 
 
 	public ArrayList<ArrayList<Item>> getBankTabs() {
-		if (!ctx.bank.isOpen() || (ctx.bank.getCurrentTab() != 0 && !ctx.bank.setCurrentTab(0))) {
+		if (!ctx.bank.opened() || (ctx.bank.currentTab() != 0 && !ctx.bank.currentTab(0))) {
 			return null;
 		}
 
@@ -133,7 +133,7 @@ public class IBank extends Bank {
 
 		for (int i = 0; i < TAB_COUNT.length; i++) {
 			int[] setting = TAB_COUNT[i];
-			count[i] = ctx.settings.get(setting[0], setting[1], 0x3ff);
+			count[i] = ctx.varpbits.varpbit(setting[0], setting[1], 0x3ff);
 		}
 
 		return count;
@@ -157,15 +157,15 @@ public class IBank extends Bank {
 			this.bankWidget = bankWidget;
 		}
 
-		public boolean exists(IMethodContext ctx) {
+		public boolean exists(IClientContext ctx) {
 			if (this == NONE) {
 				return true;
 			}
 			return ctx.bank.getNumberOfTabs() >= ordinal();
 		}
 
-		public Component getWidget(IMethodContext ctx) {
-			return ctx.widgets.get(Bank.WIDGET, bankWidget);
+		public Component getWidget(IClientContext ctx) {
+			return ctx.widgets.component(Bank.WIDGET, bankWidget);
 		}
 
 		public int getI() {

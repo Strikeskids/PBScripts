@@ -1,14 +1,14 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.HitType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Sword;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Component;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.Component;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -49,7 +49,7 @@ public class MakeSword extends ArtisanArmourerTask {
 		if (!isOpen()) {
 			ctx.skillingInterface.close();
 			smithAnvil.clickAnvil();
-			sleep(200, 1000);
+			sleep(333);
 			return;
 		}
 
@@ -57,7 +57,7 @@ public class MakeSword extends ArtisanArmourerTask {
 
 		Sword hitPart = null;
 
-		Sword[] parts = Random.nextBoolean() ? new Sword[]{Sword.Eighth, Sword.Sixteenth} : new Sword[]{Sword.Sixteenth, Sword.Eighth};
+		Sword[] parts = org.powerbot.script.Random.nextBoolean() ? new Sword[]{Sword.Eighth, Sword.Sixteenth} : new Sword[]{Sword.Sixteenth, Sword.Eighth};
 		for (Sword part : parts) {
 			if (part.getHitsNeeded(ctx) > 0) {
 				hitPart = part;
@@ -68,7 +68,7 @@ public class MakeSword extends ArtisanArmourerTask {
 		if (hitPart == null) {
 			final List<Sword> swordList = getSwordPartsByDistance();
 			if (swordList.size() > 0) {
-				hitPart = swordList.get(Random.nextInt(0, swordList.size()));
+				hitPart = swordList.get(org.powerbot.script.Random.nextInt(0, swordList.size()));
 			}
 		}
 
@@ -83,7 +83,7 @@ public class MakeSword extends ArtisanArmourerTask {
 			//LogHandler.print("Hit " + hitPart + " with " + hitPart.getRequiredHitType());
 			//script.log.info("Hit [" + hitPart + "] require=" + hitPart.getHitsNeeded(ctx) + " hittype=" + hitPart.getRequiredHitType(ctx, this));
 			hitPart.clickButton(ctx, this);
-			sleep(200, 800);
+			sleep(300);
 		}
 	}
 
@@ -92,9 +92,9 @@ public class MakeSword extends ArtisanArmourerTask {
 			return true;
 		}
 
-		Component component = ctx.widgets.get(1074, 145);
-		if (component.isValid() && component.interact("Close")) {
-			org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
+		Component component = ctx.widgets.component(1074, 145);
+		if (component.valid() && component.interact("Close")) {
+			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return !isOpen();
@@ -110,7 +110,7 @@ public class MakeSword extends ArtisanArmourerTask {
 			return Integer.MAX_VALUE;
 		}
 
-		return Integer.parseInt(ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).getText());
+		return Integer.parseInt(ctx.widgets.component(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).text());
 	}
 
 	/**
@@ -148,11 +148,11 @@ public class MakeSword extends ArtisanArmourerTask {
 	}
 
 	public boolean isOpen() {
-		return ctx.widgets.get(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).isValid();
+		return ctx.widgets.component(WIDGET_SWORD_INTERFACE, WIDGET_SWORD_COOLDOWN).valid();
 	}
 
-	static class SwordComparator extends IMethodProvider implements Comparator<Sword> {
-		SwordComparator(IMethodContext context) {
+	static class SwordComparator extends IClientAccessor implements Comparator<Sword> {
+		SwordComparator(IClientContext context) {
 			super(context);
 		}
 

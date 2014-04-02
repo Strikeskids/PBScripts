@@ -11,10 +11,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
-import org.powerbot.script.AbstractScript;
 import org.powerbot.script.Script;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.methods.Summoning;
+import org.powerbot.script.rt6.Skills;
+import org.powerbot.script.rt6.Summoning;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -81,16 +80,11 @@ public class LogGildedAltarGUI extends JFrame {
 	private JCheckBox stopLevelCheckbox;
 	private JSpinner stopLevelSpinner;
 
-	public LogGildedAltarGUI(AbstractScript script) {
-		if (script instanceof LogGildedAltar) {
-			this.script = (LogGildedAltar) script;
-			options = this.script.options;
-		} else {
-			this.script = null;
-			options = new LogGildedAltarOptions(script);
-		}
+	public LogGildedAltarGUI(LogGildedAltar script) {
+		this.script = script;
+		options = this.script.options;
 		initComponents();
-		setTitle(script.getName() + " v" + script.getVersion());
+		setTitle(script.getName() + " v" + script.version());
 		setMinimumSize(new Dimension(480, 550));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -348,14 +342,14 @@ public class LogGildedAltarGUI extends JFrame {
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
 					if (script != null) {
-						script.getController().stop();
+						script.ctx.controller().stop();
 					}
 				}
 			}
 		});
 
 		for (Summoning.Familiar familiar : familiars) {
-			familiarMap.put(String.format("%s (%d)", prettyName(familiar.name()), familiar.getRequiredLevel()), familiar);
+			familiarMap.put(String.format("%s (%d)", prettyName(familiar.name()), familiar.requiredLevel()), familiar);
 		}
 
 		// General
@@ -1066,13 +1060,13 @@ public class LogGildedAltarGUI extends JFrame {
 		options.onlySummoningPotions.set(summoningPotionCheckbox.isSelected());
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
-		final Script.Controller.Executor<Runnable> executor = script.getController().getExecutor();
+		final Script.Controller executor = script.ctx.controller();
 		executor.offer(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					if (options.detectHouses.get()) {
-						script.ctx.properties.setProperty("login.world", Integer.toString(31));
+						script.ctx.property("login.world", Integer.toString(31));
 					}
 
 				/*if (options.useBOB) {
@@ -1123,7 +1117,7 @@ public class LogGildedAltarGUI extends JFrame {
 					script.tree.add(script.leaveHouse = new LeaveHouse(script));
 					script.bankingTask = new BankingTask(script, modelToPathList(bankEnabledModel));
 
-					if (script.ctx.game.isLoggedIn() && script.ctx.players.local() != null) {
+					if (script.ctx.game.loggedIn() && script.ctx.players.local() != null) {
 						if (options.lightBurners.get() && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
 							script.bankingTask.setBanking();
 						}

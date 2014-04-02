@@ -3,9 +3,9 @@ package com.sk.methods.action.ability;
 import com.sk.methods.action.structure.Ability;
 import com.sk.windows.InnerAbilityTab;
 import com.sk.windows.Window;
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.wrappers.Component;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Skills;
 
 public enum ConstitutionAbility implements Ability {
 	MOMENTUM(AbilityLevel.ULTIMATE, 7, 14674, 10, 116, 0, 0),
@@ -57,7 +57,7 @@ public enum ConstitutionAbility implements Ability {
 	}
 
 	@Override
-	public int getId() {
+	public int id() {
 		return id;
 	}
 
@@ -82,13 +82,13 @@ public enum ConstitutionAbility implements Ability {
 	}
 
 	@Override
-	public Component getComponent(IMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(childIndex);
+	public Component getComponent(IClientContext ctx) {
+		return ctx.widgets.component(getWidget(), MAIN_COMPONENT).component(childIndex);
 	}
 
 	@Override
-	public Component getCooldownComponent(IMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(childIndex);
+	public Component getCooldownComponent(IClientContext ctx) {
+		return ctx.widgets.component(getWidget(), COOLDOWN_COMPONENT).component(childIndex);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public enum ConstitutionAbility implements Ability {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return true;
 	}
 }

@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.bankorganiser;
 
 import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
 import org.logicail.rsbot.scripts.bankorganiser.tasks.ItemSorter;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.rt6.Item;
 
 import java.io.DataInputStream;
 import java.io.IOException;

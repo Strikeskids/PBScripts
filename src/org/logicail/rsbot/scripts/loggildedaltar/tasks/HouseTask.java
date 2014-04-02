@@ -18,13 +18,10 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.Yanil
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
 import org.logicail.rsbot.util.TargetableRectangle;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.*;
-import org.powerbot.script.wrappers.Component;
+import org.powerbot.script.*;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.*;
+import org.powerbot.script.rt6.Menu;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -89,19 +86,19 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	public boolean branch() {
 		return !options.banking.get()
 				&& !isInHouse()
-				&& !ctx.bank.isOpen();
+				&& !ctx.bank.open();
 	}
 
 	public boolean isInHouse() {
-		return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && (isLoadingHouse() || !ctx.objects.select().id(EXIT_PORTAL).isEmpty());
+		return ctx.game.clientState() == Game.INDEX_MAP_LOADED && (isLoadingHouse() || !ctx.objects.select().id(EXIT_PORTAL).isEmpty());
 	}
 
 	public boolean isLoadingHouse() {
-		return ctx.widgets.get(WIDGET_LOADING_HOUSE, WIDGET_LOADING_HOUSE_CHILD).isValid();
+		return ctx.widgets.component(WIDGET_LOADING_HOUSE, WIDGET_LOADING_HOUSE_CHILD).valid();
 	}
 
 	public HouseLocation getHouseLocation() {
-		switch (ctx.settings.get(SETTING_HOUSE_LOCATION) & 7) {
+		switch (ctx.varpbits.varpbit(SETTING_HOUSE_LOCATION) & 7) {
 			case 1:
 				return HouseLocation.RIMMINGTON;
 			case 2:
@@ -120,7 +117,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	}
 
 	public Widget getWidget() {
-		return ctx.widgets.get(WIDGET_HOUSE_OPTIONS);
+		return ctx.widgets.widget(WIDGET_HOUSE_OPTIONS);
 	}
 
 	public void leaveHouse() {
@@ -139,33 +136,33 @@ public class HouseTask extends Branch<LogGildedAltar> {
 				final HousePath pathToPortal = new Astar(script).findRoute(portal);
 
 				if (pathToPortal != null && !pathToPortal.traverse(destination)) {
-					if (!destination.getMatrix(ctx).isReachable()) {
+					if (!destination.matrix(ctx).reachable()) {
 						script.log.info("Failed to get to portal - trying failsafe");
 						final Room current = script.roomStorage.getRoom(ctx.players.local());
 						final Room end = script.roomStorage.getRoom(portal);
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(current, end)).shuffle().first()) {
 							if (DoorOpener.open(ctx, door)) {
-								sleep(100, 600);
+								ctx.sleep(300);
 							}
 						}
 					}
 
 					if (ctx.movement.findPath(destination).traverse()) {
-						sleep(150, 500);
+						ctx.sleep(300);
 					}
 
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							final Tile dest = ctx.movement.getDestination();
-							return dest == null || !dest.getMatrix(ctx).isOnMap() || dest.distanceTo(ctx.players.local()) <= 4;
+							final Tile dest = ctx.movement.destination();
+							return dest == null || !dest.matrix(ctx).onMap() || dest.distanceTo(ctx.players.local()) <= 4;
 						}
 					}, 600, 8);
 				}
 			}
 
 			if (destination.distanceTo(ctx.players.local()) < 20) {
-				if (ctx.camera.prepare(portal) && (destination.getMatrix(ctx).isReachable() || script.roomStorage.getIndex(ctx.players.local()) == script.roomStorage.getIndex(portal)) && portal.interact("Enter", "Portal")) {
+				if (ctx.camera.prepare(portal) && (destination.matrix(ctx).reachable() || script.roomStorage.getIndex(ctx.players.local()) == script.roomStorage.getIndex(portal)) && portal.interact("Enter", "Portal")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
@@ -180,9 +177,9 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	private List<Tile> getTilesAround(GameObject object) {
 		List<Tile> tiles = new ArrayList<Tile>();
 
-		Area objectArea = object.getArea();
+		Area objectArea = object.area();
 		if (objectArea == null) {
-			objectArea = new Area(object.getLocation().derive(-1, 1), object.getLocation().derive(1, -1));
+			objectArea = new Area(object.tile().derive(-1, 1), object.tile().derive(1, -1));
 		}
 
 		final Room room = script.roomStorage.getRoom(object);
@@ -190,13 +187,13 @@ public class HouseTask extends Branch<LogGildedAltar> {
 			final Filter<GameObject> filter = new Filter<GameObject>() {
 				@Override
 				public boolean accept(GameObject gameObject) {
-					final GameObject.Type type = gameObject.getType();
+					final GameObject.Type type = gameObject.type();
 					return type == GameObject.Type.BOUNDARY || type == GameObject.Type.INTERACTIVE;
 				}
 			};
 			for (Tile tile : room.getArea().getTileArray()) {
 				if (!objectArea.contains(tile)/* || tile.getMatrix(ctx).isReachable()*/) {
-					if (ctx.movement.getDistance(object, tile) < 6) {
+					if (ctx.movement.distance(object, tile) < 6) {
 						if (ctx.objects.select().at(tile).select(filter).isEmpty()) {
 							tiles.add(tile);
 						}
@@ -216,27 +213,27 @@ public class HouseTask extends Branch<LogGildedAltar> {
 		}
 
 		if (ctx.hud.open(Hud.Menu.OPTIONS)) {
-			final Component gameSettings = ctx.widgets.get(1433, 0);
-			final Component component = ctx.widgets.get(WIDGET_HOUSE_OPTIONS, useOtherHouse ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_HOUSE);
-			if (gameSettings.isVisible()) {
+			final Component gameSettings = ctx.widgets.component(1433, 0);
+			final Component component = ctx.widgets.component(WIDGET_HOUSE_OPTIONS, useOtherHouse ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_HOUSE);
+			if (gameSettings.visible()) {
 				if (gameSettings.interact("Select")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return !gameSettings.isVisible() && component.isValid();
+							return !gameSettings.visible() && component.valid();
 						}
 					}, Random.nextInt(150, 250), 10);
 				}
 			}
 
-			if (component.isValid() && component.interact("Toggle")) {
+			if (component.valid() && component.interact("Toggle")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return before != isTeleportInHouse();
 					}
 				}, Random.nextInt(150, 250), 10);
-				sleep(200, 800);
+				ctx.sleep(350);
 			}
 		}
 
@@ -244,30 +241,30 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	}
 
 	public boolean close() {
-		final Component child = ctx.widgets.get(1477, 54).getChild(2);
-		if (child.isValid() && child.isVisible()) {
-			final Rectangle rect = child.getBoundingRect();
+		final Component child = ctx.widgets.component(1477, 54).component(2);
+		if (child.valid() && child.visible()) {
+			final Rectangle rect = child.boundingRect();
 			if (rect != null) {
 				rect.translate(15, 20);
 				rect.width /= 2;
 				rect.height /= 3;
 				TargetableRectangle targetableRectangle = new TargetableRectangle(ctx, rect);
-				if (targetableRectangle.hover() && ctx.menu.click(org.powerbot.script.methods.Menu.filter("Close Window"))) {
+				if (targetableRectangle.hover() && ctx.menu.click(Menu.filter("Close Window"))) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return !child.isValid();
+							return !child.valid();
 						}
 					}, Random.nextInt(150, 250), 10);
 				}
 			}
 		}
 
-		return !child.isValid() && !child.isVisible();
+		return !child.valid() && !child.visible();
 	}
 
 	public boolean isTeleportInHouse() {
-		return ctx.settings.get(SETTING_HOUSE_LOCATION, 29, 1) == 0;
+		return ctx.varpbits.varpbit(SETTING_HOUSE_LOCATION, 29, 1) == 0;
 	}
 
 	public boolean isTeleportPortal() {

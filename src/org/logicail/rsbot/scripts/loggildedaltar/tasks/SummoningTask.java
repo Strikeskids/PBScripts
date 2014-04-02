@@ -12,8 +12,8 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.canifis.Canif
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.castlewars.CastleWarsRecharge;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity.MainPlazaRecharge;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleRecharge;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,11 +86,11 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 				&& script.options.banking.get()
 				&& script.options.useBOB.get()
 				//&& !ctx.bank.isOpen()
-				&& (ctx.summoning.getTimeLeft() <= 300 || !ctx.summoning.isFamiliarSummoned())) {
+				&& (ctx.summoning.timeLeft() <= 300 || !ctx.summoning.summoned())) {
 			if (nextPoints == -1) {
-				nextPoints = Random.nextInt(script.options.beastOfBurden.getRequiredPoints() + 1, script.options.beastOfBurden.getRequiredPoints() * 2);
+				nextPoints = Random.nextInt(script.options.beastOfBurden.requiredPoints() + 1, script.options.beastOfBurden.requiredPoints() * 2);
 			}
-			return ctx.summoning.getSummoningPoints() < nextPoints;
+			return ctx.summoning.points() < nextPoints;
 		}
 
 		return false;

@@ -1,9 +1,11 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Area;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.ClientContext;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,21 +19,21 @@ import java.util.Set;
  * Date: 02/01/14
  * Time: 12:01
  */
-public class LogicailArea extends org.powerbot.script.wrappers.Area {
+public class LogicailArea extends Area {
 	protected final int plane;
 	private Set<Tile> tiles = null;
 
 	public LogicailArea(Tile... tile) {
 		super(tile);
-		plane = tile[0].plane;
+		plane = tile[0].floor();
 	}
 
 	public LogicailArea(Tile t1, Tile t2) {
 		super(t1, t2);
-		plane = t1.plane;
+		plane = t1.floor();
 	}
 
-	public Tile getRandomReachable(IMethodContext ctx, double distanceFromCenter) {
+	public Tile getRandomReachable(IClientContext ctx, double distanceFromCenter) {
 		final Tile centralTile = getCentralTile();
 		java.util.List<Tile> reachable = new ArrayList<Tile>(getReachable(ctx));
 		Collections.shuffle(reachable);
@@ -42,14 +44,14 @@ public class LogicailArea extends org.powerbot.script.wrappers.Area {
 			}
 		}
 
-		return centralTile.randomize(2, 2);
+		return centralTile.derive(Random.nextInt(-2, 3), Random.nextInt(-2, 3));
 	}
 
-	public Set<Tile> getReachable(MethodContext ctx) {
+	public Set<Tile> getReachable(ClientContext ctx) {
 		HashSet<Tile> reachable = new HashSet<Tile>();
 
 		for (Tile tile : getTileArray()) {
-			if (tile.getMatrix(ctx).isReachable()) {
+			if (tile.matrix(ctx).reachable()) {
 				reachable.add(tile);
 			}
 		}

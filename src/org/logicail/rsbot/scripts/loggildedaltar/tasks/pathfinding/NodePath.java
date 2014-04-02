@@ -4,8 +4,8 @@ import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +53,9 @@ public abstract class NodePath extends LogGildedAltarTask {
 			doLarge();
 		} else if (!locationAttribute.isInSmallArea(ctx)) {
 			//ctx.log.info("small");
-			final Tile destination = ctx.movement.getDestination();
-			double distance = IMovement.Euclidean(ctx.players.local().getLocation(), destination);
-			if (!destination.getMatrix(ctx).isOnMap() || distance > 100 || !locationAttribute.getSmallArea().contains(destination)) {
+			final Tile destination = ctx.movement.destination();
+			double distance = IMovement.Euclidean(ctx.players.local().tile(), destination);
+			if (!destination.matrix(ctx).onMap() || distance > 100 || !locationAttribute.getSmallArea().contains(destination)) {
 				doSmall();
 			}
 		}
@@ -74,7 +74,7 @@ public abstract class NodePath extends LogGildedAltarTask {
 				}
 			}, 200, 25);
 		}
-		sleep(200, 800);
+		ctx.sleep(400);
 		return location.isInSmallArea(ctx);
 	}
 }

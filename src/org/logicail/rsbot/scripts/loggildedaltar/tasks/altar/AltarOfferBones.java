@@ -3,13 +3,9 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.OpenHouse;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.methods.Menu;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.*;
 
 import java.util.concurrent.Callable;
 
@@ -34,7 +30,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 	@Override
 	public boolean isValid() {
 		return !getBackpackOffering().isEmpty()
-				&& ctx.players.local().getAnimation() != ANIMATION_OFFERING;
+				&& ctx.players.local().animation() != ANIMATION_OFFERING;
 	}
 
 	@Override
@@ -42,19 +38,19 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		if (Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+				return ctx.players.local().animation() == ANIMATION_OFFERING;
 			}
 		}, 100, 20)) {
 			options.TimeLastOffering.set(System.currentTimeMillis());
-			sleep(200, 600);
+			ctx.sleep(300);
 			return;
 		}
 
 		// Check if current house has altar
-		if (options.useOtherHouse.get() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+		if (options.useOtherHouse.get() && ctx.game.clientState() == Game.INDEX_MAP_LOADED) {
 			OpenHouse currentHouse = script.houseHandler.getCurrentHouse();
 			if (currentHouse != null) {
-				currentHouse.setHasObelisk(script.altarTask.getMiniObelisk().isValid());
+				currentHouse.setHasObelisk(script.altarTask.getMiniObelisk().valid());
 			}
 		}
 
@@ -84,18 +80,18 @@ public class AltarOfferBones extends LogGildedAltarTask {
 		script.log.info(options.status);
 
 		final GameObject altar = script.altarTask.getAltar();
-		if (altar.isValid() && !altar.isInViewport()) {
+		if (altar.valid() && !altar.inViewport()) {
 			ctx.camera.turnTo(altar);
 		}
 
 		if (Random.nextBoolean() && selectBone()) {
-			Item selectedItem = ctx.backpack.getSelectedItem();
-			if (selectedItem.getId() == options.offering.getId()) {
-				if (altar.interact("Use", selectedItem.getName() + " -> Altar") || altar.getLocation().getMatrix(ctx).interact("Use", selectedItem.getName() + " -> Altar")) {
+			Item selectedItem = ctx.backpack.selectedItem();
+			if (selectedItem.id() == options.offering.getId()) {
+				if (altar.interact("Use", selectedItem.name() + " -> Altar") || altar.tile().matrix(ctx).interact("Use", selectedItem.name() + " -> Altar")) {
 					if (Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+							return ctx.players.local().animation() == ANIMATION_OFFERING;
 						}
 					}, 100, 20)) {
 						options.TimeLastOffering.set(System.currentTimeMillis());
@@ -109,7 +105,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return ctx.players.local().getAnimation() == ANIMATION_OFFERING;
+					return ctx.players.local().animation() == ANIMATION_OFFERING;
 				}
 			}, 100, 20)) {
 				options.TimeLastOffering.set(System.currentTimeMillis());
@@ -119,33 +115,33 @@ public class AltarOfferBones extends LogGildedAltarTask {
 	}
 
 	private boolean selectBone() {
-		if (ctx.hud.view(Hud.Window.BACKPACK)) {
-			if (ctx.backpack.getSelectedItem().getId() != options.offering.getId()) {
-				if (ctx.backpack.isItemSelected() && ctx.menu.click(Menu.filter("Cancel"))) {
+		if (ctx.hud.open(Hud.Window.BACKPACK)) {
+			if (ctx.backpack.selectedItem().id() != options.offering.getId()) {
+				if (ctx.backpack.itemSelected() && ctx.menu.click(Menu.filter("Cancel"))) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return !ctx.backpack.isItemSelected();
+							return !ctx.backpack.itemSelected();
 						}
-					}, 300, 8);
+					}, 100, 10);
 				}
 
 				for (Item item : getBackpackOffering().first()) {
-					if (ctx.hud.view(Hud.Window.BACKPACK)) {
-						if (!ctx.backpack.isItemSelected() && item.isValid() && ctx.backpack.scroll(item) && item.interact("Use")) {
+					if (ctx.hud.open(Hud.Window.BACKPACK)) {
+						if (!ctx.backpack.itemSelected() && ctx.backpack.scroll(item) && item.valid() && item.interact("Use")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
-									return ctx.backpack.getSelectedItem().getId() == options.offering.getId();
+									return ctx.backpack.selectedItem().id() == options.offering.getId();
 								}
-							}, Random.nextInt(200, 600), Random.nextInt(4, 8));
-							sleep(100, 500);
+							}, 250, 5);
+							ctx.sleep(300);
 						}
 					}
 				}
 			}
 		}
 
-		return ctx.backpack.getSelectedItem().getId() == options.offering.getId();
+		return ctx.backpack.selectedItem().id() == options.offering.getId();
 	}
 }

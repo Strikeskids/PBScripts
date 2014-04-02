@@ -2,11 +2,11 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.Hud;
+import org.powerbot.script.rt6.Item;
 
 import java.util.concurrent.Callable;
 
@@ -44,23 +44,23 @@ public class DepositOre extends ArtisanArmourerTask {
 	}
 
 	public int remainingAdamant() {
-		return ctx.settings.get(SETTING_ADAMANT_RUNE, 0xFFF);
+		return ctx.varpbits.varpbit(SETTING_ADAMANT_RUNE, 0xFFF);
 	}
 
 	public int remainingCoal() {
-		return ctx.settings.get(SETTING_COAL, 0x1FFF);
+		return ctx.varpbits.varpbit(SETTING_COAL, 0x1FFF);
 	}
 
 	public int remainingIron() {
-		return ctx.settings.get(SETTING_IRON, 20, 0xFFF);
+		return ctx.varpbits.varpbit(SETTING_IRON, 20, 0xFFF);
 	}
 
 	public int remainingMithril() {
-		return ctx.settings.get(SETTING_MITHRIL, 17, 0xFFF);
+		return ctx.varpbits.varpbit(SETTING_MITHRIL, 17, 0xFFF);
 	}
 
 	public int remainingRune() {
-		return ctx.settings.get(SETTING_ADAMANT_RUNE, 12, 0xFFF);
+		return ctx.varpbits.varpbit(SETTING_ADAMANT_RUNE, 12, 0xFFF);
 	}
 
 	@Override
@@ -103,25 +103,25 @@ public class DepositOre extends ArtisanArmourerTask {
 			return;
 		}
 
-		final int count = item.getStackSize();
+		final int count = item.stackSize();
 		options.status = "Depositing ore in smelter";
 
-		if (ctx.hud.view(Hud.Window.BACKPACK) && item.interact("Use", item.getName())) {
+		if (ctx.hud.open(Hud.Window.BACKPACK) && item.interact("Use", item.name())) {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return ctx.backpack.getSelectedItem().getId() == oreId;
+					return ctx.backpack.selectedItem().id() == oreId;
 				}
 			})) {
-				sleep(100, 500);
-				if (smelter.interact("Use", item.getName() + " -> Smelter")) {
+				sleep(250);
+				if (smelter.interact("Use", item.name() + " -> Smelter")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return item.getStackSize() < count;
+							return item.stackSize() < count;
 						}
 					});
-					sleep(100, 1000);
+					sleep(250);
 				}
 			}
 		}

@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.framework.tasks.impl;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
-import org.powerbot.script.util.Random;
+import org.powerbot.script.Random;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,7 +29,7 @@ public class LogoutIdle<T extends LogicailScript> extends Node<T> {
 
 	@Override
 	public boolean isValid() {
-		return System.currentTimeMillis() > nextRun && ctx.game.isLoggedIn();
+		return System.currentTimeMillis() > nextRun && ctx.game.loggedIn();
 	}
 
 	@Override

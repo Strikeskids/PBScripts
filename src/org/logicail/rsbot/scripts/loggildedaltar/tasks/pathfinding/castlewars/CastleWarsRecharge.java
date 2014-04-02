@@ -3,10 +3,10 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.castlewars;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.RechargeSummoning;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TilePath;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.TilePath;
 
 import java.util.concurrent.Callable;
 
@@ -25,7 +25,7 @@ public class CastleWarsRecharge extends RechargeSummoning {
 	public boolean doSmall() {
 		final Tile destination = locationAttribute.getObeliskRandom(ctx);
 		final TilePath path = new TilePath(ctx, new Tile[]{new Tile(2445, 3084, 0), new Tile(2446, 3090, 0), new Tile(2458, 3090, 0), destination}).randomize(1, 1);
-		final Tile next = path.getNext();
+		final Tile next = path.next();
 
 		if (path.traverse()) {
 			if (next != null) {
@@ -36,7 +36,7 @@ public class CastleWarsRecharge extends RechargeSummoning {
 					}
 				}, Random.nextInt(400, 600), 5);
 			} else {
-				sleep(750, 1500);
+				ctx.sleep(800);
 			}
 			return true;
 		} else {

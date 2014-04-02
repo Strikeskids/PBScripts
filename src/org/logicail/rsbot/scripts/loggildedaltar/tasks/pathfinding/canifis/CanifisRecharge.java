@@ -4,8 +4,8 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.RechargeSummoning;
 import org.logicail.rsbot.util.DoorOpener;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +30,7 @@ public class CanifisRecharge extends RechargeSummoning {
 		if (KharyrllPortalRoom.CANIFIS_PUB.contains(ctx.players.local())) {
 			for (GameObject door : ctx.objects.select().id(KharyrllPortalRoom.CLOSED_DOOR).nearest().first()) {
 				if (DoorOpener.open(ctx, door)) {
-					sleep(100, 500);
+					sleep(250);
 				}
 			}
 		}

@@ -4,9 +4,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.HouseTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
-import org.powerbot.script.wrappers.Area;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TilePath;
+import org.powerbot.script.Area;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.TilePath;
 
 /**
  * Created with IntelliJ IDEA.

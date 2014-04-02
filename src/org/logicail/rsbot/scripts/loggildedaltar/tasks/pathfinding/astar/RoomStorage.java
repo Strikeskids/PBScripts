@@ -1,8 +1,12 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
-import org.powerbot.script.wrappers.*;
+import org.powerbot.script.Locatable;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.CollisionFlag;
+import org.powerbot.script.rt6.CollisionMap;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,7 @@ import java.util.List;
  * Date: 04/01/14
  * Time: 21:36
  */
-public class RoomStorage extends IMethodProvider {
+public class RoomStorage extends IClientAccessor {
 	public final Room[] rooms = new Room[81];
 	private final LogGildedAltar script;
 	private Tile base = null;
@@ -41,9 +45,9 @@ public class RoomStorage extends IMethodProvider {
 			room.clearNeighbours();
 		}
 
-		if (collisionMap == null || base == null || !base.equals(ctx.game.getMapBase())) {
-			base = ctx.game.getMapBase();
-			collisionMap = ctx.movement.getCollisionMap();
+		if (collisionMap == null || base == null || !base.equals(ctx.game.mapOffset())) {
+			base = ctx.game.mapOffset();
+			collisionMap = ctx.movement.collisionMap();
 		}
 
 		// Joined by doors
@@ -125,11 +129,11 @@ public class RoomStorage extends IMethodProvider {
 			return -1;
 		}
 
-		final Tile location = locatable.getLocation();
-		final Tile mapBase = ctx.game.getMapBase();
+		final Tile location = locatable.tile();
+		final Tile mapBase = ctx.game.mapOffset();
 
-		int localX = location.x - mapBase.x;
-		int localY = location.y - mapBase.y;
+		int localX = location.x() - mapBase.x();
+		int localY = location.y() - mapBase.y();
 
 		int x = localX - localX % 8;
 		int remainder = localY % 8;
@@ -151,6 +155,6 @@ public class RoomStorage extends IMethodProvider {
 	}
 
 	private CollisionFlag flagAt(Tile derive) {
-		return collisionMap.getFlagAt(derive.x - base.x, derive.y - base.y);
+		return collisionMap.flagAt(derive.x() - base.x(), derive.y() - base.y());
 	}
 }

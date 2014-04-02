@@ -5,10 +5,10 @@ import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.concurrent.Callable;
 
@@ -58,10 +58,10 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			script.log.severe("SmithAnvil.makeSword is null!");
 			return false;
 		}
-		if (super.isValid() && ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).isValid()) {
+		if (super.isValid() && ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).valid()) {
 			if (!ctx.backpack.select().id(options.getIngotId()).isEmpty()) {
 				if (ctx.skillingInterface.isOpen() || !options.isSmithing
-						|| !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())
+						|| !options.currentlyMaking.equals(ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text())
 						|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > animationTimelimit) {
 					return true;
 				}
@@ -74,14 +74,14 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	@Override
 	public void run() {
 		if (ctx.skillingInterface.getAction().equals("Smith")) {
-			final String make = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
+			final String make = ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text();
 			if (ctx.skillingInterface.select(getCategoryIndex(), getMakeNextId())) {
 				final int target = ctx.backpack.select().id(getMakeNextId()).count() + ctx.skillingInterface.getQuantity();
-				if (ctx.skillingInterface.getSelectedItem().getId() == getMakeNextId() && ctx.skillingInterface.start()) {
+				if (ctx.skillingInterface.getSelectedItem().id() == getMakeNextId() && ctx.skillingInterface.start()) {
 					options.isSmithing = true;
 					animationTimelimit = Random.nextInt(8000, 16000);
 					options.currentlyMaking = make;
-					if (!make.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText())) {
+					if (!make.equals(ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text())) {
 						options.isSmithing = false;
 						return;
 					}
@@ -96,7 +96,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						@Override
 						public Boolean call() throws Exception {
 							for (int i : LogArtisanWorkshop.ANIMATION_SMITHING) {
-								if (ctx.players.local().getAnimation() == i) {
+								if (ctx.players.local().animation() == i) {
 									return true;
 								}
 							}
@@ -109,14 +109,14 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return script.getController().isStopping() || script.getController().isSuspended() || !options.isSmithing
+								return ctx.controller().isStopping() || ctx.controller().isSuspended() || !options.isSmithing
 										|| ctx.backpack.select().id(getMakeNextId()).count() >= target
 										|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000
-										|| (options.followInstructions && options.mode == Mode.BURIAL_ARMOUR && !options.currentlyMaking.equals(ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText()));
+										|| (options.followInstructions && options.mode == Mode.BURIAL_ARMOUR && !options.currentlyMaking.equals(ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text()));
 							}
 						}, 600, options.mode == Mode.BURIAL_ARMOUR ? 420 : 100);
 						// 250 sec for burial
-						sleep(200, 1000);
+						sleep(300);
 					}
 
 					options.isSmithing = false;
@@ -168,9 +168,9 @@ public class SmithAnvil extends ArtisanArmourerTask {
 				? ctx.objects.select().id(getAnvilId()).at(anvilLocation).poll()
 				: ctx.objects.select().id(getAnvilId()).nearest().limit(2).shuffle().poll();
 
-		if (anvil.isValid()) {
+		if (anvil.valid()) {
 			if (anvilLocation == null) {
-				anvilLocation = anvil.getLocation();
+				anvilLocation = anvil.tile();
 			}
 			if (ctx.camera.prepare(anvil)) {
 				options.status = "Clicking on anvil";
@@ -178,13 +178,13 @@ public class SmithAnvil extends ArtisanArmourerTask {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return anvil.getLocation().distanceTo(ctx.players.local()) < 2;
+							return anvil.tile().distanceTo(ctx.players.local()) < 2;
 						}
 					}, 300, 8);
-					sleep(300, 1000);
-					if (ctx.players.local().getAnimation() != -1 && !ctx.skillingInterface.isOpen()) {
+					sleep(350);
+					if (ctx.players.local().animation() != -1 && !ctx.skillingInterface.isOpen()) {
 						if (anvil.interact("Smith", "Anvil")) {
-							sleep(200, 600);
+							sleep(250);
 						}
 					}
 
@@ -200,12 +200,12 @@ public class SmithAnvil extends ArtisanArmourerTask {
 							return false;
 						}
 					}, Random.nextInt(300, 600), Random.nextInt(8, 13))) {
-						sleep(100, 300);
+						sleep(100);
 						if (!ctx.skillingInterface.isOpen() && !makeSword.isOpen()) {
 							anvil.interact("Smith", "Anvil");
 						}
 					}
-					sleep(200, 600);
+					sleep(200);
 				}
 			}
 		}
@@ -226,7 +226,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	}
 
 	private int getMakeNextId() {
-		String text = ctx.widgets.get(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).getText();
+		String text = ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text();
 		if (text.equals("Helm")) {
 			return 20572 + options.ingotType.ordinal() - 1 + (20 * options.ingotGrade.ordinal());
 		} else if (text.equals("Boots")) {

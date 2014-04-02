@@ -24,7 +24,7 @@ public abstract class LoopTask<T extends LogicailScript<T>> extends Task<T> {
 		while (!ctx.isShutdown()) {
 			if (ctx.isPaused()) {
 				paused = true;
-				sleep(1000);
+				ctx.sleep(1000);
 			} else {
 				paused = false;
 
@@ -37,7 +37,7 @@ public abstract class LoopTask<T extends LogicailScript<T>> extends Task<T> {
 				}
 
 				if (delay >= 0) {
-					sleep(delay);
+					ctx.sleep(delay);
 				} else if (delay == -1) {
 					break;
 				}

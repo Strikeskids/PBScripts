@@ -3,8 +3,8 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.RechargeSummoning;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TilePath;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.TilePath;
 
 /**
  * Created with IntelliJ IDEA.

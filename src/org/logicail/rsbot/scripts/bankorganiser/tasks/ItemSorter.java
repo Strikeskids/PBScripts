@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.bankorganiser.tasks;
 
 import org.logicail.rsbot.scripts.bankorganiser.ItemData;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.rt6.Item;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,11 +25,11 @@ public class ItemSorter implements Comparator<Item> {
 
 	@Override
 	public int compare(Item lhs, Item rhs) {
-		final int indexlhs = order.indexOf(ItemData.getId(lhs.getId()));
-		final int indexrhs = order.indexOf(ItemData.getId(rhs.getId()));
+		final int indexlhs = order.indexOf(ItemData.getId(lhs.id()));
+		final int indexrhs = order.indexOf(ItemData.getId(rhs.id()));
 
 		if (indexlhs == -1 && indexrhs == -1) {
-			return lhs.getName().compareTo(rhs.getName());
+			return lhs.name().compareTo(rhs.name());
 		}
 
 		return indexlhs - indexrhs;

@@ -2,12 +2,12 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.Menu;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Npc;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Menu;
+import org.powerbot.script.rt6.Npc;
+import org.powerbot.script.rt6.Skills;
 
 import java.util.concurrent.Callable;
 
@@ -20,9 +20,9 @@ import java.util.concurrent.Callable;
 public class GetPlan extends ArtisanArmourerTask {
 	public static final int[] EGIL_ABEL = {6642, 6647};
 	private final MakeSword makeSword;
-	private final Filter<Menu.Entry> interactFilter = new Filter<Menu.Entry>() {
+	private final Filter<Menu.Command> interactFilter = new Filter<Menu.Command>() {
 		@Override
-		public boolean accept(Menu.Entry entry) {
+		public boolean accept(Menu.Command entry) {
 			final String action = entry.action;
 			return action.equals("Quick-score") || action.equals("Get-plans");
 		}
@@ -59,18 +59,18 @@ public class GetPlan extends ArtisanArmourerTask {
 			return;
 		}
 
-		final int xp = ctx.skills.getExperience(Skills.SMITHING);
+		final int xp = ctx.skills.experience(Skills.SMITHING);
 
 		for (Npc egil : ctx.npcs.select().id(EGIL_ABEL).nearest()/*.limit(3).shuffle()*/.first()) {
 			if (ctx.camera.prepare(egil) && egil.interact(interactFilter)) {
-				sleep(250, 1000);
+				ctx.sleep(500);
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty() || xp != ctx.skills.getExperience(Skills.SMITHING);
+						return !ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty() || xp != ctx.skills.experience(Skills.SMITHING);
 					}
 				}, Random.nextInt(300, 600), Random.nextInt(9, 12));
-				sleep(250, 1000);
+				ctx.sleep(500);
 			}
 		}
 	}

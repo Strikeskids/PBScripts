@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
-import org.powerbot.script.util.Random;
+import org.powerbot.script.Random;
 
 /**
  * Created with IntelliJ IDEA.

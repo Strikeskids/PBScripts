@@ -8,13 +8,13 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePa
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Area;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TilePath;
+import org.powerbot.script.Area;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.Game;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.TilePath;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,44 +51,44 @@ public class KharyrllPortalRoom extends NodePath {
 			final Room startRoom = script.roomStorage.getRoom(ctx.players.local());
 
 			List<Tile> tilesNear = ctx.movement.getTilesNear(portalRoom.getArea(), portal, 4);
-			Tile destination = tilesNear.isEmpty() ? portal.getLocation() : tilesNear.get(Random.nextInt(0, tilesNear.size()));
+			Tile destination = tilesNear.isEmpty() ? portal.tile() : tilesNear.get(Random.nextInt(0, tilesNear.size()));
 
 			if (!startRoom.equals(portalRoom)) {
 				final HousePath pathToPortal = new Astar(script).findRoute(portal);
 				if (pathToPortal != null && !pathToPortal.traverse(destination)) {
-					if (!destination.getMatrix(ctx).isReachable()) {
+					if (!destination.matrix(ctx).reachable()) {
 						// Find door
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, portalRoom)).shuffle().first()) {
 							if (DoorOpener.open(ctx, door)) {
-								sleep(100, 600);
+								sleep(200);
 							}
 						}
 					}
 				}
 
 				if (ctx.movement.findPath(destination).traverse()) {
-					sleep(250, 600);
+					sleep(250);
 				}
 
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						Tile dest = ctx.movement.getDestination();
-						return dest == null || !dest.getMatrix(ctx).isValid() || dest.distanceTo(ctx.players.local()) <= destinationDistance;
+						Tile dest = ctx.movement.destination();
+						return dest == null || !dest.matrix(ctx).valid() || dest.distanceTo(ctx.players.local()) <= destinationDistance;
 					}
 				});
 			}
 
-			if (startRoom.equals(portalRoom) || destination.getMatrix(ctx).isReachable()) {
+			if (startRoom.equals(portalRoom) || destination.matrix(ctx).reachable()) {
 				options.status = "Clicking on Kharyrll portal";
 				if (ctx.camera.prepare(portal) && portal.interact("Enter", "Kharyrll Portal")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && CANIFIS_PUB.contains(ctx.players.local());
+							return ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.players.local().animation() == -1 && CANIFIS_PUB.contains(ctx.players.local());
 						}
 					}, 600, 17);
-					sleep(200, 600);
+					sleep(300);
 				}
 			}
 		}
@@ -101,13 +101,13 @@ public class KharyrllPortalRoom extends NodePath {
 		if (CANIFIS_PUB.contains(ctx.players.local())) {
 			for (GameObject door : ctx.objects.select().id(CLOSED_DOOR).nearest().first()) {
 				if (DoorOpener.open(ctx, door)) {
-					sleep(100, 1000);
+					sleep(300);
 				}
 			}
 		}
 
 		final TilePath path = new TilePath(ctx, PATH_TO_PUB);
-		if (path.getEnd().distanceTo(ctx.players.local()) > 4) {
+		if (path.end().distanceTo(ctx.players.local()) > 4) {
 			if (path.randomize(2, 2).traverse()) {
 				return true;
 			}

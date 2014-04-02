@@ -3,11 +3,11 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.MagicTablet;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Action;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.Action;
+import org.powerbot.script.rt6.Game;
+import org.powerbot.script.rt6.Hud;
+import org.powerbot.script.rt6.Item;
 
 import java.util.concurrent.Callable;
 
@@ -41,11 +41,11 @@ public class HouseTablet extends MagicTablet {
 		}
 
 		final Action poll = ctx.combatBar.select().id(tabletID).poll();
-		if (poll.isValid() && ctx.combatBar.setExpanded(true) && poll.getComponent().interact("Break")) {
+		if (poll.valid() && ctx.combatBar.expanded(true) && poll.component().interact("Break")) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
+					return ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.players.local().animation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
 				}
 			});
 			return;
@@ -66,14 +66,14 @@ public class HouseTablet extends MagicTablet {
 				});
 				tablet = Inventory.getItem(tabletID);
 			}*/
-		if (ctx.hud.view(Hud.Window.BACKPACK)) {
-			if (tablet.isValid()) {
-				sleep(100, 350);
-				if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && tablet.interact("Break")) {
+		if (ctx.hud.open(Hud.Window.BACKPACK)) {
+			if (tablet.valid()) {
+				sleep(100);
+				if (!script.houseTask.isInHouse() && ctx.game.clientState() == Game.INDEX_MAP_LOADED && tablet.interact("Break")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
+							return ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.players.local().animation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null);
 						}
 					});
 				}

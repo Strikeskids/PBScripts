@@ -2,9 +2,9 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
-import org.powerbot.script.methods.Summoning;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Summoning;
 
 import java.util.concurrent.Callable;
 
@@ -37,7 +37,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 
 	@Override
 	public void run() {
-		if (options.useBOB.get() && !options.usedBOB.get() && ctx.summoning.isFamiliarSummoned() && options.beastOfBurden.getBoBSpace() > 0) {
+		if (options.useBOB.get() && !options.usedBOB.get() && ctx.summoning.summoned() && options.beastOfBurden.bobSpace() > 0) {
 			options.status = "Taking items from BoB";
 			script.log.info(options.status);
 
@@ -50,7 +50,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 						return options.usedBOB.get() || ctx.backpack.select().count() > inventoryCount;
 					}
 				}, Random.nextInt(300, 600), 5);
-				sleep(100, 600);
+				sleep(333);
 			}
 		} else if (getBackpackOffering().isEmpty()) {
 			options.status = ("Out of bones banking");

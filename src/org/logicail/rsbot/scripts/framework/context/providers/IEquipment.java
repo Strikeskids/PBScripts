@@ -1,12 +1,12 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.Equipment;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.methods.Menu;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Item;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
+import org.powerbot.script.rt6.Equipment;
+import org.powerbot.script.rt6.Hud;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.Menu;
 
 import java.util.concurrent.Callable;
 
@@ -17,9 +17,9 @@ import java.util.concurrent.Callable;
  * Time: 16:45
  */
 public class IEquipment extends Equipment {
-	private final IMethodContext ctx;
+	private final IClientContext ctx;
 
-	public IEquipment(IMethodContext context) {
+	public IEquipment(IClientContext context) {
 		super(context);
 		ctx = context;
 	}
@@ -32,13 +32,13 @@ public class IEquipment extends Equipment {
 	 */
 	public boolean equip(final int... ids) {
 		Item item;
-		if (ctx.bank.isOpen()) {
+		if (ctx.bank.opened()) {
 			item = ctx.bank.backpack.select().id(ids).poll();
 		} else {
 			item = ctx.backpack.select().id(ids).poll();
-			if (item.getId() > -1) {
-				if (!ctx.hud.isVisible(Hud.Window.BACKPACK) && ctx.hud.view(Hud.Window.BACKPACK)) {
-					sleep(100, 600);
+			if (item.id() > -1) {
+				if (!ctx.hud.opened(Hud.Window.BACKPACK) && ctx.hud.open(Hud.Window.BACKPACK)) {
+					ctx.sleep(400);
 				}
 				if (!ctx.backpack.scroll(item)) {
 					return false;
@@ -46,10 +46,10 @@ public class IEquipment extends Equipment {
 			}
 		}
 
-		if (item.isValid()) {
-			if (item.interact(new Filter<Menu.Entry>() {
+		if (item.valid()) {
+			if (item.interact(new Filter<Menu.Command>() {
 				@Override
-				public boolean accept(Menu.Entry entry) {
+				public boolean accept(Menu.Command entry) {
 					return entry.action.startsWith("Equip") || entry.action.startsWith("Wear") || entry.action.startsWith("Wield");
 				}
 			})) {
@@ -67,18 +67,18 @@ public class IEquipment extends Equipment {
 
 	public boolean unequip(final int... ids) {
 		// Disable when bank open
-		if (ctx.bank.isOpen()) {
+		if (ctx.bank.opened()) {
 			return false;
 		}
 
-		if (ctx.hud.view(Hud.Window.WORN_EQUIPMENT)) {
+		if (ctx.hud.open(Hud.Window.WORN_EQUIPMENT)) {
 			final Item item = ctx.equipment.select().id(ids).poll();
-			if (item.isValid()) {
+			if (item.valid()) {
 				if (item.interact("Remove")) {
 					return Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return !ctx.equipment.select().id(ids).poll().isValid();
+							return !ctx.equipment.select().id(ids).poll().valid();
 						}
 					});
 				}

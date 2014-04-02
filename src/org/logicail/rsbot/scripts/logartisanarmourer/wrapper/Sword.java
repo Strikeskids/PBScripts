@@ -1,11 +1,11 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.wrapper;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Component;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Skills;
 
 import java.util.concurrent.Callable;
 
@@ -47,7 +47,7 @@ public enum Sword {
 	 *
 	 * @return
 	 */
-	private static int getSwordPartsRemaining(IMethodContext ctx) {
+	private static int getSwordPartsRemaining(IClientContext ctx) {
 		int hits = 0;
 		for (Sword sword : Sword.values()) {
 			if (sword.validate(ctx)) {
@@ -57,16 +57,16 @@ public enum Sword {
 		return hits;
 	}
 
-	public boolean clickButton(final IMethodContext ctx, final MakeSword makeSword) {
+	public boolean clickButton(final IClientContext ctx, final MakeSword makeSword) {
 		final int cooldown = makeSword.getCooldown();
 		final int current = getCurrent(ctx);
 		if (getTarget(ctx) > getCurrent(ctx)) {
-			final Component button = ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, buttonWidgetId);
-			if (button.isValid() && button.interact("Select")) {
+			final Component button = ctx.widgets.component(MakeSword.WIDGET_SWORD_INTERFACE, buttonWidgetId);
+			if (button.valid() && button.interact("Select")) {
 				return Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.players.local().getAnimation() == -1 &&
+						return ctx.players.local().animation() == -1 &&
 								makeSword.getCooldown() != cooldown && current != getCurrent(ctx);
 					}
 				}, Random.nextInt(250, 350), Random.nextInt(18, 25));
@@ -75,23 +75,23 @@ public enum Sword {
 		return false;
 	}
 
-	public int getCurrent(IMethodContext ctx) {
+	public int getCurrent(IClientContext ctx) {
 		try {
-			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).getText());
+			return Integer.parseInt(ctx.widgets.component(MakeSword.WIDGET_SWORD_INTERFACE, currentWidgetId).text());
 		} catch (Exception e) {
 			return -1;
 		}
 	}
 
-	public int getTarget(IMethodContext ctx) {
+	public int getTarget(IClientContext ctx) {
 		try {
-			return Integer.parseInt(ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).getText());
+			return Integer.parseInt(ctx.widgets.component(MakeSword.WIDGET_SWORD_INTERFACE, targetWidgetId).text());
 		} catch (Exception e) {
 			return -1;
 		}
 	}
 
-	public HitType getRequiredHitType(IMethodContext ctx, MakeSword makeSword) {
+	public HitType getRequiredHitType(IClientContext ctx, MakeSword makeSword) {
 		final int hitsNeeded = getHitsNeeded(ctx);
 		if (hitsNeeded <= 0) {
 			return null;
@@ -99,7 +99,7 @@ public enum Sword {
 
 		switch (hitsNeeded) {
 			case 1:
-				if (ctx.skills.getRealLevel(Skills.SMITHING) < 95 && makeSword.getCooldown() >= 2) {
+				if (ctx.skills.realLevel(Skills.SMITHING) < 95 && makeSword.getCooldown() >= 2) {
 					final int hitsRemaining = getSwordPartsRemaining(ctx);
 					if (hitsRemaining * 2 <= makeSword.getCooldown()) {
 						// Have to risk some Softs
@@ -123,7 +123,7 @@ public enum Sword {
 		}
 	}
 
-	public int getHitsNeeded(IMethodContext ctx) {
+	public int getHitsNeeded(IClientContext ctx) {
 		if (!validate(ctx)) {
 			return 0;
 		}
@@ -140,7 +140,7 @@ public enum Sword {
     Careful (uses 2 cooldown)	0%	0%	  0%	0%	100%  0%
      */
 
-	boolean validate(IMethodContext ctx) {
+	boolean validate(IClientContext ctx) {
 		return getTarget(ctx) > getCurrent(ctx);
 	}
 }

@@ -8,9 +8,10 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Astar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.*;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -49,17 +50,17 @@ public class HouseGlory extends NodePath {
 			final GameObject mountedGlory = ctx.objects.select().id(MOUNTED_GLORY).sort(new Comparator<GameObject>() {
 				@Override
 				public int compare(GameObject o1, GameObject o2) {
-					if (altar.isValid()) {
+					if (altar.valid()) {
 						return Double.compare(IMovement.Euclidean(o1, altar), IMovement.Euclidean(o2, altar));
 					}
 					return Double.compare(IMovement.Euclidean(o1, local), IMovement.Euclidean(o2, local));
 				}
 			}).each(Interactive.doSetBounds(MOUNTED_GLORY_BOUNDS_RIGHT)).poll();
 
-			if (!mountedGlory.isValid()) return;
+			if (!mountedGlory.valid()) return;
 			final Room gloryRoom = script.roomStorage.getRoom(mountedGlory);
 			final List<Tile> tiles = ctx.movement.getTilesNear(gloryRoom.getArea(), mountedGlory, 3);
-			final Tile destination = tiles.isEmpty() ? mountedGlory.getLocation() : tiles.get(0);
+			final Tile destination = tiles.isEmpty() ? mountedGlory.tile() : tiles.get(0);
 
 			final HousePath pathToGlory = new Astar(script).findRoute(destination);
 			if (pathToGlory == null) {
@@ -67,13 +68,13 @@ public class HouseGlory extends NodePath {
 				return;
 			}
 
-			if (pathToGlory.getPath().size() > 1 && local.getLocation().distanceTo(mountedGlory) > 7) {
+			if (pathToGlory.getPath().size() > 1 && local.tile().distanceTo(mountedGlory) > 7) {
 				options.status = "Walk to mounted glory";
 				if (pathToGlory.traverse(destination)) {
-					org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
+					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || mountedGlory.isOnScreen();
+							return gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || mountedGlory.inViewport();
 						}
 					}, Random.nextInt(100, 250), 10);
 				}
@@ -81,55 +82,55 @@ public class HouseGlory extends NodePath {
 
 			//LogHandler.print("Can I reach glory?: " + (destination.canReach() ? "yes" : "no"));
 
-			if (gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || (destination.getMatrix(ctx).isReachable() && pathToGlory.getNextDoor().isEmpty())) {
+			if (gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || (destination.matrix(ctx).reachable() && pathToGlory.getNextDoor().isEmpty())) {
 				options.status = "Trying to click amulet of glory";
-				if (!mountedGlory.isOnScreen()) {
+				if (!mountedGlory.inViewport()) {
 					ctx.camera.turnTo(mountedGlory);
-					if (!mountedGlory.isOnScreen()) {
+					if (!mountedGlory.inViewport()) {
 						ctx.camera.turnTo(mountedGlory, Random.nextInt(9, 16));
 					}
 				}
 
-				if (!mountedGlory.isOnScreen()) {
-					ctx.camera.setPitch(Random.nextInt(0, 40));
-					sleep(100, 600);
+				if (!mountedGlory.inViewport()) {
+					ctx.camera.pitch(Random.nextInt(0, 40));
+					ctx.sleep(250);
 				}
 
-				if (!mountedGlory.isOnScreen() && !gloryRoom.getArea().contains(ctx.players.local())) {
+				if (!mountedGlory.inViewport() && !gloryRoom.getArea().contains(ctx.players.local())) {
 					ctx.movement.walk(destination);
 				}
 
-				if (!mountedGlory.isOnScreen()) {
+				if (!mountedGlory.inViewport()) {
 					if (ctx.movement.findPath(destination).traverse()) {
-						org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
+						Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return mountedGlory.isOnScreen() || mountedGlory.getLocation().distanceTo(ctx.players.local()) < 5;
+								return mountedGlory.inViewport() || mountedGlory.tile().distanceTo(ctx.players.local()) < 5;
 							}
 						}, Random.nextInt(125, 250), 10);
 					}
-					if (!mountedGlory.isOnScreen()) {
+					if (!mountedGlory.inViewport()) {
 						ctx.camera.turnTo(mountedGlory, Random.nextInt(0, 8));
 					}
 				}
 
-				if (mountedGlory.isOnScreen() && mountedGlory.interact("Rub", "Amulet of Glory")) {
-					if (org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
+				if (mountedGlory.inViewport() && mountedGlory.interact("Rub", "Amulet of Glory")) {
+					if (Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
 							return !ctx.chat.select().text("Edgeville").isEmpty();
 						}
 					})) {
 						for (ChatOption option : ctx.chat.first()) {
-							sleep(80, 800);
+							ctx.sleep(333);
 							if (option.select(Random.nextBoolean())) {
-								org.powerbot.script.util.Condition.wait(new Callable<Boolean>() {
+								Condition.wait(new Callable<Boolean>() {
 									@Override
 									public Boolean call() throws Exception {
-										return locationAttribute.isInLargeArea(ctx) && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.players.local().getAnimation() == -1;
+										return locationAttribute.isInLargeArea(ctx) && ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.players.local().animation() == -1;
 									}
 								}, Random.nextInt(120, 160), 100);
-								sleep(100, 800);
+								ctx.sleep(400);
 							}
 						}
 					}
@@ -140,7 +141,7 @@ public class HouseGlory extends NodePath {
 		} else {
 			if (!locationAttribute.isInLargeArea(ctx)) {
 				if (ILodestone.Lodestone.EDGEVILLE.isUnlocked(ctx)) {
-					if (ctx.players.local().getAnimation() == -1) {
+					if (ctx.players.local().animation() == -1) {
 						ctx.lodestones.teleport(ILodestone.Lodestone.EDGEVILLE);
 					}
 				}

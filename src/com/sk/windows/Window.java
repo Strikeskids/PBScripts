@@ -1,21 +1,21 @@
 package com.sk.windows;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 
 public interface Window {
 	public static final Window NIL = new Window() {
 		@Override
-		public boolean open(IMethodContext ctx) {
+		public boolean open(IClientContext ctx) {
 			return false;
 		}
 
 		@Override
-		public boolean isOpen(IMethodContext ctx) {
+		public boolean isOpen(IClientContext ctx) {
 			return false;
 		}
 	};
 
-	public boolean isOpen(final IMethodContext ctx);
+	public boolean isOpen(final IClientContext ctx);
 
-	public boolean open(final IMethodContext ctx);
+	public boolean open(final IClientContext ctx);
 }

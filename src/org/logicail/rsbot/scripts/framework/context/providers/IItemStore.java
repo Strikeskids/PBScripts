@@ -1,9 +1,9 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.lang.ItemQuery;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.Item;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.ItemQuery;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,21 +17,21 @@ import java.util.List;
 public class IItemStore extends ItemQuery<Item> {
 	private final Component component;
 
-	public IItemStore(IMethodContext context, Component component) {
+	public IItemStore(IClientContext context, Component component) {
 		super(context);
 		this.component = component;
 	}
 
 	public boolean isOpen() {
-		return component.isValid();
+		return component.valid();
 	}
 
 	@Override
 	protected List<Item> get() {
 		List<Item> items = new LinkedList<Item>();
 
-		for (Component child : component.getChildren()) {
-			if (child.isValid() && child.getItemId() != -1) {
+		for (Component child : component.components()) {
+			if (child.valid() && child.itemId() != -1) {
 				items.add(new Item(ctx, child));
 			}
 		}
@@ -40,7 +40,7 @@ public class IItemStore extends ItemQuery<Item> {
 	}
 
 	@Override
-	public Item getNil() {
-		return ctx.backpack.getNil();
+	public Item nil() {
+		return ctx.backpack.nil();
 	}
 }

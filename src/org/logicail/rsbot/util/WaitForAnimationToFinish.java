@@ -1,9 +1,9 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
-import org.powerbot.script.wrappers.Player;
+import org.powerbot.script.rt6.Player;
 
 import java.util.concurrent.Callable;
 
@@ -13,11 +13,11 @@ import java.util.concurrent.Callable;
  * Date: 05/01/14
  * Time: 16:13
  */
-public class WaitForAnimationToFinish extends IMethodProvider implements Callable<Boolean> {
+public class WaitForAnimationToFinish extends IClientAccessor implements Callable<Boolean> {
 	private final int animationId;
 	private boolean done = false;
 
-	public WaitForAnimationToFinish(IMethodContext context, int animationId) {
+	public WaitForAnimationToFinish(IClientContext context, int animationId) {
 		super(context);
 		this.animationId = animationId;
 	}
@@ -28,6 +28,6 @@ public class WaitForAnimationToFinish extends IMethodProvider implements Callabl
 			done = true;
 		}
 		final Player local = ctx.players.local();
-		return done && local != null && local.getAnimation() == -1;
+		return done && local != null && local.animation() == -1;
 	}
 }

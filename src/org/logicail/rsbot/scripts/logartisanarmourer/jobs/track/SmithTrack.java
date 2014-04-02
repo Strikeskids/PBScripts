@@ -9,10 +9,10 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track100;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track40;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track60;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.track.smith.Track80;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Player;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Game;
+import org.powerbot.script.rt6.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +122,7 @@ public class SmithTrack extends Branch<LogArtisanWorkshop> {
 	public boolean branch() {
 		Player player = ctx.players.local();
 
-		if (ctx.game.getClientState() != Game.INDEX_MAP_LOADED) {
+		if (ctx.game.clientState() != Game.INDEX_MAP_LOADED) {
 			return false;
 		}
 
@@ -206,7 +206,7 @@ public class SmithTrack extends Branch<LogArtisanWorkshop> {
 					@Override
 					public Boolean call() throws Exception {
 						for (int i : LogArtisanWorkshop.ANIMATION_SMITHING) {
-							if (ctx.players.local().getAnimation() == i) {
+							if (ctx.players.local().animation() == i) {
 								return true;
 							}
 						}
@@ -219,13 +219,13 @@ public class SmithTrack extends Branch<LogArtisanWorkshop> {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return script.getController().isSuspended()
-									|| script.getController().isStopping()
+							return ctx.controller().isSuspended()
+									|| ctx.controller().isStopping()
 									|| ctx.backpack.select().id(makeid).count() >= target
 									|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
 						}
 					}, 600, 100);
-					sleep(200, 1000);
+					sleep(500);
 				}
 				script.options.isSmithing = false;
 

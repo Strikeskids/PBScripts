@@ -3,8 +3,8 @@ package com.sk.methods.action.structure;
 import com.sk.methods.action.ability.AbilityLevel;
 import com.sk.methods.action.ability.AbilityStyle;
 import com.sk.windows.Window;
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.wrappers.Component;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.Component;
 
 public interface Ability extends BookIcon {
 	public static Ability NIL = new Ability() {
@@ -29,18 +29,18 @@ public interface Ability extends BookIcon {
 		}
 
 		@Override
-		public boolean isValid() {
+		public boolean valid() {
 			return false;
 		}
 
 		@Override
-		public int getId() {
+		public int id() {
 			return -1;
 		}
 
 		@Override
-		public Component getComponent(IMethodContext ctx) {
-			return ctx.widgets.get(0, 0);
+		public Component getComponent(IClientContext ctx) {
+			return ctx.widgets.component(0, 0);
 		}
 
 		@Override
@@ -69,7 +69,7 @@ public interface Ability extends BookIcon {
 		}
 
 		@Override
-		public Component getCooldownComponent(IMethodContext ctx) {
+		public Component getCooldownComponent(IClientContext ctx) {
 			return getComponent(ctx);
 		}
 

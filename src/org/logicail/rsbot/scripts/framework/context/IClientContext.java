@@ -4,13 +4,15 @@ import com.sk.methods.Combat;
 import com.sk.methods.SkKeyboard;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.util.ErrorDialog;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
 import org.powerbot.script.Script;
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.util.Timer;
-import org.powerbot.script.wrappers.Component;
+import org.powerbot.script.rt6.ClientContext;
 
 import java.awt.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 07/12/13
  * Time: 20:53
  */
-public class IMethodContext extends MethodContext {
+public class IClientContext extends ClientContext {
 	public final ILogger log = new ILogger(10);
 	// Providers
 	public final ISkillingInterface skillingInterface;
@@ -46,12 +48,12 @@ public class IMethodContext extends MethodContext {
 	private final AtomicBoolean paused = new AtomicBoolean();
 	private final AtomicBoolean shutdown = new AtomicBoolean();
 
-	public IMethodContext(final MethodContext originalContext, LogicailScript script) {
+	public IClientContext(final ClientContext originalContext, LogicailScript script) {
 		super(originalContext);
 		this.script = script;
 		script.log.addHandler(log);
 
-		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.getVersion();
+		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.version();
 
 		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
 			@Override
@@ -119,22 +121,21 @@ public class IMethodContext extends MethodContext {
 				}
 			});
 			Timer t = new Timer(10000);
-			while (t.isRunning() && game.isLoggedIn()) {
+			while (t.running() && game.loggedIn()) {
 				bank.close();
-
-				// Bank pin
-				Component bankPinCloseButton = widgets.get(13, 25);
-				if (bankPinCloseButton.isValid()) {
-					bankPinCloseButton.click(true);
-				}
 
 				game.logout(lobby);
 
-				game.sleep(1000, 3000);
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !game.loggedIn();
+					}
+				}, 100, 10);
 			}
 		} catch (Exception ignored) {
 		} finally {
-			script.getController().stop();
+			controller.stop();
 		}
 	}
 
@@ -146,5 +147,12 @@ public class IMethodContext extends MethodContext {
 
 	public boolean isShutdown() {
 		return shutdown.get();
+	}
+
+	public void sleep(int millis) {
+		try {
+			Thread.sleep(Math.max(5, (int) (millis * Random.nextDouble(0.75, 1.5))));
+		} catch (InterruptedException ignored) {
+		}
 	}
 }

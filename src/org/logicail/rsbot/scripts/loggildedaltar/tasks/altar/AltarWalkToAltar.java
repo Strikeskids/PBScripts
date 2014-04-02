@@ -9,10 +9,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
 import org.logicail.rsbot.util.LogicailArea;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TileMatrix;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -52,16 +51,16 @@ public class AltarWalkToAltar extends LogGildedAltarTask {
 			final List<Tile> tilesNear = ctx.movement.getTilesNear(new LogicailArea(location.derive(2, -2), location.derive(6, -6)), altar, 4);
 			if (tilesNear.isEmpty()) return;
 			final Tile destination = tilesNear.get(0);
-			final TileMatrix matrix = destination.getMatrix(ctx);
-			if (matrix.isInViewport() && matrix.interact("Walk here") || !path.traverse(destination)) {
-				if (!matrix.isReachable()) {
+			final org.powerbot.script.rt6.TileMatrix matrix = destination.matrix(ctx);
+			if (matrix.inViewport() && matrix.interact("Walk here") || !path.traverse(destination)) {
+				if (!matrix.reachable()) {
 					for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(altarRoom, currentRoom)).first()) {
 						DoorOpener.open(ctx, door);
-						sleep(100, 600);
+						ctx.sleep(300);
 					}
 				}
 
-				if (ctx.players.local().isInMotion() || ctx.movement.findPath(destination).traverse()) {
+				if (ctx.players.local().inMotion() || ctx.movement.findPath(destination).traverse()) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {

@@ -1,7 +1,7 @@
 package com.sk.methods;
 
-import org.powerbot.script.methods.Keyboard;
-import org.powerbot.script.methods.MethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Keyboard;
 
 import java.util.*;
 
@@ -31,8 +31,11 @@ public class SkKeyboard extends Keyboard {
 		keyNames.put("/", "SLASH");
 	}
 
-	public SkKeyboard(MethodContext ctx) {
+	private final IClientContext ctx;
+
+	public SkKeyboard(IClientContext ctx) {
 		super(ctx);
+		this.ctx = ctx;
 	}
 
 	public boolean press(String key) {
@@ -47,7 +50,7 @@ public class SkKeyboard extends Keyboard {
 			case 0:
 				if (!key(key, 1))
 					return false;
-				sleep(100, 150);
+				ctx.sleep(100);
 				return key(key, 2);
 			case 1:
 				act = "down";

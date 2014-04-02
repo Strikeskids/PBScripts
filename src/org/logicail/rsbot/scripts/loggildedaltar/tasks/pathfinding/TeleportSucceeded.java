@@ -1,9 +1,9 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
-import org.powerbot.script.wrappers.Player;
-import org.powerbot.script.wrappers.Tile;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.Player;
 
 import java.util.concurrent.Callable;
 
@@ -13,10 +13,10 @@ import java.util.concurrent.Callable;
  * Date: 04/01/14
  * Time: 18:06
  */
-public class TeleportSucceeded extends IMethodProvider implements Callable<Boolean> {
+public class TeleportSucceeded extends IClientAccessor implements Callable<Boolean> {
 	private final Tile start;
 
-	public TeleportSucceeded(IMethodContext ctx, Tile start) {
+	public TeleportSucceeded(IClientContext ctx, Tile start) {
 		super(ctx);
 		this.start = start;
 	}
@@ -24,6 +24,6 @@ public class TeleportSucceeded extends IMethodProvider implements Callable<Boole
 	@Override
 	public Boolean call() throws Exception {
 		final Player local = ctx.players.local();
-		return local == null || (local.getAnimation() == -1 && !local.getLocation().equals(start));
+		return local == null || (local.animation() == -1 && !local.tile().equals(start));
 	}
 }

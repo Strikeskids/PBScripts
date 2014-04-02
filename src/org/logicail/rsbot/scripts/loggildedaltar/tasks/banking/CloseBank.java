@@ -18,7 +18,7 @@ public class CloseBank extends BankingAbstract {
 
 	@Override
 	public boolean isValid() {
-		return ctx.bank.isOpen();
+		return ctx.bank.opened();
 	}
 
 	@Override

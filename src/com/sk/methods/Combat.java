@@ -1,18 +1,18 @@
 package com.sk.methods;
 
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.methods.MethodProvider;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.wrappers.Actor;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.Actor;
+import org.powerbot.script.rt6.Skills;
 
-public class Combat extends MethodProvider {
+public class Combat extends IClientAccessor {
 	private static final int ADRENALINE_SETTING = 679, MAXIMUM_ADRENALINE = 1000;
 	private static final int HEALTH_SETTING = 659, HEALTH_BOOST_SETTING = 3596;
 	private static final int PRAYER_SETTING = 3274;
 
 	private Actor target;
 
-	public Combat(MethodContext ctx) {
+	public Combat(IClientContext ctx) {
 		super(ctx);
 	}
 
@@ -21,11 +21,11 @@ public class Combat extends MethodProvider {
 	}
 
 	public int getAdrenaline() {
-		return ctx.settings.get(ADRENALINE_SETTING);
+		return ctx.varpbits.varpbit(ADRENALINE_SETTING);
 	}
 
 	public int getHealth() {
-		return ctx.settings.get(HEALTH_SETTING) >> 1;
+		return ctx.varpbits.varpbit(HEALTH_SETTING) >> 1;
 	}
 
 	public int getMaximumAdrenaline() {
@@ -33,26 +33,26 @@ public class Combat extends MethodProvider {
 	}
 
 	public int getMaximumHealth() {
-		return ctx.settings.get(HEALTH_BOOST_SETTING) + 40 * ctx.skills.getLevel(Skills.CONSTITUTION);
+		return ctx.varpbits.varpbit(HEALTH_BOOST_SETTING) + 40 * ctx.skills.level(Skills.CONSTITUTION);
 	}
 
 	public int getMaximumPrayerPoints() {
-		return ctx.skills.getLevel(Skills.PRAYER) * 100;
+		return ctx.skills.level(Skills.PRAYER) * 100;
 	}
 
 	public int getMaximumSummoningPoints() {
-		return ctx.skills.getRealLevel(Skills.SUMMONING);
+		return ctx.skills.realLevel(Skills.SUMMONING);
 	}
 
 	public int getPrayerPoints() {
-		return ctx.settings.get(PRAYER_SETTING) & 0x3fff;
+		return ctx.varpbits.varpbit(PRAYER_SETTING) & 0x3fff;
 	}
 
 	public int getSummoningPoints() {
-		return ctx.skills.getLevel(Skills.SUMMONING);
+		return ctx.skills.level(Skills.SUMMONING);
 	}
 
 	public void setTarget(Actor act) {
-		this.target = act == null ? ctx.npcs.getNil() : act;
+		this.target = act == null ? ctx.npcs.nil() : act;
 	}
 }

@@ -4,20 +4,20 @@ import com.sk.methods.action.ability.AbilityLevel;
 import com.sk.methods.action.ability.AbilityStyle;
 import com.sk.methods.action.magic.Spellbook;
 import com.sk.methods.action.structure.BarIcon;
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.lang.AbstractQuery;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.wrappers.Action.Type;
-import org.powerbot.script.wrappers.Identifiable;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.AbstractQuery;
+import org.powerbot.script.Filter;
+import org.powerbot.script.Identifiable;
+import org.powerbot.script.rt6.ClientContext;
 
 import java.util.Collections;
 import java.util.EnumSet;
 
-public abstract class ActionQuery<T extends Action> extends AbstractQuery<ActionQuery<T>, T> implements
+public abstract class ActionQuery<T extends Action> extends AbstractQuery<ActionQuery<T>, T, ClientContext> implements
 		Identifiable.Query<ActionQuery<T>> {
-	public final IMethodContext ctx;
+	public final IClientContext ctx;
 
-	public ActionQuery(IMethodContext ctx) {
+	public ActionQuery(IClientContext ctx) {
 		super(ctx);
 		this.ctx = ctx;
 	}
@@ -47,7 +47,7 @@ public abstract class ActionQuery<T extends Action> extends AbstractQuery<Action
 			@Override
 			public boolean accept(T t) {
 				BarIcon v = t.getBarIcon();
-				if (!v.isValid())
+				if (!v.valid())
 					return false;
 				for (BarIcon i : icon)
 					if (v.equals(i))
@@ -109,7 +109,7 @@ public abstract class ActionQuery<T extends Action> extends AbstractQuery<Action
 		return select(new Filter<T>() {
 			@Override
 			public boolean accept(T t) {
-				return t.isReady();
+				return t.ready();
 			}
 		});
 	}
@@ -129,11 +129,11 @@ public abstract class ActionQuery<T extends Action> extends AbstractQuery<Action
 		return style(search);
 	}
 
-	public ActionQuery<T> type(final Type type) {
+	public ActionQuery<T> type(final org.powerbot.script.rt6.Action.Type type) {
 		return select(new Filter<T>() {
 			@Override
 			public boolean accept(T t) {
-				return t.getType() == type;
+				return t.type() == type;
 			}
 		});
 	}
@@ -142,7 +142,7 @@ public abstract class ActionQuery<T extends Action> extends AbstractQuery<Action
 		return select(new Filter<T>() {
 			@Override
 			public boolean accept(T t) {
-				return t.getAbility().isValid();
+				return t.getAbility().valid();
 			}
 		});
 	}

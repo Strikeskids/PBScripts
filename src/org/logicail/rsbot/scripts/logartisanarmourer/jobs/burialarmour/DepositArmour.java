@@ -2,8 +2,8 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.concurrent.Callable;
 
@@ -47,12 +47,12 @@ public class DepositArmour extends ArtisanArmourerTask {
 							return ctx.backpack.select().id(LogArtisanWorkshop.ARMOUR_ID_LIST).isEmpty();
 						}
 					})) {
-						sleep(200, 600);
+						ctx.sleep(350);
 					}
 				}
 			} else {
 				options.status = "Walking to chute";
-				sleep(500, 2000);
+				ctx.sleep(1000);
 			}
 		}
 	}

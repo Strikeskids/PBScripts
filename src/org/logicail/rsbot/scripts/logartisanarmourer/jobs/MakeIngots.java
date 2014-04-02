@@ -4,8 +4,8 @@ import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.concurrent.Callable;
 
@@ -26,7 +26,6 @@ public class MakeIngots extends ArtisanArmourerTask {
 	@Override
 	public boolean isValid() {
 		return super.isValid()
-				&& !ctx.widgets.get(13).isValid() // Bank pin
 				&& (ctx.skillingInterface.getAction().equals("Smelt") && !ctx.skillingInterface.select().id(MakeSword.HEATED_INGOTS[0]).isEmpty())
 				|| (!ctx.backpack.isFull() && (ctx.backpack.select().id(options.getIngotId()).isEmpty() && ctx.backpack.select().id(MakeSword.HEATED_INGOTS).isEmpty()));
 	}
@@ -84,7 +83,7 @@ public class MakeIngots extends ArtisanArmourerTask {
 								return ctx.skillingInterface.isOpen();
 							}
 						})) {
-							sleep(100, 500);
+							ctx.sleep(300);
 						}
 					}
 				}

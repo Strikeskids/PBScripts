@@ -6,11 +6,11 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.powerbot.script.methods.Equipment;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Player;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Equipment;
+import org.powerbot.script.rt6.Game;
+import org.powerbot.script.rt6.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,12 +77,12 @@ public class HouseTeleportStaff extends NodePath {
 		}
 
 		if (!ctx.equipment.select().id(staff).isEmpty()) {
-			if (!script.houseTask.isInHouse() && ctx.game.getClientState() == Game.INDEX_MAP_LOADED && ctx.magic.cast(StandardSpell.HOUSE_TELEPORT)) {
+			if (!script.houseTask.isInHouse() && ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.magic.cast(StandardSpell.HOUSE_TELEPORT)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						final Player local = ctx.players.local();
-						return (script.getController().isSuspended() || script.getController().isStopping()) || (local != null && local.getAnimation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null));
+						return (script.ctx.controller().isSuspended() || script.ctx.controller().isStopping()) || (local != null && local.animation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null));
 					}
 				}, Random.nextInt(550, 650), Random.nextInt(20, 60));
 			}

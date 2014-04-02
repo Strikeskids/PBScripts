@@ -1,8 +1,8 @@
 package org.logicail.rsbot.util;
 
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.lang.ItemQuery;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Filter;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.ItemQuery;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,13 +22,13 @@ public class ItemHelper {
 			for (Item item : query.select().id(id).select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
-					return item.getStackSize() >= quantity;
+					return item.stackSize() >= quantity;
 				}
 			})) {
 				return item;
 			}
 		}
 
-		return query.getNil();
+		return query.nil();
 	}
 }

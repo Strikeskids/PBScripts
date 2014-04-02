@@ -1,7 +1,8 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.methods.Backpack;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.Backpack;
+import org.powerbot.script.rt6.Item;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,11 +11,16 @@ import org.powerbot.script.methods.Backpack;
  * Time: 21:58
  */
 public class IBackpack extends Backpack {
-	public IBackpack(IMethodContext context) {
+	public IBackpack(IClientContext context) {
 		super(context);
 	}
 
 	public boolean isFull() {
 		return select().count() == 28;
+	}
+
+	public Item selectedItem() {
+		final int index = selectedItemIndex();
+		return index > -1 ? itemAt(index) : nil();
 	}
 }

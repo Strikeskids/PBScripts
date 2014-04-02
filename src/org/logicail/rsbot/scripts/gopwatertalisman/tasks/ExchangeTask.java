@@ -2,10 +2,10 @@ package org.logicail.rsbot.scripts.gopwatertalisman.tasks;
 
 import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.gopwatertalisman.GOPWaterTalisman;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.Npc;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Npc;
 
 import java.util.concurrent.Callable;
 
@@ -34,8 +34,8 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 
 	@Override
 	public void run() {
-		final Component shop = ctx.widgets.get(WIDGET_SHOP, WIDGET_SHOP_WATER_TALISMAN);
-		if (shop.isValid()) {
+		final Component shop = ctx.widgets.component(WIDGET_SHOP, WIDGET_SHOP_WATER_TALISMAN);
+		if (shop.valid()) {
 			if (shop.interact("Buy X", "Water talisman")) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -48,10 +48,10 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 						if (Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return ctx.widgets.get(WIDGET_SHOP, 141).getText().contains("Water talisman");
+								return ctx.widgets.component(WIDGET_SHOP, 141).text().contains("Water talisman");
 							}
 						}, Random.nextInt(333, 888), 6)) {
-							if (ctx.widgets.get(WIDGET_SHOP, 130).interact("Confirm")) {
+							if (ctx.widgets.component(WIDGET_SHOP, 130).interact("Confirm")) {
 								Condition.wait(new Callable<Boolean>() {
 									@Override
 									public Boolean call() throws Exception {
@@ -64,9 +64,9 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 				}
 			}
 		} else {
-			if (ctx.depositBox.isOpen()) {
+			if (ctx.depositBox.opened()) {
 				ctx.depositBox.close();
-				sleep(222, 888);
+				sleep(333);
 				return;
 			}
 
@@ -75,7 +75,7 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return shop.isValid();
+						return shop.valid();
 					}
 				}, Random.nextInt(333, 888), 8);
 			}

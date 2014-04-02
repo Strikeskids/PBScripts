@@ -4,8 +4,8 @@ import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TilePath;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.TilePath;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +36,7 @@ public class BurthorpeLodestone extends LodestoneTeleport {
 			options.status = "Walking";
 			pathToBank.randomize(2, 2);
 			if (pathToBank.traverse() || ctx.movement.findPath(locationAttribute.getSmallRandom(ctx)).traverse()) {
-				sleep(250, 1400);
+				sleep(500);
 			}
 		}
 	}

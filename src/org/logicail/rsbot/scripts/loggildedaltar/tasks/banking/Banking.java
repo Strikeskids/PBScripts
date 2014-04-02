@@ -4,9 +4,9 @@ import org.logicail.rsbot.scripts.framework.tasks.Branch;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.util.LogicailArea;
-import org.powerbot.script.wrappers.Locatable;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TileMatrix;
+import org.powerbot.script.Locatable;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.TileMatrix;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -43,15 +43,15 @@ public class Banking extends Branch<LogGildedAltar> {
 
 	@Override
 	public boolean branch() {
-		final Locatable nearest = ctx.bank.getNearest();
+		final Locatable nearest = ctx.bank.nearest();
 		if (nearest != Tile.NIL) {
-			final Tile location = nearest.getLocation();
-			final TileMatrix tileMatrix = location.getMatrix(ctx);
-			if (tileMatrix.isInViewport()) {
+			final Tile location = nearest.tile();
+			final TileMatrix tileMatrix = location.matrix(ctx);
+			if (tileMatrix.inViewport()) {
 				return true;
 			}
 			final Tile tile = new LogicailArea(location.derive(-2, -2), location.derive(3, 3)).getRandomReachable(ctx, 6);
-			return tile.getMatrix(ctx).isValid() && tile.distanceTo(ctx.players.local()) < 10;
+			return tile.matrix(ctx).valid() && tile.distanceTo(ctx.players.local()) < 10;
 		}
 		return script.bankingTask.inBank();
 	}

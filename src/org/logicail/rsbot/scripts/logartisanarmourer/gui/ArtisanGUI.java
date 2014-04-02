@@ -74,7 +74,7 @@ public class ArtisanGUI extends JFrame {
 		this.script = logArtisanWorkshop;
 		initComponents();
 
-		setTitle(script.getName() + " v" + script.getVersion());
+		setTitle(script.getName()/* + " v" + script.getVersion()*/);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(500, 360));
 
@@ -134,7 +134,7 @@ public class ArtisanGUI extends JFrame {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
-					script.getController().stop();
+					script.ctx.controller().stop();
 				}
 			}
 		});
@@ -343,7 +343,7 @@ public class ArtisanGUI extends JFrame {
 		} else if (s.equals("Track room")) {
 			options.mode = Mode.REPAIR_TRACK;
 			options.ingotType = (IngotType) trackIngotType.getSelectedItem();
-			script.getController().getExecutor().offer(new Task<LogArtisanWorkshop>(script) {
+			script.ctx.controller().offer(new Task<LogArtisanWorkshop>(script) {
 				@Override
 				public void run() {
 					if (!ctx.backpack.select().isEmpty()) {
@@ -360,7 +360,7 @@ public class ArtisanGUI extends JFrame {
 				}
 			});
 		} else {
-			script.getController().stop();
+			script.ctx.controller().stop();
 		}
 
 		script.createTree();

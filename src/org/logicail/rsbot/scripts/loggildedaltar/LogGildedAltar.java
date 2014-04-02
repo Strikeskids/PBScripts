@@ -2,16 +2,16 @@ package org.logicail.rsbot.scripts.loggildedaltar;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
+import org.logicail.rsbot.scripts.framework.util.SkillData;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.HousePortal;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house.LeaveHouse;
-import org.powerbot.event.MessageEvent;
-import org.powerbot.event.MessageListener;
-import org.powerbot.script.Manifest;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.util.SkillData;
+import org.powerbot.script.MessageEvent;
+import org.powerbot.script.MessageListener;
+import org.powerbot.script.Script;
+import org.powerbot.script.rt6.Skills;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,12 +26,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * Date: 07/12/13
  * Time: 20:49
  */
-@Manifest(
+@Script.Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		version = 6.27,
-		topic = 1141536,
-		authors = {"Logicail"}
+		properties = "topic=1141536;version=7.00"
+
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
@@ -56,8 +55,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
 		properties.put("Not everything tested", "Report errors on forum");
 
-		if (ctx.game.isLoggedIn()) {
-			final int current = ctx.skills.getRealLevel(Skills.PRAYER);
+		if (ctx.game.loggedIn()) {
+			final int current = ctx.skills.realLevel(Skills.PRAYER);
 			currentLevel.set(current);
 			if (current > 0) {
 				if (skillData == null) {
@@ -72,10 +71,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final long runtime = getRuntime();
 
 		properties.put("Status", options.status);
-		properties.put("Time Running", org.powerbot.script.util.Timer.format(runtime));
+		properties.put("Time Running", org.logicail.rsbot.scripts.framework.util.Timer.format(runtime));
 
 		if (skillData != null) {
-			properties.put("TTL", org.powerbot.script.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
+			properties.put("TTL", org.logicail.rsbot.scripts.framework.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
 			properties.put("Level", String.format("%d (+%d)", current, current - startLevel.get()));
 			properties.put("XP Gained", String.format("%,d", experience()));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.PRAYER)));
@@ -167,7 +166,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 					housePortal.enteringHouse.set(false);
 					log.info(options.status = "Can't enter friends house anymore");
 
-					getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
+					ctx.controller().offer(new Task<LogGildedAltar>(this) {
 						@Override
 						public void run() {
 							houseHandler.currentHouseFailed();
@@ -203,7 +202,8 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 			g.drawString(NEW_VERSION_STRING, x, y);
 		}
 
-		/*final Tile location = ctx.players.local().getLocation();
+
+		/*final Tile location = ctx.players.local().tile();
 		LogicailArea area = new LogicailArea(location.derive(-8, -8), location.derive(8, 8));
 		final Tile tile = area.findSpace(ctx, 3, 3);
 		tile.getMatrix(ctx).draw(g);*/
@@ -211,7 +211,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //		if (altarTask != null) {
 //			final GameObject altar = altarTask.getAltar();
 //			if (altar.isValid()) {
-//				altar.getLocation().getMatrix(ctx).draw(g);
+//				altar.tile().getMatrix(ctx).draw(g);
 //			}
 //		}
 
@@ -231,7 +231,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 //		if (summoningTask != null) {
 //			for (Node<LogGildedAltar> node : summoningTask.getNodes()) {
 //				if (node instanceof NodePath) {
-//					final LocationAttribute location = ((NodePath) node).getPath().getLocation();
+//					final LocationAttribute location = ((NodePath) node).getPath().tile();
 //					for (Tile tile : location.getObeliskArea().getTileArray()) {
 //						tile.getMatrix(ctx).draw(g);
 //					}
@@ -242,7 +242,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	@Override
 	public void start() {
-		getController().getExecutor().offer(new Task<LogGildedAltar>(this) {
+		ctx.controller().offer(new Task<LogGildedAltar>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -252,7 +252,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							gui = new LogGildedAltarGUI(LogGildedAltar.this);
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							getController().stop();
+							ctx.controller().stop();
 						}
 					}
 				});

@@ -1,16 +1,11 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
-import org.powerbot.script.lang.BasicNamedQuery;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.lang.IdQuery;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.util.Timer;
-import org.powerbot.script.wrappers.Action;
-import org.powerbot.script.wrappers.Actor;
-import org.powerbot.script.wrappers.Npc;
-import org.powerbot.script.wrappers.Player;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.*;
 
 import java.util.Arrays;
 import java.util.concurrent.Callable;
@@ -34,13 +29,13 @@ public class Ancestors extends RespectTask {
 		return "Kill Ancestors";
 	}
 
-	private BasicNamedQuery<Npc> getAncestor() {
+	private MobileIdNameQuery<Npc> getAncestor() {
 		return ctx.npcs.select().select(new Filter<Npc>() {
 			@Override
 			public boolean accept(Npc npc) {
-				if (Arrays.binarySearch(ANCESTOR_IDS, npc.getId()) >= 0) {
-					final Actor interacting = npc.getInteracting();
-					return (interacting == null || !npc.isInCombat() || (interacting.equals(ctx.players.local()) && npc.getHealthPercent() > 0)) && ctx.movement.getDistance(options.getAreaSmall().getCentralTile(), npc) < 50;
+				if (Arrays.binarySearch(ANCESTOR_IDS, npc.id()) >= 0) {
+					final Actor interacting = npc.interacting();
+					return (interacting == null || !npc.inCombat() || (interacting.equals(ctx.players.local()) && npc.healthPercent() > 0)) && ctx.movement.distance(options.getAreaSmall().getCentralTile(), npc) < 50;
 				}
 				return false;
 			}
@@ -54,10 +49,10 @@ public class Ancestors extends RespectTask {
 				return !updateAbilities().isEmpty();
 			}
 
-			if (ctx.combatBar.isExpanded()) {
-				sleep(500, 1500);
-				if (ctx.combatBar.setExpanded(false)) {
-					sleep(500, 1500);
+			if (ctx.combatBar.expanded()) {
+				ctx.sleep(600);
+				if (ctx.combatBar.expanded(false)) {
+					ctx.sleep(600);
 				}
 			}
 		}
@@ -73,39 +68,39 @@ public class Ancestors extends RespectTask {
 				boolean fought = false;
 
 				final Player local = ctx.players.local();
-				if (!local.isInCombat() && ancestor.interact("Attack", ancestor.getName())) {
+				if (!local.inCombat() && ancestor.interact("Attack", ancestor.name())) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return local.isInCombat();
+							return local.inCombat();
 						}
 					});
 				}
 
 				final Timer t = new Timer(Random.nextInt(5000, 10000));
 
-				while (t.isRunning()) {
-					if (!local.isInMotion() && (!ancestor.isValid() || (ancestor.getInteracting() != null && !ancestor.getInteracting().equals(local)))) {
+				while (t.running()) {
+					if (!local.inMotion() && (!ancestor.valid() || (ancestor.interacting() != null && !ancestor.interacting().equals(local)))) {
 						break;
 					}
 					final IdQuery<Action> actions = updateAbilities();
 
-					if (local.isInCombat()) {
+					if (local.inCombat()) {
 						fought = true;
 						// Find an ability
 						for (Action action : actions.shuffle()) {
-							if (action.isValid() && action.isReady() && action.select()) {
-								sleep(250, 1000);
+							if (action.valid() && action.ready() && action.select()) {
+								ctx.sleep(500);
 								break;
 							}
 						}
 						t.reset();
 					}
-					sleep(33, 100);
+					ctx.sleep(50);
 				}
 
 				if (fought) {
-					sleep(500, 1000);
+					ctx.sleep(500);
 				}
 			}
 		}
@@ -115,7 +110,7 @@ public class Ancestors extends RespectTask {
 		return ctx.combatBar.select().select(new Filter<Action>() {
 			@Override
 			public boolean accept(Action action) {
-				return action.getType() == Action.Type.ABILITY;
+				return action.type() == Action.Type.ABILITY;
 			}
 		});
 	}

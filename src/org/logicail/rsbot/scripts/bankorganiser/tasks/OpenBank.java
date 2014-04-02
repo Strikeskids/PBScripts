@@ -16,12 +16,12 @@ public class OpenBank extends Node<LogBankOrganiser> {
 
 	@Override
 	public boolean isValid() {
-		return !ctx.bank.isOpen();
+		return !ctx.bank.opened();
 	}
 
 	@Override
 	public void run() {
 		ctx.bank.open();
-		sleep(500, 1500);
+		sleep(500);
 	}
 }

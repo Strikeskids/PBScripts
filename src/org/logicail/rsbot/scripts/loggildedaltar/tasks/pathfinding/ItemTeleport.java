@@ -1,18 +1,13 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.Equipment;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.methods.Menu;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Action;
-import org.powerbot.script.wrappers.ChatOption;
-import org.powerbot.script.wrappers.Item;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,12 +40,12 @@ public class ItemTeleport extends NodePath {
 	 * @param ids
 	 * @return
 	 */
-	public static boolean useItemTeleport(IMethodContext ctx, String destination, int tries, int... ids) {
+	public static boolean useItemTeleport(IClientContext ctx, String destination, int tries, int... ids) {
 		if (itemTeleport(ctx, ctx.combatBar.select().id(ids).poll(), destination, tries)) {
 			return true;
 		}
 
-		if (ctx.hud.isVisible(Hud.Window.WORN_EQUIPMENT)) {
+		if (ctx.hud.opened(Hud.Window.WORN_EQUIPMENT)) {
 			return itemTeleport(ctx, ctx.equipment.select().id(ids).poll(), Hud.Window.WORN_EQUIPMENT, destination, tries)
 					|| itemTeleport(ctx, ctx.backpack.select().id(ids).poll(), Hud.Window.BACKPACK, destination, tries);
 		}
@@ -59,21 +54,21 @@ public class ItemTeleport extends NodePath {
 				|| itemTeleport(ctx, ctx.equipment.select().id(ids).poll(), Hud.Window.WORN_EQUIPMENT, destination, tries);
 	}
 
-	private static boolean itemTeleport(final IMethodContext ctx, Action actionItem, String destination, int tries) {
-		if (actionItem.getType() != Action.Type.ITEM) {
+	private static boolean itemTeleport(final IClientContext ctx, Action actionItem, String destination, int tries) {
+		if (actionItem.type() != Action.Type.ITEM) {
 			return false;
 		}
 
-		final Tile startLocation = ctx.players.local().getLocation();
+		final Tile startLocation = ctx.players.local().tile();
 		final TeleportSucceeded teleportSucceeded = new TeleportSucceeded(ctx, startLocation);
-		final Item item = new Item(ctx, actionItem.getComponent());
+		final Item item = new Item(ctx, actionItem.component());
 
 		final ArrayList<String> actions = new ArrayList<String>();
-		final String[] groundActions = item.getGroundActions();
+		final String[] groundActions = item.groundActions();
 		if (groundActions != null) {
 			Collections.addAll(actions, groundActions);
 		}
-		final String[] itemActions = item.getActions();
+		final String[] itemActions = item.actions();
 		if (itemActions != null) {
 			Collections.addAll(actions, itemActions);
 		}
@@ -84,9 +79,9 @@ public class ItemTeleport extends NodePath {
 			}
 
 			if (action.startsWith("Teleport") || action.startsWith("Rub") || action.equals("Cast")) {
-				return ctx.combatBar.setExpanded(true) && item.interact(new Filter<Menu.Entry>() {
+				return ctx.combatBar.expanded(true) && item.interact(new Filter<Menu.Command>() {
 					@Override
-					public boolean accept(Menu.Entry entry) {
+					public boolean accept(Menu.Command entry) {
 						return entry.action.equals(action) || entry.action.equals("Operate");
 					}
 				}) && chatDestination(ctx, destination) && Condition.wait(teleportSucceeded, 600, tries);
@@ -96,7 +91,7 @@ public class ItemTeleport extends NodePath {
 		return false;
 	}
 
-	private static boolean chatDestination(final IMethodContext ctx, final String destination) {
+	private static boolean chatDestination(final IClientContext ctx, final String destination) {
 		Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
@@ -107,20 +102,17 @@ public class ItemTeleport extends NodePath {
 		return ctx.chat.select().select(new Filter<ChatOption>() {
 			@Override
 			public boolean accept(ChatOption chatOption) {
-				return chatOption.getText().contains(destination);
+				return chatOption.text().contains(destination);
 			}
 		}).poll().select(Random.nextBoolean());
 	}
 
-	private static boolean itemTeleport(final IMethodContext ctx, final Item item, Hud.Window window, String destination, int tries) {
+	private static boolean itemTeleport(final IClientContext ctx, final Item item, Hud.Window window, String destination, int tries) {
 		final String lowercase = destination.toLowerCase();
 
-		if (!ctx.hud.isVisible(window)) {
-			ctx.hud.view(window);
-			ctx.game.sleep(100, 600);
-		}
+		ctx.hud.open(window);
 
-		if (!item.isValid()) {
+		if (!item.valid()) {
 			return false;
 		}
 
@@ -128,24 +120,24 @@ public class ItemTeleport extends NodePath {
 			return false;
 		}
 
-		final Tile startLocation = ctx.players.local().getLocation();
+		final Tile startLocation = ctx.players.local().tile();
 		final TeleportSucceeded teleportSucceeded = new TeleportSucceeded(ctx, startLocation);
 
 		if (item.contains(ctx.mouse.getLocation()) || item.hover()) {
-			final Filter<Menu.Entry> filter = new Filter<Menu.Entry>() {
+			final Filter<Menu.Command> filter = new Filter<Menu.Command>() {
 				@Override
-				public boolean accept(Menu.Entry entry) {
-					return entry.action.toLowerCase().contains(lowercase) && entry.option.contains(item.getName());
+				public boolean accept(Menu.Command entry) {
+					return entry.action.toLowerCase().contains(lowercase) && entry.option.contains(item.name());
 				}
 			};
 
 			if (ctx.menu.indexOf(filter) > -1) {
 				return item.interact(filter) && Condition.wait(teleportSucceeded, 600, tries);
 			} else {
-				final Filter<Menu.Entry> filterTeleportRub = new Filter<Menu.Entry>() {
+				final Filter<Menu.Command> filterTeleportRub = new Filter<Menu.Command>() {
 					@Override
-					public boolean accept(Menu.Entry entry) {
-						return (entry.action.startsWith("Teleport") || entry.action.startsWith("Rub")) && entry.option.contains(item.getName());
+					public boolean accept(Menu.Command entry) {
+						return (entry.action.startsWith("Teleport") || entry.action.startsWith("Rub")) && entry.option.contains(item.name());
 					}
 				};
 
@@ -169,7 +161,7 @@ public class ItemTeleport extends NodePath {
 	@Override
 	protected boolean doLarge() {
 		if (ctx.equipment.select().id(ids).isEmpty() && !ctx.backpack.select().id(ids).isEmpty()) {
-			if (!ctx.equipment.getItemAt(slot).isValid()) {
+			if (!ctx.equipment.itemAt(slot).valid()) {
 				ctx.equipment.equip(ids);
 			}
 		}
@@ -182,16 +174,16 @@ public class ItemTeleport extends NodePath {
 		List<BankRequiredItem> list = new ArrayList<BankRequiredItem>();
 
 		if (ctx.equipment.select().id(ids).isEmpty() && ctx.backpack.select().id(ids).isEmpty()) {
-			if (ctx.bank.isOpen()) {
+			if (ctx.bank.opened()) {
 				final Item item = ctx.bank.select().id(ids).sort(new Comparator<Item>() {
 					@Override
 					public int compare(Item o1, Item o2) {
-						return Integer.valueOf(o1.getId()).compareTo(o2.getId());
+						return Integer.valueOf(o1.id()).compareTo(o2.id());
 					}
 				}).reverse().poll();
 
-				if (item.isValid()) {
-					list.add(new BankRequiredItem(1, true, slot, item.getId()));
+				if (item.valid()) {
+					list.add(new BankRequiredItem(1, true, slot, item.id()));
 				}
 			}
 			list.add(new BankRequiredItem(1, true, slot, ids));

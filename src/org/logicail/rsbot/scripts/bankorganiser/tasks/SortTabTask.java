@@ -3,11 +3,10 @@ package org.logicail.rsbot.scripts.bankorganiser.tasks;
 import org.logicail.rsbot.scripts.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.framework.context.providers.IBank;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
-import org.powerbot.script.lang.ItemQuery;
-import org.powerbot.script.methods.Bank;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.Bank;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.ItemQuery;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -87,13 +86,13 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			final ItemQuery<Item> sort = items.sort(sorter);
 			final List<Integer> sorted = new ArrayList<Integer>(sort.size());
 			for (Item item : sort) {
-				sorted.add(item.getId());
+				sorted.add(item.id());
 			}
 
 			int j = 0;
 
 			for (Item item : unsorted) {
-				final int index = sorted.indexOf(item.getId());
+				final int index = sorted.indexOf(item.id());
 				if (index != j) {
 					final Integer id = sorted.get(j);
 					final Item destination = ctx.bank.getItemsInTab(tab).id(id).poll();
@@ -106,52 +105,52 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			}
 		}
 
-		script.getController().stop();
+		ctx.controller().stop();
 	}
 
 	private boolean swap(final Item item, Item destination) {
-		script.status = "Swap '" + item.getName() + "' and '" + destination.getName() + "'";
+		script.status = "Swap '" + item.name() + "' and '" + destination.name() + "'";
 
-		final int id = item.getId();
+		final int id = item.id();
 
-		Component destinationComponent = destination.getComponent();
+		org.powerbot.script.rt6.Component destinationComponent = destination.component();
 
-		if (!destinationComponent.isValid()) {
+		if (!destinationComponent.valid()) {
 			return false;
 		}
 
-		final Component bankContainer = ctx.widgets.get(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
-		if (!bankContainer.isValid() || !item.isValid()) {
+		final org.powerbot.script.rt6.Component bankContainer = ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
+		if (!bankContainer.valid() || !item.valid()) {
 			return false;
 		}
-		final Component itemComponent = item.getComponent();
-		if (itemComponent.getRelativeLocation().y == 0 && !ctx.bank.setCurrentTab(0) && Condition.wait(new Callable<Boolean>() {
+		final org.powerbot.script.rt6.Component itemComponent = item.component();
+		if (itemComponent.relativePoint().y == 0 && !ctx.bank.currentTab(0) && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return itemComponent.getRelativeLocation().y != 0;
+				return itemComponent.relativePoint().y != 0;
 			}
 		}, 200, 10)) {
 			return false;
 		}
-		final Rectangle viewportRect = bankContainer.getViewportRect();
-		if (!viewportRect.contains(itemComponent.getViewportRect()) && !ctx.widgets.scroll(itemComponent, ctx.widgets.get(Bank.WIDGET, Bank.COMPONENT_SCROLL_BAR), viewportRect.contains(ctx.mouse.getLocation()))) {
+		final Rectangle viewportRect = bankContainer.viewportRect();
+		if (!viewportRect.contains(itemComponent.viewportRect()) && !ctx.widgets.scroll(itemComponent, ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_SCROLL_BAR), viewportRect.contains(ctx.mouse.getLocation()))) {
 			return false;
 		}
 
-		if (!viewportRect.contains(destinationComponent.getViewportRect())) {
+		if (!viewportRect.contains(destinationComponent.viewportRect())) {
 			// Got to handle destination not on screen
 			System.out.println("Can't move item, not both in view!");
 			return false;
 		}
 
-		if (!ctx.mouse.drag(item.getNextPoint(), destinationComponent.getNextPoint(), true) || !Condition.wait(new Callable<Boolean>() {
+		if (item.hover() && !ctx.mouse.drag(destinationComponent.nextPoint(), true) || !Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return item.getComponent().getItemId() != id;
+				return item.component().itemId() != id;
 			}
 		}, 250, 20)) {
 			script.status = "Item did not move";
-			sleep(250, 1000);
+			sleep(333);
 			return false;
 		}
 

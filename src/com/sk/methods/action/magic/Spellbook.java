@@ -1,11 +1,11 @@
 package com.sk.methods.action.magic;
 
-import org.powerbot.script.methods.MethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 
 public enum Spellbook {
 	STANDARD(0), ANCIENT(1), LUNAR(2), NONE(-1), ALL(-1) {
 		@Override
-		public boolean isOpen(MethodContext ctx) {
+		public boolean isOpen(IClientContext ctx) {
 			return true;
 		}
 	};
@@ -18,7 +18,7 @@ public enum Spellbook {
 		this.id = id;
 	}
 
-	public boolean isOpen(MethodContext ctx) {
-		return (ctx.settings.get(SPELLBOOK_SETTING) & MASK) == id;
+	public boolean isOpen(IClientContext ctx) {
+		return (ctx.varpbits.varpbit(SPELLBOOK_SETTING) & MASK) == id;
 	}
 }

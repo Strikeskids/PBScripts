@@ -1,10 +1,10 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.Skills;
 
 import java.util.concurrent.Callable;
 
@@ -38,14 +38,14 @@ public class BrokenPipes extends RespectTask {
 	@Override
 	public boolean isValid() {
 		return super.isValid()
-				&& ctx.skills.getRealLevel(Skills.SMITHING) >= 50
+				&& ctx.skills.realLevel(Skills.SMITHING) >= 50
 				&& getPipe() != null;
 	}
 
 	private Pipe getPipe() {
 		for (Pipe pipe : pipes) {
 			final GameObject object = pipe.get();
-			if (object.isValid()) {
+			if (object.valid()) {
 				return pipe;
 			}
 		}
@@ -60,16 +60,14 @@ public class BrokenPipes extends RespectTask {
 			if (ctx.camera.prepare(object) && object.interact("Mend")) {
 				options.status = "Repairing pipe";
 				options.isSmithing = false;
-				sleep(1000, 2000);
-
+				sleep(1000);
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return !pipe.needsFixing();
 					}
 				}, Random.nextInt(600, 800), Random.nextInt(8, 13));
-
-				sleep(50, 500);
+				sleep(150);
 			}
 		}
 	}
@@ -84,14 +82,14 @@ public class BrokenPipes extends RespectTask {
 		}
 
 		public boolean needsFixing() {
-			return ctx.settings.get(SETTING_BROKEN_PIPES, shift, 1) == 1;
+			return ctx.varpbits.varpbit(SETTING_BROKEN_PIPES, shift, 1) == 1;
 		}
 
 		public GameObject get() {
 			if (needsFixing()) {
 				return ctx.objects.select().id(pipeId).poll();
 			}
-			return ctx.objects.getNil();
+			return ctx.objects.nil();
 		}
 	}
 }

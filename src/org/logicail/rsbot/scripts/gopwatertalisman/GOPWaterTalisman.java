@@ -2,14 +2,14 @@ package org.logicail.rsbot.scripts.gopwatertalisman;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.scripts.gopwatertalisman.tasks.BankingTask;
 import org.logicail.rsbot.scripts.gopwatertalisman.tasks.ExchangeTask;
 import org.logicail.rsbot.util.ErrorDialog;
-import org.powerbot.event.MessageEvent;
-import org.powerbot.event.MessageListener;
-import org.powerbot.script.Manifest;
-import org.powerbot.script.util.GeItem;
-import org.powerbot.script.util.Timer;
+import org.powerbot.script.MessageEvent;
+import org.powerbot.script.MessageListener;
+import org.powerbot.script.Script;
+import org.powerbot.script.rt6.GeItem;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -22,11 +22,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 26/01/14
  * Time: 19:26
  */
-@Manifest(
+@Script.Manifest(
 		name = "GOP Exchanger",
 		description = "Exchanges tokens for water talismans",
-		topic = 1160406,
-		version = 1.02
+		properties = "topic=1160406"
+
 )
 public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implements MessageListener {
 	public static final int ELRISS = 8032;
@@ -37,10 +37,10 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 	public AtomicInteger priceWaterTalisman = new AtomicInteger();
 
 	public GOPWaterTalisman() {
-		getController().getExecutor().offer(new Runnable() {
+		ctx.controller().offer(new Runnable() {
 			@Override
 			public void run() {
-				priceWaterTalisman.set(GeItem.getPrice(WATER_TALISMAN));
+				priceWaterTalisman.set(GeItem.price(WATER_TALISMAN));
 			}
 		});
 	}
@@ -90,7 +90,7 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 					}
 				});
 			} finally {
-				getController().stop();
+				ctx.controller().stop();
 			}
 		}
 	}

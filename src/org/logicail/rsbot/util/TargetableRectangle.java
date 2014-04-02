@@ -1,9 +1,9 @@
 package org.logicail.rsbot.util;
 
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Interactive;
-import org.powerbot.script.wrappers.Targetable;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Random;
+import org.powerbot.script.Targetable;
+import org.powerbot.script.rt6.Interactive;
 
 import java.awt.*;
 
@@ -16,7 +16,7 @@ import java.awt.*;
 public class TargetableRectangle extends Interactive implements Targetable {
 	private final Rectangle rectangle;
 
-	public TargetableRectangle(MethodContext ctx, Rectangle rectangle) {
+	public TargetableRectangle(IClientContext ctx, Rectangle rectangle) {
 		super(ctx);
 		this.rectangle = rectangle;
 	}
@@ -27,22 +27,11 @@ public class TargetableRectangle extends Interactive implements Targetable {
 	}
 
 	@Override
-	public Point getCenterPoint() {
-		return new Point((int) rectangle.getCenterX(), (int) rectangle.getCenterY());
-	}
-
-	@Override
-	public Point getInteractPoint() {
-		return getNextPoint();
-	}
-
-	@Override
-	public Point getNextPoint() {
+	public Point nextPoint() {
 		return new Point(Random.nextInt(rectangle.x + 1, rectangle.x + rectangle.width), Random.nextInt(rectangle.y + 1, rectangle.y + rectangle.height));
 	}
 
 	@Override
-	public void setBounds(int i, int i2, int i3, int i4, int i5, int i6) {
-		
+	public void bounds(int i, int i2, int i3, int i4, int i5, int i6) {
 	}
 }

@@ -1,12 +1,15 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.util.Timer;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
-import org.powerbot.script.wrappers.TilePath;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.TilePath;
+
+import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,17 +48,17 @@ public class RechargeSummoning extends NodePath {
 	@Override
 	public void run() {
 		final GameObject obelisk = ctx.objects.select().id(OBELISK).nearest().poll();
-		if (obelisk.isValid() && IMovement.Euclidean(obelisk, ctx.players.local()) < 5) {
+		if (obelisk.valid() && IMovement.Euclidean(obelisk, ctx.players.local()) < 5) {
 			renewPoints();
 		} else {
 			if (!locationAttribute.isInObeliskArea(ctx)) {
 				if (doSmall()) {
-					sleep(400, 1200);
+					ctx.sleep(666);
 				}
 			}
 		}
 
-		sleep(200, 600);
+		ctx.sleep(300);
 	}
 
 	@Override
@@ -63,14 +66,14 @@ public class RechargeSummoning extends NodePath {
 		Tile obeliskRandom;
 
 		final GameObject obelisk = ctx.objects.select().id(OBELISK).nearest().poll();
-		if (obelisk.isValid()) {
-			obeliskRandom = obelisk.getLocation().randomize(2, 2);
+		if (obelisk.valid()) {
+			obeliskRandom = obelisk.tile().derive(Random.nextInt(-3, 2), Random.nextInt(-3, 2));
 		} else {
 			obeliskRandom = locationAttribute.getObeliskRandom(ctx);
 		}
 
-		if (obeliskRandom != null && ctx.movement.findPath(obeliskRandom).traverse() || ctx.movement.stepTowards(obeliskRandom)) {
-			sleep(1000, 2222);
+		if (obeliskRandom != null && ctx.movement.findPath(obeliskRandom).traverse() || ctx.movement.step(obeliskRandom)) {
+			ctx.sleep(1200);
 			return true;
 		}
 
@@ -83,28 +86,34 @@ public class RechargeSummoning extends NodePath {
 	}
 
 	protected boolean renewPoints() {
-		int points = ctx.summoning.getSummoningPoints();
+		int points = ctx.summoning.points();
 
 		for (GameObject obelisk : ctx.objects.select().id(OBELISK).within(20).first()) {
 			if (ctx.camera.prepare(obelisk) && obelisk.interact("Renew")) {
 				Timer t = new Timer(10000);
-				while (t.isRunning()) {
-					if (ctx.players.local().isInMotion()) {
+				while (t.running()) {
+					if (ctx.players.local().inMotion()) {
 						t.reset();
 					}
-					if (ctx.camera.getPitch() < 80) {
-						ctx.camera.setPitch(Random.nextInt(80, 101));
+					if (ctx.camera.pitch() < 80) {
+						ctx.camera.pitch(Random.nextInt(80, 101));
 					}
 
-					if (ctx.summoning.getSummoningPoints() > points && ctx.players.local().getAnimation() == -1) {
+					if (ctx.summoning.points() > points) {
 						options.status = "Recharged at obelisk";
 						script.log.info(options.status);
-						script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.getRequiredPoints() * 1.5), (int) (options.beastOfBurden.getRequiredPoints() * 2.33));
-						sleep(500, 1500);
+						script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.requiredPoints() * 1.5), (int) (options.beastOfBurden.requiredPoints() * 2.33));
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return ctx.players.local().idle();
+							}
+						}, 250, 10);
+						ctx.sleep(500);
 						return true;
 					}
 
-					sleep(400, 800);
+					ctx.sleep(500);
 				}
 			}
 		}

@@ -1,15 +1,15 @@
 package org.logicail.rsbot.util;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
-import org.powerbot.event.PaintListener;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.powerbot.script.PaintListener;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Painter extends IMethodProvider implements PaintListener {
+public class Painter extends IClientAccessor implements PaintListener {
 	// Public encase want to load custom font
 	public static final Font FONT_TITLE = new Font("Arial", Font.BOLD, 14);
 	public static final Font FONT_SMALL = new Font("Arial", Font.BOLD, 12);
@@ -23,7 +23,7 @@ public class Painter extends IMethodProvider implements PaintListener {
 
 	public Painter(LogicailScript script) {
 		super(script.ctx);
-		title = String.format("%s v%s", script.getName(), script.getVersion());
+		title = String.format("%s v%s", script.getName(), ctx.property("version"));
 	}
 
 	public Painter properties(LinkedHashMap<Object, Object> properties) {
@@ -81,7 +81,7 @@ public class Painter extends IMethodProvider implements PaintListener {
 
 	private void drawMouse(Graphics2D g2d) {
 		g2d.setStroke(mouseStroke);
-		g2d.setColor(ctx.mouse.isPressed() ? Color.RED : Color.WHITE);
+		//g2d.setColor(ctx.mouse.press() ? Color.RED : Color.WHITE);
 
 		final Point mouse = ctx.mouse.getLocation();
 		g2d.drawLine(mouse.x - 5, mouse.y - 5, mouse.x + 5, mouse.y + 5);

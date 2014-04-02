@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.testing;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,8 +9,8 @@ import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
  * Date: 23/02/14
  * Time: 20:57
  */
-public class Slayer extends IMethodProvider {
-	public Slayer(IMethodContext context) {
+public class Slayer extends IClientAccessor {
+	public Slayer(IClientContext context) {
 		super(context);
 	}
 
@@ -21,7 +21,7 @@ public class Slayer extends IMethodProvider {
 	 */
 	public int getPoints() {
 		// [9071] ctx.settings.get(2092, 0, 0x1ffff)
-		return ctx.settings.get(2092, 0, 0x1ffff);
+		return ctx.varpbits.varpbit(2092, 0, 0x1ffff);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class Slayer extends IMethodProvider {
 	 */
 	public int getRemaining() {
 		// [7917] ctx.settings.get(183, 0, 0x7f)
-		return ctx.settings.get(183, 0, 0x7f);
+		return ctx.varpbits.varpbit(183, 0, 0x7f);
 	}
 
 	/**

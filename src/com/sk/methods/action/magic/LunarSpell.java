@@ -4,9 +4,9 @@ import com.sk.methods.action.ability.AbilityStyle;
 import com.sk.methods.action.structure.Spell;
 import com.sk.windows.InnerAbilityTab;
 import com.sk.windows.Window;
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.wrappers.Component;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Skills;
 
 public enum LunarSpell implements Spell {
 	CURE_ME(InnerAbilityTab.COMBAT_SPELL, 1830, 71, 114, 14421, new Rune(RuneType.COSMIC, 2), new Rune(RuneType.ASTRAL, 2)),
@@ -81,7 +81,7 @@ public enum LunarSpell implements Spell {
 	}
 
 	@Override
-	public int getId() {
+	public int id() {
 		return id;
 	}
 
@@ -96,13 +96,13 @@ public enum LunarSpell implements Spell {
 	}
 
 	@Override
-	public Component getComponent(IMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), MAIN_COMPONENT).getChild(getChildIndex());
+	public Component getComponent(IClientContext ctx) {
+		return ctx.widgets.component(getWidget(), MAIN_COMPONENT).component(getChildIndex());
 	}
 
 	@Override
-	public Component getCooldownComponent(IMethodContext ctx) {
-		return ctx.widgets.get(getWidget(), COOLDOWN_COMPONENT).getChild(getChildIndex());
+	public Component getCooldownComponent(IClientContext ctx) {
+		return ctx.widgets.component(getWidget(), COOLDOWN_COMPONENT).component(getChildIndex());
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public enum LunarSpell implements Spell {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return true;
 	}
 }

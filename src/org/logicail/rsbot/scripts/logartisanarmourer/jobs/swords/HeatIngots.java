@@ -2,8 +2,8 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.concurrent.Callable;
 

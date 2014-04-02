@@ -3,9 +3,9 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
-import org.powerbot.script.lang.BasicNamedQuery;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.MobileIdNameQuery;
 
 import java.util.concurrent.Callable;
 
@@ -29,7 +29,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 		return "Take Ingots";
 	}
 
-	private BasicNamedQuery<GameObject> getTrough() {
+	private MobileIdNameQuery<GameObject> getTrough() {
 		switch (options.ingotType) {
 			case BRONZE:
 				return ctx.objects.select().id(BRONZE_TROUGH).nearest().first();
@@ -80,11 +80,11 @@ public class TakeIngots extends ArtisanArmourerTask {
 		}
 
 		for (final GameObject trough : ctx.objects.first()) {
-			if (ctx.camera.prepare(trough) && trough.interact("Take-ingots", trough.getName())) {
+			if (ctx.camera.prepare(trough) && trough.interact("Take-ingots", trough.name())) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return trough.getLocation().distanceTo(ctx.players.local()) < 3;
+						return trough.tile().distanceTo(ctx.players.local()) < 3;
 					}
 				});
 				Condition.wait(new Callable<Boolean>() {
@@ -93,9 +93,9 @@ public class TakeIngots extends ArtisanArmourerTask {
 						return ctx.skillingInterface.isOpen();
 					}
 				});
-				sleep(250, 1000);
-			} else if (ctx.movement.stepTowards(trough)) {
-				sleep(750, 1600);
+				sleep(333);
+			} else if (ctx.movement.step(trough)) {
+				sleep(888);
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Astar;
@@ -7,10 +8,9 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.HousePa
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.util.Timer;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class AltarObelisk extends LogGildedAltarTask {
 	}
 
 	private void resetNextPoints() {
-		nextPoints = Random.nextInt((int) (options.beastOfBurden.getRequiredPoints() * 1.5), (int) (options.beastOfBurden.getRequiredPoints() * 2.5));
+		nextPoints = Random.nextInt((int) (options.beastOfBurden.requiredPoints() * 1.5), (int) (options.beastOfBurden.requiredPoints() * 2.5));
 	}
 
 	@Override
@@ -44,13 +44,13 @@ public class AltarObelisk extends LogGildedAltarTask {
 	public boolean isValid() {
 		if (//&& options.beastOfBurden != Summoning.Familiar.CLAN_AVATAR
 				options.useBOB.get() &&
-						ctx.summoning.getTimeLeft() <= 420
-						&& ctx.summoning.getSummoningPoints() < nextPoints
+						ctx.summoning.timeLeft() <= 420
+						&& ctx.summoning.points() < nextPoints
 						&& (ctx.backpack.isFull() || getBackpackOffering().isEmpty())
 				) {
 			Room startRoom = script.roomStorage.getRoom(ctx.players.local());
 			final GameObject obelisk = script.altarTask.getMiniObelisk();
-			if (obelisk.isValid()) {
+			if (obelisk.valid()) {
 				Room endRoom = script.roomStorage.getRoom(obelisk);
 				return endRoom.equals(startRoom) || ((pathToObelisk = new Astar(script).findRoute(obelisk)) != null);
 			}
@@ -64,22 +64,22 @@ public class AltarObelisk extends LogGildedAltarTask {
 
 		try {
 			final GameObject obelisk = script.altarTask.getMiniObelisk();
-			if (!obelisk.isValid()) return;
+			if (!obelisk.valid()) return;
 
 			Room startRoom = script.roomStorage.getRoom(ctx.players.local());
 			Room endRoom = script.roomStorage.getRoom(obelisk);
 			if (startRoom == null || endRoom == null) return;
 
 			final List<Tile> tilesNear = ctx.movement.getTilesNear(endRoom.getArea(), obelisk, 3);
-			final Tile destination = tilesNear.isEmpty() ? obelisk.getLocation() : tilesNear.get(0);
+			final Tile destination = tilesNear.isEmpty() ? obelisk.tile() : tilesNear.get(0);
 
 			if (!startRoom.equals(endRoom)) {
 				if (!pathToObelisk.traverse(destination)) {
-					if (!destination.getMatrix(ctx).isReachable()) {
+					if (!destination.matrix(ctx).reachable()) {
 						// Find closed door
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, endRoom)).shuffle().first()) {
 							if (DoorOpener.open(ctx, door)) {
-								sleep(100, 500);
+								sleep(250);
 							}
 						}
 					}
@@ -88,32 +88,32 @@ public class AltarObelisk extends LogGildedAltarTask {
 				ctx.movement.walk(destination);
 			}
 
-			if (destination.getMatrix(ctx).isReachable() || endRoom.equals(script.roomStorage.getRoom(ctx.players.local()))) {
+			if (destination.matrix(ctx).reachable() || endRoom.equals(script.roomStorage.getRoom(ctx.players.local()))) {
 				if (destination.distanceTo(ctx.players.local()) < 10) {
-					final int points = ctx.summoning.getSummoningPoints();
+					final int points = ctx.summoning.points();
 					options.status = "Clicking on obelisk";
 
 					if (ctx.camera.prepare(obelisk) && obelisk.interact("Renew-points", "Small obelisk")) {
 						Timer t = new Timer(10000);
-						while (t.isRunning()) {
-							if (ctx.players.local().isInMotion()) {
+						while (t.running()) {
+							if (ctx.players.local().inMotion()) {
 								t.reset();
 							}
 
-							if (ctx.camera.getPitch() < 80) {
-								ctx.camera.setPitch(Random.nextInt(80, 101));
+							if (ctx.camera.pitch() < 80) {
+								ctx.camera.pitch(Random.nextInt(80, 101));
 							}
 
-							if (ctx.summoning.getSummoningPoints() > points && ctx.players.local().getAnimation() == -1) {
+							if (ctx.summoning.points() > points && ctx.players.local().animation() == -1) {
 								options.status = "Recharged at house obelisk";
 								script.log.info(options.status);
-								script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.getRequiredPoints() * 1.5), (int) (options.beastOfBurden.getRequiredPoints() * 2.33));
+								script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.requiredPoints() * 1.5), (int) (options.beastOfBurden.requiredPoints() * 2.33));
 								resetNextPoints();
-								sleep(600, 1400);
+								sleep(750);
 								break;
 							}
 
-							sleep(400, 800);
+							sleep(333);
 						}
 					}
 				} else {

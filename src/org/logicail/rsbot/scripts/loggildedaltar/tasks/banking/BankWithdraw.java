@@ -5,12 +5,12 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.RenewFamiliar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.SummoningPotion;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.powerbot.script.methods.Bank;
-import org.powerbot.script.methods.Skills;
-import org.powerbot.script.methods.Summoning;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Bank;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.Skills;
+import org.powerbot.script.rt6.Summoning;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,10 +46,10 @@ public class BankWithdraw extends BankingAbstract {
 	private void createSpaceInInventory(int min, int max) {
 		if (isNotSpace(min)) {
 			if (!ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max))) {
-				sleep(200, 800);
+				sleep(333);
 				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
 			}
-			sleep(50, 400);
+			sleep(100);
 		}
 	}
 
@@ -78,8 +78,8 @@ public class BankWithdraw extends BankingAbstract {
 
 		// Deposit items with no charge
 		for (Item item : ctx.backpack.select().id(Banking.ALWAYS_DEPOSIT, SummoningPotion.SUMMONING_POTION).shuffle()) {
-			if (item.isValid()) {
-				ctx.bank.deposit(item.getId(), Bank.Amount.ALL);
+			if (item.valid()) {
+				ctx.bank.deposit(item.id(), Bank.Amount.ALL);
 			}
 		}
 
@@ -90,24 +90,24 @@ public class BankWithdraw extends BankingAbstract {
 
         /* Summoning Pouch */
 		// TODO: made renew familar a loop job
-		if (options.useBOB.get() && options.beastOfBurden.getBoBSpace() > 0) {
-			if (ctx.summoning.isFamiliarSummoned()) {
-				Summoning.Familiar familiar = ctx.summoning.getFamiliar();
+		if (options.useBOB.get() && options.beastOfBurden.bobSpace() > 0) {
+			if (ctx.summoning.summoned()) {
+				Summoning.Familiar familiar = ctx.summoning.familiar();
 
 				if (familiar != null && familiar != options.beastOfBurden) {
 					options.status = "Dismiss wrong familiar";
-					ctx.summoning.dismissFamiliar();
+					ctx.summoning.dismiss();
 					return;
 				}
 			}
 
             /* Disable summoning if don't have level required */
-			if (options.beastOfBurden.getRequiredLevel() > ctx.skills.getRealLevel(Skills.SUMMONING)) {
+			if (options.beastOfBurden.requiredLevel() > ctx.skills.realLevel(Skills.SUMMONING)) {
 				script.log.info("Summoning level too low -> Disabling summoning");
 				options.useBOB.set(false);
 			} else {
-				if (ctx.summoning.getTimeLeft() <= nextRenew || !ctx.summoning.isFamiliarSummoned()) { // If 5 minutes left take a pouch
-					if (ctx.backpack.select().id(options.beastOfBurden.getPouchId()).isEmpty() && !ctx.bank.select().id(options.beastOfBurden.getPouchId()).isEmpty()) {
+				if (ctx.summoning.timeLeft() <= nextRenew || !ctx.summoning.summoned()) { // If 5 minutes left take a pouch
+					if (ctx.backpack.select().id(options.beastOfBurden.pouchId()).isEmpty() && !ctx.bank.select().id(options.beastOfBurden.pouchId()).isEmpty()) {
 						if (ctx.backpack.isFull()) {
 							if (ctx.bank.deposit(options.offering.getId(), 1)) {
 								Condition.wait(new Callable<Boolean>() {
@@ -118,7 +118,7 @@ public class BankWithdraw extends BankingAbstract {
 								});
 							}
 						}
-						if (ctx.bank.withdraw(options.beastOfBurden.getPouchId(), 1)) {
+						if (ctx.bank.withdraw(options.beastOfBurden.pouchId(), 1)) {
 							reset();
 						} else {
 							script.log.info("Can't withdraw pouch");
@@ -143,7 +143,7 @@ public class BankWithdraw extends BankingAbstract {
 			Collections.shuffle(list);
 			for (Branch branch : list) {
 				withdrawRequiredItems(branch);
-				if (!ctx.bank.isOpen()) {
+				if (!ctx.bank.opened()) {
 					return;
 				}
 			}
@@ -192,12 +192,12 @@ public class BankWithdraw extends BankingAbstract {
 				options.status = "Withdraw clean marrentil";
 				if (ctx.backpack.isFull()) {
 					ctx.bank.deposit(options.offering.getId(), 1);
-					sleep(100, 500);
+					sleep(200);
 				}
 				int tries = 5;
 				while (ctx.backpack.select().id(Banking.ID_MARRENTIL).count() < 2 && !ctx.bank.select().id(Banking.ID_MARRENTIL).isEmpty()) {
 					if (ctx.bank.withdraw(Banking.ID_MARRENTIL, 1)) {
-						sleep(50, 200);
+						sleep(100);
 					}
 					if (--tries <= 0) {
 						break;
@@ -236,7 +236,7 @@ public class BankWithdraw extends BankingAbstract {
 
 	private void withdrawRequiredItems(Branch delegation) {
 		for (Object node : delegation.getNodes()) {
-			if (script.getController().isStopping() || script.getController().isSuspended()) {
+			if (ctx.controller().isStopping() || ctx.controller().isSuspended()) {
 				return;
 			}
 			if (!(node instanceof NodePath)) {
@@ -258,17 +258,17 @@ public class BankWithdraw extends BankingAbstract {
 						}
 
 						for (Item item : ctx.bank.select().id(id).first()) {
-							if (ctx.bank.withdraw(id, Math.min(item.getStackSize(), bankRequiredItem.getQuantity()))) {// Possible bug, if quantity > 1
+							if (ctx.bank.withdraw(id, Math.min(item.stackSize(), bankRequiredItem.getQuantity()))) {// Possible bug, if quantity > 1
 								success = true;
-								sleep(100, 500);
+								sleep(150);
 								if (bankRequiredItem.equip()) {
 									if (ctx.equipment.equip(id)) {
 										if (!ctx.bank.isEmpty()) {
-											sleep(100, 300);
+											sleep(200);
 											ctx.bank.open();
-											sleep(300, 900);
+											sleep(400);
 										}
-										if (!ctx.bank.isOpen()) {
+										if (!ctx.bank.opened()) {
 											return;
 										}
 									}
@@ -280,7 +280,7 @@ public class BankWithdraw extends BankingAbstract {
 					if (!success) {
 						script.log.info("Ran out of required item for: " + ((NodePath) node).getPath().getLocation().name());
 					} else {
-						sleep(100, 300);
+						sleep(100);
 					}
 				}
 			}

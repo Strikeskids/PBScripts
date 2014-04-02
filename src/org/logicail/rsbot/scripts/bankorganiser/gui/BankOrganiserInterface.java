@@ -69,7 +69,7 @@ public class BankOrganiserInterface extends JFrame {
 		initComponents();
 
 		if (script != null) {
-			setTitle(script.getName() + " v" + script.getVersion());
+			setTitle(script.getName()/* + " v" + script.getVersion()*/);
 		}
 		setMinimumSize(new Dimension(750, 500));
 		setMaximumSize(new Dimension(750, 500));
@@ -166,7 +166,7 @@ public class BankOrganiserInterface extends JFrame {
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
 					if (script != null) {
-						script.getController().stop();
+						script.ctx.controller().stop();
 					}
 				}
 			}
@@ -327,7 +327,7 @@ public class BankOrganiserInterface extends JFrame {
 		}
 
 		if (startPressed) {
-			script.getController().stop();
+			script.ctx.controller().stop();
 		}
 
 		script.tree.clear();

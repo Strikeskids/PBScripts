@@ -2,8 +2,8 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs.track;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.concurrent.Callable;
 
@@ -43,7 +43,7 @@ public class LayTracks extends ArtisanArmourerTask {
 						return ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty();
 					}
 				})) {
-					sleep(1750, 3500);
+					sleep(1700);
 				}
 			} else {
 				options.status = "Laying tracks [interact failed]";

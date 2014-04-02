@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.powerbot.script.methods.Equipment;
+import org.powerbot.script.rt6.Equipment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,12 +4,12 @@ import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
-import org.powerbot.script.lang.BasicNamedQuery;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.MobileIdNameQuery;
 
 import java.util.concurrent.Callable;
 
@@ -35,7 +35,7 @@ public class LightBurners extends BurnerAbstract {
 	public boolean isValid() {
 		final Room room = script.roomStorage.getRoom(ctx.players.local());
 		if (room != null) {
-			final BasicNamedQuery<GameObject> unlitLanterns = burnersTask.getUnlitLanterns(room);
+			final MobileIdNameQuery<GameObject> unlitLanterns = burnersTask.getUnlitLanterns(room);
 			if (!unlitLanterns.isEmpty() && unlitLanterns.size() <= ctx.backpack.select().id(Banking.ID_MARRENTIL).count()) {
 				return true;
 			}
@@ -51,7 +51,7 @@ public class LightBurners extends BurnerAbstract {
 			}
 		}).poll();
 
-		if (!burner.isValid()) {
+		if (!burner.valid()) {
 			burner = burnersTask.getUnlitLanterns(room).shuffle().poll();
 		}
 
@@ -60,7 +60,7 @@ public class LightBurners extends BurnerAbstract {
 
 	@Override
 	public void run() {
-		if (ctx.players.local().getAnimation() != -1) {
+		if (ctx.players.local().animation() != -1) {
 			return;
 		}
 
@@ -73,45 +73,45 @@ public class LightBurners extends BurnerAbstract {
 
 		final GameObject burner = getBurner(room);
 
-		if (!burner.isValid()) {
+		if (!burner.valid()) {
 			return;
 		}
 
-		burner.setBounds(BURNER_BOUNDS);
+		burner.bounds(BURNER_BOUNDS);
 
-		if (!burner.isInViewport()) {
+		if (!burner.inViewport()) {
 			ctx.camera.turnTo(burner);
-			if (!burner.isInViewport()) {
-				ctx.camera.setPitch(Random.nextInt(0, 40));
+			if (!burner.inViewport()) {
+				ctx.camera.pitch(Random.nextInt(0, 40));
 			}
-			if (!burner.isInViewport()) {
+			if (!burner.inViewport()) {
 				options.status = "Walking to incense burner";
-				final Tile tile = burner.getLocation().randomize(1, 1);
-				if (ctx.movement.findPath(tile).traverse() || ctx.movement.stepTowards(tile)) {
+				final Tile tile = burner.tile().derive(Random.nextInt(-2, 1), Random.nextInt(-2, 1));
+				if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return burner.isInViewport();
+							return burner.inViewport();
 						}
 					}, 100, 25);
 				}
 			}
-			sleep(50, 400);
+			ctx.sleep(200);
 		}
 
-		if (burner.isValid() && burner.isInViewport() && burner.interact("Light", "Incense burner")) {
+		if (burner.valid() && burner.inViewport() && burner.interact("Light", "Incense burner")) {
 			final long start = System.currentTimeMillis();
 			final GameObject finalBurner = burner;
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					if (!finalBurner.isValid()) {
+					if (!finalBurner.valid()) {
 						return true;
 					}
 
 					if (System.currentTimeMillis() - start > 1000) {
 						if (IMovement.Euclidean(finalBurner, ctx.players.local()) < 2) {
-							return ctx.players.local().isIdle();
+							return !ctx.players.local().inMotion();
 						}
 					}
 

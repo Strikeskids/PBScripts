@@ -1,7 +1,7 @@
 package com.sk.methods.action.structure;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.wrappers.Component;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.Component;
 
 
 public interface BookIcon extends WindowedIcon {
@@ -13,7 +13,7 @@ public interface BookIcon extends WindowedIcon {
 
 	public int getChildTexture();
 
-	public Component getCooldownComponent(IMethodContext ctx);
+	public Component getCooldownComponent(IClientContext ctx);
 
 	public int getWidget();
 }

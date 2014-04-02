@@ -5,7 +5,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.Comparator;
 

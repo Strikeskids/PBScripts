@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar;
 
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.LogGildedAltarTask;
-import org.powerbot.script.methods.Game;
+import org.powerbot.script.rt6.Game;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,8 +22,8 @@ public class AltarNoAltar extends LogGildedAltarTask {
 
 	@Override
 	public void run() {
-		if (ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
-			sleep(2000, 3500);
+		if (ctx.game.clientState() == Game.INDEX_MAP_LOADED) {
+			ctx.sleep(2000);
 			if (isValid()) {
 				options.status = "House does not have a gilded altar";
 				if (options.useOtherHouse.get()) {
@@ -41,6 +41,6 @@ public class AltarNoAltar extends LogGildedAltarTask {
 
 	@Override
 	public boolean isValid() {
-		return !script.altarTask.getAltar().isValid();
+		return !script.altarTask.getAltar().valid();
 	}
 }

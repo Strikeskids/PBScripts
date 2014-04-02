@@ -1,11 +1,11 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners;
 
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
 import org.powerbot.script.Script;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.util.Timer;
 
 import java.util.concurrent.Callable;
 
@@ -34,9 +34,9 @@ public class WaitForBurners extends BurnerAbstract {
 	public void run() {
 		Timer timer = new Timer(Random.nextInt(50000, 70000));
 
-		final Script.Controller controller = script.getController();
+		final Script.Controller controller = ctx.controller();
 
-		while (timer.isRunning()) {
+		while (timer.running()) {
 			if (controller == null || controller.isSuspended() || controller.isStopping()) {
 				break;
 			}
@@ -44,21 +44,19 @@ public class WaitForBurners extends BurnerAbstract {
 			options.status = "Waiting for burners";
 			if (options.detectHouses.get()) {
 				script.log.info("Waiting to see if someone lights the burners otherwise skipping house in "
-						+ timer.toRemainingString());
+						+ timer.remainingString());
 			} else {
 				script.log.info("Waiting to see if someone lights the burners");
 			}
 
-			if (options.stopOffering.get() && ctx.players.local().getAnimation() != -1 && ctx.players.local().getLocation().randomize(2, 2).getMatrix(ctx).interact("Walk here")) {
+			if (options.stopOffering.get() && ctx.players.local().animation() != -1 && ctx.players.local().tile().derive(Random.nextInt(-2, 2), Random.nextInt(-2, 2)).matrix(ctx).interact("Walk here")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.players.local().getAnimation() == -1;
+						return ctx.players.local().animation() == -1;
 					}
 				}, Random.nextInt(200, 600), 5);
 			}
-
-			sleep(600);
 
 			final Room room = script.roomStorage.getRoom(ctx.players.local());
 			if (room != null && burnersTask.getUnlitLanterns(room).isEmpty()) {

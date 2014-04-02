@@ -4,7 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.ILodestone;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
-import org.powerbot.script.util.Condition;
+import org.powerbot.script.Condition;
 
 import java.util.concurrent.Callable;
 
@@ -28,7 +28,7 @@ public class YanilleLodestone extends LodestoneTeleport {
 	public boolean doSmall() {
 		if (!script.houseTask.isInHouse()) {
 
-			if (locationAttribute.getSmallRandom(ctx).getMatrix(ctx).isReachable()) {
+			if (locationAttribute.getSmallRandom(ctx).matrix(ctx).reachable()) {
 				script.housePortal.enterPortal();
 			} else {
 				ctx.movement.findPath(locationAttribute.getSmallRandom(ctx)).traverse();
@@ -37,13 +37,13 @@ public class YanilleLodestone extends LodestoneTeleport {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return ctx.players.local().isInMotion();
+					return ctx.players.local().inMotion();
 				}
 			}, 100, 10)) {
 				return Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !ctx.players.local().isInMotion() || locationAttribute.isInSmallArea(ctx);
+						return !ctx.players.local().inMotion() || locationAttribute.isInSmallArea(ctx);
 					}
 				});
 			}

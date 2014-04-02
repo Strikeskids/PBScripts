@@ -2,7 +2,7 @@ package com.sk.methods.action.ability;
 
 import com.sk.windows.InnerAbilityTab;
 import com.sk.windows.Window;
-import org.powerbot.script.methods.Skills;
+import org.powerbot.script.rt6.Skills;
 
 /**
  * An enum of styles of ability. Corresponds to the skill requirement to use the ability
@@ -28,7 +28,7 @@ public enum AbilityStyle {
 		if (t == null)
 			this.widgetId = 0;
 		else
-			this.widgetId = t.getSuperWindow().getSource().getWidget();
+			this.widgetId = t.getSuperWindow().getSource().widget();
 	}
 
 	/**

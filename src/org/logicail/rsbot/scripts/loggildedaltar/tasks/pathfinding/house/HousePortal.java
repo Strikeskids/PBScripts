@@ -7,11 +7,11 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttri
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.ChatOption;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.ChatOption;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class HousePortal extends NodePath {
 	 * @return How long to delay before next call or -1 on stop
 	 */
 	public void enterPortal() {
-		if (script.houseTask.isInHouse() || ctx.players.local().isInCombat()) {
+		if (script.houseTask.isInHouse() || ctx.players.local().inCombat()) {
 			return;
 		}
 
@@ -96,7 +96,7 @@ public class HousePortal extends NodePath {
 			final OpenHouse openHouse = script.houseHandler.getOpenHouse();
 			if (options.useOtherHouse.get() && openHouse == null) {
 				options.status = "Waiting for a house";
-				sleep(250, 1250);
+				sleep(500);
 				return;
 			}
 
@@ -105,15 +105,15 @@ public class HousePortal extends NodePath {
 			if (ctx.chat.select().text("Go to a friend's house.").isEmpty()) {
 				if (options.useOtherHouse.get() && ctx.chat.isInputWidgetOpen()) {
 					script.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
-					Component previous = ctx.widgets.get(IChat.WIDGET_INPUT, 1).getChild(0);
-					if (previous.isValid() && previous.isVisible() && previous.getText().toLowerCase().equals("last name entered: " + openHouse.getPlayerNameClean())) {
+					Component previous = ctx.widgets.component(IChat.WIDGET_INPUT, 1).component(0);
+					if (previous.valid() && previous.visible() && previous.text().toLowerCase().equals("last name entered: " + openHouse.getPlayerNameClean())) {
 						if (previous.interact("Use:")) {
 							enteringHouse.set(true);
 						} else {
 							return;
 						}
 					} else {
-						sleep(150, 850);
+						sleep(500);
 						enteringHouse.set(ctx.chat.sendInput(openHouse.getPlayerNameClean()));
 					}
 				} else {
@@ -134,7 +134,7 @@ public class HousePortal extends NodePath {
 					for (final ChatOption option : ctx.chat.first()) {
 						if (option.select(Random.nextBoolean())) {
 							ctx.chat.waitForInputWidget();
-							sleep(50, 400);
+							sleep(200);
 							return;
 						}
 					}

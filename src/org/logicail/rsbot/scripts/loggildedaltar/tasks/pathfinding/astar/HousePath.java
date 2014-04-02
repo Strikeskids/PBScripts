@@ -1,15 +1,15 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
-import org.powerbot.script.lang.BasicNamedQuery;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Player;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.MobileIdNameQuery;
+import org.powerbot.script.rt6.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * Date: 04/01/14
  * Time: 21:09
  */
-public class HousePath extends IMethodProvider implements Comparable<HousePath> {
+public class HousePath extends IClientAccessor implements Comparable<HousePath> {
 	public final double cost;
 	private final LogGildedAltar script;
 	private final HousePath previous;
@@ -65,7 +65,7 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 
 	public boolean traverse(Tile destination) {
 		boolean success = true;
-		BasicNamedQuery<GameObject> nextDoor;
+		MobileIdNameQuery<GameObject> nextDoor;
 
 		final int endIndex = script.roomStorage.getIndex(destination);
 
@@ -76,7 +76,7 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 			nextDoor = getNextDoor();
 			if (!nextDoor.isEmpty()) {
 				for (GameObject door : nextDoor) {
-					final double distanceToDoor = door.getLocation().distanceTo(local);
+					final double distanceToDoor = door.tile().distanceTo(local);
 					if (distanceToDoor > 12 || (Random.nextBoolean() && distanceToDoor > 6)) {
 						// Find correct area
 						for (Room room : getPath()) {
@@ -93,20 +93,20 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 							}
 						}
 					} else {
-						nextDoor.each(new DoorOpener(ctx));
+						DoorOpener.open(ctx, nextDoor.poll());
 						return true;
 					}
 				}
 			} else {
-				if (Random.nextBoolean() && destination.getMatrix(ctx).isOnMap()) {
-					if (ctx.camera.prepare(destination.getLocation())) {
-						if (destination.getMatrix(ctx).interact("Walk here")) {
+				if (Random.nextBoolean() && destination.matrix(ctx).onMap()) {
+					if (ctx.camera.prepare(destination.tile())) {
+						if (destination.matrix(ctx).interact("Walk here")) {
 							success = true;
 						}
 					}
 				}
 				if (!success) {
-					if (destination.getMatrix(ctx).isOnMap()) {
+					if (destination.matrix(ctx).onMap()) {
 						if (ctx.movement.findPath(destination).traverse()) {
 							success = true;
 						}
@@ -127,14 +127,14 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 					@Override
 					public Boolean call() throws Exception {
 						final Player local = ctx.players.local();
-						return local == null || local.isInMotion();
+						return local == null || local.inMotion();
 					}
-				}, 300, 4);
+				}, 100, 9);
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						final Player local = ctx.players.local();
-						return local == null || !local.isInMotion() || script.roomStorage.getIndex(local) == endIndex || finalDestination.distanceTo(local) <= 3;
+						return local == null || !local.inMotion() || script.roomStorage.getIndex(local) == endIndex || finalDestination.distanceTo(local) <= 3;
 					}
 				});
 			}
@@ -143,7 +143,7 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 		return success || script.roomStorage.getIndex(local) == endIndex;
 	}
 
-	public BasicNamedQuery<GameObject> getNextDoor() {
+	public MobileIdNameQuery<GameObject> getNextDoor() {
 		final List<Room> roomPath = getPath();
 		if (!roomPath.isEmpty()) {
 			for (int i = 0; i < roomPath.size() - 1; i++) {
@@ -155,15 +155,15 @@ public class HousePath extends IMethodProvider implements Comparable<HousePath> 
 			}
 		}
 
-		return new BasicNamedQuery<GameObject>(ctx) {
+		return new MobileIdNameQuery<GameObject>(ctx) {
 			@Override
 			protected List<GameObject> get() {
 				return new ArrayList<GameObject>();
 			}
 
 			@Override
-			public GameObject getNil() {
-				return ctx.objects.getNil();
+			public GameObject nil() {
+				return ctx.objects.nil();
 			}
 		};
 	}

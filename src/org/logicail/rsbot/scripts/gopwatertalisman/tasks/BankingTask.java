@@ -3,12 +3,12 @@ package org.logicail.rsbot.scripts.gopwatertalisman.tasks;
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.gopwatertalisman.GOPWaterTalisman;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.Hud;
+import org.powerbot.script.rt6.Item;
 
 import java.util.concurrent.Callable;
 
@@ -31,23 +31,23 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 
 	@Override
 	public void run() {
-		final Component closebutton = ctx.widgets.get(ExchangeTask.WIDGET_SHOP, ExchangeTask.WIDGET_SHOP_CLOSE);
-		if (closebutton.isValid() && closebutton.interact("Close")) {
+		final Component closebutton = ctx.widgets.component(ExchangeTask.WIDGET_SHOP, ExchangeTask.WIDGET_SHOP_CLOSE);
+		if (closebutton.valid() && closebutton.interact("Close")) {
 			if (!Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return !closebutton.isValid();
+					return !closebutton.valid();
 				}
-			}, Random.nextInt(111, 333), 10)) {
+			}, 200, 10)) {
 				return;
 			}
 		}
 
 		final int startCount = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).count();
 
-		if (ctx.depositBox.isOpen() && ctx.depositBox.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll().interact("Deposit-All", "Water talisman")) {
+		if (ctx.depositBox.opened() && ctx.depositBox.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll().interact("Deposit-All", "Water talisman")) {
 			script.banked.set(script.banked.get() + startCount);
-			sleep(222, 888);
+			ctx.sleep(400);
 			return;
 		}
 
@@ -57,18 +57,18 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 				public Boolean call() throws Exception {
 					return ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).isEmpty();
 				}
-			}, Random.nextInt(333, 888), 8)) {
+			}, 400, 8)) {
 				script.banked.set(script.banked.get() + startCount);
 			}
 		} else {
 			final GameObject depositBox = ctx.objects.poll();
 
 			if (IMovement.Euclidean(ctx.players.local(), depositBox) > 7) {
-				if (ctx.movement.stepTowards(depositBox.getLocation().randomize(3, 1, 3, 1))) {
+				if (ctx.movement.step(depositBox.tile().derive(Random.nextInt(0, 3), Random.nextInt(0, 3)))) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return depositBox.isOnScreen();
+							return depositBox.inViewport();
 						}
 					}, Random.nextInt(555, 999), 6);
 				}
@@ -76,18 +76,18 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 
 			if (ctx.camera.prepare(depositBox)) {
 				if (!Random.nextBoolean() || !ctx.depositBox.open()) {
-					if (ctx.backpack.getSelectedItem().getId() != GOPWaterTalisman.WATER_TALISMAN) {
+					if (ctx.backpack.selectedItem().id() != GOPWaterTalisman.WATER_TALISMAN) {
 						final Item talisman = ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).shuffle().poll();
-						if (ctx.hud.view(Hud.Window.BACKPACK) && talisman.interact("Use", "Water talisman")) {
+						if (ctx.hud.open(Hud.Window.BACKPACK) && ctx.backpack.scroll(talisman) && talisman.interact("Use", "Water talisman")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
-									return ctx.backpack.getSelectedItem().getId() == GOPWaterTalisman.WATER_TALISMAN;
+									return ctx.backpack.selectedItem().id() == GOPWaterTalisman.WATER_TALISMAN;
 								}
 							}, Random.nextInt(333, 888), 6);
 						}
 					}
-					if (ctx.backpack.getSelectedItem().getId() == GOPWaterTalisman.WATER_TALISMAN) {
+					if (ctx.backpack.selectedItem().id() == GOPWaterTalisman.WATER_TALISMAN) {
 						if (depositBox.interact("Use", "Water talisman -> Deposit box")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override

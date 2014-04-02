@@ -3,10 +3,9 @@ package com.sk.methods.action;
 import com.sk.methods.action.ability.*;
 import com.sk.methods.action.structure.BarIcon;
 import com.sk.util.time.TimedCondition;
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.methods.MethodContext;
-import org.powerbot.script.wrappers.Action.Type;
-import org.powerbot.script.wrappers.Component;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.rt6.ClientContext;
+import org.powerbot.script.rt6.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static org.powerbot.script.methods.CombatBar.SETTING_ABILITY;
-import static org.powerbot.script.methods.CombatBar.SETTING_ITEM;
+import static org.powerbot.script.rt6.CombatBar.SETTING_ABILITY;
+import static org.powerbot.script.rt6.CombatBar.SETTING_ITEM;
 
 public class ActionBar extends ActionQuery<Action> {
 	public static final int COMPONENT_AUTO_RETAILIATE_BUTTON = 6;
@@ -43,13 +42,13 @@ public class ActionBar extends ActionQuery<Action> {
 
 	private static final int ADRENALINE_SETTING = 679, MAXIMUM_ADRENALINE = 1000;
 
-	public final IMethodContext ctx;
-	public final MethodContext octx;
+	public final IClientContext ctx;
+	public final ClientContext octx;
 	public final Logger log = Logger.getLogger(getClass().getSimpleName());
 
 	private final Map<Integer, BarIcon> icons = new HashMap<Integer, BarIcon>();
 
-	public ActionBar(IMethodContext ctx) {
+	public ActionBar(IClientContext ctx) {
 		super(ctx);
 		this.ctx = ctx;
 		this.octx = ctx;
@@ -64,7 +63,7 @@ public class ActionBar extends ActionQuery<Action> {
 
 	private <T extends BarIcon> void addIcons(Class<T> clazz) {
 		for (T t : clazz.getEnumConstants()) {
-			icons.put(t.getId(), t);
+			icons.put(t.id(), t);
 		}
 	}
 
@@ -72,7 +71,7 @@ public class ActionBar extends ActionQuery<Action> {
 	protected List<Action> get() {
 		List<Action> ret = new ArrayList<Action>(NUM_ACTIONS);
 		for (Action a : getActions())
-			if (a.isValid())
+			if (a.valid())
 				ret.add(a);
 		return ret;
 	}
@@ -86,15 +85,15 @@ public class ActionBar extends ActionQuery<Action> {
 
 	public Action getActionAt(int slot) {
 		if (slot < 0 || slot > NUM_ACTIONS)
-			return getNil();
-		final int itemId = ctx.settings.get(SETTING_ITEM + slot);
-		final int abilityId = ctx.settings.get(SETTING_ABILITY + slot);
+			return nil();
+		final int itemId = ctx.varpbits.varpbit(SETTING_ITEM + slot);
+		final int abilityId = ctx.varpbits.varpbit(SETTING_ABILITY + slot);
 		if (itemId != -1)
-			return new Action(ctx, slot, Type.ITEM, itemId, BarIcon.NIL);
+			return new Action(ctx, slot, org.powerbot.script.rt6.Action.Type.ITEM, itemId, BarIcon.NIL);
 		else if (abilityId != -1)
-			return new Action(ctx, slot, Type.ABILITY, abilityId, getIconWithId(abilityId));
+			return new Action(ctx, slot, org.powerbot.script.rt6.Action.Type.ABILITY, abilityId, getIconWithId(abilityId));
 		else
-			return getNil();
+			return nil();
 	}
 
 	public BarIcon getIconWithId(int id) {
@@ -103,12 +102,12 @@ public class ActionBar extends ActionQuery<Action> {
 	}
 
 	@Override
-	public Action getNil() {
-		return new Action(ctx, -1, Type.UNKNOWN, -1, BarIcon.NIL);
+	public Action nil() {
+		return new Action(ctx, -1, org.powerbot.script.rt6.Action.Type.UNKNOWN, -1, BarIcon.NIL);
 	}
 
 	public int getAdrenaline() {
-		return ctx.settings.get(ADRENALINE_SETTING);
+		return ctx.varpbits.varpbit(ADRENALINE_SETTING);
 	}
 
 	public int getMaximumAdrenaline() {
@@ -116,15 +115,15 @@ public class ActionBar extends ActionQuery<Action> {
 	}
 
 	public boolean isLocked() {
-		return octx.combatBar.isLocked();
+		return octx.combatBar.locked();
 	}
 
 	public boolean setExpanded(boolean expanded) {
-		return octx.combatBar.setExpanded(expanded);
+		return octx.combatBar.expanded(expanded);
 	}
 
 	public boolean setLocked(final boolean locked) {
-		return octx.combatBar.setLocked(locked);
+		return octx.combatBar.expanded(locked);
 	}
 
 	public boolean switchBar(final int bar) {
@@ -135,19 +134,19 @@ public class ActionBar extends ActionQuery<Action> {
 			return false;
 		}
 		int dir = (((bar - getCurrentBar()) % NUM_BARS + NUM_BARS / 2 + NUM_BARS) % NUM_BARS - NUM_BARS / 2);
-		final Component button = ctx.widgets.get(BAR_WIDGET, dir < 0 ? PREV_BAR : NEXT_BAR);
+		final Component button = ctx.widgets.component(BAR_WIDGET, dir < 0 ? PREV_BAR : NEXT_BAR);
 		final String action = dir < 0 ? "Previous" : "Next";
-		if (!button.isValid()) {
+		if (!button.valid()) {
 			log.info("switchBar: switch button invalid");
 			return false;
 		}
-		if (!button.isVisible()) {
+		if (!button.visible()) {
 			log.info("switchBar: switch button not visible");
 			return false;
 		}
 		for (int i = 0; i < Math.abs(dir); ++i) {
 			button.interact(action);
-			sleep(50, 100);
+			ctx.sleep(50);
 		}
 		return new TimedCondition() {
 			@Override
@@ -158,10 +157,10 @@ public class ActionBar extends ActionQuery<Action> {
 	}
 
 	public int getCurrentBar() {
-		return ctx.settings.get(CURRENT_BAR_SETTING) >>> CURRENT_BAR_SHIFT & CURRENT_BAR_MASK;
+		return ctx.varpbits.varpbit(CURRENT_BAR_SETTING) >>> CURRENT_BAR_SHIFT & CURRENT_BAR_MASK;
 	}
 
 	public boolean isExpanded() {
-		return octx.combatBar.isExpanded();
+		return octx.combatBar.expanded();
 	}
 }

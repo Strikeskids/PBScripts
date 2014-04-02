@@ -1,11 +1,11 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.util.LogicailArea;
-import org.powerbot.script.lang.BasicNamedQuery;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.MobileIdNameQuery;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +16,7 @@ import java.util.Set;
  * Date: 04/01/14
  * Time: 21:09
  */
-public class Room extends IMethodProvider {
+public class Room extends IClientAccessor {
 	public static final int[] DOOR_CLOSED = {
 			13006, 13007, // Whitewashed stone
 			13015, 13016, // Tropical
@@ -69,7 +69,7 @@ public class Room extends IMethodProvider {
 	private Tile mapBase = null;
 	private Tile location = null;
 
-	public Room(IMethodContext context, RoomStorage roomStorage, int localX, int localY) {
+	public Room(IClientContext context, RoomStorage roomStorage, int localX, int localY) {
 		super(context);
 		this.localX = localX;
 		this.localY = localY;
@@ -77,13 +77,13 @@ public class Room extends IMethodProvider {
 	}
 
 	public Tile getLocation() {
-		if (location != null && mapBase != null && mapBase.equals(ctx.game.getMapBase())) {
+		if (location != null && mapBase != null && mapBase.equals(ctx.game.mapOffset())) {
 			return location;
 		}
 		area = null;
 		wallarea = null;
-		mapBase = ctx.game.getMapBase();
-		return location = new Tile(mapBase.x + localX, mapBase.y + localY, mapBase.getPlane());
+		mapBase = ctx.game.mapOffset();
+		return location = new Tile(mapBase.x() + localX, mapBase.y() + localY, mapBase.floor());
 	}
 
 	public int getIndex() {
@@ -141,7 +141,7 @@ public class Room extends IMethodProvider {
 		neighbours.clear();
 	}
 
-	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int... ids) {
+	public MobileIdNameQuery<GameObject> getGameObjectsInRoom(int... ids) {
 		return ctx.objects.select().id(ids).within(getArea());
 	}
 
@@ -153,7 +153,7 @@ public class Room extends IMethodProvider {
 		return area = new LogicailArea(location.derive(0, 1), location.derive(8, -7));
 	}
 
-	public BasicNamedQuery<GameObject> getGameObjectsInRoom(int[] ids, int... ids2) {
+	public MobileIdNameQuery<GameObject> getGameObjectsInRoom(int[] ids, int... ids2) {
 		return ctx.objects.select().id(ids, ids2).within(getArea());
 	}
 

@@ -1,11 +1,9 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.wrapper;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.MakeSword;
 import org.logicail.rsbot.util.TargetableRectangle;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Component;
+import org.powerbot.script.Condition;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -27,14 +25,14 @@ public enum HitType {
 		this.widgetButton = widgetButton;
 	}
 
-	public static boolean setHitType(final IMethodContext ctx, final HitType hitType) {
+	public static boolean setHitType(final IClientContext ctx, final HitType hitType) {
 		if (getCurrentHitType(ctx) == hitType) {
 			return true;
 		}
 
-		final Component buttonWidget = hitType.getButtonWidget(ctx);
-		if (buttonWidget.isValid()) {
-			final Rectangle rect = buttonWidget.getBoundingRect();
+		final org.powerbot.script.rt6.Component buttonWidget = hitType.getButtonWidget(ctx);
+		if (buttonWidget.valid()) {
+			final Rectangle rect = buttonWidget.boundingRect();
 			rect.height -= 10;
 			TargetableRectangle targetableRectangle = new TargetableRectangle(ctx, rect);
 
@@ -43,19 +41,19 @@ public enum HitType {
 				public Boolean call() throws Exception {
 					return getCurrentHitType(ctx) == hitType;
 				}
-			}, Random.nextInt(150, 250), Random.nextInt(10, 13))) {
-				ctx.game.sleep(200, 800);
+			}, 175, 10)) {
+				ctx.sleep(400);
 			}
 		}
 
 		return getCurrentHitType(ctx) == hitType;
 	}
 
-	public static HitType getCurrentHitType(IMethodContext ctx) {
-		return HitType.values()[ctx.settings.get(132, 16, 3)];
+	public static HitType getCurrentHitType(IClientContext ctx) {
+		return HitType.values()[ctx.varpbits.varpbit(132, 16, 3)];
 	}
 
-	Component getButtonWidget(IMethodContext ctx) {
-		return ctx.widgets.get(MakeSword.WIDGET_SWORD_INTERFACE, widgetButton);
+	private org.powerbot.script.rt6.Component getButtonWidget(IClientContext ctx) {
+		return ctx.widgets.component(MakeSword.WIDGET_SWORD_INTERFACE, widgetButton);
 	}
 }

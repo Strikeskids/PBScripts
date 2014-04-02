@@ -1,11 +1,10 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
-import org.powerbot.script.lang.ChainingIterator;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.GameObject;
 
 import java.util.concurrent.Callable;
 
@@ -15,33 +14,33 @@ import java.util.concurrent.Callable;
  * Date: 03/01/14
  * Time: 21:23
  */
-public class DoorOpener extends IMethodProvider implements ChainingIterator<GameObject> {
-	public DoorOpener(IMethodContext context) {
+public class DoorOpener extends IClientAccessor {
+	public DoorOpener(IClientContext context) {
 		super(context);
 	}
 
-	public static boolean open(IMethodContext ctx, final GameObject door) {
+	public static boolean open(IClientContext ctx, final GameObject door) {
 		if (openDoor(ctx, door)) return true;
 
-		if (door.isValid()) {
-			if (ctx.camera.getPitch() > 50) {
-				ctx.camera.setPitch(Random.nextInt(0, 40));
+		if (door.valid()) {
+			if (ctx.camera.pitch() > 50) {
+				ctx.camera.pitch(Random.nextInt(0, 40));
 			} else {
-				ctx.camera.setAngle(Random.nextInt(0, 360));
+				ctx.camera.angle(Random.nextInt(0, 360));
 			}
 			if (openDoor(ctx, door)) return true;
 		}
 
-		return !door.isValid();
+		return !door.valid();
 	}
 
-	private static boolean openDoor(IMethodContext ctx, final GameObject door) {
+	private static boolean openDoor(IClientContext ctx, final GameObject door) {
 		if (ctx.camera.prepare(door)) {
 			if (door.interact("Open")) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !door.isValid();
+						return !door.valid();
 					}
 				})) {
 					return true;
@@ -49,10 +48,5 @@ public class DoorOpener extends IMethodProvider implements ChainingIterator<Game
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public boolean next(int i, final GameObject door) {
-		return open(ctx, door);
 	}
 }

@@ -1,15 +1,16 @@
 package org.logicail.rsbot.scripts.framework;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.tasks.Tree;
 import org.logicail.rsbot.util.Painter;
-import org.powerbot.event.PaintListener;
+import org.powerbot.script.PaintListener;
 import org.powerbot.script.PollingScript;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Random;
+import org.powerbot.script.rt6.ClientContext;
+import org.powerbot.script.rt6.Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,14 +18,14 @@ import java.awt.*;
  * Date: 07/12/13
  * Time: 21:07
  */
-public abstract class LogicailScript<T extends LogicailScript> extends PollingScript implements PaintListener {
-	public final IMethodContext ctx;
+public abstract class LogicailScript<T extends LogicailScript> extends PollingScript<ClientContext> implements PaintListener {
+	public final IClientContext ctx;
 	public final Tree<T> tree;
 	private final Painter paint;
 	protected JFrame gui;
 
 	protected LogicailScript() {
-		this.ctx = new IMethodContext(super.ctx, this);
+		this.ctx = new IClientContext(super.ctx, this);
 
 		tree = new Tree<T>((T) this);
 		paint = new Painter(this);
@@ -43,6 +44,10 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 		});
 	}
 
+	public String version() {
+		return manifestExtra().get("version");
+	}
+
 	/**
 	 * Ordered properties to show on paint box
 	 *
@@ -51,19 +56,38 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 	public abstract java.util.LinkedHashMap<Object, Object> getPaintInfo();
 
 	@Override
-	public int poll() {
+	public void poll() {
 		try {
-			if (ctx.game.getClientState() == Game.INDEX_MAP_LOADED) {
+			if (ctx.game.clientState() == Game.INDEX_MAP_LOADED) {
 				tree.run();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Random.nextInt(100, 400);
 	}
 
 	@Override
 	public void repaint(Graphics g) {
 		paint.properties(getPaintInfo()).repaint(g);
 	}
+
+	private java.util.Map<java.lang.String, java.lang.String> manifestExtra = null;
+
+	public java.util.Map<java.lang.String, java.lang.String> manifestExtra() {
+		if (manifestExtra != null) return manifestExtra;
+
+		final LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+
+		final String[] split = getManifest().properties().split(";");
+
+		for (int i = 0; i < split.length; i++) {
+			final String[] strings = split[i].split("=", 2);
+			if (strings.length == 2) {
+				map.put(strings[0], strings[1]);
+			}
+		}
+
+		return manifestExtra = map;
+	}
+
 }

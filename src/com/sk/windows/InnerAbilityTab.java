@@ -1,6 +1,6 @@
 package com.sk.windows;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 
 public enum InnerAbilityTab implements Window {
 	ATTACK_ABILITY(MainWindow.MELEE_ABILITIES, 0, "Attack", 4),
@@ -40,12 +40,12 @@ public enum InnerAbilityTab implements Window {
 	}
 
 	@Override
-	public boolean open(final IMethodContext ctx) {
-		return isOpen(ctx) || superWindow.open(ctx) && ((ctx.settings.get(TAB_SETTING) >> shift & 0xf) == component || ctx.widgets.get(superWindow.getSource().getWidget(), 7).getChild(6 + component).interact(openAction));
+	public boolean open(final IClientContext ctx) {
+		return isOpen(ctx) || superWindow.open(ctx) && ((ctx.varpbits.varpbit(TAB_SETTING) >> shift & 0xf) == component || ctx.widgets.component(superWindow.getSource().widget(), 7).component(6 + component).interact(openAction));
 	}
 
 	@Override
-	public boolean isOpen(IMethodContext ctx) {
-		return superWindow.isOpen(ctx) && (ctx.settings.get(TAB_SETTING) >> shift & 0xf) == component;
+	public boolean isOpen(IClientContext ctx) {
+		return superWindow.isOpen(ctx) && (ctx.varpbits.varpbit(TAB_SETTING) >> shift & 0xf) == component;
 	}
 }

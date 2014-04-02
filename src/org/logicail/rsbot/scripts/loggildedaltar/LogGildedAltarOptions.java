@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.loggildedaltar;
 import com.eclipsesource.json.JsonObject;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.Offering;
 import org.powerbot.script.AbstractScript;
-import org.powerbot.script.methods.Summoning;
+import org.powerbot.script.rt6.Summoning;
 
 import java.io.*;
 import java.util.Properties;

@@ -5,7 +5,7 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.ItemTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.RechargeSummoning;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
-import org.powerbot.script.methods.Equipment;
+import org.powerbot.script.rt6.Equipment;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class MainPlazaRecharge extends RechargeSummoning {
 	@Override
 	public void run() {
 		if (!locationAttribute.isInLargeArea(ctx) || locationAttribute.getObeliskRandom(ctx).distanceTo(ctx.players.local()) > 20) {
-			//LogHandler.print("Distance: " + Calculations.distanceTo(getPath().getLocation().getObeliskRandom()));
+			//LogHandler.print("Distance: " + Calculations.distanceTo(getPath().tile().getObeliskRandom()));
 			doLarge();
 			return;
 		}
@@ -52,7 +52,7 @@ public class MainPlazaRecharge extends RechargeSummoning {
 			renewPoints();
 		}
 
-		sleep(100, 800);
+		sleep(300);
 	}
 
 	@Override

@@ -56,8 +56,8 @@ public class AnimationMonitor<T extends LogicailScript<T>> extends LoopTask<T> {
 				map.clear();
 			}
 
-			if (ctx.game.isLoggedIn()) {
-				put(ctx.players.local().getAnimation());
+			if (ctx.game.loggedIn()) {
+				put(ctx.players.local().animation());
 			}
 		} catch (Exception ignored) {
 		}

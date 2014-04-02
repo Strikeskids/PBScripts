@@ -1,15 +1,10 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.methods.Menu;
-import org.powerbot.script.methods.Summoning;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.ChatOption;
-import org.powerbot.script.wrappers.Component;
-import org.powerbot.script.wrappers.Item;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.*;
 
 import java.util.concurrent.Callable;
 
@@ -25,15 +20,15 @@ public class ISummoning extends Summoning {
 	public static final int WIDGET_STORE_CLOSE_BUTTON_CHILD = 1;
 	public static final int WIDGET_ORB = 1430;
 	public static final int WIDGET_ORB_BUTTON = 109;
-	protected final IMethodContext ctx;
+	protected final IClientContext ctx;
 	private final IItemStore familiar;
 	private final IItemStore backpack;
 
-	public ISummoning(IMethodContext context) {
+	public ISummoning(IClientContext context) {
 		super(context);
 		ctx = context;
-		familiar = new IItemStore(context, ctx.widgets.get(671, 25));
-		backpack = new IItemStore(context, ctx.widgets.get(671, 30));
+		familiar = new IItemStore(context, ctx.widgets.component(671, 25));
+		backpack = new IItemStore(context, ctx.widgets.component(671, 30));
 	}
 
 	private static String getStoreString(int amount) {
@@ -63,7 +58,7 @@ public class ISummoning extends Summoning {
 	}
 
 	public Component getCloseButton() {
-		return ctx.widgets.get(WIDGET_STORE, WIDGET_STORE_CLOSE_BUTTON).getChild(WIDGET_STORE_CLOSE_BUTTON_CHILD);
+		return ctx.widgets.component(WIDGET_STORE, WIDGET_STORE_CLOSE_BUTTON).component(WIDGET_STORE_CLOSE_BUTTON_CHILD);
 	}
 
 	/**
@@ -77,7 +72,7 @@ public class ISummoning extends Summoning {
 
 	public boolean deposit(final int id, int amount) {
 		if (open()) {
-			int spaceLeft = getFamiliar().getBoBSpace() - familiar.select().count();
+			int spaceLeft = familiar().bobSpace() - familiar.select().count();
 			if (spaceLeft == 0) {
 				return false;
 			}
@@ -86,13 +81,13 @@ public class ISummoning extends Summoning {
 			final Item item = backpack.shuffle().poll();
 			final String action = getStoreString(amount);
 			if (action.equals("Store-X")) {
-				if (item.interact(new Filter<Menu.Entry>() {
+				if (item.interact(new Filter<Menu.Command>() {
 					@Override
-					public boolean accept(Menu.Entry entry) {
-						return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
+					public boolean accept(Menu.Command entry) {
+						return entry.action.startsWith(action) && entry.option.startsWith(item.name());
 					}
 				}) && ctx.chat.waitForInputWidget()) {
-					sleep(500, 1200);
+					ctx.sleep(500);
 					if (amount == 0) {
 						amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
 					}
@@ -101,10 +96,10 @@ public class ISummoning extends Summoning {
 					}
 				}
 			}
-			return item.interact(new Filter<Menu.Entry>() {
+			return item.interact(new Filter<Menu.Command>() {
 				@Override
-				public boolean accept(Menu.Entry entry) {
-					return entry.action.startsWith(action) && entry.option.startsWith(item.getName());
+				public boolean accept(Menu.Command entry) {
+					return entry.action.startsWith(action) && entry.option.startsWith(item.name());
 				}
 			});
 		}
@@ -117,7 +112,7 @@ public class ISummoning extends Summoning {
 			return true;
 		}
 
-		if (isFamiliarSummoned() && select(Option.INTERACT)) {
+		if (summoned() && select(Option.INTERACT)) {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
@@ -125,7 +120,7 @@ public class ISummoning extends Summoning {
 				}
 			})) {
 				for (ChatOption option : ctx.chat.first()) {
-					sleep(100, 800);
+					ctx.sleep(200);
 					if (option.select(Random.nextBoolean())) {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
@@ -153,21 +148,21 @@ public class ISummoning extends Summoning {
 
 	private void closeBankIfInTheWay() {
 		final Component bank = ctx.bank.getWidget(); // 54, 48
-		if (bank.isValid()) {
-			final Component orb = ctx.widgets.get(WIDGET_ORB, WIDGET_ORB_BUTTON);
-			if (bank.getBoundingRect().intersects(orb.getBoundingRect())) {
+		if (bank.valid()) {
+			final Component orb = ctx.widgets.component(WIDGET_ORB, WIDGET_ORB_BUTTON);
+			if (bank.boundingRect().intersects(orb.boundingRect())) {
 				ctx.bank.close();
-				sleep(50, 500);
+				ctx.sleep(75);
 			}
 		}
 	}
 
 	@Override
-	public boolean dismissFamiliar() {
-		return isFamiliarSummoned() && select(Option.DISMISS) && Condition.wait(new Callable<Boolean>() {
+	public boolean dismiss() {
+		return summoned() && select(Option.DISMISS) && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return !isFamiliarSummoned();
+				return !summoned();
 			}
 		}, 50, 20);
 	}
@@ -189,15 +184,15 @@ public class ISummoning extends Summoning {
 //	}
 
 	@Override
-	public boolean renewFamiliar() {
+	public boolean renew() {
 		return select(Option.RENEW_FAMILIAR);
 	}
 
 	public boolean canSummon(Familiar familiar) {
 		return familiar != null
-				&& getSummoningPoints() >= familiar.getRequiredPoints()
-				&& (!isFamiliarSummoned() || getTimeLeft() <= 150)
-				&& !ctx.backpack.select().id(familiar.getPouchId()).isEmpty();
+				&& points() >= familiar.requiredPoints()
+				&& (!summoned() || timeLeft() <= 150)
+				&& !ctx.backpack.select().id(familiar.pouchId()).isEmpty();
 	}
 
 	/**
@@ -212,15 +207,15 @@ public class ISummoning extends Summoning {
 		}
 
 		// Close bank
-		if (ctx.bank.isOpen()) {
+		if (ctx.bank.opened()) {
 			ctx.bank.close();
-			sleep(400, 1200);
+			ctx.sleep(500);
 		}
 
 		final Item pouch = ctx.backpack.shuffle().poll();
-		if (ctx.hud.view(Hud.Window.BACKPACK)) {
-			sleep(200, 800);
-			return pouch.isValid() && ctx.backpack.scroll(pouch) && pouch.interact("Summon");
+		if (ctx.hud.open(Hud.Window.BACKPACK)) {
+			ctx.sleep(400);
+			return pouch.valid() && ctx.backpack.scroll(pouch) && pouch.interact("Summon");
 		}
 
 		return false;

@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.logartisanarmourer;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotGrade;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
-import org.powerbot.script.wrappers.Area;
+import org.powerbot.script.Area;
 
 /**
  * Created with IntelliJ IDEA.

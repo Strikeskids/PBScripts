@@ -3,13 +3,13 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import org.logicail.rsbot.scripts.framework.context.IMethodProvider;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.IOUtil;
 import org.logicail.rsbot.util.IPlayerValidator;
-import org.powerbot.event.MessageEvent;
-import org.powerbot.event.MessageListener;
-import org.powerbot.script.util.Random;
+import org.powerbot.script.MessageEvent;
+import org.powerbot.script.MessageListener;
+import org.powerbot.script.Random;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * Date: 07/12/13
  * Time: 21:41
  */
-public class HouseHandler extends IMethodProvider implements MessageListener {
+public class HouseHandler extends IClientAccessor implements MessageListener {
 	private static final Pattern[] ADVERT_PATTERNS = {
 			//Pattern.compile(".*>([\\d\\w\\s-]+)<.*altar.*"), //>name<  altar
 			//Pattern.compile(".*altar.*>([\\d\\w\\s-]+)<.*"), //altar >name<

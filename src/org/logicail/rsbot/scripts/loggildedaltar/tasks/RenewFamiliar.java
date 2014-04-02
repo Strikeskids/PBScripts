@@ -1,13 +1,13 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.LocationAttribute;
 import org.logicail.rsbot.util.LogicailArea;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,8 +32,8 @@ public class RenewFamiliar extends LogGildedAltarTask {
 		reset();
 	}
 
-	public static List<Tile> familarTile(IMethodContext ctx) {
-		final Tile location = ctx.players.local().getLocation();
+	public static List<Tile> familarTile(IClientContext ctx) {
+		final Tile location = ctx.players.local().tile();
 		List<Tile> tiles = new ArrayList<Tile>();
 		LogicailArea area = new LogicailArea(location.derive(-7, -7), location.derive(5, 5));
 
@@ -58,7 +58,7 @@ public class RenewFamiliar extends LogGildedAltarTask {
 		Iterator<Tile> iterator = tiles.iterator();
 		while (iterator.hasNext()) {
 			final Tile next = iterator.next();
-			if (!next.getMatrix(ctx).isReachable()) {
+			if (!next.matrix(ctx).reachable()) {
 				iterator.remove();
 			}
 		}
@@ -71,14 +71,14 @@ public class RenewFamiliar extends LogGildedAltarTask {
 	public static void renew(final LogGildedAltar script) {
 		script.options.status = "Renewing familiar";
 
-		if (script.ctx.summoning.isFamiliarSummoned()) {
-			script.ctx.summoning.renewFamiliar();
+		if (script.ctx.summoning.summoned()) {
+			script.ctx.summoning.renew();
 		} else {
 			script.ctx.summoning.summon(script.options.beastOfBurden);
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return script.familiarFailed.get() || !(script.ctx.summoning.canSummon(script.options.beastOfBurden) && (script.ctx.summoning.getTimeLeft() <= 150 || !script.ctx.summoning.isFamiliarSummoned()));
+					return script.familiarFailed.get() || !(script.ctx.summoning.canSummon(script.options.beastOfBurden) && (script.ctx.summoning.timeLeft() <= 150 || !script.ctx.summoning.summoned()));
 				}
 			});
 		}
@@ -95,8 +95,8 @@ public class RenewFamiliar extends LogGildedAltarTask {
 
 	@Override
 	public boolean isValid() {
-		if (options.useBOB.get() && options.beastOfBurden.getBoBSpace() > 0 && System.currentTimeMillis() > script.nextSummon.get()) {
-			if (!ctx.summoning.isFamiliarSummoned() || ctx.summoning.getTimeLeft() <= nextRenew) {
+		if (options.useBOB.get() && options.beastOfBurden.bobSpace() > 0 && System.currentTimeMillis() > script.nextSummon.get()) {
+			if (!ctx.summoning.summoned() || ctx.summoning.timeLeft() <= nextRenew) {
 				return ctx.summoning.canSummon(options.beastOfBurden);
 			}
 		}
@@ -107,11 +107,11 @@ public class RenewFamiliar extends LogGildedAltarTask {
 	public void run() {
 		script.familiarFailed.set(false);
 		renew(script);
-		sleep(1000, 3000);
+		ctx.sleep(1000);
 
 		if (script.familiarFailed.get()) {
 			script.options.status = "Renewing familiar failed";
-			final Tile start = ctx.players.local().getLocation();
+			final Tile start = ctx.players.local().tile();
 			final List<Tile> tiles = familarTile(ctx);
 			for (final Tile tile : tiles) {
 				script.familiarFailed.set(false);
@@ -126,13 +126,13 @@ public class RenewFamiliar extends LogGildedAltarTask {
 						if (!script.familiarFailed.get()) {
 							break;
 						}
-						sleep(600, 1800);
+						ctx.sleep(900);
 					}
 				}
 			}
 		}
 
-		if (ctx.summoning.isFamiliarSummoned() && ctx.summoning.getTimeLeft() > nextRenew) {
+		if (ctx.summoning.summoned() && ctx.summoning.timeLeft() > nextRenew) {
 			reset();
 		}
 

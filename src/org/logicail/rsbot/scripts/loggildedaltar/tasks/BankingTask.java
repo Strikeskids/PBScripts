@@ -14,8 +14,8 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.daemonheim.Da
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.edgeville.HouseGlory;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity.FightCavesBank;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.yanille.YanilleBankWalk;
-import org.powerbot.script.methods.Equipment;
-import org.powerbot.script.wrappers.Locatable;
+import org.powerbot.script.Locatable;
+import org.powerbot.script.rt6.Equipment;
 
 import java.util.List;
 
@@ -80,7 +80,7 @@ public class BankingTask extends Branch<LogGildedAltar> {
 
 	public boolean inBank() {
 		if (!LocationAttribute.EDGEVILLE.isInLargeArea(ctx)) {
-			final Locatable nearest = ctx.bank.getNearest();
+			final Locatable nearest = ctx.bank.nearest();
 			if (IMovement.Euclidean(ctx.players.local(), nearest) < 8) {
 				return true;
 			}

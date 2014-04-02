@@ -3,8 +3,8 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltarOptions;
-import org.powerbot.script.lang.ItemQuery;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.ItemQuery;
 
 /**
  * Created with IntelliJ IDEA.

@@ -24,6 +24,6 @@ public abstract class RespectTask extends ArtisanArmourerTask {
 	}
 
 	public int getRespect() {
-		return ctx.settings.get(SETTING_RESPECT, 10, 0x7f);
+		return ctx.varpbits.varpbit(SETTING_RESPECT, 10, 0x7f);
 	}
 }

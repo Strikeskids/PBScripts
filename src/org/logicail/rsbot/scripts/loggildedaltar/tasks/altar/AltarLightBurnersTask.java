@@ -6,8 +6,8 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners.LightBurner
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners.ReturnToBank;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners.WaitForBurners;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
-import org.powerbot.script.lang.BasicNamedQuery;
-import org.powerbot.script.wrappers.GameObject;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.MobileIdNameQuery;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,7 +41,7 @@ public class AltarLightBurnersTask extends Branch<LogGildedAltar> {
 	@Override
 	public boolean branch() {
 		final GameObject altar = script.altarTask.getAltar();
-		if (altar.isValid()) {
+		if (altar.valid()) {
 			final Room room = script.roomStorage.getRoom(altar);
 			return !room.getGameObjectsInRoom(UNLIT_LANTERN).isEmpty();
 		}
@@ -49,7 +49,7 @@ public class AltarLightBurnersTask extends Branch<LogGildedAltar> {
 		return false;
 	}
 
-	public BasicNamedQuery<GameObject> getUnlitLanterns(Room room) {
+	public MobileIdNameQuery<GameObject> getUnlitLanterns(Room room) {
 		return room.getGameObjectsInRoom(AltarLightBurnersTask.UNLIT_LANTERN);
 	}
 }

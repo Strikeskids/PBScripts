@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.tzhaarcity;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.ItemTeleport;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
-import org.powerbot.script.methods.Equipment;
+import org.powerbot.script.rt6.Equipment;
 
 /**
  * Created with IntelliJ IDEA.

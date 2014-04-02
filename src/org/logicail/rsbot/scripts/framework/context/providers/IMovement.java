@@ -1,14 +1,10 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.util.LogicailArea;
-import org.powerbot.script.lang.Filter;
-import org.powerbot.script.methods.Movement;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Locatable;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.*;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.Movement;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,9 +18,9 @@ import java.util.concurrent.Callable;
  * Time: 12:57
  */
 public class IMovement extends Movement {
-	private final IMethodContext ctx;
+	private final IClientContext ctx;
 
-	public IMovement(IMethodContext context) {
+	public IMovement(IClientContext context) {
 		super(context);
 		this.ctx = context;
 	}
@@ -35,13 +31,13 @@ public class IMovement extends Movement {
 		final Filter<GameObject> filter = new Filter<GameObject>() {
 			@Override
 			public boolean accept(GameObject gameObject) {
-				final GameObject.Type type = gameObject.getType();
+				final GameObject.Type type = gameObject.type();
 				return type == GameObject.Type.BOUNDARY || type == GameObject.Type.INTERACTIVE;
 			}
 		};
 
 		for (Tile tile : area.getTileArray()) {
-			if ((!tile.equals(locatable.getLocation()) || tile.getMatrix(ctx).isReachable()) && Euclidean(locatable, tile) <= maxDistance) {
+			if ((!tile.equals(locatable.tile()) || tile.matrix(ctx).reachable()) && Euclidean(locatable, tile) <= maxDistance) {
 				if (ctx.objects.select().at(tile).select(filter).isEmpty()) {
 					tiles.add(tile);
 				}
@@ -58,20 +54,20 @@ public class IMovement extends Movement {
 			return Double.MAX_VALUE;
 		}
 
-		final Tile startLocation = start.getLocation();
-		final Tile location = end.getLocation();
-		int dx = location.x - startLocation.x;
-		int dy = location.y - startLocation.y;
+		final Tile startLocation = start.tile();
+		final Tile location = end.tile();
+		int dx = location.x() - startLocation.x();
+		int dy = location.y() - startLocation.y();
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
 	public void walk(final Locatable locatable) {
-		final Tile tile = locatable.getLocation();
+		final Tile tile = locatable.tile();
 		if (ctx.movement.findPath(locatable).traverse()) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return tile.getMatrix(ctx).isOnScreen() || tile.distanceTo(ctx.players.local()) < 5;
+					return tile.matrix(ctx).inViewport() || tile.distanceTo(ctx.players.local()) < 5;
 				}
 			}, Random.nextInt(400, 650), Random.nextInt(10, 15));
 		}

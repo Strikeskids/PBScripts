@@ -1,10 +1,10 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
-import org.logicail.rsbot.scripts.framework.context.IMethodContext;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.util.LogicailArea;
-import org.powerbot.script.methods.Game;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.Tile;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.Game;
 
 import java.util.concurrent.Callable;
 
@@ -122,34 +122,34 @@ public enum LocationAttribute {
 		return smallArea;
 	}
 
-	public Tile getObeliskRandom(IMethodContext ctx) {
+	public Tile getObeliskRandom(IClientContext ctx) {
 		return obeliskArea != null ? obeliskArea.getRandomReachable(ctx, 3) : null;
 	}
 
-	public Tile getSmallRandom(IMethodContext ctx) {
+	public Tile getSmallRandom(IClientContext ctx) {
 		return smallArea.getRandomReachable(ctx, 3);
 	}
 
-	public boolean isInLargeArea(IMethodContext ctx) {
+	public boolean isInLargeArea(IClientContext ctx) {
 		waitUntilMapReady(ctx);
 		return largeArea.contains(ctx.players.local());
 	}
 
-	private void waitUntilMapReady(final IMethodContext ctx) {
+	private void waitUntilMapReady(final IClientContext ctx) {
 		Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return ctx.game.getClientState() == Game.INDEX_MAP_LOADED;
+				return ctx.game.clientState() == Game.INDEX_MAP_LOADED;
 			}
 		}, 50, 20);
 	}
 
-	public boolean isInObeliskArea(IMethodContext ctx) {
+	public boolean isInObeliskArea(IClientContext ctx) {
 		waitUntilMapReady(ctx);
 		return obeliskArea != null && obeliskArea.contains(ctx.players.local());
 	}
 
-	public boolean isInSmallArea(IMethodContext ctx) {
+	public boolean isInSmallArea(IClientContext ctx) {
 		waitUntilMapReady(ctx);
 		return smallArea.contains(ctx.players.local());
 	}

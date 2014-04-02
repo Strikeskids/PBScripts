@@ -2,9 +2,10 @@ package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.wrappers.GameObject;
-import org.powerbot.script.wrappers.Player;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.Player;
 
 import java.util.concurrent.Callable;
 
@@ -21,7 +22,7 @@ public class StayInArea extends ArtisanArmourerTask {
 	@Override
 	public boolean isValid() {
 		final Player local = ctx.players.local();
-		return local.isIdle()
+		return local.idle()
 				&& !options.getAreaSmall().contains(local);
 	}
 
@@ -29,7 +30,7 @@ public class StayInArea extends ArtisanArmourerTask {
 	public void run() {
 		if (options.mode == Mode.BURIAL_ARMOUR) {
 			final GameObject tunnel = ctx.objects.select().id(4618).nearest().poll();
-			if (tunnel.isValid() && ctx.camera.prepare(tunnel) && tunnel.interact("Climb")) {
+			if (tunnel.valid() && ctx.camera.prepare(tunnel) && tunnel.interact("Climb")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -41,9 +42,9 @@ public class StayInArea extends ArtisanArmourerTask {
 		}
 
 
-		if (ctx.movement.findPath(options.getAreaSmall().getCentralTile().randomize(3, 3)).traverse()
-				|| ctx.movement.stepTowards(options.getAreaSmall().getCentralTile().randomize(3, 3))) {
-			sleep(500, 1500);
+		if (ctx.movement.findPath(options.getAreaSmall().getCentralTile().derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3))).traverse()
+				|| ctx.movement.step(options.getAreaSmall().getCentralTile().derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)))) {
+			sleep(600);
 		}
 
 		/*if (LogArtisanWorkshop.getAreaSmall().getCentralTile().distanceTo(ctx.players.local()) > 100) {

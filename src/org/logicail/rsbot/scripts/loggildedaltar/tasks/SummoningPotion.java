@@ -5,10 +5,10 @@ import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.loggildedaltar.wrapper.BankRequiredItem;
 import org.logicail.rsbot.util.ItemHelper;
-import org.powerbot.script.methods.Hud;
-import org.powerbot.script.util.Condition;
-import org.powerbot.script.util.Random;
-import org.powerbot.script.wrappers.Item;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
+import org.powerbot.script.rt6.Hud;
+import org.powerbot.script.rt6.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +50,11 @@ public class SummoningPotion extends NodePath {
 
 	@Override
 	public void run() {
-		if (ctx.bank.isOpen() && ctx.bank.close()) {
+		if (ctx.bank.opened() && ctx.bank.close()) {
 			if (!Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return !ctx.bank.isOpen();
+					return !ctx.bank.opened();
 				}
 			}, Random.nextInt(100, 200), 15)) {
 				return;
@@ -62,8 +62,8 @@ public class SummoningPotion extends NodePath {
 		}
 
 		final Item potion = ItemHelper.getFirst(ctx.backpack, SUMMONING_POTION, 1);
-		if (ctx.hud.view(Hud.Window.BACKPACK)) {
-			if (potion.isValid() && potion.interact("Drink")) {
+		if (ctx.hud.open(Hud.Window.BACKPACK)) {
+			if (potion.valid() && potion.interact("Drink")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -73,6 +73,6 @@ public class SummoningPotion extends NodePath {
 			}
 		}
 
-		sleep(400, 1300);
+		sleep(500);
 	}
 }
