@@ -20,7 +20,7 @@ public class AltarOffering extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return true;
 	}
 

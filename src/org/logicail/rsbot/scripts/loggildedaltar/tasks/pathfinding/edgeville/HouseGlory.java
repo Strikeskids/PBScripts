@@ -37,7 +37,7 @@ public class HouseGlory extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !locationAttribute.isInSmallArea(ctx)
 				&& (locationAttribute.isInLargeArea(ctx) || (script.houseTask.isInHouse() && !ctx.objects.select().id(MOUNTED_GLORY).isEmpty()) || ILodestone.Lodestone.EDGEVILLE.isUnlocked(ctx));
 	}

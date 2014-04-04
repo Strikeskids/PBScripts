@@ -20,8 +20,8 @@ public abstract class Branch<T extends LogicailScript<T>> extends Tree<T> {
 	}
 
 	@Override
-	public final boolean isValid() {
-		return branch() && super.isValid();
+	public final boolean valid() {
+		return branch() && super.valid();
 	}
 
 	public abstract boolean branch();

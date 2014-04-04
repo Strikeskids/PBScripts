@@ -25,7 +25,7 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !ctx.backpack.isFull()
 				&& ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).isEmpty()
 				&& !ctx.backpack.select().id(GOPWaterTalisman.TOKENS).isEmpty()

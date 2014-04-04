@@ -19,7 +19,7 @@ public abstract class ArtisanArmourerTask extends Node<LogArtisanWorkshop> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return options.getAreaSmall().contains(ctx.players.local());
 	}
 }

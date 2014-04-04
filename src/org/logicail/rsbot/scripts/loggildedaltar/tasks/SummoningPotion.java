@@ -44,7 +44,7 @@ public class SummoningPotion extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return getItemsNeededFromBank().isEmpty();
 	}
 

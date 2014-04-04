@@ -28,7 +28,7 @@ public class AltarOfferBones extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !getBackpackOffering().isEmpty()
 				&& ctx.players.local().animation() != ANIMATION_OFFERING;
 	}

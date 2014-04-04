@@ -19,7 +19,7 @@ public class LeaveHouse extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return leaveHouse.get();
 	}
 

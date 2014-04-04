@@ -15,7 +15,7 @@ public class OpenBank extends Node<LogBankOrganiser> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !ctx.bank.opened();
 	}
 

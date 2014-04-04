@@ -19,7 +19,7 @@ public class Track60 extends AbstractTrack {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !ctx.backpack.select().id(smithTrack.getTrack40()).isEmpty() && !ctx.backpack.select().id(options.getIngotId(), smithTrack.getSpikes()).isEmpty();
 	}
 

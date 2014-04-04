@@ -42,7 +42,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	private static final IBank.BankTab[] BANK_TABS = IBank.BankTab.values();
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		if (!removedInvalidTabs || mapping.size() < ctx.bank.getNumberOfTabs() + 1) {
 			return true;
 		}

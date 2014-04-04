@@ -62,7 +62,7 @@ public class BankWithdraw extends BankingAbstract {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return true;
 	}
 
@@ -152,27 +152,27 @@ public class BankWithdraw extends BankingAbstract {
 		}
 
 		// Aura disabled for now
-				/*if (options.useAura && Settings.aura != null) {
-					MyAuras.Aura aura = MyAuras.getAura();
-					if (aura != Settings.aura) {
-						instance.getLogHandler().print("Not wearing correct aura");
+		/*if (options.useAura && Settings.aura != null) {
+			MyAuras.Aura aura = MyAuras.getAura();
+			if (aura != Settings.aura) {
+				instance.getLogHandler().print("Not wearing correct aura");
 
-						if (!Inventory.contains(Settings.aura.getId())) {
-							Bank.withdraw(Settings.aura.getId(), 1);
-							Task.sleep(50, 500);
-						}
-						if (Inventory.contains(Settings.aura.getId())) {
-							if (IEquipment.equip(Settings.aura.getId())) {
-								Task.sleep(50, 500);
-							}
-						}
-					}
-					final Item item = Inventory.getItem(MyAuras.getIds(Settings.aura.getId()));
-					if (item != null) {
-						Bank.deposit(item.getId(), 1);
+				if (!Inventory.contains(Settings.aura.getId())) {
+					Bank.withdraw(Settings.aura.getId(), 1);
+					Task.sleep(50, 500);
+				}
+				if (Inventory.contains(Settings.aura.getId())) {
+					if (IEquipment.equip(Settings.aura.getId())) {
 						Task.sleep(50, 500);
 					}
-				}*/
+				}
+			}
+			final Item item = Inventory.getItem(MyAuras.getIds(Settings.aura.getId()));
+			if (item != null) {
+				Bank.deposit(item.getId(), 1);
+				Task.sleep(50, 500);
+			}
+		}*/
 
 		// Fill bob as much as possible before withdrawing marrentil
 		if (options.bobonce.get() && options.timesBob.get() == 0) {

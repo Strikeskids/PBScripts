@@ -28,8 +28,8 @@ public class GetTongs extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean isValid() {
-		return super.isValid()
+	public boolean valid() {
+		return super.valid()
 				&& !ctx.backpack.isFull()
 				&& ctx.backpack.select().id(MakeSword.TONGS).isEmpty();
 	}

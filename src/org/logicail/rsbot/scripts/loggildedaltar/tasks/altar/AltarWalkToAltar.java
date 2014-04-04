@@ -33,7 +33,7 @@ public class AltarWalkToAltar extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		final Room room = script.roomStorage.getRoom(ctx.players.local());
 		return room != null && ctx.objects.select().id(AltarTask.ALTAR).within(room.getArea()).isEmpty();
 	}

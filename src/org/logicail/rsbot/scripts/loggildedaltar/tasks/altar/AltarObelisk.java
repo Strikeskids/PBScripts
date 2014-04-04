@@ -41,7 +41,7 @@ public class AltarObelisk extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		if (//&& options.beastOfBurden != Summoning.Familiar.CLAN_AVATAR
 				options.useBOB.get() &&
 						ctx.summoning.timeLeft() <= 420

@@ -28,7 +28,7 @@ public class LogoutIdle<T extends LogicailScript> extends Node<T> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return System.currentTimeMillis() > nextRun && ctx.game.loggedIn();
 	}
 

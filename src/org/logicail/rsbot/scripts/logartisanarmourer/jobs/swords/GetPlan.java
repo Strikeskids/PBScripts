@@ -39,8 +39,8 @@ public class GetPlan extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean isValid() {
-		return super.isValid()
+	public boolean valid() {
+		return super.valid()
 				&& options.finishedSword || !options.gotPlan;
 	}
 

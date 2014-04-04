@@ -136,7 +136,7 @@ public class HouseHandler extends IClientAccessor implements MessageListener {
 							}
 						}
 						//checkedNames.put(playername, true);
-						//IPlayerValidator.isValid(playername);
+						//IPlayerValidator.valid(playername);
 					}
 				}
 			}

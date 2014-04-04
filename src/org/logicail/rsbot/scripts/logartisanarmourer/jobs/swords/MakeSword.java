@@ -38,7 +38,7 @@ public class MakeSword extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !options.finishedSword
 				&& options.gotPlan
 				&& !ctx.backpack.select().id(TONGS).isEmpty();

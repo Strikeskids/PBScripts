@@ -69,7 +69,7 @@ public class YanillePortalWalk extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return locationAttribute.isInLargeArea(ctx)
 				&& !locationAttribute.isInSmallArea(ctx);
 	}

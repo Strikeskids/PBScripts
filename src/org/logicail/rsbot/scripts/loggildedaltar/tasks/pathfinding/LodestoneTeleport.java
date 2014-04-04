@@ -37,7 +37,7 @@ public class LodestoneTeleport extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !locationAttribute.isInSmallArea(ctx) && (locationAttribute.isInLargeArea(ctx) || (lodestone.isUnlocked(ctx) && System.currentTimeMillis() - timeLastTeleport > 15000));
 	}
 }

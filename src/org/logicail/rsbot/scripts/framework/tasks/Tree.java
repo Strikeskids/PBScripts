@@ -54,7 +54,7 @@ public class Tree<T extends LogicailScript> extends Node<T> {
 
 	@Override
 	public void run() {
-		if (isValid()) {
+		if (valid()) {
 			Task task = get();
 			if (task != null) {
 				final String toString = task.toString();
@@ -71,7 +71,7 @@ public class Tree<T extends LogicailScript> extends Node<T> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		Node<T> state = state();
 		if (state != null) {
 			set(state);
@@ -86,15 +86,15 @@ public class Tree<T extends LogicailScript> extends Node<T> {
 
 	public final synchronized Node<T> state() {
 		/*Task current = currentTask.get();
-		if (current != null && current.isValid()) {
-			if (current.isValid()) {
+		if (current != null && current.valid()) {
+			if (current.valid()) {
 				// Don't loop previous is still valid
 				return current;
 			}
 		}*/
 
 		for (Node<T> next : tasks) {
-			if (next != null && next.isValid()) {
+			if (next != null && next.valid()) {
 				return next;
 			}
 		}

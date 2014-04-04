@@ -24,7 +24,7 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !ctx.backpack.select().id(GOPWaterTalisman.WATER_TALISMAN).isEmpty()
 				&& !ctx.objects.select().id(GOPWaterTalisman.DEPOSIT).isEmpty();
 	}

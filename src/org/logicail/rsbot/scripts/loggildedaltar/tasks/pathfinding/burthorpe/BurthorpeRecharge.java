@@ -25,7 +25,7 @@ public class BurthorpeRecharge extends RechargeSummoning {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return locationAttribute.isInLargeArea(ctx) || ILodestone.Lodestone.BURTHORPE.isUnlocked(ctx);
 	}
 

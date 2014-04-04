@@ -20,8 +20,8 @@ public class DepositArmour extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean isValid() {
-		return super.isValid()
+	public boolean valid() {
+		return super.valid()
 				&& ctx.backpack.select().id(options.getIngotId()).isEmpty()
 				&& !ctx.backpack.select().id(LogArtisanWorkshop.ARMOUR_ID_LIST).isEmpty();
 	}

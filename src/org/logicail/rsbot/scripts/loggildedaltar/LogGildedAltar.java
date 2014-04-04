@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.loggildedaltar;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.util.SkillData;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.scripts.loggildedaltar.gui.LogGildedAltarGUI;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.*;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.RoomStorage;
@@ -30,7 +31,6 @@ import java.util.concurrent.atomic.AtomicLong;
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
 		properties = "topic=1141536;client=6;version=7.00"
-
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
@@ -71,17 +71,19 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		final long runtime = getRuntime();
 
 		properties.put("Status", options.status);
-		properties.put("Time Running", org.logicail.rsbot.scripts.framework.util.Timer.format(runtime));
+		properties.put("Time Running", Timer.format(runtime));
 
 		if (skillData != null) {
-			properties.put("TTL", org.logicail.rsbot.scripts.framework.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
+			properties.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.PRAYER)));
 			properties.put("Level", String.format("%d (+%d)", current, current - startLevel.get()));
 			properties.put("XP Gained", String.format("%,d", experience()));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.PRAYER)));
 			if (current < 99) {
-				properties.put("XP to level " + (current + 1), String.format("%,d", org.logicail.rsbot.scripts.framework.util.SkillData.getExperenceToNextLevel(ctx, Skills.PRAYER)));
+				properties.put("XP to level " + (current + 1), String.format("%,d", SkillData.getExperenceToNextLevel(ctx, Skills.PRAYER)));
 			}
 		}
+
+		properties.put("Banking", options.banking.get());
 
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
@@ -210,7 +212,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 //		if (altarTask != null) {
 //			final GameObject altar = altarTask.getAltar();
-//			if (altar.isValid()) {
+//			if (altar.valid()) {
 //				altar.tile().getMatrix(ctx).draw(g);
 //			}
 //		}

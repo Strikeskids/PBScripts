@@ -44,7 +44,7 @@ public class HousePortal extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return getPortalLocation() != null;
 	}
 

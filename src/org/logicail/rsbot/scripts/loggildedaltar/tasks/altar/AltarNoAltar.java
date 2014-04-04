@@ -24,7 +24,7 @@ public class AltarNoAltar extends LogGildedAltarTask {
 	public void run() {
 		if (ctx.game.clientState() == Game.INDEX_MAP_LOADED) {
 			ctx.sleep(2000);
-			if (isValid()) {
+			if (valid()) {
 				options.status = "House does not have a gilded altar";
 				if (options.useOtherHouse.get()) {
 					script.houseHandler.currentHouseFailed();
@@ -40,7 +40,7 @@ public class AltarNoAltar extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !script.altarTask.getAltar().valid();
 	}
 }

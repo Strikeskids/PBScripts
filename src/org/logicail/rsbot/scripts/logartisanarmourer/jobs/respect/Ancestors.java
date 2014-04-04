@@ -43,8 +43,8 @@ public class Ancestors extends RespectTask {
 	}
 
 	@Override
-	public boolean isValid() {
-		if (super.isValid()) {
+	public boolean valid() {
+		if (super.valid()) {
 			if (!getAncestor().isEmpty()) {
 				return !updateAbilities().isEmpty();
 			}

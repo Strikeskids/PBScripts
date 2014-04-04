@@ -41,7 +41,7 @@ public class RechargeSummoning extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return locationAttribute.isInLargeArea(ctx);
 	}
 

@@ -41,8 +41,8 @@ public class TakeIngots extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean isValid() {
-		return super.isValid()
+	public boolean valid() {
+		return super.valid()
 				//&& (!Inventory.isFull() && (!Inventory.contains(SmithTrackOld.RAILS) || !Inventory.contains(SmithTrackOld.BASE_PLATE)))
 				&& AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > SmithTrack.animationTimelimit
 				&& ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty()

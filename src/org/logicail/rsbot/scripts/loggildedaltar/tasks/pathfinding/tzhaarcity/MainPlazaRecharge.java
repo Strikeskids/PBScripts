@@ -34,7 +34,7 @@ public class MainPlazaRecharge extends RechargeSummoning {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return locationAttribute.isInLargeArea(ctx) || getItemsNeededFromBank().isEmpty();
 	}
 

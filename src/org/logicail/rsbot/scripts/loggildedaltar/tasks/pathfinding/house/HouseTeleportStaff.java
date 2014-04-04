@@ -58,7 +58,7 @@ public class HouseTeleportStaff extends NodePath {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return script.housePortal.getPortalLocation() == null
 				&& getItemsNeededFromBank().isEmpty()
 				&& Spellbook.STANDARD.isOpen(ctx);

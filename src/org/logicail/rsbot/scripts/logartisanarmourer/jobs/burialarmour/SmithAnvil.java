@@ -53,12 +53,12 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		if (makeSword == null) {
 			script.log.severe("SmithAnvil.makeSword is null!");
 			return false;
 		}
-		if (super.isValid() && ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).valid()) {
+		if (super.valid() && ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).valid()) {
 			if (!ctx.backpack.select().id(options.getIngotId()).isEmpty()) {
 				if (ctx.skillingInterface.isOpen() || !options.isSmithing
 						|| !options.currentlyMaking.equals(ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text())

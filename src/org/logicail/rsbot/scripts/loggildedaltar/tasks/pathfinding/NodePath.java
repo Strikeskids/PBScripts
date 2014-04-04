@@ -41,7 +41,7 @@ public abstract class NodePath extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !locationAttribute.isInSmallArea(ctx)
 				&& (locationAttribute.isInLargeArea(ctx) || getItemsNeededFromBank().isEmpty());
 	}

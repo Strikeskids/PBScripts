@@ -26,7 +26,7 @@ public class WaitForBurners extends BurnerAbstract {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return /*!options.lightBurners &&*/ /*options.useOtherHouse MOVED TO CONSTRUCTOR*/ true;
 	}
 

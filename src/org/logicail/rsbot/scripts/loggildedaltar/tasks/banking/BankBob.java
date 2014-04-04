@@ -29,7 +29,7 @@ public class BankBob extends BankingAbstract {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return ctx.summoning.isOpen() || depositBob();
 	}
 

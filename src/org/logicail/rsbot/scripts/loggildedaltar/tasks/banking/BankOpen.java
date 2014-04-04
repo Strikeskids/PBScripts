@@ -20,7 +20,7 @@ public class BankOpen extends BankingAbstract {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return !ctx.bank.opened();
 	}
 

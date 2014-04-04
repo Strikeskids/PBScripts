@@ -36,8 +36,8 @@ public class BrokenPipes extends RespectTask {
 	}
 
 	@Override
-	public boolean isValid() {
-		return super.isValid()
+	public boolean valid() {
+		return super.valid()
 				&& ctx.skills.realLevel(Skills.SMITHING) >= 50
 				&& getPipe() != null;
 	}

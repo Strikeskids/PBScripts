@@ -25,7 +25,7 @@ public class StopLevel<T extends LogicailScript> extends Node<T> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		try {
 			return ctx.skills.realLevel(skill) >= level;
 		} catch (Exception ignored) {

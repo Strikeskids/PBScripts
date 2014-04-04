@@ -96,7 +96,7 @@ public class Postback extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return cipher != null && nextRun < System.currentTimeMillis();
 	}
 

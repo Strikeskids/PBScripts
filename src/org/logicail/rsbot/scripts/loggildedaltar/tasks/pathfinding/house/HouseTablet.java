@@ -28,8 +28,8 @@ public class HouseTablet extends MagicTablet {
 	}
 
 	@Override
-	public boolean isValid() {
-		return super.isValid()
+	public boolean valid() {
+		return super.valid()
 				&& script.housePortal.getPortalLocation() == null;
 	}
 

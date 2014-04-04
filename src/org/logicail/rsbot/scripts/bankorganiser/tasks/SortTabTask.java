@@ -33,7 +33,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return true;
 	}
 

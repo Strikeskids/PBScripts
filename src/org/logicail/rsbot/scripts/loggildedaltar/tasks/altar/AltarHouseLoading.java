@@ -21,7 +21,7 @@ public class AltarHouseLoading extends LogGildedAltarTask {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		return ctx.game.clientState() == Game.INDEX_MAP_LOADING || script.houseTask.isLoadingHouse();
 	}
 

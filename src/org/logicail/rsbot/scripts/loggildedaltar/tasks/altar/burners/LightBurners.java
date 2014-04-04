@@ -32,7 +32,7 @@ public class LightBurners extends BurnerAbstract {
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean valid() {
 		final Room room = script.roomStorage.getRoom(ctx.players.local());
 		if (room != null) {
 			final MobileIdNameQuery<GameObject> unlitLanterns = burnersTask.getUnlitLanterns(room);
