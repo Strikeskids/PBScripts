@@ -86,7 +86,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 	public boolean branch() {
 		return !options.banking.get()
 				&& !isInHouse()
-				&& !ctx.bank.open();
+				&& !ctx.bank.opened();
 	}
 
 	public boolean isInHouse() {
