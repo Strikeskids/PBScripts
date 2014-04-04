@@ -47,9 +47,11 @@ public class IClientContext extends ClientContext {
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AtomicBoolean paused = new AtomicBoolean();
 	private final AtomicBoolean shutdown = new AtomicBoolean();
+	public final ClientContext original;
 
 	public IClientContext(final ClientContext originalContext, LogicailScript script) {
 		super(originalContext);
+		this.original = originalContext;
 		this.script = script;
 		script.log.addHandler(log);
 

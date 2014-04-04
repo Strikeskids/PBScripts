@@ -83,8 +83,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 			}
 		}
 
-		properties.put("Banking", options.banking.get());
-
 		final float time = runtime / 3600000f;
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
 
