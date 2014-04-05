@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.ParseException;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.util.IOUtil;
 
@@ -134,9 +135,10 @@ public class Postback extends LogGildedAltarTask {
 		}
 		//json.add("settings", options.toJson());
 
-		//script.log.info("Postback: " + json.toString());
+		script.log.info("Postback: " + json.toString());
 
 		final String data = "data=" + bytesToHex(encrypt(json.toString()));
+		script.log.info("Enc: " + data);
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(POSTBACK_URL).openConnection();
 
@@ -168,13 +170,17 @@ public class Postback extends LogGildedAltarTask {
 						ctx.stop("Forced shutdown see thread on forum", false);
 					} else {
 						if (read.length() > 0) {
-							final JsonObject jsonObject = JsonObject.readFrom(read);
-							final JsonValue latest_version = jsonObject.get("latest_version");
-							if (latest_version != null && latest_version.isNumber()) {
-								//final double latest_version_double = latest_version.asDouble();
-								//if (latest_version_double > script.getVersion()) {
-								//	script.options.newVersionAvailable.set(true);
-								//}
+							try {
+								final JsonObject jsonObject = JsonObject.readFrom(read);
+								final JsonValue latest_version = jsonObject.get("latest_version");
+								if (latest_version != null && latest_version.isNumber()) {
+									//final double latest_version_double = latest_version.asDouble();
+									//if (latest_version_double > script.getVersion()) {
+									//	script.options.newVersionAvailable.set(true);
+									//}
+								}
+							} catch (ParseException e) {
+								ctx.script.log.info("Postback: " + e.getMessage());
 							}
 						}
 					}

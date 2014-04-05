@@ -5,6 +5,8 @@ import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.IngotType;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.Area;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -16,7 +18,7 @@ public class LogArtisanWorkshopOptions {
 	public boolean isSmithing;
 	public int swordsSmithed;
 	public int brokenSwords;
-	public boolean gotPlan = true;
+	public AtomicBoolean gotPlan = new AtomicBoolean(true);
 	public int perfectSwords;
 	public int completedTracks;
 	public boolean finishedSword = false;

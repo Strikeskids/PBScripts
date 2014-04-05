@@ -194,6 +194,11 @@ public class SmithAnvil extends ArtisanArmourerTask {
 							if (ctx.skillingInterface.opened() || makeSword.isOpen()) {
 								return true;
 							}
+
+							if (options.mode == Mode.CEREMONIAL_SWORDS && !options.gotPlan.get()) {
+								return true;
+							}
+
 							if (ctx.skillingInterface.isProductionInterfaceOpen()) {
 								ctx.skillingInterface.cancelProduction();
 							}
@@ -201,6 +206,9 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						}
 					}, Random.nextInt(300, 600), Random.nextInt(8, 13))) {
 						sleep(100);
+						if (options.mode == Mode.CEREMONIAL_SWORDS && !options.gotPlan.get()) {
+							return;
+						}
 						if (!ctx.skillingInterface.opened() && !makeSword.isOpen()) {
 							anvil.interact("Smith", "Anvil");
 						}

@@ -165,8 +165,8 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 				break;
 			case CEREMONIAL_SWORDS:
 				tree.add(depositOre = new DepositOre(this));
-				tree.add(new MakeIngots(this, smithAnvil));
 				tree.add(new GetTongs(this));
+				tree.add(new MakeIngots(this, smithAnvil));
 				tree.add(new GetPlan(this, makeSword));
 				tree.add(new HeatIngots(this, makeSword));
 				tree.add(makeSword);
@@ -271,24 +271,24 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 			switch (e.getId()) {
 				case 0:
 					if (s.equals("You need plans to make a sword.")) {
-						options.gotPlan = false;
+						options.gotPlan.set(false);
 					} else if (s.equals("This sword is too cool to work. Ask Egil or Abel to rate it.") || s.equals("This sword has cooled and you can no longer work it.")) {
 						options.finishedSword = true;
-						options.gotPlan = false;
+						options.gotPlan.set(false);
 					} else if (s.equals("You broke the sword! You'll need to get another set of plans from Egil.")) {
 						options.brokenSwords++;
 						options.finishedSword = true;
-						options.gotPlan = false;
+						options.gotPlan.set(false);
 					} else if (s.equals("This sword is now perfect and requires no more work.") || s.equals("This sword is perfect. Ask Egil or Abel to rate it.")) {
 						options.finishedSword = true;
-						options.gotPlan = false;
+						options.gotPlan.set(false);
 					} else if (s.equals("For producing a perfect sword, you are awarded 120% of the normal experience. Excellent work!")) {
 						options.perfectSwords++;
 						options.swordsSmithed++;
 					} else if (s.startsWith("Your sword is awarded")) {
 						options.swordsSmithed++;
 						options.finishedSword = true;
-						options.gotPlan = false;
+						options.gotPlan.set(false);
 					}
 					break;
 				case 109:

@@ -334,7 +334,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 				if (ctx.backpack.count() == 28) {
 					targetQuantity = -1;
 				} else {
-					targetQuantity = 27 - ctx.backpack.count();
+					targetQuantity = 28 - ctx.backpack.select().count();
 				}
 				break;
 			case 0:

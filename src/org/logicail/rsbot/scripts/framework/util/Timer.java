@@ -79,6 +79,6 @@ public class Timer {
 	}
 
 	public boolean running() {
-		return end.get() < System.nanoTime();
+		return end.get() > System.nanoTime();
 	}
 }
