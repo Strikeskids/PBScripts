@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.framework.context.providers;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.util.Timer;
-import org.logicail.rsbot.util.TargetableRectangle;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
@@ -11,7 +10,6 @@ import org.powerbot.script.rt6.Interactive;
 import org.powerbot.script.rt6.Item;
 import org.powerbot.script.rt6.ItemQuery;
 
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -31,8 +29,6 @@ public class ISkillingInterface extends ItemQuery<Item> {
 	private static final int WIDGET_MAIN_QUANTITY = 74;
 	private static final int WIDGET_INTERFACE_MAIN = 1371;
 	private static final int WIDGET_INTERFACE_MAIN_ITEMS = 44;
-	private static final int WIDGET_INTERFACE_MAIN_SELECTED_ITEM = 55;
-	private static final int WIDGET_INTERFACE_CATEGORY_MENU = 60;
 	private static final int WIDGET_INTERFACE_CATEGORY = 51;
 	private static final int WIDGET_MAIN_CLOSE_BUTTON = 30;
 	private static final int WIDGET_QUANTITY_INCREASE = 29;
@@ -41,7 +37,10 @@ public class ISkillingInterface extends ItemQuery<Item> {
 	private static final int WIDGET_PRODUCTION_MAIN = 1251;
 	private static final int WIDGET_PRODUCTION_PROGRESS = 33;
 	private static final int WIDGET_PRODUCTION_CANCEL = 48;
+	private static final int WIDGET_INTERFACE_MAIN_CURRENT_CATEGORY = 51;
 	protected final IClientContext ctx;
+
+	private int indexSelectedItem = -1;
 
 
 	public ISkillingInterface(IClientContext context) {
@@ -153,10 +152,22 @@ public class ISkillingInterface extends ItemQuery<Item> {
 	}
 
 	public Item getSelectedItem() {
-		Component component = ctx.widgets.component(WIDGET_MAIN, WIDGET_INTERFACE_MAIN_SELECTED_ITEM);
-		if (component.valid()) {
-			return new Item(ctx, component);
+		if (!opened()) {
+			return nil();
 		}
+
+		if (indexSelectedItem > -1) {
+			Component component = ctx.widgets.component(WIDGET_MAIN, indexSelectedItem);
+			return component.valid() ? new Item(ctx, component) : nil();
+		}
+
+		for (Component component : ctx.widgets.widget(WIDGET_MAIN).components()) {
+			if (component.itemId() > -1) {
+				indexSelectedItem = component.index();
+				return component.valid() ? new Item(ctx, component) : nil();
+			}
+		}
+
 		return nil();
 	}
 
@@ -193,9 +204,11 @@ public class ISkillingInterface extends ItemQuery<Item> {
 		final Component[] options = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 62).components();
 
 		for (Component option : options) {
-			final String text = option.text();
-			if (opened() && !text.isEmpty()) {
-				list.add(text);
+			if (option.valid()) {
+				final String text = option.text();
+				if (!text.isEmpty()) {
+					list.add(text);
+				}
 			}
 		}
 
@@ -265,17 +278,14 @@ public class ISkillingInterface extends ItemQuery<Item> {
 					}
 				})) {
 					ctx.sleep(400);
-					TargetableRectangle rectangle = getCategoryRectangle(ctx, target);
-					if (rectangle != null && ctx.mouse.move(rectangle.nextPoint())) {
-						ctx.sleep(400);
-						if (rectangle.contains(ctx.mouse.getLocation()) && ctx.menu.click(org.powerbot.script.rt6.Menu.filter("Select"))) {
-							Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									return !currentCategory.equalsIgnoreCase(getCategory());
-								}
-							});
-						}
+					Component component = getCategoryRectangle(ctx, target);
+					if (component != null && component.interact("Select")) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !currentCategory.equalsIgnoreCase(getCategory());
+							}
+						}, 200, 10);
 						ctx.sleep(400);
 					}
 				}
@@ -292,7 +302,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 	public String getCategory() {
 		try {
 			if (opened()) {
-				Component component = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 51);
+				Component component = ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_MAIN_CURRENT_CATEGORY);
 				if (component.childrenCount() > 0) {
 					return component.component(0).text().toLowerCase();
 				} else {
@@ -304,21 +314,12 @@ public class ISkillingInterface extends ItemQuery<Item> {
 		return "";
 	}
 
-	public TargetableRectangle getCategoryRectangle(IClientContext ctx, String text) {
-		final Component widgetChild = ctx.widgets.component(WIDGET_INTERFACE_MAIN, WIDGET_INTERFACE_CATEGORY_MENU);
-		final Component[] options = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 62).components();
-
-		for (int i = 0; i < options.length; i++) {
-			if (options[i].valid() && options[i].text().equalsIgnoreCase(text)) {
-				Rectangle rectangle = widgetChild.boundingRect();
-				rectangle.x += 4;
-				rectangle.y += i * 15 + 7;
-				rectangle.width -= 9;
-				rectangle.height = 10;
-				return new TargetableRectangle(ctx, rectangle);
+	public Component getCategoryRectangle(IClientContext ctx, String text) {
+		for (Component component : ctx.widgets.component(WIDGET_INTERFACE_MAIN, 62).components()) {
+			if (component.valid() && component.text().equalsIgnoreCase(text)) {
+				return component;
 			}
 		}
-
 		return null;
 	}
 
