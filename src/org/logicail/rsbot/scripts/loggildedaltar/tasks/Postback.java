@@ -117,7 +117,7 @@ public class Postback extends LogGildedAltarTask {
 
 		JsonObject json = new JsonObject();
 		json.add("script", script.getName());
-		json.add("userid", ctx.original.properties.get("user.id"));
+		json.add("userid", Integer.parseInt(ctx.original.properties.get("user.id")));
 		json.add("username", ctx.original.properties.get("user.name"));
 		final long timeRunning = script.getRuntime() / 1000;
 		json.add("timerunning", timeRunning - previousTimeRunning);
@@ -134,7 +134,7 @@ public class Postback extends LogGildedAltarTask {
 		}
 		//json.add("settings", options.toJson());
 
-		//ctx.log.info("Postback: " + json.toString());
+		//script.log.info("Postback: " + json.toString());
 
 		final String data = "data=" + bytesToHex(encrypt(json.toString()));
 		try {
