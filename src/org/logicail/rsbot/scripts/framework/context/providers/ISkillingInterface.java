@@ -204,12 +204,11 @@ public class ISkillingInterface extends ItemQuery<Item> {
 		final Component[] options = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 62).components();
 
 		for (Component option : options) {
-			if (option.valid()) {
-				final String text = option.text();
-				if (!text.isEmpty()) {
-					list.add(text);
-				}
+			final String text = option.text();
+			if (!text.isEmpty()) {
+				list.add(text);
 			}
+
 		}
 
 		return list.toArray(new String[list.size()]);
