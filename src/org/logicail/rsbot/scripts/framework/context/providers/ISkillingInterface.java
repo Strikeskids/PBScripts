@@ -92,7 +92,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 	}
 
 	public boolean close() {
-		if (!isOpen()) {
+		if (!opened()) {
 			return true;
 		}
 
@@ -102,7 +102,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return !isOpen();
+					return !opened();
 				}
 			});
 		} else*/
@@ -112,16 +112,16 @@ public class ISkillingInterface extends ItemQuery<Item> {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !isOpen();
+						return !opened();
 					}
 				});
 			}
 		}
 
-		return !isOpen();
+		return !opened();
 	}
 
-	public boolean isOpen() {
+	public boolean opened() {
 		return ctx.widgets.component(WIDGET_MAIN, 0).valid();
 	}
 
@@ -143,7 +143,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 
 	public String getAction() {
 		try {
-			if (isOpen()) {
+			if (opened()) {
 				return ctx.widgets.component(WIDGET_MAIN, WIDGET_MAIN_ACTION).component(0).text();
 			}
 		} catch (Exception ignored) {
@@ -194,7 +194,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 
 		for (Component option : options) {
 			final String text = option.text();
-			if (isOpen() && !text.isEmpty()) {
+			if (opened() && !text.isEmpty()) {
 				list.add(text);
 			}
 		}
@@ -204,7 +204,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 
 	public boolean select(final int categoryIndex, final int itemId) {
 		//ctx.log.info(String.format("ISkillingInterface %d %d", categoryIndex, itemId));
-		if (!isOpen()) {
+		if (!opened()) {
 			return false;
 		}
 
@@ -285,7 +285,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 
 	public String getCategory() {
 		try {
-			if (isOpen()) {
+			if (opened()) {
 				Component component = ctx.widgets.component(WIDGET_INTERFACE_MAIN, 51);
 				if (component.childrenCount() > 0) {
 					return component.component(0).text().toLowerCase();
@@ -350,7 +350,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 			final Timer t = new Timer(Math.abs(targetQuantity - currentQuantity) * Random.nextInt(2000, 3000));
 			if (targetQuantity > currentQuantity) {
 				while (t.running() && targetQuantity > currentQuantity) {
-					if (!isOpen()) {
+					if (!opened()) {
 						break;
 					}
 					if (getQuantityPercent() >= 100) {
@@ -363,7 +363,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 				}
 			} else {
 				while (t.running() && currentQuantity > targetQuantity) {
-					if (!isOpen()) {
+					if (!opened()) {
 						break;
 					}
 					if (getQuantityPercent() <= 0) {

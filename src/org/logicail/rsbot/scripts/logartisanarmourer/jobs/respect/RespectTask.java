@@ -20,7 +20,7 @@ public abstract class RespectTask extends ArtisanArmourerTask {
 	public boolean valid() {
 		return super.valid()
 				&& getRespect() < 100
-				&& !ctx.skillingInterface.isOpen();
+				&& !ctx.skillingInterface.opened();
 	}
 
 	public int getRespect() {

@@ -52,7 +52,7 @@ public class HeatIngots extends ArtisanArmourerTask {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return ctx.skillingInterface.isOpen();
+							return ctx.skillingInterface.opened();
 						}
 					});
 				}

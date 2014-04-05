@@ -104,7 +104,7 @@ public class SmithTrack extends Branch<LogArtisanWorkshop> {
 
 	public boolean anvilReady() {
 		if (!ctx.skillingInterface.getAction().equalsIgnoreCase("Smith")) {
-			if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.close()) {
+			if (ctx.skillingInterface.opened() && ctx.skillingInterface.close()) {
 				return false;
 			}
 
@@ -134,7 +134,7 @@ public class SmithTrack extends Branch<LogArtisanWorkshop> {
 			return false;
 		}
 
-		if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.getAction().equals("Smith")) {
+		if (ctx.skillingInterface.opened() && ctx.skillingInterface.getAction().equals("Smith")) {
 			return true;
 		}
 
@@ -237,7 +237,7 @@ public class SmithTrack extends Branch<LogArtisanWorkshop> {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !ctx.skillingInterface.isOpen() && ctx.players.local().getAnimation() != -1;
+						return !ctx.skillingInterface.opened() && ctx.players.local().getAnimation() != -1;
 					}
 				})) {
 					for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {

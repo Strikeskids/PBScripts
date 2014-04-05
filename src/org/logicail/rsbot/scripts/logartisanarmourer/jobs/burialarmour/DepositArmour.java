@@ -30,7 +30,7 @@ public class DepositArmour extends ArtisanArmourerTask {
 	public void run() {
 		options.isSmithing = false;
 
-		if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.close()) {
+		if (ctx.skillingInterface.opened() && ctx.skillingInterface.close()) {
 			return;
 		}
 

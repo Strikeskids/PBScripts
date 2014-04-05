@@ -64,6 +64,7 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		ctx.sleep(250);
 	}
 
 	@Override

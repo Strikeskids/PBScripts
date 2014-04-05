@@ -30,15 +30,17 @@ public class StayInArea extends ArtisanArmourerTask {
 	public void run() {
 		if (options.mode == Mode.BURIAL_ARMOUR) {
 			final GameObject tunnel = ctx.objects.select().id(4618).nearest().poll();
-			if (tunnel.valid() && ctx.camera.prepare(tunnel) && tunnel.interact("Climb")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return options.getAreaSmall().contains(ctx.players.local());
-					}
-				});
+			if (tunnel.valid()) {
+				if (ctx.camera.prepare(tunnel) && tunnel.interact("Climb")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return options.getAreaSmall().contains(ctx.players.local());
+						}
+					});
+				}
+				return;
 			}
-			return;
 		}
 
 

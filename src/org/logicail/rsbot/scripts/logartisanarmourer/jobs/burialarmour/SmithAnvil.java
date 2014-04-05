@@ -60,7 +60,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 		}
 		if (super.valid() && ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).valid()) {
 			if (!ctx.backpack.select().id(options.getIngotId()).isEmpty()) {
-				if (ctx.skillingInterface.isOpen() || !options.isSmithing
+				if (ctx.skillingInterface.opened() || !options.isSmithing
 						|| !options.currentlyMaking.equals(ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text())
 						|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > animationTimelimit) {
 					return true;
@@ -125,7 +125,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !ctx.skillingInterface.isOpen() && ctx.players.local().getAnimation() != -1;
+						return !ctx.skillingInterface.opened() && ctx.players.local().getAnimation() != -1;
 					}
 				})) {
 					for (int id : LogArtisanWorkshop.ANIMATION_SMITHING) {
@@ -136,7 +136,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 			}
 		} else {
 			options.isSmithing = false;
-			if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.close()) {
+			if (ctx.skillingInterface.opened() && ctx.skillingInterface.close()) {
 				return;
 			}
 			if (ctx.skillingInterface.isProductionInterfaceOpen()) {
@@ -151,7 +151,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 	private Tile anvilLocation = null;
 
 	public void clickAnvil() {
-		if (ctx.skillingInterface.isOpen()) {
+		if (ctx.skillingInterface.opened()) {
 			return;
 		}
 
@@ -182,7 +182,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						}
 					}, 300, 8);
 					sleep(350);
-					if (ctx.players.local().animation() != -1 && !ctx.skillingInterface.isOpen()) {
+					if (ctx.players.local().animation() != -1 && !ctx.skillingInterface.opened()) {
 						if (anvil.interact("Smith", "Anvil")) {
 							sleep(250);
 						}
@@ -191,7 +191,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 					if (!Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							if (ctx.skillingInterface.isOpen() || makeSword.isOpen()) {
+							if (ctx.skillingInterface.opened() || makeSword.isOpen()) {
 								return true;
 							}
 							if (ctx.skillingInterface.isProductionInterfaceOpen()) {
@@ -201,7 +201,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						}
 					}, Random.nextInt(300, 600), Random.nextInt(8, 13))) {
 						sleep(100);
-						if (!ctx.skillingInterface.isOpen() && !makeSword.isOpen()) {
+						if (!ctx.skillingInterface.opened() && !makeSword.isOpen()) {
 							anvil.interact("Smith", "Anvil");
 						}
 					}

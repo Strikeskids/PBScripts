@@ -6,6 +6,7 @@ import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AnimationMonitor;
 import org.logicail.rsbot.scripts.framework.tasks.impl.AntiBan;
 import org.logicail.rsbot.scripts.framework.util.SkillData;
+import org.logicail.rsbot.scripts.framework.util.Timer;
 import org.logicail.rsbot.scripts.logartisanarmourer.gui.ArtisanGUI;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.DepositOre;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.MakeIngots;
@@ -57,6 +58,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 	private SkillData skillData = null;
 	private int currentLevel = -1;
 	private int startLevel = -1;
+	private DepositOre depositOre = null;
 
 	private int getRequiredLevel() {
 		int requiredLevel = 30;
@@ -156,13 +158,13 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 					tree.add(new Ancestors(this));
 				}
 
-				tree.add(new DepositOre(this));
+				tree.add(depositOre = new DepositOre(this));
 				tree.add(new DepositArmour(this));
 				tree.add(new MakeIngots(this, smithAnvil));
 				tree.add(smithAnvil);
 				break;
 			case CEREMONIAL_SWORDS:
-				tree.add(new DepositOre(this));
+				tree.add(depositOre = new DepositOre(this));
 				tree.add(new MakeIngots(this, smithAnvil));
 				tree.add(new GetTongs(this));
 				tree.add(new GetPlan(this, makeSword));
@@ -194,10 +196,10 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 		final long runtime = getRuntime();
 
 		properties.put("Status", options.status);
-		properties.put("Time Running", org.logicail.rsbot.scripts.framework.util.Timer.format(runtime));
+		properties.put("Time Running", Timer.format(runtime));
 
 		if (skillData != null) {
-			properties.put("TTL", org.logicail.rsbot.scripts.framework.util.Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
+			properties.put("TTL", Timer.format(skillData.timeToLevel(SkillData.Rate.HOUR, Skills.SMITHING)));
 			properties.put("Level", String.format("%d (+%d)", currentLevel, currentLevel - startLevel));
 			properties.put("XP Gained", String.format("%,d", skillData.experience(Skills.SMITHING)));
 			properties.put("XP Hour", String.format("%,d", skillData.experience(SkillData.Rate.HOUR, Skills.SMITHING)));
@@ -217,6 +219,14 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 			case REPAIR_TRACK:
 				properties.put("Completed Tracks", String.format("%,d (%,d/h)", options.completedTracks, (int) (options.completedTracks / time)));
 				break;
+		}
+
+		if (depositOre != null) {
+			properties.put("Iron", depositOre.remainingIron());
+			properties.put("Coal", depositOre.remainingCoal());
+			properties.put("Mithril", depositOre.remainingMithril());
+			properties.put("Adamant", depositOre.remainingAdamant());
+			properties.put("Runite", depositOre.remainingRune());
 		}
 
 		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());

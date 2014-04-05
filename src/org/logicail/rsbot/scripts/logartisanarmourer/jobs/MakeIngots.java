@@ -62,13 +62,13 @@ public class MakeIngots extends ArtisanArmourerTask {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return !ctx.skillingInterface.isOpen();
+							return !ctx.skillingInterface.opened();
 						}
 					});
 				}
 			}
 		} else {
-			if (ctx.skillingInterface.isOpen() && ctx.skillingInterface.close()) {
+			if (ctx.skillingInterface.opened() && ctx.skillingInterface.close()) {
 				return;
 			}
 
@@ -80,10 +80,10 @@ public class MakeIngots extends ArtisanArmourerTask {
 						if (Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return ctx.skillingInterface.isOpen();
+								return ctx.skillingInterface.opened();
 							}
-						})) {
-							ctx.sleep(300);
+						}, 200, 10)) {
+							ctx.sleep(200);
 						}
 					}
 				}
