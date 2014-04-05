@@ -237,7 +237,13 @@ public class ISkillingInterface extends ItemQuery<Item> {
 			}, 150, 8);
 		}
 
-		return getSelectedItem().id() == itemId;
+		if (getSelectedItem().id() == itemId) {
+			return true;
+		}
+
+		ctx.script.log.info("Failed to select item " + itemId + " selected " + getSelectedItem().id());
+
+		return false;
 	}
 
 	private boolean setCategory(int index) {
