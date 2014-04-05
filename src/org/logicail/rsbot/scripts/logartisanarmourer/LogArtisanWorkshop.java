@@ -209,6 +209,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 
 		switch (options.mode) {
 			case BURIAL_ARMOUR:
+				properties.put("Currently making", options.currentlyMaking);
 				properties.put("Ingots Smithed", String.format("%,d (%,d/h)", options.ingotsSmithed, (int) (options.ingotsSmithed / time)));
 				break;
 			case CEREMONIAL_SWORDS:
@@ -221,13 +222,13 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 				break;
 		}
 
-		if (depositOre != null) {
-			properties.put("Iron", depositOre.remainingIron());
-			properties.put("Coal", depositOre.remainingCoal());
-			properties.put("Mithril", depositOre.remainingMithril());
-			properties.put("Adamant", depositOre.remainingAdamant());
-			properties.put("Runite", depositOre.remainingRune());
-		}
+//		if (depositOre != null) {
+//			properties.put("Iron", depositOre.remainingIron());
+//			properties.put("Coal", depositOre.remainingCoal());
+//			properties.put("Mithril", depositOre.remainingMithril());
+//			properties.put("Adamant", depositOre.remainingAdamant());
+//			properties.put("Runite", depositOre.remainingRune());
+//		}
 
 		//properties.add("SkillingQuanitity: " + ctx.skillingInterface.getQuantity());
 		//properties.add("TimeAnim: " + AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING));
