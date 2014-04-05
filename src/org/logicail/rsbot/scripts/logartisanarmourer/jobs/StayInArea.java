@@ -1,9 +1,9 @@
 package org.logicail.rsbot.scripts.logartisanarmourer.jobs;
 
+import org.logicail.rsbot.scripts.framework.wrappers.ITile;
 import org.logicail.rsbot.scripts.logartisanarmourer.LogArtisanWorkshop;
 import org.logicail.rsbot.scripts.logartisanarmourer.wrapper.Mode;
 import org.powerbot.script.Condition;
-import org.powerbot.script.Random;
 import org.powerbot.script.rt6.GameObject;
 import org.powerbot.script.rt6.Player;
 
@@ -44,8 +44,8 @@ public class StayInArea extends ArtisanArmourerTask {
 		}
 
 
-		if (ctx.movement.findPath(options.getAreaSmall().getCentralTile().derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3))).traverse()
-				|| ctx.movement.step(options.getAreaSmall().getCentralTile().derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)))) {
+		if (ctx.movement.findPath(ITile.randomize(options.getAreaSmall().getCentralTile(), 3, 3)).traverse()
+				|| ctx.movement.step(ITile.randomize(options.getAreaSmall().getCentralTile(), 3, 3))) {
 			sleep(600);
 		}
 

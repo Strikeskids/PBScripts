@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.gopwatertalisman.tasks;
 
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
+import org.logicail.rsbot.scripts.framework.wrappers.ITile;
 import org.logicail.rsbot.scripts.gopwatertalisman.GOPWaterTalisman;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
@@ -64,7 +65,7 @@ public class BankingTask extends Node<GOPWaterTalisman> {
 			final GameObject depositBox = ctx.objects.poll();
 
 			if (IMovement.Euclidean(ctx.players.local(), depositBox) > 7) {
-				if (ctx.movement.step(depositBox.tile().derive(Random.nextInt(0, 3), Random.nextInt(0, 3)))) {
+				if (ctx.movement.step(ITile.randomize(depositBox.tile(), 3, 3))) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
