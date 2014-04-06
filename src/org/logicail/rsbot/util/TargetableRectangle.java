@@ -32,6 +32,11 @@ public class TargetableRectangle extends Interactive implements Targetable {
 	}
 
 	@Override
+	public Point centerPoint() {
+		return new Point((int) rectangle.getCenterX(), (int) rectangle.getCenterY());
+	}
+
+	@Override
 	public void bounds(int i, int i2, int i3, int i4, int i5, int i6) {
 	}
 }
