@@ -20,7 +20,7 @@ public class ItemData {
 	public static final Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
 	private static final Map<Integer, String> itemToCategory = new HashMap<Integer, String>();
 	private static final Map<String, LinkedHashSet<Integer>> categoryToItems = new LinkedHashMap<String, LinkedHashSet<Integer>>();
-	private static String ITEMDATA_ADDRESS = "http://logicail.co.uk/resources/items.dat";
+	private static String ITEMDATA_ADDRESS = "http://logicail.co.uk/resources/bankorganiser.dat";
 	private static int version = -1;
 	private static boolean loaded;
 	private static Comparator<? super Item> sorter = null;

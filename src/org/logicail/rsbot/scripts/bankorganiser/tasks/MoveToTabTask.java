@@ -7,6 +7,7 @@ import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt6.Bank;
+import org.powerbot.script.rt6.Component;
 import org.powerbot.script.rt6.Item;
 
 import java.awt.*;
@@ -84,11 +85,6 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	public void run() {
 		cleanUpMapping();
 
-		// Set bank to swap mode
-		if (!ctx.bank.setSwapMode(false)) {
-			return;
-		}
-
 		for (int i = 0; i < mapping.size(); i++) {
 			final LinkedHashSet<Integer> set = mapping.get(i);
 			final IBank.BankTab sortingTab = BANK_TABS[i];
@@ -120,6 +116,12 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 					return set.contains(ItemData.getId(item.id())) && !alreadyHave.contains(item.id());
 				}
 			}).sort(ItemData.getSorter())) {
+
+				// Set bank to swap mode
+				if (!ctx.bank.setSwapMode(false)) {
+					return;
+				}
+
 				move(item, sortingTab);
 				sleep(100);
 				return;
@@ -172,8 +174,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	private boolean move(final Item item, final IBank.BankTab tab) {
 		script.status = "Move '" + item.name() + "' to tab " + (tab.ordinal() + 1);
 		final int id = item.id();
-
-		org.powerbot.script.rt6.Component destination = tab.getWidget(ctx);
+		Component destination = tab.getWidget(ctx);
 
 		if (!destination.valid()) {
 			return false;
@@ -183,11 +184,11 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			script.status = "Create tab " + (ctx.bank.getNumberOfTabs() + 1);
 		}
 
-		final org.powerbot.script.rt6.Component value = this.ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
+		final Component value = this.ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
 		if (!value.valid() || !item.valid()) {
 			return false;
 		}
-		final org.powerbot.script.rt6.Component component = item.component();
+		final Component component = item.component();
 		if (component.relativePoint().y == 0 && !ctx.bank.currentTab(0) && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
@@ -201,17 +202,21 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			return false;
 		}
 
-		if (ctx.mouse.move(item.nextPoint()) && !ctx.mouse.drag(destination.nextPoint(), true) || !Condition.wait(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				return !ctx.bank.getItemsInTab(tab).id(id).isEmpty();
-			}
-		}, 250, 20)) {
-			script.status = "Item did not move";
-			sleep(250);
-			return false;
+		if (item.hover()) {
+			ctx.mouse.press(1);
+			ctx.sleep(100);
+			destination.hover();
+			ctx.sleep(100);
+			ctx.mouse.release(1);
+			ctx.sleep(100);
+			return Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return item.id() != id;
+				}
+			}, 100, 10);
 		}
 
-		return true;
+		return false;
 	}
 }
