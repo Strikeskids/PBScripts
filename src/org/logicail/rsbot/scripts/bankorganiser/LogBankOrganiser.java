@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 @Script.Manifest(
 		name = "Log Bank Organiser",
 		description = "Organises your bank",
-		properties = "client=6;")
+		properties = "client=6;version=1.00;")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
 
