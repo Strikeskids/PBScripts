@@ -203,12 +203,15 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 		}
 
 		if (item.hover()) {
-			ctx.mouse.press(1);
-			ctx.sleep(100);
-			destination.hover();
-			ctx.sleep(100);
-			ctx.mouse.release(1);
-			ctx.sleep(100);
+			try {
+				ctx.mouse.press(1);
+				ctx.sleep(100);
+				destination.hover();
+				ctx.sleep(100);
+			} finally {
+				ctx.mouse.release(1);
+				ctx.sleep(100);
+			}
 			return Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
