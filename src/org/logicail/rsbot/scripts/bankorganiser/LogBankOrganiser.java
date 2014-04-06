@@ -54,7 +54,7 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 				@Override
 				public void run() {
 					try {
-						new ErrorDialog("Error", "Failed to load category date");
+						new ErrorDialog("Error", "Failed to load category data");
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}
