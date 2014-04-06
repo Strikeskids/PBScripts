@@ -326,10 +326,6 @@ public class BankOrganiserInterface extends JFrame {
 			return;
 		}
 
-		if (startPressed) {
-			script.ctx.controller().stop();
-		}
-
 		script.tree.clear();
 
 		script.status = "";
@@ -361,6 +357,7 @@ public class BankOrganiserInterface extends JFrame {
 		}
 
 		startPressed = true;
+		dispose();
 	}
 
 	private LinkedHashMap<Integer, List<String>> getTabContents(int start) {
@@ -462,7 +459,7 @@ public class BankOrganiserInterface extends JFrame {
 			@Override
 			public void run() {
 				BankOrganiserInterface gui = new BankOrganiserInterface(null);
-				gui.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+				gui.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				gui.setVisible(true);
 			}
 		});
