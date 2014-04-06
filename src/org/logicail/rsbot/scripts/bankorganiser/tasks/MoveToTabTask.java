@@ -205,19 +205,22 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 		if (item.hover()) {
 			try {
 				ctx.mouse.press(1);
-				ctx.sleep(100);
+				ctx.sleep(50);
 				destination.hover();
-				ctx.sleep(100);
+				ctx.sleep(50);
 			} finally {
 				ctx.mouse.release(1);
-				ctx.sleep(100);
+				ctx.sleep(50);
 			}
-			return Condition.wait(new Callable<Boolean>() {
+			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return item.id() != id;
 				}
-			}, 100, 10);
+			}, 50, 20)) {
+				// TODO: Insert it in the correct location
+				return true;
+			}
 		}
 
 		return false;
