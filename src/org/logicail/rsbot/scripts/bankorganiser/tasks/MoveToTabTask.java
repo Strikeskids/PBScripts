@@ -116,12 +116,6 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 					return set.contains(ItemData.getId(item.id())) && !alreadyHave.contains(item.id());
 				}
 			}).sort(ItemData.getSorter())) {
-
-				// Set bank to swap mode
-				if (!ctx.bank.setSwapMode(false)) {
-					return;
-				}
-
 				move(item, sortingTab);
 				sleep(100);
 				return;

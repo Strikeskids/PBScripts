@@ -34,8 +34,22 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 		this.moveToTabTask = moveToTabTask;
 	}
 
+	private boolean isTabSorted(IBank.BankTab tab) {
+		return false;
+	}
+
 	@Override
 	public boolean valid() {
+		moveToTabTask.cleanUpMapping();
+
+		if (mappingList == null) {
+			mappingList = new ArrayList<List<Integer>>();
+			List<LinkedHashSet<Integer>> mapping = moveToTabTask.getMapping();
+			for (LinkedHashSet<Integer> set : mapping) {
+				mappingList.add(new ArrayList<Integer>(set));
+			}
+		}
+
 		return true;
 	}
 
@@ -48,19 +62,8 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 	public void run() {
 		script.status = "Sort tab";
 
-		moveToTabTask.cleanUpMapping();
-
-		if (mappingList == null) {
-			mappingList = new ArrayList<List<Integer>>();
-			List<LinkedHashSet<Integer>> mapping = moveToTabTask.getMapping();
-			for (LinkedHashSet<Integer> set : mapping) {
-				mappingList.add(new ArrayList<Integer>(set));
-			}
-		}
-
 		// extra for tab0
 		// Categories then rest sorted alphabetically
-
 
 		for (int i = 0; i < mappingList.size(); i++) {
 			if (sorters == null) {
@@ -98,10 +101,6 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 						continue;
 					}
 
-					if (!ctx.bank.setSwapMode(false)) {
-						return;
-					}
-
 					swap(poll, destination);
 
 					return;
@@ -112,7 +111,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 		ctx.controller().stop();
 	}
 
-	private boolean swap(final Item item, Item destination) {
+	public boolean swap(final Item item, Item destination) {
 		script.status = "Swap '" + item.name() + "' and '" + destination.name() + "'";
 		//script.log.info(script.status);
 
