@@ -117,7 +117,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 				}
 			}).sort(ItemData.getSorter())) {
 				move(item, sortingTab);
-				sleep(100);
+				sleep(66);
 				return;
 			}
 		}
@@ -138,7 +138,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 						public boolean accept(Item item) {
 							return next.contains(ItemData.getId(item.id()));
 						}
-					}).count() <= 1) {
+					}).count() < 1) {
 						iterator.remove();
 						//System.out.println("Remove tab " + i + " no matching items");
 					}
@@ -167,7 +167,6 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	 */
 	private boolean move(final Item item, final IBank.BankTab tab) {
 		script.status = "Move '" + item.name() + "' to tab " + (tab.ordinal() + 1);
-		final int id = item.id();
 		Component destination = tab.getWidget(ctx);
 
 		if (!destination.valid()) {
@@ -209,10 +208,9 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return item.id() != id;
+					return !item.valid();
 				}
 			}, 50, 20)) {
-				// TODO: Insert it in the correct location
 				return true;
 			}
 		}
