@@ -52,7 +52,7 @@ public class ItemData {
 
 			connection.setDoInput(true);
 			connection.setDoOutput(false);
-			connection.setUseCaches(false);
+			//connection.setUseCaches(false);
 
 			DataInputStream data = new DataInputStream(connection.getInputStream());
 			version = data.readInt();
