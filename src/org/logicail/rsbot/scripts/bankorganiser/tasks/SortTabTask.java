@@ -101,7 +101,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 						continue;
 					}
 
-					swap(poll, destination);
+					script.log.info("Swap: " + swap(poll, destination));
 
 					return;
 				}
@@ -165,7 +165,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			return Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return item.id() != id;
+					return !item.valid();
 				}
 			}, 50, 20);
 		}
