@@ -122,15 +122,15 @@ public class IBank extends Bank {
 	}
 
 	public enum BankTab {
-		NONE(-1, 37),
-		TWO(0, 35),
-		THREE(1, 33),
-		FOUR(2, 31),
-		FIVE(3, 29),
-		SIX(4, 27),
-		SEVEN(5, 25),
-		EIGHT(6, 23),
-		NINE(7, 21);
+		NONE(-1, 19),
+		TWO(0, 17),
+		THREE(1, 15),
+		FOUR(2, 13),
+		FIVE(3, 11),
+		SIX(4, 9),
+		SEVEN(5, 7),
+		EIGHT(6, 5),
+		NINE(7, 3);
 		private final int i;
 		private final int bankWidget;
 
