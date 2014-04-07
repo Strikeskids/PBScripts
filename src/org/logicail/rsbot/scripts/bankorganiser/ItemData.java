@@ -2,13 +2,16 @@ package org.logicail.rsbot.scripts.bankorganiser;
 
 import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
 import org.logicail.rsbot.scripts.bankorganiser.tasks.ItemSorter;
+import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.rt6.Item;
 
+import java.awt.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -79,8 +82,19 @@ public class ItemData {
 			sorter = new ItemSorter(new ArrayList<Integer>(set));
 
 			loaded = true;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
+
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						new ErrorDialog("Error", "Failed to load category data\n" + e.getMessage());
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
+				}
+			});
 		} finally {
 			if (connection != null) {
 				connection.disconnect();
