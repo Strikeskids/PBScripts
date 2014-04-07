@@ -133,11 +133,11 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			public Boolean call() throws Exception {
 				return itemComponent.relativePoint().y != 0;
 			}
-		}, 200, 10)) {
+		}, 50, 20)) {
 			return false;
 		}
 		final Rectangle viewportRect = bankContainer.viewportRect();
-		if (!viewportRect.contains(itemComponent.viewportRect()) && !ctx.widgets.scroll(itemComponent, ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_SCROLL_BAR), viewportRect.contains(ctx.mouse.getLocation()))) {
+		if (!viewportRect.contains(itemComponent.viewportRect()) && !ctx.widgets.scroll(itemComponent, ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_SCROLL_BAR), true)) {
 			return false;
 		}
 

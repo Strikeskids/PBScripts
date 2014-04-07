@@ -56,7 +56,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 				alreadyHave.add(item.id());
 			}
 
-			if (sortingTab != IBank.BankTab.NONE) {
+			if (sortingTab != IBank.BankTab.ONE) {
 				for (Integer integer : alreadyHave) {
 					if (!set.contains(ItemData.getId(integer))) {
 						// Remove
@@ -94,7 +94,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 				alreadyHave.add(item.id());
 			}
 
-			if (sortingTab != IBank.BankTab.NONE) {
+			if (sortingTab != IBank.BankTab.ONE) {
 				for (Integer integer : alreadyHave) {
 					if (!set.contains(ItemData.getId(integer))) {
 						// Remove
@@ -102,7 +102,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 						if (item.valid()) {
 							//System.out.println("Remove from tab");
 							script.status = "Remove '" + item.name() + "' from tab";
-							move(item, IBank.BankTab.NONE);
+							move(item, IBank.BankTab.ONE);
 							sleep(100);
 							return;
 						}
@@ -179,6 +179,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 
 		final Component value = this.ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
 		if (!value.valid() || !item.valid()) {
+			script.status = "Scroll failed 1";
 			return false;
 		}
 		final Component component = item.component();
@@ -187,11 +188,13 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			public Boolean call() throws Exception {
 				return component.relativePoint().y != 0;
 			}
-		}, 100, 10)) {
+		}, 50, 20)) {
+			script.status = "Scroll failed 2";
 			return false;
 		}
 		final Rectangle viewportRect = value.viewportRect();
-		if (!viewportRect.contains(component.viewportRect()) && !this.ctx.widgets.scroll(component, this.ctx.widgets.component(762, 40), viewportRect.contains(this.ctx.mouse.getLocation()))) {
+		if (!viewportRect.contains(component.viewportRect()) && !this.ctx.widgets.scroll(component, this.ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_SCROLL_BAR), true)) {
+			script.status = "Scroll failed 3";
 			return false;
 		}
 

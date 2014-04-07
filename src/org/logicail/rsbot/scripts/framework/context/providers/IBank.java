@@ -78,7 +78,7 @@ public class IBank extends Bank {
 		final int[] count = getTabCount();
 
 		switch (tab) {
-			case NONE:
+			case ONE:
 				int total = 0;
 				for (Integer i : count) {
 					total += i;
@@ -122,15 +122,15 @@ public class IBank extends Bank {
 	}
 
 	public enum BankTab {
-		NONE(-1, 19),
-		TWO(0, 17),
-		THREE(1, 15),
-		FOUR(2, 13),
-		FIVE(3, 11),
-		SIX(4, 9),
-		SEVEN(5, 7),
-		EIGHT(6, 5),
-		NINE(7, 3);
+		ONE(-1, 20),
+		TWO(0, 18),
+		THREE(1, 16),
+		FOUR(2, 14),
+		FIVE(3, 12),
+		SIX(4, 10),
+		SEVEN(5, 8),
+		EIGHT(6, 6),
+		NINE(7, 4);
 		private final int i;
 		private final int bankWidget;
 
@@ -140,7 +140,7 @@ public class IBank extends Bank {
 		}
 
 		public boolean exists(IClientContext ctx) {
-			if (this == NONE) {
+			if (this == ONE) {
 				return true;
 			}
 			return ctx.bank.getNumberOfTabs() >= ordinal();
