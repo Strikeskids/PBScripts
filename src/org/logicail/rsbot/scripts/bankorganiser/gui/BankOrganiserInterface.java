@@ -3,7 +3,6 @@ package org.logicail.rsbot.scripts.bankorganiser.gui;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import org.logicail.rsbot.scripts.bankorganiser.ItemData;
 import org.logicail.rsbot.scripts.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.bankorganiser.tasks.MoveToTabTask;
 import org.logicail.rsbot.scripts.bankorganiser.tasks.OpenBank;
@@ -172,7 +171,7 @@ public class BankOrganiserInterface extends JFrame {
 			}
 		});
 
-		for (String category : ItemData.getCategorys()) {
+		for (String category : script.itemData.getCategorys()) {
 			//tab0model.addElement(prettyName(category));
 			tab0model.addElement(category);
 		}
@@ -274,22 +273,6 @@ public class BankOrganiserInterface extends JFrame {
 		}
 	}
 
-	public static String prettyName(String value) {
-		if (value == null) {
-			return "null";
-		}
-
-		StringBuilder sb = new StringBuilder(value.length());
-		if (value.length() > 0) {
-			sb.append(Character.toUpperCase(value.charAt(0)));
-		}
-		if (value.length() > 1) {
-			sb.append(value.substring(1).toLowerCase());
-		}
-
-		return sb.toString().replace('_', ' ');
-	}
-
 	private void save() {
 		if (script == null) {
 			return;
@@ -309,7 +292,7 @@ public class BankOrganiserInterface extends JFrame {
 			i++;
 		}
 
-		settings.put("version", ItemData.getVersion() + "");
+		settings.put("version", script.itemData.getVersion() + "");
 		settings.put("Tabs", object.toString());
 
 		try {
@@ -344,7 +327,7 @@ public class BankOrganiserInterface extends JFrame {
 			if (i > 0 && entry.getValue().isEmpty()) {
 				continue;
 			}
-			result.add(ItemData.getData(entry.getValue()));
+			result.add(script.itemData.getData(entry.getValue()));
 			i++;
 		}
 

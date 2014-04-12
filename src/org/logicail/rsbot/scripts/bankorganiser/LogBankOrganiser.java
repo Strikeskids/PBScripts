@@ -23,6 +23,13 @@ import java.util.LinkedHashMap;
 		properties = "topic=1174066;client=6;version=1.00;")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
+	public final ItemData itemData;
+
+	public LogBankOrganiser() {
+		super();
+
+		itemData = new ItemData(ctx);
+	}
 
 	@Override
 	public LinkedHashMap<Object, Object> getPaintInfo() {
@@ -48,8 +55,7 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 
 	@Override
 	public void start() {
-		ItemData.getId(0);
-		if (!ItemData.loaded()) {
+		if (!itemData.loaded()) {
 			EventQueue.invokeLater(new Runnable() {
 				@Override
 				public void run() {
