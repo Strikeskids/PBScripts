@@ -15,7 +15,6 @@ import java.util.Arrays;
 public class FarmingDefinition {
 	public final int id;
 	public final String name;
-	public final String[] actions;
 	public final int[] models;
 
 	FarmingDefinition(JsonObject.Member member) {
@@ -32,14 +31,6 @@ public class FarmingDefinition {
 			models[i] = v.asInt();
 			i++;
 		}
-
-		final JsonArray actionsArray = value.get("actions").asArray();
-		actions = new String[actionsArray.size()];
-		i = 0;
-		for (JsonValue v : actionsArray) {
-			actions[i] = v.asString();
-			i++;
-		}
 	}
 
 	@Override
@@ -47,7 +38,6 @@ public class FarmingDefinition {
 		return "FarmingDefinition{" +
 				"id=" + id +
 				", name='" + name + '\'' +
-				", actions=" + Arrays.toString(actions) +
 				", models=" + Arrays.toString(models) +
 				'}';
 	}
