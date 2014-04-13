@@ -63,7 +63,7 @@ public class IFarming extends ClientAccessor {
 
 					for (JsonObject.Member member : map.get("definitions").asObject()) {
 						final FarmingDefinition definition = new FarmingDefinition(member);
-						children.put(definition.id, definition);
+						children.put(definition.id(), definition);
 					}
 
 					for (JsonObject.Member member : map.get("herbpatches").asObject()) {
@@ -105,6 +105,7 @@ public class IFarming extends ClientAccessor {
 	}
 
 	public FarmingDefinition definition(int objectId, int index) {
-		return patches.get(objectId)[index];
+		final FarmingDefinition definition = patches.get(objectId)[index];
+		return definition != null ? definition : FarmingDefinition.NIL;
 	}
 }
