@@ -37,7 +37,15 @@ public enum HerbPatch implements Locatable, Identifiable {
 		return ctx.farming.definition(id, bits(ctx));
 	}
 
+	public String name(IClientContext ctx) {
+		return definition(ctx).name();
+	}
+
 	public CropState state(IClientContext ctx) {
+		if (empty(ctx)) {
+			return CropState.EMPTY;
+		}
+
 		if (diseased(ctx)) {
 			return CropState.DISEASED;
 		}
@@ -50,10 +58,6 @@ public enum HerbPatch implements Locatable, Identifiable {
 			return CropState.WEEDS;
 		}
 
-		if (empty(ctx)) {
-			return CropState.EMPTY;
-		}
-
 		if (grown(ctx)) {
 			return CropState.READY;
 		}
@@ -61,6 +65,12 @@ public enum HerbPatch implements Locatable, Identifiable {
 		return CropState.GROWING;
 	}
 
+	/**
+	 * Number of weeds on patch
+	 *
+	 * @param ctx
+	 * @return 3 to 0
+	 */
 	public int weeds(IClientContext ctx) {
 		switch (bits(ctx)) {
 			case 0:
@@ -74,43 +84,80 @@ public enum HerbPatch implements Locatable, Identifiable {
 		return 0;
 	}
 
+	/**
+	 * Growth stage of patch
+	 *
+	 * @param ctx
+	 * @return 0 (empty) to 5 (grown)
+	 */
 	public int stage(IClientContext ctx) {
 		final FarmingDefinition definition = definition(ctx);
 
 		int[] model_ids_growth_stage = this == TROLLHEIM ? IFarming.MODEL_IDS_GROWTH_STAGE_TROLLHEIM : IFarming.MODEL_IDS_GROWTH_STAGE;
 		for (int i = 0; i < model_ids_growth_stage.length; i++) {
-			int id = model_ids_growth_stage[i];
-			for (int model : definition.models) {
-				if (model == id) {
-					return i + 1;
-				}
+			if (definition.containsModel(model_ids_growth_stage[i])) {
+				return i + 1;
 			}
 		}
 
 		return 0;
 	}
 
+	/**
+	 * Is the patch weed free but empty (ready to plant seed)
+	 *
+	 * @param ctx
+	 * @return <tt>true</tt> if patch has no weeeds and is ready to plant a seed, otherwise <tt>false</tt>
+	 */
 	public boolean empty(IClientContext ctx) {
 		return bits(ctx) == 3;
 	}
 
+	/**
+	 * Is the growth stage >= 5
+	 *
+	 * @param ctx
+	 * @return <tt>true</tt> if the patch has finished growing and can be picked
+	 */
 	public boolean grown(IClientContext ctx) {
 		return stage(ctx) >= 5;
 	}
 
+	/**
+	 * Is the patch diseased
+	 *
+	 * @param ctx
+	 * @return <tt>true</tt> if the patch iss diseases, otherwise <tt>false</tt>
+	 */
 	public boolean diseased(IClientContext ctx) {
-		return definition(ctx).name.startsWith("Diseased");
+		return definition(ctx).name().startsWith("Diseased");
 	}
 
+	/**
+	 * Is the patch dead
+	 *
+	 * @param ctx
+	 * @return <tt>true</tt> if the herb has died, otherwise <tt>false</tt>
+	 */
 	public boolean dead(IClientContext ctx) {
-		return definition(ctx).name.startsWith("Dead");
+		return definition(ctx).name().startsWith("Dead");
 	}
 
+	/**
+	 * The object id of the patch
+	 *
+	 * @return
+	 */
 	@Override
 	public int id() {
 		return id;
 	}
 
+	/**
+	 * The location of the patch
+	 *
+	 * @return
+	 */
 	@Override
 	public Tile tile() {
 		return tile;
