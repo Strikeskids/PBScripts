@@ -13,9 +13,17 @@ import java.util.Arrays;
  * Time: 23:47
  */
 public class FarmingDefinition {
-	public final int id;
-	public final String name;
-	public final int[] models;
+	public static final FarmingDefinition NIL = new FarmingDefinition(-1, "", new int[0]);
+
+	private final int id;
+	private final String name;
+	private final int[] models;
+
+	public FarmingDefinition(int id, String name, int[] models) {
+		this.id = id;
+		this.name = name;
+		this.models = models;
+	}
 
 	FarmingDefinition(JsonObject.Member member) {
 		this.id = Integer.parseInt(member.getName());
@@ -31,6 +39,27 @@ public class FarmingDefinition {
 			models[i] = v.asInt();
 			i++;
 		}
+	}
+
+	public int id() {
+		return id;
+	}
+
+	public String name() {
+		return name;
+	}
+
+	public int[] models() {
+		return models;
+	}
+
+	public boolean containsModel(int id) {
+		for (int i : models) {
+			if (i == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
