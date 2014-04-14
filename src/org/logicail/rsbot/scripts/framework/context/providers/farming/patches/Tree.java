@@ -19,7 +19,7 @@ public class Tree extends FarmingObject {
 		if (definition().containsAction("Gather-Branches")) {
 			final int bits = bits();
 			if ((bits & 0xC0) == 0xC0) {
-				return (bits & 0x7) + 1; // TODO: Check could be "6 - (bits & 0x7)
+				return (bits & 0x7) + 1; // TODO: Check when grown
 			}
 		}
 
