@@ -1,6 +1,8 @@
 package org.logicail.rsbot.scripts.testing;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.Tree;
 import org.powerbot.script.Script;
 
 import java.awt.*;
@@ -38,6 +40,20 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 //
 //			properties.put(patch.name(), sb.toString());
 //		}
+
+		for (TreeEnum treeEnum : TreeEnum.values()) {
+			final Tree tree = treeEnum.tree(ctx);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("[").append(tree.bits()).append("]");
+			sb.append(" " + tree.type());
+			if (tree.checkHealth()) sb.append(" check health");
+			if (tree.grown()) sb.append(" branches: ").append(tree.branches());
+			if (tree.grown()) sb.append(" grown");
+
+			properties.put(treeEnum, sb.toString());
+		}
+
 
 		return properties;
 	}

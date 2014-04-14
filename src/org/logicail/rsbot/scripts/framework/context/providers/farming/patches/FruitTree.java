@@ -1,25 +1,37 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.patches;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.FruitTreeEnum;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
  * Date: 14/04/2014
- * Time: 19:18
+ * Time: 21:00
  */
-public class Tree extends FarmingObject {
-	public Tree(IClientContext ctx, TreeEnum tree) {
+public class FruitTree extends FarmingObject {
+	public FruitTree(IClientContext ctx, FruitTreeEnum tree) {
 		super(ctx, tree.id());
 	}
 
-	public int branches() {
-		if (definition().containsAction("Gather-Branches")) {
-			final int bits = bits();
-			if ((bits & 0xC0) == 0xC0) {
-				return (bits & 0x7) + 1; // TODO: Check could be "6 - (bits & 0x7)
+	/**
+	 * Number of fruit on the tree/plant
+	 *
+	 * @return
+	 */
+	public int fruit() {
+		if (!grown()) {
+			return 0;
+		}
+
+		final FarmingDefinition definition = definition();
+
+		int[] fruitStages = type().fruitStages;
+		for (int i = 0; i < fruitStages.length; i++) {
+			if (definition.containsModel(fruitStages[i])) {
+				return i + 1;
 			}
 		}
 
@@ -42,7 +54,7 @@ public class Tree extends FarmingObject {
 	/**
 	 * Is the patch diseased, can be cured by interact("Prune")
 	 *
-	 * @return <tt>true</tt> if the patch iss diseases, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if the patch is diseased, otherwise <tt>false</tt>
 	 */
 	public boolean diseased() {
 		return definition().name().startsWith("Diseased");
@@ -51,7 +63,7 @@ public class Tree extends FarmingObject {
 	/**
 	 * Can the tree be chopped down or check-healthed
 	 *
-	 * @return <tt>true</tt> if the allotment has finished growing and can be harvested, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if the tree has finished growing, otherwise <tt>false</tt>
 	 */
 	public boolean grown() {
 		final TreeType type = type();
@@ -75,7 +87,7 @@ public class Tree extends FarmingObject {
 			}
 		}
 
-		return TreeType.TREE_PATCH;
+		return TreeType.FRUIT_TREE_PATCH;
 	}
 
 	/**
@@ -96,30 +108,35 @@ public class Tree extends FarmingObject {
 		return 0;
 	}
 
-	public enum TreeType {
-		TREE_PATCH(-1),
-		OAK(64863), // 8031, 8033, 8035, 8037, 64863, 64863, 64864
-		WILLOW(64870), // 8031, 8127, 8129, 8131, 8133, 8135, 64870, 64870, 64869
-		MAPLE(20513), // 8031, 8013, 8015, 8017, 8019, 8021, 8023, 8026, 20513, 20513, 20512
-		YEW(64873), // 8031, 8145, 8147, 8149, 8151, 8153, 8155, 8157, 8159, 8141, 64873, 64873, 64872
-		MAGIC(20468) // 7977, 7991, 7993, 7995, 7997, 7999, 8002, 8005, 8008, 7978, 7981, 7984, 20468, 20468, 20511
-		;
-
-		private final int grownModel;
-
-		TreeType(int grownModel) {
-			this.grownModel = grownModel;
-		}
-	}
-
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[").append(bits()).append("]");
 		sb.append(" ").append(type());
 		if (checkHealth()) sb.append(" check health");
 		if (grown()) sb.append(" grown");
-		if (grown() && type() == TreeType.WILLOW) sb.append(" branches: ").append(branches());
+		if (grown() && type() != TreeType.FRUIT_TREE_PATCH) sb.append(" fruit: ").append(fruit());
 
 		return sb.toString();
+	}
+
+	public enum TreeType {
+		FRUIT_TREE_PATCH(null, -1),
+		APPLE("Pick-apple", 7921, 7923, 7924, 7925, 7926, 7927, 7928),
+		BANANA("Pick-banana", 7935, 7936, 7937, 7938, 7939, 7940, 7941),
+		CURRY("Pick-leaf", 7969, 7970, 7971, 7972, 7973, 7974, 7975),
+		ORANGE("Pick-orange", 7969, 8056, 8057, 8058, 8059, 8060, 8061),
+		PALM("Pick-coconut", 8069, 8070, 8071, 8072, 8073, 8074, 8075),
+		PAPAYA("Pick-fruit", 8083, 8084, 8085, 8086, 8087, 8088, 8089),
+		PINEAPPLE("Pick-pineapple", 8097, 8098, 8099, 8100, 8101, 8102, 8103);
+
+		private final String pickAction;
+		private final int grownModel;
+		private final int[] fruitStages;
+
+		TreeType(String pickAction, int grownModel, int... fruitStages) {
+			this.pickAction = pickAction;
+			this.grownModel = grownModel;
+			this.fruitStages = fruitStages;
+		}
 	}
 }
