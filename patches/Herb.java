@@ -4,7 +4,6 @@ import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.CropState;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.HerbEnum;
 
 import java.awt.*;
@@ -16,42 +15,42 @@ import java.awt.*;
  * Time: 17:18
  */
 public class Herb extends FarmingObject {
+	// just 7794 == empty
+	// always [x?, 7766]
+	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875}; // stage 1 to 5 [grown]
+
+	// just 19148, 19152 == empty
+	// always have [19148, 19152, x?]
+	public static final int[] MODEL_IDS_GROWTH_STAGE_TROLLHEIM = {19144, 19150, 19143, 19149, 19140};
 	public Herb(IClientContext ctx, HerbEnum patch) {
-		super(ctx, ctx.farming.dynamic(patch.id()));
+		super(ctx, patch.id());
 	}
 
-	//private static final Polygon POLYGON_ALLOTMENT_1 = new Polygon(new int[]{0, 15, 15, 6, 6, 0}, new int[]{0, 0, 6, 6, 18, 18}, 6);
-	//private static final Polygon POLYGON_ALLOTMENT_2 = new Polygon(new int[]{9, 15, 15, 0, 0, 9}, new int[]{0, 0, 18, 18, 12, 12}, 6);
-
-
 	public void repaint(Graphics2D g, int x, int y) {
-		switch (state()) {
-			case WEEDS:
-				g.setColor(new Color(102, 51, 0));
-				break;
-			case GROWING:
-				g.setColor(Color.blue);
-				break;
-			case DISEASED:
-				g.setColor(Color.YELLOW);
-				break;
-			case EMPTY:
-				g.setColor(Color.gray);
-				break;
-			case DEAD:
-				g.setColor(Color.black);
-				break;
-			case READY:
-				g.setColor(Color.green);
-				break;
-			default:
-				g.setColor(Color.pink);
-		}
+		g.setColor(state().color());
 
 		g.fillRect(x, y, 6, 6);
 		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.gray);
 		g.drawRect(x, y, 6, 6);
+	}
+
+	/**
+	 * Growth stage of patch
+	 *
+	 * @return 0 (empty) to 5 (grown)
+	 */
+	public int stage() {
+		final FarmingDefinition definition = definition();
+
+		int[] model_ids_growth_stage = this.id() == HerbEnum.TROLLHEIM.id() ? MODEL_IDS_GROWTH_STAGE_TROLLHEIM : MODEL_IDS_GROWTH_STAGE;
+		for (int i = 0; i < model_ids_growth_stage.length; i++) {
+			if (definition.containsModel(model_ids_growth_stage[i])) {
+				return i + 1;
+			}
+		}
+
+		return 0;
 	}
 
 	public CropState state() {
@@ -131,37 +130,4 @@ public class Herb extends FarmingObject {
 
 		return 0;
 	}
-
-	/**
-	 * Growth stage of patch
-	 *
-	 * @return 0 (empty) to 5 (grown)
-	 */
-	public int stage() {
-		final FarmingDefinition definition = definition();
-
-		int[] model_ids_growth_stage = this.id() == HerbEnum.TROLLHEIM.id() ? IFarming.MODEL_IDS_GROWTH_STAGE_TROLLHEIM : IFarming.MODEL_IDS_GROWTH_STAGE;
-		for (int i = 0; i < model_ids_growth_stage.length; i++) {
-			if (definition.containsModel(model_ids_growth_stage[i])) {
-				return i + 1;
-			}
-		}
-
-		return 0;
-	}
-
-//	private void drawPatch(IClientContext ctx, Graphics2D g, int x, int y) {
-//
-//		final Polygon allotment1 = new Polygon(POLYGON_ALLOTMENT_1.xpoints, POLYGON_ALLOTMENT_1.ypoints, POLYGON_ALLOTMENT_1.npoints);
-//		allotment1.translate(x, y);
-//		g.fillPolygon(allotment1);
-//
-//		final Polygon allotment2 = new Polygon(POLYGON_ALLOTMENT_2.xpoints, POLYGON_ALLOTMENT_2.ypoints, POLYGON_ALLOTMENT_2.npoints);
-//		allotment2.translate(x + 15, y + 12);
-//		g.fill(allotment2);
-//
-//		g.fillRect(x + 24, y, 6, 6);
-//
-//		g.fillRect(x + 12, y + 12, 6, 6);
-//	}
 }

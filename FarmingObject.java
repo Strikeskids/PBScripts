@@ -6,6 +6,8 @@ import org.powerbot.script.Identifiable;
 import org.powerbot.script.Locatable;
 import org.powerbot.script.Tile;
 
+import java.awt.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -18,27 +20,28 @@ public class FarmingObject extends IClientAccessor implements Locatable, Identif
 	protected final int mask;
 	protected final int object;
 	protected final Tile tile;
+	protected final int[] children;
 
-	public FarmingObject(IClientContext ctx, FarmingObject object) {
-		super(ctx);
-		this.setting = object.setting;
-		this.shift = object.shift;
-		this.mask = object.mask;
-		this.object = object.object;
-		this.tile = object.tile;
+	public FarmingObject(IClientContext context, int id) {
+		this(context, context.farming.dynamic(id));
 	}
 
-	public FarmingObject(IClientContext ctx, int object, int setting, int shift, int mask, Tile tile) {
+	private FarmingObject(IClientContext ctx, FarmingObject object) {
+		this(ctx, object.object, object.setting, object.shift, object.mask, object.tile, object.children);
+	}
+
+	public FarmingObject(IClientContext ctx, int object, int setting, int shift, int mask, Tile tile, int[] children) {
 		super(ctx);
 		this.setting = setting;
 		this.shift = shift;
 		this.mask = mask;
 		this.object = object;
 		this.tile = tile;
+		this.children = children;
 	}
 
 	public FarmingDefinition definition() {
-		return ctx.farming.definition(object, bits());
+		return ctx.farming.definition(children[bits()]);
 	}
 
 	public int bits() {
@@ -48,6 +51,9 @@ public class FarmingObject extends IClientAccessor implements Locatable, Identif
 	@Override
 	public int id() {
 		return object;
+	}
+
+	public void repaint(Graphics2D g, int x, int y) {
 	}
 
 	@Override
