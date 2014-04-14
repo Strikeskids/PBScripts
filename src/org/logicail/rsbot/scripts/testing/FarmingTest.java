@@ -1,9 +1,9 @@
 package org.logicail.rsbot.scripts.testing;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.HerbPatch;
 import org.powerbot.script.Script;
 
+import java.awt.*;
 import java.util.LinkedHashMap;
 
 /**
@@ -14,20 +14,38 @@ import java.util.LinkedHashMap;
  */
 @Script.Manifest(name = "Farming Test", description = "Test farming methods", properties = "hidden=true;")
 public class FarmingTest extends LogicailScript<FarmingTest> {
+	private final FarmingPaint farmingPaint;
+
+	public FarmingTest() {
+		super();
+		farmingPaint = new FarmingPaint(ctx);
+	}
+
 	@Override
 	public LinkedHashMap<Object, Object> getPaintInfo() {
 		LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
 
-		if (ctx.farming.ready()) {
-			for (HerbPatch patch : ctx.farming.herbs().select()) {
-				properties.put(patch.name(), "[" + patch.bits(ctx) + "] state:" + patch.state(ctx) + " stage: " + patch.stage(ctx));
-			}
-		}
+//		for (HerbEnum patch : ctx.farming.herbs().select()) {
+//			properties.put(patch.name(), "[" + patch.bits(ctx) + "] state:" + patch.state(ctx) + " stage: " + patch.stage(ctx));
+//		}
+//		for (CompostEnum patch : ctx.farming.compost().select()) {
+//			StringBuilder sb = new StringBuilder();
+//			sb.append("[").append(patch.bits(ctx)).append("]");
+//			sb.append(" type: ").append(patch.type(ctx));
+//			sb.append(" count: ").append(patch.count(ctx));
+//			if (patch.closed(ctx)) sb.append(" closed");
+//			if (patch.grown(ctx)) sb.append(" grown");
+//
+//			properties.put(patch.name(), sb.toString());
+//		}
 
 		return properties;
 	}
 
-	public static void main(String[] args) {
-		//System.out.println(HerbPatch.stage(Herb.GOUTWEED, (-1422313159 & 0xff) & 127));
+
+	@Override
+	public void repaint(Graphics g) {
+		super.repaint(g);
+		farmingPaint.repaint(g);
 	}
 }
