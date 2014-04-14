@@ -28,7 +28,7 @@ public class IFarming extends IClientAccessor {
 	public static final int CALQUAT = 7807;
 	public static final int[] COMPOST = {7836, 7837, 7838, 7839};
 	public static final int[] FLOWER = {7847, 7848, 7849, 7850};
-	public static final int[] FRUIT_TREE = {7962, 7963, 7964, 7965};
+	public static final int[] FRUIT_TREE = {7962, 7963, 7964, 7965, 28919, 56667};
 	public static final int[] HOPS = {8173, 8174, 8175, 8176};
 	public static final int MUSHROOM = 8337;
 	public static final int[] SPIRIT_TREE = {8338, 8382, 8383};
@@ -84,7 +84,11 @@ public class IFarming extends IClientAccessor {
 	}
 
 	public FarmingObject dynamic(int id) {
-		return dynamicObjects.get(id);
+		final FarmingObject object = dynamicObjects.get(id);
+		if (object == null) {
+			throw new IllegalArgumentException("Don't have id " + id);
+		}
+		return object;
 	}
 
 	public FarmingQuery<Herb> herbs(final EnumSet<HerbEnum> enums) {

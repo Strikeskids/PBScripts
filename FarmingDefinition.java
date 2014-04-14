@@ -47,6 +47,10 @@ public class FarmingDefinition {
 		}
 	}
 
+	public Set<String> actions() {
+		return actions;
+	}
+
 	public boolean containsAction(String action) {
 		return actions.contains(action);
 	}
