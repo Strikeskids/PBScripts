@@ -15,8 +15,9 @@ public class Compost extends FarmingObject {
 	private static final int[] NORMAL_STAGE = {31, 32, 94};
 	private static final int[] SUPER_STAGE = {95, 96, 126};
 	private static final int[] TOMATO_STAGE = {159, 160, 222};
+
 	public Compost(IClientContext ctx, CompostEnum patch) {
-		super(ctx, ctx.farming.dynamic(patch.id()));
+		super(ctx, patch.id());
 	}
 
 	public int count() {
