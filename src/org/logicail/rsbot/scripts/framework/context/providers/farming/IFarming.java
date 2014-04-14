@@ -26,7 +26,7 @@ public class IFarming extends IClientAccessor {
 	public static final int[] BUSH = {7577, 7578, 7579, 7580};
 	public static final int CACTUS = 7771;
 	public static final int CALQUAT = 7807;
-	public static final int[] COMPOST = {7836, 7837, 7838, 7839};
+	public static final int[] COMPOST = {7836, 7837, 7838, 7839, 56684, 66577};
 	public static final int[] FLOWER = {7847, 7848, 7849, 7850};
 	public static final int[] FRUIT_TREE = {7962, 7963, 7964, 7965, 28919, 56667};
 	public static final int[] HOPS = {8173, 8174, 8175, 8176};

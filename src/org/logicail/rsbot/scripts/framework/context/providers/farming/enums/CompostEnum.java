@@ -15,8 +15,10 @@ import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFa
 public enum CompostEnum implements Identifiable {
 	FALADOR(COMPOST[0]),
 	CATHERBY(COMPOST[1]),
-	PORT_PHASMATYS(COMPOST[3]),
-	ARDOUGNE(COMPOST[4]);
+	PORT_PHASMATYS(COMPOST[2]),
+	ARDOUGNE(COMPOST[3]),
+	HERBLORE_HABITAT(COMPOST[4]),
+	TAVERLEY(COMPOST[5]);
 	private final int id;
 
 	private Compost instance = null;
