@@ -108,4 +108,8 @@ public class IFarming extends IClientAccessor {
 			}
 		};
 	}
+
+	public static final String pretty(String string) {
+		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
+	}
 }

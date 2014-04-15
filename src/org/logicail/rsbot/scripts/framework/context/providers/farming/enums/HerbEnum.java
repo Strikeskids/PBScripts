@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.Herb;
 import org.powerbot.script.Identifiable;
 
@@ -22,8 +23,16 @@ public enum HerbEnum implements Identifiable {
 
 	private Herb herb = null;
 
+	private final String pretty;
+
 	HerbEnum(int id) {
 		this.id = id;
+		pretty = IFarming.pretty(name());
+	}
+
+	@Override
+	public String toString() {
+		return pretty;
 	}
 
 	public Herb herb(IClientContext ctx) {

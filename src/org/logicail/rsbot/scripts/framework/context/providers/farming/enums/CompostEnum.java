@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.Compost;
 import org.powerbot.script.Identifiable;
 
@@ -23,8 +24,16 @@ public enum CompostEnum implements Identifiable {
 
 	private Compost instance = null;
 
+	private final String pretty;
+
 	CompostEnum(int id) {
 		this.id = id;
+		pretty = IFarming.pretty(name());
+	}
+
+	@Override
+	public String toString() {
+		return pretty;
 	}
 
 	public Compost compost(IClientContext ctx) {

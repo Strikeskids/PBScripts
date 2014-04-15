@@ -21,7 +21,7 @@ public enum CropState {
 
 	CropState(Color color) {
 		this.color = color;
-		pretty = Character.toUpperCase(name().charAt(0)) + name().substring(1).toLowerCase();
+		pretty = IFarming.pretty(name());
 	}
 
 	@Override
