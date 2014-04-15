@@ -15,6 +15,17 @@ public class Tree extends FarmingObject {
 		super(ctx, tree.id());
 	}
 
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[").append(bits()).append("]");
+		sb.append(" ").append(type());
+		if (checkHealth()) sb.append(" check health");
+		if (grown()) sb.append(" grown");
+		if (grown() && type() == TreeType.WILLOW) sb.append(" branches: ").append(branches());
+
+		return sb.toString();
+	}
+
 	public int branches() {
 		if (definition().containsAction("Gather-Branches")) {
 			final int bits = bits();
@@ -28,6 +39,32 @@ public class Tree extends FarmingObject {
 
 	public boolean checkHealth() {
 		return definition().containsAction("Check-health");
+	}
+
+	/**
+	 * Can the tree be chopped down or check-healthed
+	 *
+	 * @return <tt>true</tt> if the tree has reached its final stage of growing, otherwise <tt>false</tt>
+	 */
+	public boolean grown() {
+		final TreeType type = type();
+		return definition().containsModel(type.grownModel);
+	}
+
+	/**
+	 * Get the type of tree growing
+	 *
+	 * @return the type of tree growing, or TREE_PATCH if nothing is growing
+	 */
+	public TreeType type() {
+		final String name = definition().name().toLowerCase();
+		for (TreeType cropType : TreeType.values()) {
+			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
+				return cropType;
+			}
+		}
+
+		return TreeType.TREE_PATCH;
 	}
 
 	/**
@@ -48,34 +85,8 @@ public class Tree extends FarmingObject {
 		return definition().name().startsWith("Diseased");
 	}
 
-	/**
-	 * Can the tree be chopped down or check-healthed
-	 *
-	 * @return <tt>true</tt> if the tree has reached its final stage of growing, otherwise <tt>false</tt>
-	 */
-	public boolean grown() {
-		final TreeType type = type();
-		return definition().containsModel(type.grownModel);
-	}
-
 	public boolean stump() {
 		return definition().name().toLowerCase().endsWith(" stump");
-	}
-
-	/**
-	 * Get the type of tree growing
-	 *
-	 * @return the type of tree growing, or TREE_PATCH if nothing is growing
-	 */
-	public TreeType type() {
-		final String name = definition().name().toLowerCase();
-		for (TreeType cropType : TreeType.values()) {
-			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
-				return cropType;
-			}
-		}
-
-		return TreeType.TREE_PATCH;
 	}
 
 	/**
@@ -110,16 +121,5 @@ public class Tree extends FarmingObject {
 		TreeType(int grownModel) {
 			this.grownModel = grownModel;
 		}
-	}
-
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[").append(bits()).append("]");
-		sb.append(" ").append(type());
-		if (checkHealth()) sb.append(" check health");
-		if (grown()) sb.append(" grown");
-		if (grown() && type() == TreeType.WILLOW) sb.append(" branches: ").append(branches());
-
-		return sb.toString();
 	}
 }
