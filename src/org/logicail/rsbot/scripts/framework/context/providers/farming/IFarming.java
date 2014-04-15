@@ -6,7 +6,7 @@ import com.eclipsesource.json.JsonValue;
 import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.HerbEnum;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.Herb;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Herb;
 import org.logicail.rsbot.util.IOUtil;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
