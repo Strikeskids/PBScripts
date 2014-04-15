@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IStump;
 
 import java.awt.*;
@@ -15,7 +16,7 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 19:18
  */
-public class Tree extends FarmingObject implements IStump, ICheckHealth {
+public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowthStage {
 	public Tree(IClientContext ctx, TreeEnum tree) {
 		super(ctx, tree.id());
 	}
@@ -59,7 +60,7 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth {
 	 */
 	public boolean grown() {
 		final TreeType type = type();
-		return type != TreeType.TREE_PATCH && definition().containsModel(type.stages[type.stages.length - 1]);
+		return type != TreeType.TREE_PATCH && definition().containsModel(type.numberOfStages() - 1);
 	}
 
 	/**
@@ -90,17 +91,11 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth {
 	public void repaint(Graphics2D g, int x, int y) {
 		g.setColor(state().color());
 		g.fillRect(x, y, 9, 9);
-		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.gray);
 		g.drawRect(x, y, 9, 9);
 		g.drawRect(x, y, 9, 9);
 	}
 
-	/**
-	 * Growth stage of tree
-	 *
-	 * @return 0 (empty) to X depends on how many stages tree has {@link TreeType#stages}
-	 */
 	public int stage() {
 		final FarmingDefinition definition = definition();
 		final TreeType type = type();
@@ -132,6 +127,10 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth {
 		;
 
 		private final int[] stages;
+
+		public int numberOfStages() {
+			return stages.length;
+		}
 
 		TreeType(int... stages) {
 			this.stages = stages;

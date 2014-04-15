@@ -7,5 +7,10 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.interface
  * Time: 23:11
  */
 public interface IGrowthStage {
+	/**
+	 * Growth stage
+	 *
+	 * @return 0 (empty) to X depends on how many stages object has
+	 */
 	int stage();
 }

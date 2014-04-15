@@ -137,4 +137,14 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 	}
 
 	public abstract T type();
+
+
+	/**
+	 * Can the crop be cleared
+	 *
+	 * @return
+	 */
+	public boolean clearable() {
+		return definition().containsAction("Clear");
+	}
 }
