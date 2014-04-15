@@ -51,7 +51,7 @@ public class Tree extends FarmingObject {
 	/**
 	 * Can the tree be chopped down or check-healthed
 	 *
-	 * @return <tt>true</tt> if the allotment has finished growing and can be harvested, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if the tree has reached its final stage of growing, otherwise <tt>false</tt>
 	 */
 	public boolean grown() {
 		final TreeType type = type();
@@ -65,7 +65,7 @@ public class Tree extends FarmingObject {
 	/**
 	 * Get the type of tree growing
 	 *
-	 * @return the type of trr growing, or ALLOTMENT if nothing is growing
+	 * @return the type of tree growing, or TREE_PATCH if nothing is growing
 	 */
 	public TreeType type() {
 		final String name = definition().name().toLowerCase();
@@ -79,7 +79,7 @@ public class Tree extends FarmingObject {
 	}
 
 	/**
-	 * Number of weeds on patch
+	 * Number of weeds on the tree patch
 	 *
 	 * @return 3 to 0
 	 */
