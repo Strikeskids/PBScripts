@@ -9,25 +9,27 @@ import java.awt.*;
  * Time: 13:59
  */
 public enum CropState {
-	WEEDS(new Color(102, 51, 0)),
-	GROWING(Color.green),
-	WATERED(Color.blue),
+	DEAD(Color.black),
 	DISEASED(Color.yellow),
 	EMPTY(Color.gray),
-	DEAD(Color.black),
-	READY(Color.green.darker());
+	GROWING(Color.green.brighter()),
+	READY(Color.green.darker().darker()),
+	WATERED(Color.blue.brighter()),
+	WEEDS(new Color(102, 51, 0).brighter());
 	private final Color color;
+	private final String pretty;
 
 	CropState(Color color) {
 		this.color = color;
-	}
-
-	public Color color() {
-		return color;
+		pretty = Character.toUpperCase(name().charAt(0)) + name().substring(1).toLowerCase();
 	}
 
 	@Override
 	public String toString() {
-		return Character.toUpperCase(name().charAt(0)) + name().substring(1).toLowerCase();
+		return pretty;
+	}
+
+	public Color color() {
+		return color;
 	}
 }
