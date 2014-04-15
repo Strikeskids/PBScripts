@@ -111,7 +111,7 @@ public class IFarming extends IClientAccessor {
 			protected List<Herb> get() {
 				ArrayList<Herb> list = new ArrayList<Herb>(enums.size());
 				for (HerbEnum herbEnum : enums) {
-					list.add(herbEnum.herb(ctx));
+					list.add(herbEnum.object(ctx));
 				}
 				return list;
 			}

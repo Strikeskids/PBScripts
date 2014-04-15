@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.CropState;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.CompostEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 
 import java.awt.*;
 
@@ -14,7 +15,7 @@ import java.awt.*;
  * Date: 13/04/2014
  * Time: 12:25
  */
-public class Compost extends FarmingObject<Compost.CompostType> {
+public class Compost extends FarmingObject<Compost.CompostType> implements IGrowthStage {
 	private static final int[] NORMAL_STAGE = {31, 32, 94};
 	private static final int[] SUPER_STAGE = {95, 96, 126};
 	private static final int[] TOMATO_STAGE = {159, 160, 222};
@@ -57,6 +58,10 @@ public class Compost extends FarmingObject<Compost.CompostType> {
 		g.drawRect(x, y, 9, 9);
 	}
 
+	public boolean empty() {
+		return bits() == 0;
+	}
+
 	public boolean grown() {
 		final FarmingDefinition definition = definition();
 		if (definition.containsAction("Empty") || definition.containsAction("Take-tomato")) {
@@ -67,7 +72,7 @@ public class Compost extends FarmingObject<Compost.CompostType> {
 		return bits == NORMAL_STAGE[2] || bits == SUPER_STAGE[2] || bits == TOMATO_STAGE[2];
 	}
 
-	private int stage() {
+	public int stage() {
 		final int bits = bits();
 
 		for (int i = 0; i < NORMAL_STAGE.length; i++) {
@@ -88,7 +93,7 @@ public class Compost extends FarmingObject<Compost.CompostType> {
 			}
 		}
 
-		return -1;
+		return 4;
 	}
 
 	@Override
@@ -112,10 +117,6 @@ public class Compost extends FarmingObject<Compost.CompostType> {
 		}
 
 		return CompostType.TOMATO;
-	}
-
-	public boolean empty() {
-		return bits() == 0;
 	}
 
 	@Override

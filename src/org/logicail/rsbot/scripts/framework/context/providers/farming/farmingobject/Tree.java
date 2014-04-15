@@ -4,6 +4,8 @@ import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IStump;
 
 import java.awt.*;
 
@@ -13,7 +15,7 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 19:18
  */
-public class Tree extends FarmingObject {
+public class Tree extends FarmingObject implements IStump, ICheckHealth {
 	public Tree(IClientContext ctx, TreeEnum tree) {
 		super(ctx, tree.id());
 	}

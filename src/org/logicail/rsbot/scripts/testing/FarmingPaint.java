@@ -37,23 +37,23 @@ public class FarmingPaint extends IClientAccessor implements PaintListener {
 		g2.setColor(COLOUR_BACKGROUND_BORDER);
 		g2.drawRect(x - 3, y - 3, 199, 47);
 
-		AllotmentEnum.FALADOR_N.allotment(ctx).repaint(g2, x, y);
-		HerbEnum.FALADOR.herb(ctx).repaint(g2, x + 32, y);
-		AllotmentEnum.FALADOR_S.allotment(ctx).repaint(g2, x + 20, y + 16);
+		AllotmentEnum.FALADOR_N.object(ctx).repaint(g2, x, y);
+		HerbEnum.FALADOR.object(ctx).repaint(g2, x + 32, y);
+		AllotmentEnum.FALADOR_S.object(ctx).repaint(g2, x + 20, y + 16);
 		x += 46;
-		AllotmentEnum.CATHERBY_N.allotment(ctx).repaint(g2, x, y);
-		HerbEnum.CATHERBY.herb(ctx).repaint(g2, x + 32, y + 16);
-		AllotmentEnum.CATHERBY_S.allotment(ctx).repaint(g2, x, y + 28);
+		AllotmentEnum.CATHERBY_N.object(ctx).repaint(g2, x, y);
+		HerbEnum.CATHERBY.object(ctx).repaint(g2, x + 32, y + 16);
+		AllotmentEnum.CATHERBY_S.object(ctx).repaint(g2, x, y + 28);
 		x += 46;
-		AllotmentEnum.ARDOUGNE_N.allotment(ctx).repaint(g2, x, y);
-		HerbEnum.ARDOUGNE.herb(ctx).repaint(g2, x + 32, y + 16);
-		AllotmentEnum.ARDOUGNE_S.allotment(ctx).repaint(g2, x, y + 28);
+		AllotmentEnum.ARDOUGNE_N.object(ctx).repaint(g2, x, y);
+		HerbEnum.ARDOUGNE.object(ctx).repaint(g2, x + 32, y + 16);
+		AllotmentEnum.ARDOUGNE_S.object(ctx).repaint(g2, x, y + 28);
 		x += 46;
-		AllotmentEnum.PORT_PHASMATYS_N.allotment(ctx).repaint(g2, x, y);
-		HerbEnum.PORT_PHASMATYS.herb(ctx).repaint(g2, x + 32, y);
-		AllotmentEnum.PORT_PHASMATYS_S.allotment(ctx).repaint(g2, x + 20, y + 16);
+		AllotmentEnum.PORT_PHASMATYS_N.object(ctx).repaint(g2, x, y);
+		HerbEnum.PORT_PHASMATYS.object(ctx).repaint(g2, x + 32, y);
+		AllotmentEnum.PORT_PHASMATYS_S.object(ctx).repaint(g2, x + 20, y + 16);
 		x += 46;
-		HerbEnum.TROLLHEIM.herb(ctx).repaint(g2, x, y);
+		HerbEnum.TROLLHEIM.object(ctx).repaint(g2, x, y);
 
 		x = 251;
 

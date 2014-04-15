@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.HerbEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +12,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Herb
  * Date: 14/04/2014
  * Time: 17:18
  */
-public class Herb extends FarmingObject<Herb.HerbType> {
+public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage {
 	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875};
 	public static final int[] MODEL_IDS_GROWTH_STAGE_TROLLHEIM = {19144, 19150, 19143, 19149, 19140};
 
@@ -48,7 +49,7 @@ public class Herb extends FarmingObject<Herb.HerbType> {
 
 	@Override
 	public HerbType type() {
-		return HerbType.UNKNOWN;
+		return HerbType.UNKNOWN; // TODO
 	}
 
 	public enum HerbType {

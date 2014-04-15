@@ -1,8 +1,6 @@
 package org.logicail.rsbot.scripts.testing;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.Tree;
 import org.powerbot.script.Script;
 
 import java.awt.*;
@@ -30,30 +28,37 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 //		for (HerbEnum patch : ctx.farming.herbs().select()) {
 //			properties.put(patch.name(), "[" + patch.bits(ctx) + "] state:" + patch.state(ctx) + " stage: " + patch.stage(ctx));
 //		}
-//		for (CompostEnum patch : ctx.farming.compost().select()) {
-//			StringBuilder sb = new StringBuilder();
-//			sb.append("[").append(patch.bits(ctx)).append("]");
-//			sb.append(" type: ").append(patch.type(ctx));
-//			sb.append(" count: ").append(patch.count(ctx));
-//			if (patch.closed(ctx)) sb.append(" closed");
-//			if (patch.grown(ctx)) sb.append(" grown");
+//		for (CompostEnum patch : CompostEnum.values()) {
+//			final Compost compost = patch.compost(ctx);
 //
-//			properties.put(patch.name(), sb.toString());
+//			StringBuilder sb = new StringBuilder();
+//			sb.append("[").append(compost.bits()).append("]");
+//			sb.append(" type: ").append(compost.type());
+//			sb.append(" count: ").append(compost.count());
+//			if (compost.closed()) sb.append(" closed");
+//			if (compost.grown()) sb.append(" grown");
+//
+//			properties.put(patch, sb.toString());
 //		}
 
-		for (TreeEnum treeEnum : TreeEnum.values()) {
-			final Tree tree = treeEnum.tree(ctx);
+//		for (TreeEnum treeEnum : TreeEnum.values()) {
+//			final Tree tree = treeEnum.tree(ctx);
+//
+//			StringBuilder sb = new StringBuilder();
+//			sb.append("[").append(tree.bits()).append("]");
+//			sb.append(" " + tree.type());
+//			if (tree.checkHealth()) sb.append(" check health");
+//			if (tree.grown()) sb.append(" branches: ").append(tree.branches());
+//			if (tree.grown()) sb.append(" grown");
+//
+//			properties.put(treeEnum, sb.toString());
+//		}
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("[").append(tree.bits()).append("]");
-			sb.append(" " + tree.type());
-			if (tree.checkHealth()) sb.append(" check health");
-			if (tree.grown()) sb.append(" branches: ").append(tree.branches());
-			if (tree.grown()) sb.append(" grown");
-
-			properties.put(treeEnum, sb.toString());
-		}
-
+		properties.put("Super compost", ctx.farming.superCompost());
+		properties.put("Compost", ctx.farming.compost());
+		properties.put("Plant cure", ctx.farming.plantCure());
+		properties.put("Buckets", ctx.farming.buckets());
+		properties.put("Watering can type", ctx.farming.wateringCan());
 
 		return properties;
 	}

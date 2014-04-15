@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.FruitTree;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFarmingObjectAccessor;
 import org.powerbot.script.Identifiable;
 
 import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.FRUIT_TREE;
@@ -13,7 +14,7 @@ import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFa
  * Date: 14/04/2014
  * Time: 21:01
  */
-public enum FruitTreeEnum implements Identifiable {
+public enum FruitTreeEnum implements Identifiable, IFarmingObjectAccessor<FruitTree> {
 	TREE_GNOME_STRONGHOLD(FRUIT_TREE[0]),
 	TREE_GNOME_VILLAGE(FRUIT_TREE[1]),
 	BRIMHAVEN(FRUIT_TREE[2]),
@@ -42,7 +43,7 @@ public enum FruitTreeEnum implements Identifiable {
 		return id;
 	}
 
-	public FruitTree tree(IClientContext ctx) {
+	public FruitTree object(IClientContext ctx) {
 		return instance == null ? instance = new FruitTree(ctx, this) : instance;
 	}
 }

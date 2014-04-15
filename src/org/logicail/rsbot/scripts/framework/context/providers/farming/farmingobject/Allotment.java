@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.CropState;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.AllotmentEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanWater;
 
 import java.awt.*;
 
@@ -13,7 +14,7 @@ import java.awt.*;
  * Date: 13/04/2014
  * Time: 21:29
  */
-public class Allotment extends FarmingObject<Allotment.CropType> {
+public class Allotment extends FarmingObject<Allotment.CropType> implements ICanWater {
 	// An allotment is made up of several instances of the 1x1 tile dynamic object
 	// You should use nearest() & shuffle() and not always interact with the one at the tile()
 
@@ -58,11 +59,6 @@ public class Allotment extends FarmingObject<Allotment.CropType> {
 		return definition().containsAction("Harvest");
 	}
 
-	/**
-	 * Get the type of crop growing in the allotment
-	 *
-	 * @return the type of crop growing in the allotment, or ALLOTMENT if nothing is growing
-	 */
 	public CropType type() {
 		final String name = definition().name().toLowerCase();
 		for (CropType cropType : CropType.values()) {

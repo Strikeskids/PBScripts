@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Herb;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFarmingObjectAccessor;
 import org.powerbot.script.Identifiable;
 
 import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.HERB;
@@ -13,7 +14,7 @@ import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFa
  * Date: 11/04/2014
  * Time: 17:32
  */
-public enum HerbEnum implements Identifiable {
+public enum HerbEnum implements Identifiable, IFarmingObjectAccessor<Herb> {
 	FALADOR(HERB[0]),
 	CATHERBY(HERB[1]),
 	ARDOUGNE(HERB[2]),
@@ -35,7 +36,7 @@ public enum HerbEnum implements Identifiable {
 		return pretty;
 	}
 
-	public Herb herb(IClientContext ctx) {
+	public Herb object(IClientContext ctx) {
 		return herb == null ? herb = new Herb(ctx, this) : herb;
 	}
 
