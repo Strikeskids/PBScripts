@@ -44,6 +44,10 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 		return ctx.farming.definition(children[bits()]);
 	}
 
+	public int bits() {
+		return ctx.varpbits.varpbit(setting, shift, mask);
+	}
+
 	@Override
 	public int id() {
 		return object;
@@ -105,10 +109,6 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 	 */
 	public boolean empty() {
 		return bits() <= 3;
-	}
-
-	public int bits() {
-		return ctx.varpbits.varpbit(setting, shift, mask);
 	}
 
 	protected abstract boolean grown();

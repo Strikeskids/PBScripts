@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Allotment;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFarmingObjectAccessor;
 import org.powerbot.script.Identifiable;
 
 import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.ALLOTMENT;
@@ -13,7 +14,7 @@ import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFa
  * Date: 14/04/2014
  * Time: 17:54
  */
-public enum AllotmentEnum implements Identifiable {
+public enum AllotmentEnum implements Identifiable, IFarmingObjectAccessor<Allotment> {
 	FALADOR_N(ALLOTMENT[0]),
 	FALADOR_S(ALLOTMENT[1]),
 	CATHERBY_N(ALLOTMENT[2]),
@@ -38,12 +39,12 @@ public enum AllotmentEnum implements Identifiable {
 		return pretty;
 	}
 
-	public Allotment allotment(IClientContext ctx) {
-		return instance == null ? instance = new Allotment(ctx, this) : instance;
-	}
-
 	@Override
 	public int id() {
 		return id;
+	}
+
+	public Allotment object(IClientContext ctx) {
+		return instance == null ? instance = new Allotment(ctx, this) : instance;
 	}
 }

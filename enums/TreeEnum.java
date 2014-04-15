@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Tree;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFarmingObjectAccessor;
 import org.powerbot.script.Identifiable;
 
 import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.TREE;
@@ -13,7 +14,7 @@ import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFa
  * Date: 14/04/2014
  * Time: 19:21
  */
-public enum TreeEnum implements Identifiable {
+public enum TreeEnum implements Identifiable, IFarmingObjectAccessor<Tree> {
 	TAVERLEY(TREE[0]),
 	FALADOR(TREE[1]),
 	VARROCK(TREE[2]),
@@ -40,7 +41,7 @@ public enum TreeEnum implements Identifiable {
 		return id;
 	}
 
-	public Tree tree(IClientContext ctx) {
+	public Tree object(IClientContext ctx) {
 		return instance == null ? instance = new Tree(ctx, this) : instance;
 	}
 }

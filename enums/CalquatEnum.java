@@ -2,32 +2,27 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Compost;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Calquat;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFarmingObjectAccessor;
 import org.powerbot.script.Identifiable;
 
-import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.COMPOST;
+import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.CALQUAT;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
- * Date: 14/04/2014
- * Time: 17:47
+ * Date: 15/04/2014
+ * Time: 22:47
  */
-public enum CompostEnum implements Identifiable, IFarmingObjectAccessor<Compost> {
-	FALADOR(COMPOST[0]),
-	CATHERBY(COMPOST[1]),
-	PORT_PHASMATYS(COMPOST[2]),
-	ARDOUGNE(COMPOST[3]),
-	HERBLORE_HABITAT(COMPOST[4]),
-	TAVERLEY(COMPOST[5]);
+public enum CalquatEnum implements Identifiable, IFarmingObjectAccessor<Calquat> {
+	TAI_BWO_WANNAI(CALQUAT);
 	private final int id;
 
-	private Compost instance = null;
+	private Calquat instance = null;
 
 	private final String pretty;
 
-	CompostEnum(int id) {
+	CalquatEnum(int id) {
 		this.id = id;
 		pretty = IFarming.pretty(name());
 	}
@@ -37,12 +32,12 @@ public enum CompostEnum implements Identifiable, IFarmingObjectAccessor<Compost>
 		return pretty;
 	}
 
-	public Compost object(IClientContext ctx) {
-		return instance == null ? instance = new Compost(ctx, this) : instance;
-	}
-
 	@Override
 	public int id() {
 		return id;
+	}
+
+	public Calquat object(IClientContext ctx) {
+		return instance == null ? instance = new Calquat(ctx, this) : instance;
 	}
 }

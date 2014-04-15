@@ -39,10 +39,6 @@ public class FarmingDefinition {
 		}
 	}
 
-	public FarmingDefinition(FarmingDefinition definition) {
-		this(definition.id(), definition.name(), definition.models);
-	}
-
 	public int id() {
 		return id;
 	}

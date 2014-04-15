@@ -4,6 +4,9 @@ import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.FruitTreeEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFruit;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IStump;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +14,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Frui
  * Date: 14/04/2014
  * Time: 21:00
  */
-public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> {
+public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements IFruit, IStump, ICheckHealth {
 	public FruitTree(IClientContext ctx, FruitTreeEnum tree) {
 		super(ctx, tree.id());
 	}
@@ -27,15 +30,12 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> {
 		return sb.toString();
 	}
 
+	@Override
 	public boolean checkHealth() {
 		return definition().containsAction("Check-health");
 	}
 
-	/**
-	 * Number of fruit on the tree/plant
-	 *
-	 * @return
-	 */
+	@Override
 	public int fruit() {
 		if (!grown()) {
 			return 0;
@@ -79,6 +79,7 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> {
 		return FruitTreeType.FRUIT_TREE_PATCH;
 	}
 
+	@Override
 	public boolean stump() {
 		return definition().name().toLowerCase().endsWith(" stump");
 	}
