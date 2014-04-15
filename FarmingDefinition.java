@@ -14,12 +14,12 @@ import java.util.Set;
  * Time: 23:47
  */
 public class FarmingDefinition {
-	public static final FarmingDefinition NIL = new FarmingDefinition(-1, "", new int[0]);
+	public static final FarmingDefinition NIL = new FarmingDefinition(-1, "", null);
 
-	private final int id;
-	private final String name;
-	private final Set<String> actions = new LinkedHashSet<String>();
-	private final Set<Integer> models = new LinkedHashSet<Integer>();
+	protected final int id;
+	protected final String name;
+	protected final Set<String> actions = new LinkedHashSet<String>();
+	protected final Set<Integer> models = new LinkedHashSet<Integer>();
 
 	FarmingDefinition(JsonObject.Member member) {
 		this.id = Integer.parseInt(member.getName());
@@ -39,11 +39,25 @@ public class FarmingDefinition {
 		}
 	}
 
-	public FarmingDefinition(int id, String name, int[] models) {
+	public FarmingDefinition(FarmingDefinition definition) {
+		this(definition.id(), definition.name(), definition.models);
+	}
+
+	public int id() {
+		return id;
+	}
+
+	public String name() {
+		return name;
+	}
+
+	public FarmingDefinition(int id, String name, Iterable<Integer> models) {
 		this.id = id;
 		this.name = name;
-		for (int model : models) {
-			this.models.add(model);
+		if (models != null) {
+			for (int model : models) {
+				this.models.add(model);
+			}
 		}
 	}
 
@@ -57,13 +71,5 @@ public class FarmingDefinition {
 
 	public boolean containsModel(int id) {
 		return models.contains(id);
-	}
-
-	public int id() {
-		return id;
-	}
-
-	public String name() {
-		return name;
 	}
 }

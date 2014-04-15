@@ -11,7 +11,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Frui
  * Date: 14/04/2014
  * Time: 21:00
  */
-public class FruitTree extends FarmingObject {
+public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> {
 	public FruitTree(IClientContext ctx, FruitTreeEnum tree) {
 		super(ctx, tree.id());
 	}
@@ -22,7 +22,7 @@ public class FruitTree extends FarmingObject {
 		sb.append(" ").append(type());
 		if (checkHealth()) sb.append(" check health");
 		if (grown()) sb.append(" grown");
-		if (grown() && type() != TreeType.FRUIT_TREE_PATCH) sb.append(" fruit: ").append(fruit());
+		if (grown() && type() != FruitTreeType.FRUIT_TREE_PATCH) sb.append(" fruit: ").append(fruit());
 
 		return sb.toString();
 	}
@@ -59,8 +59,8 @@ public class FruitTree extends FarmingObject {
 	 * @return <tt>true</tt> if the tree has finished growing, otherwise <tt>false</tt>
 	 */
 	public boolean grown() {
-		final TreeType type = type();
-		return definition().containsModel(type.grownModel);
+		final FruitTreeType type = type();
+		return type.grownModel > -1 && definition().containsModel(type.grownModel);
 	}
 
 	/**
@@ -68,58 +68,22 @@ public class FruitTree extends FarmingObject {
 	 *
 	 * @return the type of trr growing, or ALLOTMENT if nothing is growing
 	 */
-	public TreeType type() {
+	public FruitTreeType type() {
 		final String name = definition().name().toLowerCase();
-		for (TreeType cropType : TreeType.values()) {
+		for (FruitTreeType cropType : FruitTreeType.values()) {
 			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
 				return cropType;
 			}
 		}
 
-		return TreeType.FRUIT_TREE_PATCH;
-	}
-
-	/**
-	 * Is the patch dead
-	 *
-	 * @return <tt>true</tt> if the herb has died, otherwise <tt>false</tt>
-	 */
-	public boolean dead() {
-		return definition().name().startsWith("Dead");
-	}
-
-	/**
-	 * Is the patch diseased, can be cured by interact("Prune")
-	 *
-	 * @return <tt>true</tt> if the patch is diseased, otherwise <tt>false</tt>
-	 */
-	public boolean diseased() {
-		return definition().name().startsWith("Diseased");
+		return FruitTreeType.FRUIT_TREE_PATCH;
 	}
 
 	public boolean stump() {
 		return definition().name().toLowerCase().endsWith(" stump");
 	}
 
-	/**
-	 * Number of weeds on patch
-	 *
-	 * @return 3 to 0
-	 */
-	public int weeds() {
-		switch (bits()) {
-			case 0:
-				return 3;
-			case 1:
-				return 2;
-			case 2:
-				return 1;
-		}
-
-		return 0;
-	}
-
-	public enum TreeType {
+	public enum FruitTreeType {
 		FRUIT_TREE_PATCH(null, -1),
 		APPLE("Pick-apple", 7921, 7923, 7924, 7925, 7926, 7927, 7928),
 		BANANA("Pick-banana", 7935, 7936, 7937, 7938, 7939, 7940, 7941),
@@ -133,7 +97,7 @@ public class FruitTree extends FarmingObject {
 		private final int grownModel;
 		private final int[] fruitStages;
 
-		TreeType(String pickAction, int grownModel, int... fruitStages) {
+		FruitTreeType(String pickAction, int grownModel, int... fruitStages) {
 			this.pickAction = pickAction;
 			this.grownModel = grownModel;
 			this.fruitStages = fruitStages;
