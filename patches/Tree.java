@@ -19,7 +19,7 @@ public class Tree extends FarmingObject {
 		if (definition().containsAction("Gather-Branches")) {
 			final int bits = bits();
 			if ((bits & 0xC0) == 0xC0) {
-				return (bits & 0x7) + 1; // TODO: Check when grown
+				return 6 - (bits & 0x7);
 			}
 		}
 
@@ -31,18 +31,18 @@ public class Tree extends FarmingObject {
 	}
 
 	/**
-	 * Is the patch dead
+	 * Is the tree dead
 	 *
-	 * @return <tt>true</tt> if the herb has died, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if the tree has died, otherwise <tt>false</tt>
 	 */
 	public boolean dead() {
 		return definition().name().startsWith("Dead");
 	}
 
 	/**
-	 * Is the patch diseased, can be cured by interact("Prune")
+	 * Is the tree diseased, can be cured by interact("Prune")
 	 *
-	 * @return <tt>true</tt> if the patch iss diseases, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if the tree is diseased, otherwise <tt>false</tt>
 	 */
 	public boolean diseased() {
 		return definition().name().startsWith("Diseased");
