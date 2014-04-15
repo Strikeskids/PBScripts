@@ -13,7 +13,7 @@ import java.awt.*;
  * Date: 13/04/2014
  * Time: 21:29
  */
-public class Allotment extends FarmingObject {
+public class Allotment extends FarmingObject<Allotment.CropType> {
 	// An allotment is made up of several instances of the 1x1 tile dynamic object
 	// You should use nearest() & shuffle() and not always interact with the one at the tile()
 
@@ -54,11 +54,6 @@ public class Allotment extends FarmingObject {
 		return !watered() && !grown() && type() != CropType.ALLOTMENT;
 	}
 
-	/**
-	 * Can the patch be harvested
-	 *
-	 * @return <tt>true</tt> if the allotment has finished growing and can be harvested, otherwise <tt>false</tt>
-	 */
 	public boolean grown() {
 		return definition().containsAction("Harvest");
 	}
@@ -89,69 +84,16 @@ public class Allotment extends FarmingObject {
 		p.translate(x, y);
 		g.setColor(state().color());
 		g.fill(p);
-		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.gray);
 		g.draw(p);
 	}
 
 	public CropState state() {
-		if (weeds() > 0) {
-			return CropState.WEEDS;
-		}
-
-		if (diseased()) {
-			return CropState.DISEASED;
-		}
-
-		if (dead()) {
-			return CropState.DEAD;
-		}
-
-		if (grown()) {
-			return CropState.READY;
-		}
-
 		if (watered()) {
 			return CropState.WATERED;
 		}
 
-		return CropState.GROWING;
-	}
-
-	/**
-	 * Is the patch dead
-	 *
-	 * @return <tt>true</tt> if the herb has died, otherwise <tt>false</tt>
-	 */
-	public boolean dead() {
-		return definition().name().startsWith("Dead");
-	}
-
-	/**
-	 * Is the patch diseased
-	 *
-	 * @return <tt>true</tt> if the patch iss diseases, otherwise <tt>false</tt>
-	 */
-	public boolean diseased() {
-		return definition().name().startsWith("Diseased");
-	}
-
-	/**
-	 * Number of weeds on patch
-	 *
-	 * @return 3 to 0
-	 */
-	public int weeds() {
-		switch (bits()) {
-			case 0:
-				return 3;
-			case 1:
-				return 2;
-			case 2:
-				return 1;
-		}
-
-		return 0;
+		return super.state();
 	}
 
 	public enum CropType {

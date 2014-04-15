@@ -39,7 +39,7 @@ public class IFarming extends IClientAccessor {
 	private static final int SETTING_SUPPLIES_EXTRA = 1611;
 	private static final int SETTING_SUPPLIES = 29;
 	private final Map<Integer, FarmingDefinition> cache = new HashMap<Integer, FarmingDefinition>();
-	private final Map<Integer, FarmingObject> dynamicObjects = new HashMap<Integer, FarmingObject>();
+	private final Map<Integer, FarmingDynamicDefinition> dynamicObjects = new HashMap<Integer, FarmingDynamicDefinition>();
 
 	public static final String pretty(String string) {
 		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
@@ -77,7 +77,7 @@ public class IFarming extends IClientAccessor {
 				final JsonObject config = object.get("config").asObject();
 				final JsonObject tile = object.get("tile").asObject();
 				Tile t = new Tile(tile.get("x").asInt(), tile.get("y").asInt(), tile.get("z") != null ? tile.get("z").asInt() : 0);
-				dynamicObjects.put(Integer.parseInt(member.getName()), new FarmingObject(ctx, Integer.parseInt(member.getName()), config.get("id").asInt(), config.get("shift").asInt(), config.get("mask").asInt(), t, definitions));
+				dynamicObjects.put(Integer.parseInt(member.getName()), new FarmingDynamicDefinition(Integer.parseInt(member.getName()), config.get("id").asInt(), config.get("shift").asInt(), config.get("mask").asInt(), t, definitions));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -97,8 +97,8 @@ public class IFarming extends IClientAccessor {
 		return definition != null ? definition : FarmingDefinition.NIL;
 	}
 
-	public FarmingObject dynamic(int id) {
-		final FarmingObject object = dynamicObjects.get(id);
+	public FarmingDynamicDefinition dynamic(int id) {
+		final FarmingDynamicDefinition object = dynamicObjects.get(id);
 		if (object == null) {
 			throw new IllegalArgumentException("Don't have id " + id);
 		}

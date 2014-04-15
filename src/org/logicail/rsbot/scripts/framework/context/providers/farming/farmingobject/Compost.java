@@ -1,9 +1,12 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.CropState;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.CompostEnum;
+
+import java.awt.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +14,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Comp
  * Date: 13/04/2014
  * Time: 12:25
  */
-public class Compost extends FarmingObject {
+public class Compost extends FarmingObject<Compost.CompostType> {
 	private static final int[] NORMAL_STAGE = {31, 32, 94};
 	private static final int[] SUPER_STAGE = {95, 96, 126};
 	private static final int[] TOMATO_STAGE = {159, 160, 222};
@@ -38,6 +41,20 @@ public class Compost extends FarmingObject {
 
 	public boolean closed() {
 		return definition().containsModel(7844);
+	}
+
+	public void repaint(Graphics2D g, int x, int y) {
+		if (empty()) {
+			g.setColor(CropState.EMPTY.color());
+		} else if (grown()) {
+			g.setColor(CropState.READY.color());
+		} else {
+			g.setColor(CropState.GROWING.color());
+		}
+
+		g.fillRect(x, y, 9, 9);
+		g.setColor(Color.gray);
+		g.drawRect(x, y, 9, 9);
 	}
 
 	public boolean grown() {
@@ -74,6 +91,11 @@ public class Compost extends FarmingObject {
 		return -1;
 	}
 
+	@Override
+	public CropState state() {
+		return CropState.EMPTY;
+	}
+
 	public CompostType type() {
 		if (empty()) {
 			return CompostType.EMPTY;
@@ -96,7 +118,12 @@ public class Compost extends FarmingObject {
 		return bits() == 0;
 	}
 
-	enum CompostType {
+	@Override
+	public int weeds() {
+		return 0;
+	}
+
+	public enum CompostType {
 		NORMAL, SUPER, TOMATO, EMPTY
 	}
 }

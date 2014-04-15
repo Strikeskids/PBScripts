@@ -14,7 +14,7 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 16:41
  */
-public class FarmingObject extends IClientAccessor implements Locatable, Identifiable {
+public abstract class FarmingObject<T extends Enum> extends IClientAccessor implements Locatable, Identifiable {
 	protected final int setting;
 	protected final int shift;
 	protected final int mask;
@@ -26,7 +26,7 @@ public class FarmingObject extends IClientAccessor implements Locatable, Identif
 		this(context, context.farming.dynamic(id));
 	}
 
-	private FarmingObject(IClientContext ctx, FarmingObject object) {
+	private FarmingObject(IClientContext ctx, FarmingDynamicDefinition object) {
 		this(ctx, object.object, object.setting, object.shift, object.mask, object.tile, object.children);
 	}
 
@@ -44,20 +44,97 @@ public class FarmingObject extends IClientAccessor implements Locatable, Identif
 		return ctx.farming.definition(children[bits()]);
 	}
 
-	public int bits() {
-		return ctx.varpbits.varpbit(setting, shift, mask);
-	}
-
 	@Override
 	public int id() {
 		return object;
 	}
 
 	public void repaint(Graphics2D g, int x, int y) {
+		g.setColor(state().color());
+		g.fillRect(x, y, 9, 9);
+		g.setColor(Color.gray);
+		g.drawRect(x, y, 9, 9);
+	}
+
+	public CropState state() {
+		if (weeds() > 0) {
+			return CropState.WEEDS;
+		}
+
+		if (empty()) {
+			return CropState.EMPTY;
+		}
+
+		if (diseased()) {
+			return CropState.DISEASED;
+		}
+
+		if (dead()) {
+			return CropState.DEAD;
+		}
+
+		if (grown()) {
+			return CropState.READY;
+		}
+
+		return CropState.GROWING;
+	}
+
+	/**
+	 * Is the patch dead
+	 *
+	 * @return <tt>true</tt> if the herb has died, otherwise <tt>false</tt>
+	 */
+	public boolean dead() {
+		return definition().name().startsWith("Dead");
+	}
+
+	/**
+	 * Is the patch diseased
+	 *
+	 * @return <tt>true</tt> if the patch iss diseases, otherwise <tt>false</tt>
+	 */
+	public boolean diseased() {
+		return definition().name().startsWith("Diseased");
+	}
+
+	/**
+	 * Is the patch empty of any crop
+	 *
+	 * @return <tt>true</tt> if patch has no herb growing, otherwise <tt>false</tt>
+	 */
+	public boolean empty() {
+		return bits() <= 3;
+	}
+
+	public int bits() {
+		return ctx.varpbits.varpbit(setting, shift, mask);
+	}
+
+	protected abstract boolean grown();
+
+	/**
+	 * Number of weeds on patch
+	 *
+	 * @return 3 to 0
+	 */
+	public int weeds() {
+		switch (bits()) {
+			case 0:
+				return 3;
+			case 1:
+				return 2;
+			case 2:
+				return 1;
+		}
+
+		return 0;
 	}
 
 	@Override
 	public Tile tile() {
 		return tile;
 	}
+
+	public abstract T type();
 }

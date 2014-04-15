@@ -5,6 +5,8 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
 
+import java.awt.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
@@ -27,6 +29,11 @@ public class Tree extends FarmingObject {
 		return sb.toString();
 	}
 
+	/**
+	 * How many branches are on the willow tree
+	 *
+	 * @return
+	 */
 	public int branches() {
 		if (definition().containsAction("Gather-Branches")) {
 			final int bits = bits();
@@ -50,7 +57,41 @@ public class Tree extends FarmingObject {
 	 */
 	public boolean grown() {
 		final TreeType type = type();
-		return definition().containsModel(type.stages[type.stages.length - 1]);
+		return type != TreeType.TREE_PATCH && definition().containsModel(type.stages[type.stages.length - 1]);
+	}
+
+	/**
+	 * Get the type of tree growing
+	 *
+	 * @return the type of tree growing, or TREE_PATCH if nothing is growing
+	 */
+	public TreeType type() {
+		final String name = definition().name().toLowerCase();
+		for (TreeType cropType : TreeType.values()) {
+			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
+				return cropType;
+			}
+		}
+
+		return TreeType.TREE_PATCH;
+	}
+
+	/**
+	 * Is the patch weed free but empty (ready to plant seed)
+	 *
+	 * @return <tt>true</tt> if patch has no weeeds and is ready to plant a seed, otherwise <tt>false</tt>
+	 */
+	public boolean empty() {
+		return type() == TreeType.TREE_PATCH;
+	}
+
+	public void repaint(Graphics2D g, int x, int y) {
+		g.setColor(state().color());
+		g.fillRect(x, y, 9, 9);
+		g.setStroke(new BasicStroke(1));
+		g.setColor(Color.gray);
+		g.drawRect(x, y, 9, 9);
+		g.drawRect(x, y, 9, 9);
 	}
 
 	/**
@@ -75,60 +116,8 @@ public class Tree extends FarmingObject {
 		return 0;
 	}
 
-	/**
-	 * Get the type of tree growing
-	 *
-	 * @return the type of tree growing, or TREE_PATCH if nothing is growing
-	 */
-	public TreeType type() {
-		final String name = definition().name().toLowerCase();
-		for (TreeType cropType : TreeType.values()) {
-			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
-				return cropType;
-			}
-		}
-
-		return TreeType.TREE_PATCH;
-	}
-
-	/**
-	 * Is the tree dead
-	 *
-	 * @return <tt>true</tt> if the tree has died, otherwise <tt>false</tt>
-	 */
-	public boolean dead() {
-		return definition().name().startsWith("Dead");
-	}
-
-	/**
-	 * Is the tree diseased, can be cured by interact("Prune")
-	 *
-	 * @return <tt>true</tt> if the tree is diseased, otherwise <tt>false</tt>
-	 */
-	public boolean diseased() {
-		return definition().name().startsWith("Diseased");
-	}
-
 	public boolean stump() {
 		return definition().name().toLowerCase().endsWith(" stump");
-	}
-
-	/**
-	 * Number of weeds on the tree patch
-	 *
-	 * @return 3 to 0
-	 */
-	public int weeds() {
-		switch (bits()) {
-			case 0:
-				return 3;
-			case 1:
-				return 2;
-			case 2:
-				return 1;
-		}
-
-		return 0;
 	}
 
 	public enum TreeType {
