@@ -15,24 +15,19 @@ import java.awt.*;
  * Time: 17:18
  */
 public class Herb extends FarmingObject {
-	// just 7794 == empty
-	// always [x?, 7766]
-	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875}; // stage 1 to 5 [grown]
-
-	// just 19148, 19152 == empty
-	// always have [19148, 19152, x?]
+	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875};
 	public static final int[] MODEL_IDS_GROWTH_STAGE_TROLLHEIM = {19144, 19150, 19143, 19149, 19140};
+
 	public Herb(IClientContext ctx, HerbEnum patch) {
 		super(ctx, patch.id());
 	}
 
 	public void repaint(Graphics2D g, int x, int y) {
 		g.setColor(state().color());
-
-		g.fillRect(x, y, 6, 6);
+		g.fillRect(x, y, 7, 7);
 		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.gray);
-		g.drawRect(x, y, 6, 6);
+		g.drawRect(x, y, 7, 7);
 	}
 
 	/**
@@ -54,6 +49,10 @@ public class Herb extends FarmingObject {
 	}
 
 	public CropState state() {
+		if (weeds() > 0) {
+			return CropState.WEEDS;
+		}
+
 		if (empty()) {
 			return CropState.EMPTY;
 		}
@@ -64,10 +63,6 @@ public class Herb extends FarmingObject {
 
 		if (dead()) {
 			return CropState.DEAD;
-		}
-
-		if (weeds() > 0) {
-			return CropState.WEEDS;
 		}
 
 		if (grown()) {
