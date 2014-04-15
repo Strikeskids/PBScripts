@@ -36,8 +36,14 @@ public class IFarming extends IClientAccessor {
 	public static final int[] ALLOTMENT = {8550, 8551, 8552, 8553, 8554, 8555, 8556, 8557};
 	private static final String URL_HERBS = "http://logicail.co.uk/resources/farming.json";
 
+	private static final int SETTING_SUPPLIES_EXTRA = 1611;
+	private static final int SETTING_SUPPLIES = 29;
 	private final Map<Integer, FarmingDefinition> cache = new HashMap<Integer, FarmingDefinition>();
 	private final Map<Integer, FarmingObject> dynamicObjects = new HashMap<Integer, FarmingObject>();
+
+	public static final String pretty(String string) {
+		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
+	}
 
 	public IFarming(final IClientContext ctx) {
 		super(ctx);
@@ -78,6 +84,14 @@ public class IFarming extends IClientAccessor {
 		}
 	}
 
+	public int buckets() {
+		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 9, 0x1f) + 32 * ctx.varpbits.varpbit(SETTING_SUPPLIES_EXTRA, 17, 0x7);
+	}
+
+	public int compost() {
+		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 14, 0xff);
+	}
+
 	public FarmingDefinition definition(int id) {
 		final FarmingDefinition definition = cache.get(id);
 		return definition != null ? definition : FarmingDefinition.NIL;
@@ -109,7 +123,42 @@ public class IFarming extends IClientAccessor {
 		};
 	}
 
-	public static final String pretty(String string) {
-		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
+	public int plantCure() {
+		return ctx.varpbits.varpbit(SETTING_SUPPLIES_EXTRA, 20, 0xff);
+	}
+
+	public int superCompost() {
+		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 22, 0xff);
+	}
+
+	public int wateringCan() {
+		final WateringCan type = wateringCanType();
+		switch (type) {
+			case NONE:
+				return 0;
+			case NORMAL:
+				return wateringCanSetting() - 1;
+			default:
+				return 1;
+		}
+	}
+
+	private int wateringCanSetting() {
+		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 4, 0xf);
+	}
+
+	public WateringCan wateringCanType() {
+		final int i = wateringCanSetting();
+		if (i == 0) {
+			return WateringCan.NONE;
+		}
+		if (i < 10) {
+			return WateringCan.NORMAL;
+		}
+		return WateringCan.MAGIC;
+	}
+
+	enum WateringCan {
+		NONE, NORMAL, MAGIC
 	}
 }
