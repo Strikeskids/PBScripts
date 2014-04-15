@@ -17,9 +17,10 @@ public class Allotment extends FarmingObject {
 	// An allotment is made up of several instances of the 1x1 tile dynamic object
 	// You should use nearest() & shuffle() and not always interact with the one at the tile()
 
-	private static final Polygon POLYGON_ALLOTMENT_1 = new Polygon(new int[]{0, 15, 15, 6, 6, 0}, new int[]{0, 0, 6, 6, 18, 18}, 6);
-	private static final Polygon POLYGON_ALLOTMENT_2 = new Polygon(new int[]{9, 15, 15, 0, 0, 9}, new int[]{0, 0, 18, 18, 12, 12}, 6);
-	private static final Polygon POLYGON_ALLOTMENT_RECTANGLE = new Polygon(new int[]{0, 30, 30, 0}, new int[]{0, 0, 6, 6}, 4);
+	private static final Polygon POLYGON_ALLOTMENT_1 = new Polygon(new int[]{0, 16, 16, 7, 7, 0}, new int[]{0, 0, 7, 7, 19, 19}, 6);
+	private static final Polygon POLYGON_ALLOTMENT_2 = new Polygon(new int[]{9, 16, 16, 0, 0, 9}, new int[]{0, 0, 19, 19, 12, 12}, 6);
+	private static final Polygon POLYGON_ALLOTMENT_RECTANGLE_1 = new Polygon(new int[]{0, 33, 33, 7, 7, 0}, new int[]{0, 0, 7, 7, 11, 11}, 6);
+	private static final Polygon POLYGON_ALLOTMENT_RECTANGLE_2 = new Polygon(new int[]{0, 7, 7, 33, 33, 0}, new int[]{0, 0, 4, 4, 11, 11}, 6);
 
 	private static final int MODEL_ID_WATERED = 8222;
 	private final Polygon polygon;
@@ -28,15 +29,24 @@ public class Allotment extends FarmingObject {
 		super(ctx, patch.id());
 
 		switch (patch) {
+			case ARDOUGNE_N:
+			case CATHERBY_N:
+				polygon = POLYGON_ALLOTMENT_RECTANGLE_1;
+				break;
+			case ARDOUGNE_S:
+			case CATHERBY_S:
+				polygon = POLYGON_ALLOTMENT_RECTANGLE_2;
+				break;
 			case FALADOR_N:
+			case PORT_PHASMATYS_N:
 				polygon = POLYGON_ALLOTMENT_1;
 				break;
 			case FALADOR_S:
+			case PORT_PHASMATYS_S:
 				polygon = POLYGON_ALLOTMENT_2;
 				break;
 			default:
-				polygon = POLYGON_ALLOTMENT_RECTANGLE;
-				break;
+				polygon = POLYGON_ALLOTMENT_2;
 		}
 	}
 
@@ -75,11 +85,13 @@ public class Allotment extends FarmingObject {
 
 	@Override
 	public void repaint(Graphics2D g, int x, int y) {
+		Polygon p = new Polygon(polygon.xpoints, polygon.ypoints, polygon.npoints); // TODO: Improve this
+		p.translate(x, y);
 		g.setColor(state().color());
-		g.fill(polygon);
+		g.fill(p);
 		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.gray);
-		g.draw(polygon);
+		g.draw(p);
 	}
 
 	public CropState state() {

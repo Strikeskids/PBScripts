@@ -12,7 +12,7 @@ public enum CropState {
 	WEEDS(new Color(102, 51, 0)),
 	GROWING(Color.green),
 	WATERED(Color.blue),
-	DISEASED(Color.green.brighter()),
+	DISEASED(Color.yellow),
 	EMPTY(Color.gray),
 	DEAD(Color.black),
 	READY(Color.green.darker());
@@ -24,5 +24,10 @@ public enum CropState {
 
 	public Color color() {
 		return color;
+	}
+
+	@Override
+	public String toString() {
+		return Character.toUpperCase(name().charAt(0)) + name().substring(1).toLowerCase();
 	}
 }
