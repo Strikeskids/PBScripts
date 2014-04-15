@@ -24,10 +24,11 @@ public class Herb extends FarmingObject {
 
 	public void repaint(Graphics2D g, int x, int y) {
 		g.setColor(state().color());
-		g.fillRect(x, y, 7, 7);
+		g.fillRect(x, y, 9, 9);
 		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.gray);
-		g.drawRect(x, y, 7, 7);
+		g.drawRect(x, y, 9, 9);
+		g.drawRect(x, y, 9, 9);
 	}
 
 	/**

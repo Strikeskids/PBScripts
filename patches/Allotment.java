@@ -17,10 +17,10 @@ public class Allotment extends FarmingObject {
 	// An allotment is made up of several instances of the 1x1 tile dynamic object
 	// You should use nearest() & shuffle() and not always interact with the one at the tile()
 
-	private static final Polygon POLYGON_ALLOTMENT_1 = new Polygon(new int[]{0, 16, 16, 7, 7, 0}, new int[]{0, 0, 7, 7, 19, 19}, 6);
-	private static final Polygon POLYGON_ALLOTMENT_2 = new Polygon(new int[]{9, 16, 16, 0, 0, 9}, new int[]{0, 0, 19, 19, 12, 12}, 6);
-	private static final Polygon POLYGON_ALLOTMENT_RECTANGLE_1 = new Polygon(new int[]{0, 33, 33, 7, 7, 0}, new int[]{0, 0, 7, 7, 11, 11}, 6);
-	private static final Polygon POLYGON_ALLOTMENT_RECTANGLE_2 = new Polygon(new int[]{0, 7, 7, 33, 33, 0}, new int[]{0, 0, 4, 4, 11, 11}, 6);
+	private static final Polygon POLYGON_ALLOTMENT_1 = new Polygon(new int[]{0, 21, 21, 9, 9, 0}, new int[]{0, 0, 9, 9, 25, 25}, 6);
+	private static final Polygon POLYGON_ALLOTMENT_2 = new Polygon(new int[]{12, 21, 21, 0, 0, 12}, new int[]{0, 0, 25, 25, 16, 16}, 6);
+	private static final Polygon POLYGON_ALLOTMENT_RECTANGLE_1 = new Polygon(new int[]{0, 41, 41, 9, 9, 0}, new int[]{0, 0, 9, 9, 13, 13}, 6);
+	private static final Polygon POLYGON_ALLOTMENT_RECTANGLE_2 = new Polygon(new int[]{0, 9, 9, 41, 41, 0}, new int[]{0, 0, 4, 4, 13, 13}, 6);
 
 	private static final int MODEL_ID_WATERED = 8222;
 	private final Polygon polygon;
