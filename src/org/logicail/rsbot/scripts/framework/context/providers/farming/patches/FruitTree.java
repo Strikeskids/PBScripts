@@ -16,6 +16,21 @@ public class FruitTree extends FarmingObject {
 		super(ctx, tree.id());
 	}
 
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[").append(bits()).append("]");
+		sb.append(" ").append(type());
+		if (checkHealth()) sb.append(" check health");
+		if (grown()) sb.append(" grown");
+		if (grown() && type() != TreeType.FRUIT_TREE_PATCH) sb.append(" fruit: ").append(fruit());
+
+		return sb.toString();
+	}
+
+	public boolean checkHealth() {
+		return definition().containsAction("Check-health");
+	}
+
 	/**
 	 * Number of fruit on the tree/plant
 	 *
@@ -38,8 +53,30 @@ public class FruitTree extends FarmingObject {
 		return 0;
 	}
 
-	public boolean checkHealth() {
-		return definition().containsAction("Check-health");
+	/**
+	 * Can the tree be chopped down or check-healthed
+	 *
+	 * @return <tt>true</tt> if the tree has finished growing, otherwise <tt>false</tt>
+	 */
+	public boolean grown() {
+		final TreeType type = type();
+		return definition().containsModel(type.grownModel);
+	}
+
+	/**
+	 * Get the type of tree growing
+	 *
+	 * @return the type of trr growing, or ALLOTMENT if nothing is growing
+	 */
+	public TreeType type() {
+		final String name = definition().name().toLowerCase();
+		for (TreeType cropType : TreeType.values()) {
+			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
+				return cropType;
+			}
+		}
+
+		return TreeType.FRUIT_TREE_PATCH;
 	}
 
 	/**
@@ -60,34 +97,8 @@ public class FruitTree extends FarmingObject {
 		return definition().name().startsWith("Diseased");
 	}
 
-	/**
-	 * Can the tree be chopped down or check-healthed
-	 *
-	 * @return <tt>true</tt> if the tree has finished growing, otherwise <tt>false</tt>
-	 */
-	public boolean grown() {
-		final TreeType type = type();
-		return definition().containsModel(type.grownModel);
-	}
-
 	public boolean stump() {
 		return definition().name().toLowerCase().endsWith(" stump");
-	}
-
-	/**
-	 * Get the type of tree growing
-	 *
-	 * @return the type of trr growing, or ALLOTMENT if nothing is growing
-	 */
-	public TreeType type() {
-		final String name = definition().name().toLowerCase();
-		for (TreeType cropType : TreeType.values()) {
-			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
-				return cropType;
-			}
-		}
-
-		return TreeType.FRUIT_TREE_PATCH;
 	}
 
 	/**
@@ -106,17 +117,6 @@ public class FruitTree extends FarmingObject {
 		}
 
 		return 0;
-	}
-
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[").append(bits()).append("]");
-		sb.append(" ").append(type());
-		if (checkHealth()) sb.append(" check health");
-		if (grown()) sb.append(" grown");
-		if (grown() && type() != TreeType.FRUIT_TREE_PATCH) sb.append(" fruit: ").append(fruit());
-
-		return sb.toString();
 	}
 
 	public enum TreeType {
