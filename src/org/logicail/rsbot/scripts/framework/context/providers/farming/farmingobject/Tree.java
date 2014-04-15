@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
 
@@ -45,10 +46,33 @@ public class Tree extends FarmingObject {
 	 * Can the tree be chopped down or check-healthed
 	 *
 	 * @return <tt>true</tt> if the tree has reached its final stage of growing, otherwise <tt>false</tt>
+	 * @see TreeType#stages
 	 */
 	public boolean grown() {
 		final TreeType type = type();
-		return definition().containsModel(type.grownModel);
+		return definition().containsModel(type.stages[type.stages.length - 1]);
+	}
+
+	/**
+	 * Growth stage of tree
+	 *
+	 * @return 0 (empty) to X depends on how many stages tree has {@link TreeType#stages}
+	 */
+	public int stage() {
+		final FarmingDefinition definition = definition();
+		final TreeType type = type();
+		if (type == TreeType.TREE_PATCH) {
+			return 0;
+		}
+
+		int[] stages = type.stages;
+		for (int i = 0; i < stages.length; i++) {
+			if (definition.containsModel(stages[i])) {
+				return i + 1;
+			}
+		}
+
+		return 0;
 	}
 
 	/**
@@ -109,17 +133,17 @@ public class Tree extends FarmingObject {
 
 	public enum TreeType {
 		TREE_PATCH(-1),
-		OAK(64863), // 8031, 8033, 8035, 8037, 64863, 64863, 64864
-		WILLOW(64870), // 8031, 8127, 8129, 8131, 8133, 8135, 64870, 64870, 64869
-		MAPLE(20513), // 8031, 8013, 8015, 8017, 8019, 8021, 8023, 8026, 20513, 20513, 20512
-		YEW(64873), // 8031, 8145, 8147, 8149, 8151, 8153, 8155, 8157, 8159, 8141, 64873, 64873, 64872
-		MAGIC(20468) // 7977, 7991, 7993, 7995, 7997, 7999, 8002, 8005, 8008, 7978, 7981, 7984, 20468, 20468, 20511
+		OAK(8031, 8033, 8035, 8037, 64863), // 64864
+		WILLOW(8031, 8127, 8129, 8131, 8133, 8135, 64870), // 64869
+		MAPLE(8031, 8013, 8015, 8017, 8019, 8021, 8023, 8026, 20513), // 20512
+		YEW(8031, 8145, 8147, 8149, 8151, 8153, 8155, 8157, 8159, 8141, 64873), // 64872
+		MAGIC(7977, 7991, 7993, 7995, 7997, 7999, 8002, 8005, 8008, 7978, 7981, 7984, 20468) // 20511
 		;
 
-		private final int grownModel;
+		private final int[] stages;
 
-		TreeType(int grownModel) {
-			this.grownModel = grownModel;
+		TreeType(int... stages) {
+			this.stages = stages;
 		}
 	}
 }
