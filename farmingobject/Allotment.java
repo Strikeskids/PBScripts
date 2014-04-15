@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.framework.context.providers.farming.patches;
+package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.CropState;

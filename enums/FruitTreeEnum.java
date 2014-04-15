@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.FruitTree;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.FruitTree;
 import org.powerbot.script.Identifiable;
 
 import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.FRUIT_TREE;

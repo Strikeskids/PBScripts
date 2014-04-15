@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.Compost;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Compost;
 import org.powerbot.script.Identifiable;
 
 import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.COMPOST;
