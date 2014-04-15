@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.patches.Tree;
 import org.powerbot.script.Identifiable;
 
@@ -22,8 +23,16 @@ public enum TreeEnum implements Identifiable {
 
 	private Tree instance = null;
 
+	private final String pretty;
+
 	TreeEnum(int id) {
 		this.id = id;
+		pretty = IFarming.pretty(name());
+	}
+
+	@Override
+	public String toString() {
+		return pretty;
 	}
 
 	@Override
