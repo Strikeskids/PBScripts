@@ -27,12 +27,11 @@ public class FarmingPaint extends IClientAccessor implements PaintListener {
 	@Override
 	public void repaint(Graphics graphics) {
 		Graphics2D g2 = (Graphics2D) graphics;
+		g2.setStroke(new BasicStroke(1));
 
 		int x = 50;
 		int y = 50;
 
-
-		g2.setStroke(new BasicStroke(1));
 		g2.setColor(COLOUR_BACKGROUND);
 		g2.fillRect(x - 3, y - 3, 198, 42);
 		g2.setColor(COLOUR_BACKGROUND_BORDER);
@@ -56,25 +55,24 @@ public class FarmingPaint extends IClientAccessor implements PaintListener {
 		x += 46;
 		HerbEnum.TROLLHEIM.herb(ctx).repaint(g2, x, y);
 
-		x = 500;
-		y = 20;
+		x = 251;
 
 		g2.setColor(COLOUR_BACKGROUND);
-		g2.fillRect(x - 6, y - 6, 78, CROP_STATES.length * 16);
+		g2.fillRect(x - 3, y - 3, 75, CROP_STATES.length * 15 + 3);
 		g2.setColor(COLOUR_BACKGROUND_BORDER);
-		g2.drawRect(x - 6, y - 6, 78, CROP_STATES.length * 16);
+		g2.drawRect(x - 3, y - 3, 75, CROP_STATES.length * 15 + 3);
 
-		g2.setStroke(new BasicStroke(1));
+
 		for (CropState state : CROP_STATES) {
 			g2.setColor(state.color());
-			g2.fillRect(x, y, 6, 6);
+			g2.fillRect(x, y, 7, 7);
 			g2.setColor(Color.gray);
-			g2.drawRect(x, y, 6, 6);
+			g2.drawRect(x, y, 7, 7);
 
-			g2.setColor(Color.BLACK);
-			g2.drawString(state.toString(), x + 15, y + 9);
-			g2.setColor(Color.WHITE);
-			g2.drawString(state.toString(), x + 14, y + 8);
+			g2.setColor(Color.black);
+			g2.drawString(state.toString(), x + 15, y + 10);
+			g2.setColor(Color.gray.brighter());
+			g2.drawString(state.toString(), x + 14, y + 9);
 
 			y += 15;
 		}
