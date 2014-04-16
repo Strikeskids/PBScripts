@@ -119,11 +119,6 @@ public class Compost extends FarmingObject<Compost.CompostType> implements IGrow
 		return CompostType.TOMATO;
 	}
 
-	@Override
-	public int weeds() {
-		return 0;
-	}
-
 	public enum CompostType {
 		NORMAL, SUPER, TOMATO, EMPTY
 	}

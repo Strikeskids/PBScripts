@@ -39,14 +39,6 @@ public class FarmingDefinition {
 		}
 	}
 
-	public int id() {
-		return id;
-	}
-
-	public String name() {
-		return name;
-	}
-
 	public FarmingDefinition(int id, String name, Iterable<Integer> models) {
 		this.id = id;
 		this.name = name;
@@ -67,5 +59,13 @@ public class FarmingDefinition {
 
 	public boolean containsModel(int id) {
 		return models.contains(id);
+	}
+
+	public int id() {
+		return id;
+	}
+
+	public String name() {
+		return name;
 	}
 }

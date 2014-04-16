@@ -2,8 +2,10 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingob
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.SpiritTreeEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 
 /**
@@ -12,9 +14,14 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 15/04/2014
  * Time: 23:35
  */
-public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> implements IGrowthStage {
+public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> implements IGrowthStage, ICheckHealth {
 	public SpiritTree(IClientContext ctx, SpiritTreeEnum patch) {
 		super(ctx, patch.id());
+	}
+
+	@Override
+	public boolean checkHealth() {
+		return FarmingHelper.checkHealth(this);
 	}
 
 	@Override

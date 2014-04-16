@@ -12,11 +12,15 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Time: 00:03
  */
 public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWater {
+	private static final int MODEL_WATERED = 7783;
 	public Flower(IClientContext context, FlowerEnum patch) {
 		super(context, patch.id());
 	}
 
-	private static final int MODEL_WATERED = 7783;
+	@Override
+	public boolean canWater() {
+		return !watered() && !grown() && type() != FlowerType.FLOWER_PATCH;
+	}
 
 	@Override
 	protected boolean grown() {
@@ -34,11 +38,6 @@ public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWate
 		}
 
 		return FlowerType.FLOWER_PATCH;
-	}
-
-	@Override
-	public boolean canWater() {
-		return !watered() && !grown() && type() != FlowerType.FLOWER_PATCH;
 	}
 
 	@Override

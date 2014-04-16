@@ -37,12 +37,12 @@ public enum CompostEnum implements Identifiable, IFarmingObjectAccessor<Compost>
 		return pretty;
 	}
 
-	public Compost object(IClientContext ctx) {
-		return instance == null ? instance = new Compost(ctx, this) : instance;
-	}
-
 	@Override
 	public int id() {
 		return id;
+	}
+
+	public Compost object(IClientContext ctx) {
+		return instance == null ? instance = new Compost(ctx, this) : instance;
 	}
 }

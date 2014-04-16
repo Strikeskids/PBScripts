@@ -35,12 +35,12 @@ public enum FlowerEnum implements Identifiable, IFarmingObjectAccessor<Flower> {
 		return pretty;
 	}
 
-	public Flower object(IClientContext ctx) {
-		return instance == null ? instance = new Flower(ctx, this) : instance;
-	}
-
 	@Override
 	public int id() {
 		return id;
+	}
+
+	public Flower object(IClientContext ctx) {
+		return instance == null ? instance = new Flower(ctx, this) : instance;
 	}
 }

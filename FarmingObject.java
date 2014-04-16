@@ -2,6 +2,9 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming;
 
 import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanDie;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanWater;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 import org.powerbot.script.Identifiable;
 import org.powerbot.script.Locatable;
 import org.powerbot.script.Tile;
@@ -40,6 +43,15 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 		this.children = children;
 	}
 
+	/**
+	 * Can the crop be cleared
+	 *
+	 * @return
+	 */
+	public boolean clearable() {
+		return definition().containsAction("Clear");
+	}
+
 	public FarmingDefinition definition() {
 		return ctx.farming.definition(children[bits()]);
 	}
@@ -61,45 +73,39 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 	}
 
 	public CropState state() {
-		if (weeds() > 0) {
-			return CropState.WEEDS;
+		if (this instanceof IWeeds) {
+			if (((IWeeds) this).weeds() > 0) {
+				return CropState.WEEDS;
+			}
 		}
 
 		if (empty()) {
 			return CropState.EMPTY;
 		}
 
-		if (diseased()) {
-			return CropState.DISEASED;
-		}
+		if (this instanceof ICanDie) {
+			ICanDie canDie = (ICanDie) this;
 
-		if (dead()) {
-			return CropState.DEAD;
+			if (canDie.diseased()) {
+				return CropState.DISEASED;
+			}
+
+			if (canDie.dead()) {
+				return CropState.DEAD;
+			}
 		}
 
 		if (grown()) {
 			return CropState.READY;
 		}
 
+		if (this instanceof ICanWater) {
+			if (((ICanWater) this).watered()) {
+				return CropState.WATERED;
+			}
+		}
+
 		return CropState.GROWING;
-	}
-
-	/**
-	 * Is the patch dead
-	 *
-	 * @return <tt>true</tt> if the herb has died, otherwise <tt>false</tt>
-	 */
-	public boolean dead() {
-		return definition().name().startsWith("Dead");
-	}
-
-	/**
-	 * Is the patch diseased
-	 *
-	 * @return <tt>true</tt> if the patch iss diseases, otherwise <tt>false</tt>
-	 */
-	public boolean diseased() {
-		return definition().name().startsWith("Diseased");
 	}
 
 	/**
@@ -113,38 +119,10 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 
 	protected abstract boolean grown();
 
-	/**
-	 * Number of weeds on patch
-	 *
-	 * @return 3 to 0
-	 */
-	public int weeds() {
-		switch (bits()) {
-			case 0:
-				return 3;
-			case 1:
-				return 2;
-			case 2:
-				return 1;
-		}
-
-		return 0;
-	}
-
 	@Override
 	public Tile tile() {
 		return tile;
 	}
 
 	public abstract T type();
-
-
-	/**
-	 * Can the crop be cleared
-	 *
-	 * @return
-	 */
-	public boolean clearable() {
-		return definition().containsAction("Clear");
-	}
 }

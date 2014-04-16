@@ -36,12 +36,12 @@ public enum HerbEnum implements Identifiable, IFarmingObjectAccessor<Herb> {
 		return pretty;
 	}
 
-	public Herb object(IClientContext ctx) {
-		return herb == null ? herb = new Herb(ctx, this) : herb;
-	}
-
 	@Override
 	public int id() {
 		return id;
+	}
+
+	public Herb object(IClientContext ctx) {
+		return herb == null ? herb = new Herb(ctx, this) : herb;
 	}
 }
