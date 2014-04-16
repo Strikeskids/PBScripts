@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 public abstract class LogicailScript<T extends LogicailScript> extends PollingScript<ClientContext> implements PaintListener {
 	public final IClientContext ctx;
 	public final Tree<T> tree;
-	private final Painter paint;
+	protected final Painter paint;
 	protected JFrame gui;
 
 	protected LogicailScript() {

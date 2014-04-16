@@ -19,6 +19,7 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 	public FarmingTest() {
 		super();
 		farmingPaint = new FarmingPaint(ctx);
+		paint.location(new Point(50, 350));
 	}
 
 	@Override

@@ -111,7 +111,7 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 	/**
 	 * Is the patch empty of any crop
 	 *
-	 * @return <tt>true</tt> if patch has no herb growing, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if patch has nothing growing on it, otherwise <tt>false</tt>
 	 */
 	public boolean empty() {
 		return bits() <= 3;
