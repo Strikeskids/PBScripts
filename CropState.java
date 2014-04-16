@@ -11,7 +11,7 @@ import java.awt.*;
 public enum CropState {
 	DEAD(Color.black),
 	DISEASED(Color.yellow),
-	EMPTY(Color.gray),
+	EMPTY(Color.gray.darker()),
 	GROWING(Color.green.brighter()),
 	READY(Color.green.darker().darker()),
 	WATERED(Color.blue.brighter()),

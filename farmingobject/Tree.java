@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Tree
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IStump;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
 import java.awt.*;
 
@@ -17,7 +18,7 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 19:18
  */
-public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowthStage {
+public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowthStage, IWeeds {
 	public Tree(IClientContext ctx, TreeEnum tree) {
 		super(ctx, tree.id());
 	}
@@ -94,7 +95,6 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 		g.fillRect(x, y, 9, 9);
 		g.setColor(Color.gray);
 		g.drawRect(x, y, 9, 9);
-		g.drawRect(x, y, 9, 9);
 	}
 
 	public int stage() {
@@ -116,6 +116,11 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 
 	public boolean stump() {
 		return FarmingHelper.stump(this);
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum TreeType {

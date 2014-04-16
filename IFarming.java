@@ -21,6 +21,7 @@ import java.util.*;
  * Time: 23:31
  */
 public class IFarming extends IClientAccessor {
+	// TODO: Missing some plots
 	public static final int[] HERB = {8150, 8151, 8152, 8153, 18816};
 	public static final int BELLADONNA = 7572;
 	public static final int[] BUSH = {7577, 7578, 7579, 7580};

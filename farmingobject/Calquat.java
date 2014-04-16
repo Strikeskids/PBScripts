@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Calq
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFruit;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +16,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 15/04/2014
  * Time: 22:48
  */
-public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFruit, ICheckHealth, IGrowthStage {
+public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds {
 	public Calquat(IClientContext ctx, CalquatEnum patch) {
 		super(ctx, patch.id());
 	}
@@ -76,6 +77,11 @@ public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFrui
 		}
 
 		return 0;
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum CalquatType {

@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Frui
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFruit;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IStump;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +16,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 14/04/2014
  * Time: 21:00
  */
-public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements IFruit, IStump, ICheckHealth {
+public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements IFruit, IStump, ICheckHealth, IWeeds {
 	public FruitTree(IClientContext ctx, FruitTreeEnum tree) {
 		super(ctx, tree.id());
 	}
@@ -83,6 +84,11 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 	@Override
 	public boolean stump() {
 		return FarmingHelper.stump(this);
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum FruitTreeType {

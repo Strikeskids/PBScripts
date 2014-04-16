@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Cact
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFruit;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +16,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 16/04/2014
  * Time: 00:26
  */
-public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, ICheckHealth, IGrowthStage {
+public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds {
 	public Cactus(IClientContext ctx, CactusEnum patch) {
 		super(ctx, patch.id());
 	}
@@ -76,6 +77,11 @@ public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, 
 		}
 
 		return 0;
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum CactusType {

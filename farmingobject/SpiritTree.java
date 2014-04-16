@@ -7,6 +7,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObj
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.SpiritTreeEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +15,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 15/04/2014
  * Time: 23:35
  */
-public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> implements IGrowthStage, ICheckHealth {
+public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> implements IGrowthStage, ICheckHealth, IWeeds {
 	public SpiritTree(IClientContext ctx, SpiritTreeEnum patch) {
 		super(ctx, patch.id());
 	}
@@ -58,6 +59,11 @@ public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> impleme
 		}
 
 		return 0;
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum SpiritTreeType {

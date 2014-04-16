@@ -53,9 +53,9 @@ public class Compost extends FarmingObject<Compost.CompostType> implements IGrow
 			g.setColor(CropState.GROWING.color());
 		}
 
-		g.fillRect(x, y, 9, 9);
+		g.fillRect(x, y, 5, 5);
 		g.setColor(Color.gray);
-		g.drawRect(x, y, 9, 9);
+		g.drawRect(x, y, 5, 5);
 	}
 
 	public boolean empty() {

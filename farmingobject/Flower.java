@@ -1,9 +1,11 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.FlowerEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanWater;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,8 +13,9 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 16/04/2014
  * Time: 00:03
  */
-public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWater {
+public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWater, IWeeds {
 	private static final int MODEL_WATERED = 7783;
+
 	public Flower(IClientContext context, FlowerEnum patch) {
 		super(context, patch.id());
 	}
@@ -43,6 +46,11 @@ public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWate
 	@Override
 	public boolean watered() {
 		return definition().containsModel(MODEL_WATERED);
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum FlowerType {
