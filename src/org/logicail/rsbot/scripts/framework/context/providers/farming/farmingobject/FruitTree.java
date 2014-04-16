@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingob
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.FruitTreeEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
@@ -32,7 +33,7 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 
 	@Override
 	public boolean checkHealth() {
-		return definition().containsAction("Check-health");
+		return FarmingHelper.checkHealth(this);
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 
 	@Override
 	public boolean stump() {
-		return definition().name().toLowerCase().endsWith(" stump");
+		return FarmingHelper.stump(this);
 	}
 
 	public enum FruitTreeType {

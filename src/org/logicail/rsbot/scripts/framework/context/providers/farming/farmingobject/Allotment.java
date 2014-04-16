@@ -1,10 +1,12 @@
 package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.CropState;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.AllotmentEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanWater;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
 import java.awt.*;
 
@@ -14,7 +16,7 @@ import java.awt.*;
  * Date: 13/04/2014
  * Time: 21:29
  */
-public class Allotment extends FarmingObject<Allotment.CropType> implements ICanWater {
+public class Allotment extends FarmingObject<Allotment.CropType> implements ICanWater, IWeeds, ICanDie {
 	// An allotment is made up of several instances of the 1x1 tile dynamic object
 	// You should use nearest() & shuffle() and not always interact with the one at the tile()
 
@@ -75,6 +77,16 @@ public class Allotment extends FarmingObject<Allotment.CropType> implements ICan
 	}
 
 	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
+	}
+
+	@Override
 	public void repaint(Graphics2D g, int x, int y) {
 		Polygon p = new Polygon(polygon.xpoints, polygon.ypoints, polygon.npoints); // TODO: Improve this
 		p.translate(x, y);
@@ -84,12 +96,9 @@ public class Allotment extends FarmingObject<Allotment.CropType> implements ICan
 		g.draw(p);
 	}
 
-	public CropState state() {
-		if (watered()) {
-			return CropState.WATERED;
-		}
-
-		return super.state();
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum CropType {

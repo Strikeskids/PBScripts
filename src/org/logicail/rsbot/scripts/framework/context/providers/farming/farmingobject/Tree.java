@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingob
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
@@ -114,7 +115,7 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 	}
 
 	public boolean stump() {
-		return definition().name().toLowerCase().endsWith(" stump");
+		return FarmingHelper.stump(this);
 	}
 
 	public enum TreeType {

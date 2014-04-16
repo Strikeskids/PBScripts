@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.farmingob
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDefinition;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.CactusEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
@@ -21,7 +22,7 @@ public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, 
 
 	@Override
 	public boolean checkHealth() {
-		return definition().containsAction("Check-health");
+		return FarmingHelper.checkHealth(this);
 	}
 
 	@Override
