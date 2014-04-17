@@ -27,7 +27,12 @@ public class Painter extends IClientAccessor implements PaintListener {
 
 	public Painter(LogicailScript script) {
 		super(script.ctx);
-		title = String.format("%s v%s", script.getName(), script.version());
+		final String version = script.version();
+		if (version != null) {
+			title = String.format("%s v%s", script.getName(), version);
+		} else {
+			title = script.getName();
+		}
 	}
 
 	public Painter properties(LinkedHashMap<Object, Object> properties) {
