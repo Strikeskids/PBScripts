@@ -15,6 +15,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.DepositAr
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.burialarmour.SmithAnvil;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect.Ancestors;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect.BrokenPipes;
+import org.logicail.rsbot.scripts.logartisanarmourer.jobs.respect.RespectTask;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.GetPlan;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.GetTongs;
 import org.logicail.rsbot.scripts.logartisanarmourer.jobs.swords.HeatIngots;
@@ -221,6 +222,8 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 				properties.put("Completed Tracks", String.format("%,d (%,d/h)", options.completedTracks, (int) (options.completedTracks / time)));
 				break;
 		}
+
+		properties.put("Respect", RespectTask.getRespect(ctx));
 
 //		if (depositOre != null) {
 //			properties.put("Iron", depositOre.remainingIron());
