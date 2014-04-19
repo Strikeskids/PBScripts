@@ -42,7 +42,7 @@ public class DoorOpener extends IClientAccessor {
 					public Boolean call() throws Exception {
 						return !door.valid();
 					}
-				})) {
+				}, 100, 20)) {
 					return true;
 				}
 			}
