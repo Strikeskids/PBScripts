@@ -1,6 +1,5 @@
 package org.logicail.rsbot.scripts.bankorganiser.tasks;
 
-import org.logicail.rsbot.scripts.bankorganiser.ItemData;
 import org.logicail.rsbot.scripts.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.framework.context.providers.IBank;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
