@@ -34,6 +34,9 @@ public class DoorOpener extends IClientAccessor {
 		return !door.valid();
 	}
 
+	public static int[] DOOR_BOUNDS_NS = {-256, 256, -900, 0, 128, 256};
+	public static int[] DOOR_BOUNDS_EW = {128, 256, -900, 0, -256, 256};
+
 	private static boolean openDoor(IClientContext ctx, final GameObject door) {
 		if (ctx.camera.prepare(door)) {
 			if (door.interact("Open")) {

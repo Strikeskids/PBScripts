@@ -59,6 +59,7 @@ public class KharyrllPortalRoom extends NodePath {
 					if (!destination.matrix(ctx).reachable()) {
 						// Find door
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, portalRoom)).shuffle().first()) {
+							door.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
 							if (DoorOpener.open(ctx, door)) {
 								sleep(200);
 							}
@@ -100,6 +101,7 @@ public class KharyrllPortalRoom extends NodePath {
 	public boolean doSmall() {
 		if (CANIFIS_PUB.contains(ctx.players.local())) {
 			for (GameObject door : ctx.objects.select().id(CLOSED_DOOR).nearest().first()) {
+				door.bounds(DoorOpener.DOOR_BOUNDS_EW);
 				if (DoorOpener.open(ctx, door)) {
 					sleep(300);
 				}

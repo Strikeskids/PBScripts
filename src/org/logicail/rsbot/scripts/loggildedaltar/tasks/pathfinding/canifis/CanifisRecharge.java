@@ -29,6 +29,7 @@ public class CanifisRecharge extends RechargeSummoning {
 	public boolean doSmall() {
 		if (KharyrllPortalRoom.CANIFIS_PUB.contains(ctx.players.local())) {
 			for (GameObject door : ctx.objects.select().id(KharyrllPortalRoom.CLOSED_DOOR).nearest().first()) {
+				door.bounds(DoorOpener.DOOR_BOUNDS_EW);
 				if (DoorOpener.open(ctx, door)) {
 					sleep(250);
 				}

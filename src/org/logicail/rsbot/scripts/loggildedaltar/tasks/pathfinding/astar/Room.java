@@ -68,6 +68,7 @@ public class Room extends IClientAccessor {
 
 	private Tile mapBase = null;
 	private Tile location = null;
+	private LogicailArea eastWestDoorArea;
 
 	public Room(IClientContext context, RoomStorage roomStorage, int localX, int localY) {
 		super(context);
@@ -163,5 +164,13 @@ public class Room extends IClientAccessor {
 			return wallarea;
 		}
 		return wallarea = new LogicailArea(location.derive(-1, 2), location.derive(9, -8));
+	}
+
+	public LogicailArea getEastWestDoorArea() {
+		final Tile location = getLocation();
+		if (eastWestDoorArea != null) {
+			return eastWestDoorArea;
+		}
+		return eastWestDoorArea = new LogicailArea(location.derive(-1, 0), location.derive(9, -6));
 	}
 }

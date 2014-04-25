@@ -78,6 +78,7 @@ public class AltarObelisk extends LogGildedAltarTask {
 					if (!destination.matrix(ctx).reachable()) {
 						// Find closed door
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, endRoom)).shuffle().first()) {
+							door.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
 							if (DoorOpener.open(ctx, door)) {
 								sleep(250);
 							}

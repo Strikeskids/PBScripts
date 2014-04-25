@@ -141,6 +141,7 @@ public class HouseTask extends Branch<LogGildedAltar> {
 						final Room current = script.roomStorage.getRoom(ctx.players.local());
 						final Room end = script.roomStorage.getRoom(portal);
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(current, end)).shuffle().first()) {
+							door.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
 							if (DoorOpener.open(ctx, door)) {
 								ctx.sleep(300);
 							}
