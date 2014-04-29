@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
  * Date: 11/04/2014
  * Time: 19:04
  */
-@Script.Manifest(name = "Farming Test", description = "Test farming methods", properties = "hidden=true;")
+@Script.Manifest(name = "Farming Test", description = "Test farming methods.", properties = "hidden=true;")
 public class FarmingTest extends LogicailScript<FarmingTest> {
 	private final FarmingPaint farmingPaint;
 
