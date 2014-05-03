@@ -53,9 +53,11 @@ public class BankBob extends BankingAbstract {
 			if (depositBob()) {
 				options.status = "Deposit in familiar";
 				if (ctx.summoning.isOpen()) {
-					int spaceLeft = ctx.summoning.familiar().bobSpace() - ctx.summoning.getFamiliarStore().select().count();
+					int spaceLeft = options.beastOfBurden.bobSpace() - ctx.summoning.getFamiliarStore().select().count();
 					if (spaceLeft <= 0 || ctx.summoning.deposit(options.offering.getId(), 0)) {
-						bankingBranch.beastOfBurdenCount.set(ctx.summoning.getFamiliarStore().select().count());
+						int count = ctx.summoning.getFamiliarStore().select().count();
+						script.log.info("Set BoB count: " + count);
+						bankingBranch.beastOfBurdenCount.set(count);
 					}
 				}
 			} else {

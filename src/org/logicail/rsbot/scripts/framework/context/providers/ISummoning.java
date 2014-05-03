@@ -77,6 +77,7 @@ public class ISummoning extends Summoning {
 				return false;
 			}
 
+			final int familiarStartCount = familiar.select().count();
 			final int backpackCount = backpack.select().id(id).count();
 			final Item item = backpack.shuffle().poll();
 			final String action = getStoreString(amount);
@@ -92,14 +93,24 @@ public class ISummoning extends Summoning {
 						amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
 					}
 					if (ctx.chat.isInputWidgetOpen() && ctx.keyboard.sendln(amount + "")) {
-						return true;
+						return Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return familiar.select().count() != familiarStartCount;
+							}
+						}, 100, 15);
 					}
 				}
 			}
 			return item.interact(new Filter<Menu.Command>() {
 				@Override
 				public boolean accept(Menu.Command entry) {
-					return entry.action.startsWith(action) && entry.option.startsWith(item.name());
+					return entry.action.startsWith(action) && entry.option.startsWith(item.name()) && Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return familiar.select().count() != familiarStartCount;
+						}
+					}, 100, 15);
 				}
 			});
 		}
