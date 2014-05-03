@@ -41,14 +41,14 @@ public class GetPlan extends ArtisanArmourerTask {
 	@Override
 	public boolean valid() {
 		return super.valid()
-				&& options.finishedSword || !options.gotPlan;
+				&& options.finishedSword || !options.gotPlan.get();
 	}
 
 	@Override
 	public void run() {
 		if (!ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty()) {
 			options.finishedSword = false;
-			options.gotPlan = true;
+			options.gotPlan.set(true);
 			return;
 		}
 

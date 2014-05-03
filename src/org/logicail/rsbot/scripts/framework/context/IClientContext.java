@@ -4,7 +4,9 @@ import com.sk.methods.Combat;
 import com.sk.methods.SkKeyboard;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.util.Timer;
+import org.logicail.rsbot.scripts.testing.FarmingTest;
 import org.logicail.rsbot.util.ErrorDialog;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
@@ -36,6 +38,7 @@ public class IClientContext extends ClientContext {
 	public final IMovement movement;
 	public final IMagic magic;
 	public final IBank bank;
+	public final IFarming farming;
 	// SK
 	public final SkKeyboard keyboard;
 	//public final ActionBar actionBar;
@@ -87,6 +90,12 @@ public class IClientContext extends ClientContext {
 		summoning = new ISummoning(this);
 		chat = new IChat(this);
 		lodestones = new ILodestone(this);
+
+		if(script instanceof FarmingTest) {
+			farming = new IFarming(this);
+		} else {
+			farming = null;
+		}
 
 		/*super.keyboard =*/
 		this.keyboard = new SkKeyboard(this);

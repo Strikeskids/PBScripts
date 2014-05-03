@@ -21,8 +21,8 @@ public class IOUtil {
 			connection.addRequestProperty("User-Agent", useragent);
 			connection.setRequestProperty("Connection", "close");
 
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
+			connection.setConnectTimeout(10000);
+			connection.setReadTimeout(10000);
 
 			connection.setDoInput(true);
 			connection.setDoOutput(false);

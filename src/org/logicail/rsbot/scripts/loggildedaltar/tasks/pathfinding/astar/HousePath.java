@@ -93,7 +93,10 @@ public class HousePath extends IClientAccessor implements Comparable<HousePath> 
 							}
 						}
 					} else {
-						DoorOpener.open(ctx, nextDoor.poll());
+						// Not sure what this is for
+						final GameObject anotherdoor = nextDoor.poll();
+						anotherdoor.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
+						DoorOpener.open(ctx, anotherdoor);
 						return true;
 					}
 				}

@@ -1,13 +1,14 @@
 package org.logicail.rsbot.scripts.bankorganiser;
 
-import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import org.logicail.rsbot.scripts.bankorganiser.tasks.ItemSorter;
+import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.util.IOUtil;
 import org.powerbot.script.rt6.Item;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -16,83 +17,59 @@ import java.util.*;
  * Date: 02/03/14
  * Time: 16:05
  */
-public class ItemData {
-	public static final Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
-	private static final Map<Integer, String> itemToCategory = new HashMap<Integer, String>();
-	private static final Map<String, LinkedHashSet<Integer>> categoryToItems = new LinkedHashMap<String, LinkedHashSet<Integer>>();
-	private static String ITEMDATA_ADDRESS = "http://logicail.co.uk/resources/items.dat";
-	private static int version = -1;
-	private static boolean loaded;
-	private static Comparator<? super Item> sorter = null;
+public class ItemData extends IClientAccessor {
+	public final Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
+	private final Map<Integer, String> itemToCategory = new HashMap<Integer, String>();
+	private final Map<String, LinkedHashSet<Integer>> categoryToItems = new LinkedHashMap<String, LinkedHashSet<Integer>>();
+	private static String ITEMDATA_ADDRESS = "http://logicail.co.uk/resources/bankorganiser.json";
+	private int version = -1;
+	private Comparator<? super Item> sorter = null;
 
-	public static boolean loaded() {
-		return loaded;
+	public boolean loaded() {
+		return version > -1;
 	}
 
-	public static Set<String> getCategorys() {
+	public Set<String> getCategorys() {
 		return categoryToItems.keySet();
 	}
 
-	static {
-		load(ITEMDATA_ADDRESS, "LogItemData");
-	}
-
-	private static void load(String url, String useragent) {
-		HttpURLConnection connection = null;
+	public ItemData(final IClientContext ctx) {
+		super(ctx);
+		final File file = ctx.script.download(ITEMDATA_ADDRESS, "bankorganiser.json");
 		try {
-			connection = (HttpURLConnection) new URL(url).openConnection();
-			connection.addRequestProperty("User-Agent", useragent);
-			connection.setRequestProperty("Connection", "close");
+			final DataInputStream stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 
-			connection.setConnectTimeout(10000);
-			connection.setReadTimeout(10000);
+			JsonObject map = JsonObject.readFrom(IOUtil.read(stream));
 
-			connection.setDoInput(true);
-			connection.setDoOutput(false);
-			connection.setUseCaches(false);
-
-			DataInputStream data = new DataInputStream(connection.getInputStream());
-			version = data.readInt();
-			int count = data.readInt();
-			for (int i = 0; i < count; i++) {
-				mapping.put(data.readUnsignedShort(), data.readUnsignedShort());
+			for (JsonObject.Member member : map.get("mapping").asObject()) {
+				mapping.put(Integer.parseInt(member.getName()), member.getValue().asInt());
 			}
-			int numberCategories = data.readInt();
-			for (int i = 0; i < numberCategories; i++) {
-				final String category = BankOrganiserInterface.prettyName(data.readUTF());
-				final int ids = data.readInt();
-				for (int j = 0; j < ids; j++) {
-					final int id = data.readUnsignedShort();
-					itemToCategory.put(id, category);
-					if (!categoryToItems.containsKey(category)) {
-						categoryToItems.put(category, new LinkedHashSet<Integer>());
-					}
-					categoryToItems.get(category).add(id);
+
+			LinkedHashSet<Integer> all = new LinkedHashSet<Integer>();
+
+			for (JsonObject.Member member : map.get("categories").asObject()) {
+				final LinkedHashSet<Integer> set = new LinkedHashSet<Integer>();
+
+				for (JsonValue value : member.getValue().asArray()) {
+					set.add(value.asInt());
 				}
+
+				all.addAll(set);
+
+				categoryToItems.put(member.getName(), set);
 			}
-
-			LinkedHashSet<Integer> set = new LinkedHashSet<Integer>();
-			for (Map.Entry<String, LinkedHashSet<Integer>> entry : categoryToItems.entrySet()) {
-				set.addAll(entry.getValue());
-			}
-
-			sorter = new ItemSorter(new ArrayList<Integer>(set));
-
-			loaded = true;
+			sorter = new ItemSorter(this, new ArrayList<Integer>(all));
+			version = map.get("version").asInt();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
 		}
 	}
 
-	public static int getId(int id) {
+	public int getId(int id) {
 		return mapping.containsKey(id) ? mapping.get(id) : id;
 	}
 
-	public static LinkedHashSet<Integer> getData(List<String> categories) {
+	public LinkedHashSet<Integer> getData(List<String> categories) {
 		LinkedHashSet<Integer> result = new LinkedHashSet<Integer>();
 
 		for (String category : categories) {
@@ -104,11 +81,11 @@ public class ItemData {
 		return result;
 	}
 
-	public static int getVersion() {
+	public int getVersion() {
 		return version;
 	}
 
-	public static Comparator<? super Item> getSorter() {
+	public Comparator<? super Item> getSorter() {
 		return sorter;
 	}
 }

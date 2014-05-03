@@ -1,12 +1,12 @@
 package org.logicail.rsbot.scripts.bankorganiser.tasks;
 
-import org.logicail.rsbot.scripts.bankorganiser.ItemData;
 import org.logicail.rsbot.scripts.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.framework.context.providers.IBank;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt6.Bank;
+import org.powerbot.script.rt6.Component;
 import org.powerbot.script.rt6.Item;
 
 import java.awt.*;
@@ -55,9 +55,9 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 				alreadyHave.add(item.id());
 			}
 
-			if (sortingTab != IBank.BankTab.NONE) {
+			if (sortingTab != IBank.BankTab.ONE) {
 				for (Integer integer : alreadyHave) {
-					if (!set.contains(ItemData.getId(integer))) {
+					if (!set.contains(script.itemData.getId(integer))) {
 						// Remove
 						final Item item = ctx.bank.getItemsInTab(sortingTab).id(integer).poll();
 						if (item.valid()) {
@@ -70,7 +70,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			if (!ctx.bank.select().select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
-					return set.contains(ItemData.getId(item.id())) && !alreadyHave.contains(item.id());
+					return set.contains(script.itemData.getId(item.id())) && !alreadyHave.contains(item.id());
 				}
 			}).isEmpty()) {
 				return true;
@@ -84,11 +84,6 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	public void run() {
 		cleanUpMapping();
 
-		// Set bank to swap mode
-		if (!ctx.bank.setSwapMode(false)) {
-			return;
-		}
-
 		for (int i = 0; i < mapping.size(); i++) {
 			final LinkedHashSet<Integer> set = mapping.get(i);
 			final IBank.BankTab sortingTab = BANK_TABS[i];
@@ -98,15 +93,15 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 				alreadyHave.add(item.id());
 			}
 
-			if (sortingTab != IBank.BankTab.NONE) {
+			if (sortingTab != IBank.BankTab.ONE) {
 				for (Integer integer : alreadyHave) {
-					if (!set.contains(ItemData.getId(integer))) {
+					if (!set.contains(script.itemData.getId(integer))) {
 						// Remove
 						final Item item = ctx.bank.getItemsInTab(sortingTab).id(integer).poll();
 						if (item.valid()) {
 							//System.out.println("Remove from tab");
 							script.status = "Remove '" + item.name() + "' from tab";
-							move(item, IBank.BankTab.NONE);
+							move(item, IBank.BankTab.ONE);
 							sleep(100);
 							return;
 						}
@@ -117,11 +112,11 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			for (Item item : ctx.bank.select().select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
-					return set.contains(ItemData.getId(item.id())) && !alreadyHave.contains(item.id());
+					return set.contains(script.itemData.getId(item.id())) && !alreadyHave.contains(item.id());
 				}
-			}).sort(ItemData.getSorter())) {
+			}).sort(script.itemData.getSorter())) {
 				move(item, sortingTab);
-				sleep(100);
+				sleep(66);
 				return;
 			}
 		}
@@ -140,9 +135,9 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 					if (ctx.bank.select().select(new Filter<Item>() {
 						@Override
 						public boolean accept(Item item) {
-							return next.contains(ItemData.getId(item.id()));
+							return next.contains(script.itemData.getId(item.id()));
 						}
-					}).count() <= 1) {
+					}).count() < 1) {
 						iterator.remove();
 						//System.out.println("Remove tab " + i + " no matching items");
 					}
@@ -171,9 +166,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 	 */
 	private boolean move(final Item item, final IBank.BankTab tab) {
 		script.status = "Move '" + item.name() + "' to tab " + (tab.ordinal() + 1);
-		final int id = item.id();
-
-		org.powerbot.script.rt6.Component destination = tab.getWidget(ctx);
+		Component destination = tab.getWidget(ctx);
 
 		if (!destination.valid()) {
 			return false;
@@ -183,35 +176,47 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			script.status = "Create tab " + (ctx.bank.getNumberOfTabs() + 1);
 		}
 
-		final org.powerbot.script.rt6.Component value = this.ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
+		final Component value = this.ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_CONTAINER_ITEMS);
 		if (!value.valid() || !item.valid()) {
+			script.status = "Scroll failed 1";
 			return false;
 		}
-		final org.powerbot.script.rt6.Component component = item.component();
+		final Component component = item.component();
 		if (component.relativePoint().y == 0 && !ctx.bank.currentTab(0) && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return component.relativePoint().y != 0;
 			}
-		}, 100, 10)) {
+		}, 50, 20)) {
+			script.status = "Scroll failed 2";
 			return false;
 		}
 		final Rectangle viewportRect = value.viewportRect();
-		if (!viewportRect.contains(component.viewportRect()) && !this.ctx.widgets.scroll(component, this.ctx.widgets.component(762, 40), viewportRect.contains(this.ctx.mouse.getLocation()))) {
+		if (!viewportRect.contains(component.viewportRect()) && !this.ctx.widgets.scroll(component, this.ctx.widgets.component(Bank.WIDGET, Bank.COMPONENT_SCROLL_BAR), true)) {
+			script.status = "Scroll failed 3";
 			return false;
 		}
 
-		if (ctx.mouse.move(item.nextPoint()) && !ctx.mouse.drag(destination.nextPoint(), true) || !Condition.wait(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				return !ctx.bank.getItemsInTab(tab).id(id).isEmpty();
+		if (item.hover()) {
+			try {
+				ctx.mouse.press(1);
+				ctx.sleep(50);
+				destination.hover();
+				ctx.sleep(50);
+			} finally {
+				ctx.mouse.release(1);
+				ctx.sleep(50);
 			}
-		}, 250, 20)) {
-			script.status = "Item did not move";
-			sleep(250);
-			return false;
+			if (Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !item.valid();
+				}
+			}, 50, 20)) {
+				return true;
+			}
 		}
 
-		return true;
+		return false;
 	}
 }

@@ -17,13 +17,22 @@ public class Painter extends IClientAccessor implements PaintListener {
 	private static final Color COLOUR_BORDER = new Color(255, 255, 255, 192);
 	private final BasicStroke mouseStroke = new BasicStroke(2f);
 	private final String title;
-	private final Point location = new Point(50, 220);
+	private Point location = new Point(50, 220);
 	private final Rectangle backgroundRectangle = new Rectangle(location.x, location.y, 1, 1);
 	private LinkedHashMap<Object, Object> properties;
 
+	public void location(Point point) {
+		location = point;
+	}
+
 	public Painter(LogicailScript script) {
 		super(script.ctx);
-		title = String.format("%s v%s", script.getName(), ctx.property("version"));
+		final String version = script.version();
+		if (version != null) {
+			title = String.format("%s v%s", script.getName(), version);
+		} else {
+			title = script.getName();
+		}
 	}
 
 	public Painter properties(LinkedHashMap<Object, Object> properties) {
@@ -75,6 +84,8 @@ public class Painter extends IClientAccessor implements PaintListener {
 		drawMouse(g2d);
 
 		// Resize background
+		backgroundRectangle.x = location.x;
+		backgroundRectangle.y = location.y;
 		backgroundRectangle.width = width + 20;
 		backgroundRectangle.height = y - location.y - 5;
 	}

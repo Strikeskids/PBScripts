@@ -2,8 +2,8 @@ package org.logicail.rsbot.util;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
+import org.logicail.rsbot.scripts.framework.wrappers.ITile;
 import org.powerbot.script.Area;
-import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt6.ClientContext;
 
@@ -44,7 +44,7 @@ public class LogicailArea extends Area {
 			}
 		}
 
-		return centralTile.derive(Random.nextInt(-2, 3), Random.nextInt(-2, 3));
+		return ITile.randomize(centralTile, 2, 2);
 	}
 
 	public Set<Tile> getReachable(ClientContext ctx) {

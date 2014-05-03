@@ -4,7 +4,6 @@ import org.logicail.rsbot.scripts.bankorganiser.gui.BankOrganiserInterface;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
 import org.logicail.rsbot.util.ErrorDialog;
-import org.powerbot.script.Random;
 import org.powerbot.script.Script;
 import org.powerbot.script.rt6.Game;
 
@@ -21,16 +20,23 @@ import java.util.LinkedHashMap;
 @Script.Manifest(
 		name = "Log Bank Organiser",
 		description = "Organises your bank",
-		properties = "hidden=true;client=6;")
+		properties = "topic=1174066;client=6;version=1.00;")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
+	public final ItemData itemData;
+
+	public LogBankOrganiser() {
+		super();
+
+		itemData = new ItemData(ctx);
+	}
 
 	@Override
 	public LinkedHashMap<Object, Object> getPaintInfo() {
 		final LinkedHashMap<Object, Object> map = new LinkedHashMap<Object, Object>();
 
 		map.put("Status", status);
-		map.put("Number of Tabs", ctx.bank.getNumberOfTabs());
+		//map.put("Number of Tabs", ctx.bank.getNumberOfTabs());
 
 		return map;
 	}
@@ -44,18 +50,17 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ctx.sleep(Random.nextInt(50, 150));
+		ctx.sleep(70);
 	}
 
 	@Override
 	public void start() {
-		ItemData.getId(0);
-		if (!ItemData.loaded()) {
+		if (!itemData.loaded()) {
 			EventQueue.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						new ErrorDialog("Error", "Failed to load category date");
+						new ErrorDialog("Error", "Failed to load category data");
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}

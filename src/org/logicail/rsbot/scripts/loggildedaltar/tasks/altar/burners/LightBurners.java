@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners;
 
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
+import org.logicail.rsbot.scripts.framework.wrappers.ITile;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.banking.Banking;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
@@ -86,7 +87,7 @@ public class LightBurners extends BurnerAbstract {
 			}
 			if (!burner.inViewport()) {
 				options.status = "Walking to incense burner";
-				final Tile tile = burner.tile().derive(Random.nextInt(-2, 1), Random.nextInt(-2, 1));
+				final Tile tile = ITile.randomize(burner.tile(), 1, 1);
 				if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override

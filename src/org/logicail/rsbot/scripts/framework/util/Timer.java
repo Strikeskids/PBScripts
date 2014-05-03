@@ -29,14 +29,13 @@ public class Timer {
 
 	public static String format(final long millis) {
 		final StringBuilder sb = new StringBuilder();
-		final long n4 = millis / 1000L;
-		final long n3 = n4 / 60L;
-		final long n2 = n3 / 60L;
-		final long n = n2 / 24L;
-		final int seconds = (int) n4 % 60;
-		final int minutes = (int) n3 % 60;
-		final int hours = (int) n2 % 24;
-		final int days = (int) n;
+		final long totalseconds = millis / 1000L;
+		final long totalminutes = totalseconds / 60L;
+		final long totalhours = totalminutes / 60L;
+		final int seconds = (int) totalseconds % 60;
+		final int minutes = (int) totalminutes % 60;
+		final int hours = (int) totalhours % 24;
+		final int days = (int) (totalhours / 24);
 		if (days > 0) {
 			if (days < 10) {
 				sb.append(0);
@@ -79,6 +78,6 @@ public class Timer {
 	}
 
 	public boolean running() {
-		return end.get() < System.nanoTime();
+		return end.get() > System.nanoTime();
 	}
 }

@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.burners;
 
 import org.logicail.rsbot.scripts.framework.util.Timer;
+import org.logicail.rsbot.scripts.framework.wrappers.ITile;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.altar.AltarLightBurnersTask;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.powerbot.script.Condition;
@@ -49,7 +50,7 @@ public class WaitForBurners extends BurnerAbstract {
 				script.log.info("Waiting to see if someone lights the burners");
 			}
 
-			if (options.stopOffering.get() && ctx.players.local().animation() != -1 && ctx.players.local().tile().derive(Random.nextInt(-2, 2), Random.nextInt(-2, 2)).matrix(ctx).interact("Walk here")) {
+			if (options.stopOffering.get() && ctx.players.local().animation() != -1 && ITile.randomize(ctx.players.local().tile(), 2, 2).matrix(ctx).interact("Walk here")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

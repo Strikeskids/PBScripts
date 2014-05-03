@@ -60,7 +60,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 			return;
 		}
 
-		if (ctx.skillingInterface.isOpen()) {
+		if (ctx.skillingInterface.opened()) {
 			if (ctx.skillingInterface.getAction().equals("Take")) {
 				if (ctx.skillingInterface.select(0, options.getIngotId())) {
 					if (ctx.skillingInterface.start()) {
@@ -90,7 +90,7 @@ public class TakeIngots extends ArtisanArmourerTask {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.skillingInterface.isOpen();
+						return ctx.skillingInterface.opened();
 					}
 				});
 				sleep(333);

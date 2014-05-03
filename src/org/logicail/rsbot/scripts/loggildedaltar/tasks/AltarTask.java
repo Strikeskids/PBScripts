@@ -54,7 +54,7 @@ public class AltarTask extends Branch<LogGildedAltar> {
 			public int compare(GameObject lhs, GameObject rhs) {
 				Room lhsRoom = script.roomStorage.getRoom(lhs);
 				Room rhsRoom = script.roomStorage.getRoom(rhs);
-				return Integer.valueOf(lhsRoom.getGameObjectsInRoom(AltarLightBurnersTask.LIT_LANTERN, AltarLightBurnersTask.UNLIT_LANTERN).size()).compareTo(rhsRoom.getGameObjectsInRoom(AltarLightBurnersTask.LIT_LANTERN, AltarLightBurnersTask.UNLIT_LANTERN).size());
+				return Integer.valueOf(rhsRoom.getGameObjectsInRoom(AltarLightBurnersTask.LIT_LANTERN).size()).compareTo(lhsRoom.getGameObjectsInRoom(AltarLightBurnersTask.LIT_LANTERN).size());
 			}
 		}).poll();
 	}

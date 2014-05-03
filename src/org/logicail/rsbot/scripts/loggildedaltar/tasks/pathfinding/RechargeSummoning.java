@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding;
 
 import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
 import org.logicail.rsbot.scripts.framework.util.Timer;
+import org.logicail.rsbot.scripts.framework.wrappers.ITile;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
@@ -67,7 +68,7 @@ public class RechargeSummoning extends NodePath {
 
 		final GameObject obelisk = ctx.objects.select().id(OBELISK).nearest().poll();
 		if (obelisk.valid()) {
-			obeliskRandom = obelisk.tile().derive(Random.nextInt(-3, 2), Random.nextInt(-3, 2));
+			obeliskRandom = ITile.randomize(obelisk.tile(), 2, 2);
 		} else {
 			obeliskRandom = locationAttribute.getObeliskRandom(ctx);
 		}

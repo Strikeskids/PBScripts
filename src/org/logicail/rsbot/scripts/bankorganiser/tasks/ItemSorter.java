@@ -17,16 +17,18 @@ public class ItemSorter implements Comparator<Item> {
 		return order.size();
 	}
 
+	private final ItemData itemData;
 	private final List<Integer> order;
 
-	public ItemSorter(List<Integer> order) {
+	public ItemSorter(ItemData itemData, List<Integer> order) {
+		this.itemData = itemData;
 		this.order = order;
 	}
 
 	@Override
 	public int compare(Item lhs, Item rhs) {
-		final int indexlhs = order.indexOf(ItemData.getId(lhs.id()));
-		final int indexrhs = order.indexOf(ItemData.getId(rhs.id()));
+		final int indexlhs = order.indexOf(itemData.getId(lhs.id()));
+		final int indexrhs = order.indexOf(itemData.getId(rhs.id()));
 
 		if (indexlhs == -1 && indexrhs == -1) {
 			return lhs.name().compareTo(rhs.name());

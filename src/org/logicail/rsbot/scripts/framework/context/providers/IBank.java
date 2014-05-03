@@ -1,14 +1,12 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
-import org.powerbot.script.Condition;
 import org.powerbot.script.rt6.Bank;
 import org.powerbot.script.rt6.Component;
 import org.powerbot.script.rt6.Item;
 import org.powerbot.script.rt6.ItemQuery;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,10 +15,8 @@ import java.util.concurrent.Callable;
  * Time: 14:37
  */
 public class IBank extends Bank {
-	public static final int WIDGET_BANK_ITEMS = 54;
-	private static final int WIDGET_BOUNDS = 48;
-	public static final int BANK_SWAP_MODE_BUTTON = 4;
-	private static final int SETTING_SWAP_MODE = 161;
+	public static final int WIDGET_BANK_ITEMS = 120;
+	private static final int WIDGET_BOUNDS = 50;
 
 	/**
 	 * Backpack when bank is open
@@ -35,20 +31,6 @@ public class IBank extends Bank {
 	public org.powerbot.script.rt6.Component getWidget() {
 		return ctx.widgets.component(WIDGET, WIDGET_BOUNDS);
 	}
-
-	public boolean isInsertMode() {
-		return ctx.varpbits.varpbit(SETTING_SWAP_MODE, 1) == 1;
-	}
-
-	public boolean setSwapMode(final boolean insert) {
-		return isInsertMode() == insert || (ctx.widgets.component(Bank.WIDGET, BANK_SWAP_MODE_BUTTON).click() && Condition.wait(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				return isInsertMode() == insert;
-			}
-		}));
-	}
-
 
 	public ArrayList<ArrayList<Item>> getBankTabs() {
 		if (!ctx.bank.opened() || (ctx.bank.currentTab() != 0 && !ctx.bank.currentTab(0))) {
@@ -96,7 +78,7 @@ public class IBank extends Bank {
 		final int[] count = getTabCount();
 
 		switch (tab) {
-			case NONE:
+			case ONE:
 				int total = 0;
 				for (Integer i : count) {
 					total += i;
@@ -140,15 +122,15 @@ public class IBank extends Bank {
 	}
 
 	public enum BankTab {
-		NONE(-1, 37),
-		TWO(0, 35),
-		THREE(1, 33),
-		FOUR(2, 31),
-		FIVE(3, 29),
-		SIX(4, 27),
-		SEVEN(5, 25),
-		EIGHT(6, 23),
-		NINE(7, 21);
+		ONE(-1, 20),
+		TWO(0, 18),
+		THREE(1, 16),
+		FOUR(2, 14),
+		FIVE(3, 12),
+		SIX(4, 10),
+		SEVEN(5, 8),
+		EIGHT(6, 6),
+		NINE(7, 4);
 		private final int i;
 		private final int bankWidget;
 
@@ -158,7 +140,7 @@ public class IBank extends Bank {
 		}
 
 		public boolean exists(IClientContext ctx) {
-			if (this == NONE) {
+			if (this == ONE) {
 				return true;
 			}
 			return ctx.bank.getNumberOfTabs() >= ordinal();

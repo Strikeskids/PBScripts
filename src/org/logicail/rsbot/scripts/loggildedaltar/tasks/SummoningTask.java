@@ -85,7 +85,7 @@ public class SummoningTask extends Branch<LogGildedAltar> {
 		if (!script.options.onlyHouseObelisk.get() // TODO: Move house obelisk here
 				&& script.options.banking.get()
 				&& script.options.useBOB.get()
-				//&& !ctx.bank.isOpen()
+				//&& !ctx.bank.opened()
 				&& (ctx.summoning.timeLeft() <= 300 || !ctx.summoning.summoned())) {
 			if (nextPoints == -1) {
 				nextPoints = Random.nextInt(script.options.beastOfBurden.requiredPoints() + 1, script.options.beastOfBurden.requiredPoints() * 2);

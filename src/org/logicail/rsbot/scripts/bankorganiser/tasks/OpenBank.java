@@ -15,6 +15,11 @@ public class OpenBank extends Node<LogBankOrganiser> {
 	}
 
 	@Override
+	public String toString() {
+		return "Open Bank";
+	}
+
+	@Override
 	public boolean valid() {
 		return !ctx.bank.opened();
 	}
