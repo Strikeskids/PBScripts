@@ -16,6 +16,8 @@ import java.util.concurrent.Callable;
  */
 public class ISummoning extends Summoning {
 	public static final int WIDGET_STORE = 671;
+	public static final int WIDGET_STORE_FAMILIAR = 25;
+	public static final int WIDGET_STORE_BACKPACK = 30;
 	public static final int WIDGET_STORE_CLOSE_BUTTON = 21;
 	public static final int WIDGET_STORE_CLOSE_BUTTON_CHILD = 1;
 	public static final int WIDGET_ORB = 1430;
@@ -27,8 +29,8 @@ public class ISummoning extends Summoning {
 	public ISummoning(IClientContext context) {
 		super(context);
 		ctx = context;
-		familiar = new IItemStore(context, ctx.widgets.component(671, 25));
-		backpack = new IItemStore(context, ctx.widgets.component(671, 30));
+		familiar = new IItemStore(context, ctx.widgets.component(WIDGET_STORE, WIDGET_STORE_FAMILIAR));
+		backpack = new IItemStore(context, ctx.widgets.component(WIDGET_STORE, WIDGET_STORE_BACKPACK));
 	}
 
 	private static String getStoreString(int amount) {
