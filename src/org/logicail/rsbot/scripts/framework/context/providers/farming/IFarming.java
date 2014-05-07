@@ -53,7 +53,7 @@ public class IFarming extends IClientAccessor {
 			if (!file.exists()) {
 				ctx.script.log.info("Failed to download json data");
 				Condition.sleep(2000);
-				ctx.controller().stop();
+				ctx.controller.stop();
 				return;
 			}
 			final DataInputStream stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -132,6 +132,10 @@ public class IFarming extends IClientAccessor {
 		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 22, 0xff);
 	}
 
+	/**
+	 * @return count of remaining watering can actions on watering can stored in the tool leprechaun
+	 * if the watering can is type {@link org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.WateringCan#MAGIC} this always returns <i>1</i>
+	 */
 	public int wateringCan() {
 		final WateringCan type = wateringCanType();
 		switch (type) {
@@ -148,6 +152,11 @@ public class IFarming extends IClientAccessor {
 		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 4, 0xf);
 	}
 
+	/**
+	 * Get the type of watering can stored in the tool leprechaun
+	 *
+	 * @return
+	 */
 	public WateringCan wateringCanType() {
 		final int i = wateringCanSetting();
 		if (i == 0) {
@@ -161,5 +170,9 @@ public class IFarming extends IClientAccessor {
 
 	enum WateringCan {
 		NONE, NORMAL, MAGIC
+	}
+
+	public boolean canUseMagicSecateurs() {
+		return false;
 	}
 }

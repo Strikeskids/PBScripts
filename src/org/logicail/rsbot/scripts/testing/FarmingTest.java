@@ -55,11 +55,11 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 //			properties.put(treeEnum, sb.toString());
 //		}
 
-		properties.put("Super compost", ctx.farming.superCompost());
-		properties.put("Compost", ctx.farming.compost());
-		properties.put("Plant cure", ctx.farming.plantCure());
-		properties.put("Buckets", ctx.farming.buckets());
-		properties.put("Watering can type", ctx.farming.wateringCan());
+		properties.put("Super compost", ctx.farming().superCompost());
+		properties.put("Compost", ctx.farming().compost());
+		properties.put("Plant cure", ctx.farming().plantCure());
+		properties.put("Buckets", ctx.farming().buckets());
+		properties.put("Watering can type", ctx.farming().wateringCan());
 
 		return properties;
 	}
