@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanWater;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IClearable;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 import org.powerbot.script.Identifiable;
 import org.powerbot.script.Locatable;
@@ -17,7 +18,7 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 16:41
  */
-public abstract class FarmingObject<T extends Enum> extends IClientAccessor implements Locatable, Identifiable {
+public abstract class FarmingObject<T extends Enum> extends IClientAccessor implements Locatable, Identifiable, IClearable {
 	protected final int setting;
 	protected final int shift;
 	protected final int mask;
@@ -25,35 +26,27 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 	protected final Tile tile;
 	protected final int[] children;
 
-	public FarmingObject(IClientContext context, int id) {
-		this(context, context.farming.dynamic(id));
+	public FarmingObject(IClientContext context, int dynamicParentId) {
+		this(context, context.farming().dynamic(dynamicParentId));
 	}
 
-	private FarmingObject(IClientContext ctx, FarmingDynamicDefinition object) {
-		this(ctx, object.object, object.setting, object.shift, object.mask, object.tile, object.children);
-	}
-
-	public FarmingObject(IClientContext ctx, int object, int setting, int shift, int mask, Tile tile, int[] children) {
+	private FarmingObject(IClientContext ctx, FarmingDynamicDefinition parentDefinition) {
 		super(ctx);
-		this.setting = setting;
-		this.shift = shift;
-		this.mask = mask;
-		this.object = object;
-		this.tile = tile;
-		this.children = children;
+		this.setting = parentDefinition.setting;
+		this.shift = parentDefinition.shift;
+		this.mask = parentDefinition.mask;
+		this.object = parentDefinition.object;
+		this.tile = parentDefinition.tile;
+		this.children = parentDefinition.children;
 	}
 
-	/**
-	 * Can the crop be cleared
-	 *
-	 * @return
-	 */
+	@Override
 	public boolean clearable() {
 		return definition().containsAction("Clear");
 	}
 
 	public FarmingDefinition definition() {
-		return ctx.farming.definition(children[bits()]);
+		return ctx.farming().definition(children[bits()]);
 	}
 
 	public int bits() {
