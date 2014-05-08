@@ -13,9 +13,9 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 15/04/2014
  * Time: 22:48
  */
-public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
+public class Calquat extends FarmingObject<Calquat.CalquatType, CalquatEnum> implements IFruit, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
 	public Calquat(IClientContext ctx, CalquatEnum patch) {
-		super(ctx, patch.id());
+		super(ctx, patch);
 	}
 
 	@Override

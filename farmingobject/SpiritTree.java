@@ -16,9 +16,9 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 15/04/2014
  * Time: 23:35
  */
-public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> implements IGrowthStage, ICheckHealth, IWeeds, ICanDie {
+public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType, SpiritTreeEnum> implements IGrowthStage, ICheckHealth, IWeeds, ICanDie {
 	public SpiritTree(IClientContext ctx, SpiritTreeEnum patch) {
-		super(ctx, patch.id());
+		super(ctx, patch);
 	}
 
 	@Override

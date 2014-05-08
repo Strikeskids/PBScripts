@@ -15,12 +15,12 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 08/05/2014
  * Time: 12:26
  */
-public class Mushroom extends FarmingObject<Mushroom.MushroomType> implements IFruit, IWeeds, ICanDie {
+public class Mushroom extends FarmingObject<Mushroom.MushroomType, MushroomEnum> implements IFruit, IWeeds, ICanDie {
 	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875};
 	public static final int[] MODEL_IDS_GROWTH_STAGE_TROLLHEIM = {19144, 19150, 19143, 19149, 19140};
 
 	public Mushroom(IClientContext ctx, MushroomEnum patch) {
-		super(ctx, patch.id());
+		super(ctx, patch);
 	}
 
 	@Override

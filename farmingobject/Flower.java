@@ -14,11 +14,11 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 16/04/2014
  * Time: 00:03
  */
-public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWater, IWeeds, ICanDie {
+public class Flower extends FarmingObject<Flower.FlowerType, FlowerEnum> implements ICanWater, IWeeds, ICanDie {
 	private static final int MODEL_WATERED = 7783;
 
 	public Flower(IClientContext context, FlowerEnum patch) {
-		super(context, patch.id());
+		super(context, patch);
 	}
 
 	@Override

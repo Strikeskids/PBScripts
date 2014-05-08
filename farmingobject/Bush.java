@@ -13,12 +13,12 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 08/05/2014
  * Time: 11:24
  */
-public class Bush extends FarmingObject<Bush.BushType> implements ICheckHealth, IGrowthStage, IWeeds, ICanDie, IFruit {
+public class Bush extends FarmingObject<Bush.BushType, BushEnum> implements ICheckHealth, IGrowthStage, IWeeds, ICanDie, IFruit {
 	private static final int[] MODELS_FRUIT = {7816, 7813, 7814, 7815};
 	private static final int BARBERRY_FRUIT_MODEL = 85831;
 
 	public Bush(IClientContext ctx, BushEnum bushEnum) {
-		super(ctx, bushEnum.id());
+		super(ctx, bushEnum);
 	}
 
 	@Override

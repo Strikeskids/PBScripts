@@ -15,9 +15,9 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 08/05/2014
  * Time: 09:04
  */
-public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> implements IGrowthStage, IWeeds, ICanDie {
+public class Belladonna extends FarmingObject<Belladonna.BelladonnaType, BelladonnaEnum> implements IGrowthStage, IWeeds, ICanDie {
 	public Belladonna(IClientContext ctx, BelladonnaEnum patch) {
-		super(ctx, patch.id());
+		super(ctx, patch);
 	}
 
 	@Override

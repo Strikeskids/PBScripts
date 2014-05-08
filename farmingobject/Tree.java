@@ -15,9 +15,9 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 19:18
  */
-public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
+public class Tree extends FarmingObject<Tree.TreeType, TreeEnum> implements IStump, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
 	public Tree(IClientContext ctx, TreeEnum tree) {
-		super(ctx, tree.id());
+		super(ctx, tree);
 	}
 
 	public String toString() {

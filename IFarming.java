@@ -13,7 +13,10 @@ import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,7 +61,7 @@ public class IFarming extends IClientAccessor {
 		try {
 			if (!file.exists()) {
 				ctx.script.log.info("Failed to download json data");
-				Condition.sleep(2000);
+				Condition.sleep(2000); // I add a log handler so that the log shows on the screen, so give the user chance to read it
 				ctx.controller.stop();
 				return;
 			}
@@ -127,12 +130,12 @@ public class IFarming extends IClientAccessor {
 		return object;
 	}
 
-	public FarmingQuery<Herb> herbs(final EnumSet<HerbEnum> enums) {
+	public FarmingQuery<Herb> herbs() {
 		return new FarmingQuery<Herb>(ctx) {
 			@Override
 			protected List<Herb> get() {
-				ArrayList<Herb> list = new ArrayList<Herb>(enums.size());
-				for (HerbEnum herbEnum : enums) {
+				ArrayList<Herb> list = new ArrayList<Herb>();
+				for (HerbEnum herbEnum : HerbEnum.values()) {
 					list.add(herbEnum.object(ctx));
 				}
 				return list;
@@ -155,7 +158,7 @@ public class IFarming extends IClientAccessor {
 
 	/**
 	 * @return count of remaining watering can actions on watering can stored in the tool leprechaun
-	 * if the watering can is type {@link org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.WateringCan#MAGIC} this always returns <i>1</i>
+	 * if the watering can is type {@link IFarming.WateringCan#MAGIC} this always returns <i>1</i>
 	 */
 	public int wateringCan() {
 		final WateringCan type = wateringCanType();
