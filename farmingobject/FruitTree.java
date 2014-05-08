@@ -81,16 +81,6 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 	}
 
 	@Override
-	public boolean stump() {
-		return FarmingHelper.stump(this);
-	}
-
-	@Override
-	public int weeds() {
-		return FarmingHelper.weeds(this);
-	}
-
-	@Override
 	public boolean dead() {
 		return FarmingHelper.dead(this);
 	}
@@ -98,6 +88,16 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 	@Override
 	public boolean diseased() {
 		return FarmingHelper.diseased(this);
+	}
+
+	@Override
+	public boolean stump() {
+		return FarmingHelper.stump(this);
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum FruitTreeType {

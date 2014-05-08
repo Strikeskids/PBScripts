@@ -23,6 +23,16 @@ public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, 
 		super(ctx, patch.id());
 	}
 
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
+	}
+
 	/**
 	 * Can the patch be picked
 	 *
@@ -60,16 +70,6 @@ public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, 
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
-	}
-
-	@Override
-	public boolean dead() {
-		return FarmingHelper.dead(this);
-	}
-
-	@Override
-	public boolean diseased() {
-		return FarmingHelper.diseased(this);
 	}
 
 	public enum HerbType {

@@ -24,29 +24,6 @@ public class Mushroom extends FarmingObject<Mushroom.MushroomType> implements IF
 	}
 
 	@Override
-	public boolean grown() {
-		return definition().containsAction("Pick");
-	}
-
-
-	@Override
-	public MushroomType type() {
-		final String name = definition().name().toLowerCase();
-		for (MushroomType cropType : MushroomType.values()) {
-			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
-				return cropType;
-			}
-		}
-
-		return MushroomType.MUSHROOM_PATCH;
-	}
-
-	@Override
-	public int weeds() {
-		return FarmingHelper.weeds(this);
-	}
-
-	@Override
 	public boolean dead() {
 		return FarmingHelper.dead(this);
 	}
@@ -72,6 +49,28 @@ public class Mushroom extends FarmingObject<Mushroom.MushroomType> implements IF
 		}
 
 		return 0;
+	}
+
+	@Override
+	public boolean grown() {
+		return definition().containsAction("Pick");
+	}
+
+	@Override
+	public MushroomType type() {
+		final String name = definition().name().toLowerCase();
+		for (MushroomType cropType : MushroomType.values()) {
+			if (name.contains(cropType.name().toLowerCase().replace('_', ' '))) {
+				return cropType;
+			}
+		}
+
+		return MushroomType.MUSHROOM_PATCH;
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum MushroomType {

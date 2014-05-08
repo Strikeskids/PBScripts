@@ -21,19 +21,18 @@ public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> impleme
 	}
 
 	@Override
-	public boolean grown() {
-		return definition().containsAction("Pick");
+	public boolean dead() {
+		return FarmingHelper.dead(this);
 	}
 
 	@Override
-	public BelladonnaType type() {
-		final String name = definition().name().toLowerCase();
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
+	}
 
-		if (!name.contains("patch")) {
-			return BelladonnaType.BELLADONNA;
-		}
-
-		return BelladonnaType.BELLADONNA_PATCH;
+	@Override
+	public boolean grown() {
+		return definition().containsAction("Pick");
 	}
 
 	@Override
@@ -55,18 +54,19 @@ public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> impleme
 	}
 
 	@Override
+	public BelladonnaType type() {
+		final String name = definition().name().toLowerCase();
+
+		if (!name.contains("patch")) {
+			return BelladonnaType.BELLADONNA;
+		}
+
+		return BelladonnaType.BELLADONNA_PATCH;
+	}
+
+	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
-	}
-
-	@Override
-	public boolean dead() {
-		return FarmingHelper.dead(this);
-	}
-
-	@Override
-	public boolean diseased() {
-		return FarmingHelper.diseased(this);
 	}
 
 	public enum BelladonnaType {

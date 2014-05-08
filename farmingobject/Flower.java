@@ -50,11 +50,6 @@ public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWate
 	}
 
 	@Override
-	public int weeds() {
-		return FarmingHelper.weeds(this);
-	}
-
-	@Override
 	public boolean dead() {
 		return FarmingHelper.dead(this);
 	}
@@ -62,6 +57,11 @@ public class Flower extends FarmingObject<Flower.FlowerType> implements ICanWate
 	@Override
 	public boolean diseased() {
 		return FarmingHelper.diseased(this);
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum FlowerType {

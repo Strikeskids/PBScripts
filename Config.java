@@ -13,15 +13,15 @@ public class Config {
 	public final int shift;
 	public final int mask;
 
-	public Config(int index, int shift, int mask) {
-		this.index = index;
-		this.shift = shift;
-		this.mask = mask;
-	}
-
 	public Config(JsonObject config) {
 		index = config.get("index").asInt();
 		shift = config.get("shift").asInt();
 		mask = config.get("mask").asInt();
+	}
+
+	public Config(int index, int shift, int mask) {
+		this.index = index;
+		this.shift = shift;
+		this.mask = mask;
 	}
 }

@@ -27,6 +27,16 @@ public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> impleme
 	}
 
 	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
+	}
+
+	@Override
 	protected boolean grown() {
 		final SpiritTreeType type = type();
 		return type != SpiritTreeType.SPIRIT_TREE_PATCH && definition().containsModel(type.numberOfStages() - 1);
@@ -65,16 +75,6 @@ public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> impleme
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
-	}
-
-	@Override
-	public boolean dead() {
-		return FarmingHelper.dead(this);
-	}
-
-	@Override
-	public boolean diseased() {
-		return FarmingHelper.diseased(this);
 	}
 
 	public enum SpiritTreeType {

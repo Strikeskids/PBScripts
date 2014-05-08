@@ -81,6 +81,16 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 		return TreeType.TREE_PATCH;
 	}
 
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
+	}
+
 	/**
 	 * Is the patch weed free but empty (ready to plant seed)
 	 *
@@ -125,16 +135,6 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
-	}
-
-	@Override
-	public boolean dead() {
-		return FarmingHelper.dead(this);
-	}
-
-	@Override
-	public boolean diseased() {
-		return FarmingHelper.diseased(this);
 	}
 
 	public enum TreeType {
