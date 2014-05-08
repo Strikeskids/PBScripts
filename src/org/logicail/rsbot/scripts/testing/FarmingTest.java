@@ -1,6 +1,9 @@
 package org.logicail.rsbot.scripts.testing;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.CropState;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Herb;
+import org.powerbot.script.Filter;
 import org.powerbot.script.Script;
 
 import java.awt.*;
@@ -20,6 +23,15 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 		super();
 		farmingPaint = new FarmingPaint(ctx);
 		paint.location(new Point(50, 350));
+
+		final Herb herb = ctx.farming().herbs().select().select(new Filter<Herb>() {
+			@Override
+			public boolean accept(Herb herb) {
+				return herb.state() != CropState.GROWING;
+			}
+		}).nearest().poll();
+
+		log.info(herb.parent + " " + herb.type() + " " + herb.state());
 	}
 
 	@Override
