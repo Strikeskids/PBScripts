@@ -8,11 +8,9 @@ import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.HerbEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Herb;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.QuestDefinition;
-import org.logicail.rsbot.util.IOUtil;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +37,7 @@ public class IFarming extends IClientAccessor {
 	public static final int[] SPIRIT_TREE = {8338, 8382, 8383};
 	public static final int[] TREE = {8388, 8389, 8390, 8391};
 	public static final int[] ALLOTMENT = {8550, 8551, 8552, 8553, 8554, 8555, 8556, 8557};
-	private static final String URL_HERBS = "http://logicail.co.uk/resources/farming.json";
+	private static final String URL_FARMING_JSON = "http://logicail.co.uk/resources/farming.json";
 
 	private static final int SETTING_SUPPLIES_EXTRA = 1611;
 	private static final int SETTING_SUPPLIES = 29;
@@ -57,17 +55,9 @@ public class IFarming extends IClientAccessor {
 
 	public IFarming(final IClientContext ctx) {
 		super(ctx);
-		final File file = ctx.script.download(URL_HERBS, "farming.json");
 		try {
-			if (!file.exists()) {
-				ctx.script.log.info("Failed to download json data");
-				Condition.sleep(2000); // I add a log handler so that the log shows on the screen, so give the user chance to read it
-				ctx.controller.stop();
-				return;
-			}
-			final DataInputStream stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-
-			JsonObject map = JsonObject.readFrom(IOUtil.read(stream));
+			final String json = ctx.script.downloadString(URL_FARMING_JSON);
+			JsonObject map = JsonObject.readFrom(json);
 
 			for (JsonObject.Member member : map.get("quests").asObject()) {
 				final JsonObject object = member.getValue().asObject();
@@ -96,8 +86,11 @@ public class IFarming extends IClientAccessor {
 				Tile t = new Tile(tile.get("x").asInt(), tile.get("y").asInt(), tile.get("z") != null ? tile.get("z").asInt() : 0);
 				dynamicObjects.put(Integer.parseInt(member.getName()), new FarmingDynamicDefinition(Integer.parseInt(member.getName()), config, t, definitions));
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			ctx.script.log.info("Failed to download/load json data");
+			Condition.sleep(2000); // I add a log handler so that the log shows on the screen, so give the user chance to read it
+			ctx.controller.stop();
 		}
 	}
 
