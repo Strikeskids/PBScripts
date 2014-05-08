@@ -63,9 +63,9 @@ public class IClientContext extends ClientContext {
 	private final AtomicBoolean shutdown = new AtomicBoolean();
 	public final ClientContext original;
 
-	public IClientContext(final ClientContext originalContext, LogicailScript script) {
-		super(originalContext);
-		this.original = originalContext;
+	public IClientContext(final ClientContext original, LogicailScript script) {
+		super(original);
+		this.original = original;
 		this.script = script;
 		script.log.addHandler(log);
 
