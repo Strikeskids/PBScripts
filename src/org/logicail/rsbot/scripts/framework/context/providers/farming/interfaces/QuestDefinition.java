@@ -22,11 +22,11 @@ public class QuestDefinition {
 		this.end = end;
 	}
 
-	public boolean started(ClientContext ctx) {
-		return ctx.varpbits.varpbit(config.index, config.shift, config.mask) >= start;
-	}
-
 	public boolean complete(ClientContext ctx) {
 		return ctx.varpbits.varpbit(config.index, config.shift, config.mask) == end;
+	}
+
+	public boolean started(ClientContext ctx) {
+		return ctx.varpbits.varpbit(config.index, config.shift, config.mask) >= start;
 	}
 }

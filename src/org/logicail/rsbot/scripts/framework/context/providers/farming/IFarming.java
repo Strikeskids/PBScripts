@@ -102,6 +102,14 @@ public class IFarming extends IClientAccessor {
 		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 9, 0x1f) + 32 * ctx.varpbits.varpbit(SETTING_SUPPLIES_EXTRA, 17, 0x7);
 	}
 
+	public boolean canUseMagicSecateurs() {
+		return quests.get(FAIRY_TALE_I).complete(ctx);
+	}
+
+	public boolean canUseMagicWateringCan() {
+		return quests.get(FAIRY_TALE_III).complete(ctx);
+	}
+
 	public int compost() {
 		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 14, 0xff);
 	}
@@ -183,13 +191,5 @@ public class IFarming extends IClientAccessor {
 
 	enum WateringCan {
 		NONE, NORMAL, MAGIC
-	}
-
-	public boolean canUseMagicWateringCan() {
-		return quests.get(FAIRY_TALE_III).complete(ctx);
-	}
-
-	public boolean canUseMagicSecateurs() {
-		return quests.get(FAIRY_TALE_I).complete(ctx);
 	}
 }

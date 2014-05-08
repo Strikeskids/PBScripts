@@ -24,6 +24,16 @@ public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFrui
 	}
 
 	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
+	}
+
+	@Override
 	public int fruit() {
 		if (!grown()) {
 			return 0;
@@ -80,16 +90,6 @@ public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFrui
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
-	}
-
-	@Override
-	public boolean dead() {
-		return FarmingHelper.dead(this);
-	}
-
-	@Override
-	public boolean diseased() {
-		return FarmingHelper.diseased(this);
 	}
 
 	public enum CalquatType {
