@@ -84,7 +84,7 @@ public class Hops extends FarmingObject<Hops.HopsType, HopsEnum> implements IGro
 	}
 
 	public enum HopsType {
-		// TODO: Can't get IFruit from models,
+		// TODO: IFruit
 		HOPS_PATCH(),
 		HAMMERSTONE(8197, 8799, 8201, 8203, 8205),
 		ASGARNIAN(8197, 8199, 8201, 8203, 8204, 8205),
