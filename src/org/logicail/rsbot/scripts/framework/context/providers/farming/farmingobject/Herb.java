@@ -84,7 +84,7 @@ public class Herb extends FarmingObject<Herb.HerbType, HerbEnum> implements IGro
 			}
 		}
 
-		throw new IllegalArgumentException("Unknown herb type!");
+		throw new IllegalArgumentException("Unknown herb type! bits:" + bits);
 	}
 
 	@Override
@@ -121,7 +121,8 @@ public class Herb extends FarmingObject<Herb.HerbType, HerbEnum> implements IGro
 				return i == 67 || (i >= 110 && i <= 115);
 			}
 		}, 176, 178),
-		GOUTWEED(192, 203);
+		GOUTWEED(192, 203),
+		SPIRIT_WEED(204, 213);
 
 		private final Filter<Integer> filterGrowing;
 		private final Filter<Integer> diseasedFilter;
