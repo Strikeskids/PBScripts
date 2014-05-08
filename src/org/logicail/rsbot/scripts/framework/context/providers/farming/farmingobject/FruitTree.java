@@ -13,9 +13,9 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 14/04/2014
  * Time: 21:00
  */
-public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements IFruit, IStump, ICheckHealth, IWeeds, ICanDie {
-	public FruitTree(IClientContext ctx, FruitTreeEnum tree) {
-		super(ctx, tree.id());
+public class FruitTree extends FarmingObject<FruitTree.FruitTreeType, FruitTreeEnum> implements IFruit, IStump, ICheckHealth, IWeeds, ICanDie {
+	public FruitTree(IClientContext ctx, FruitTreeEnum patch) {
+		super(ctx, patch);
 	}
 
 	public String toString() {

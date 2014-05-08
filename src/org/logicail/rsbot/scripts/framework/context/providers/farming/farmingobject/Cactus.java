@@ -13,9 +13,9 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 16/04/2014
  * Time: 00:26
  */
-public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
+public class Cactus extends FarmingObject<Cactus.CactusType, CactusEnum> implements IFruit, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
 	public Cactus(IClientContext ctx, CactusEnum patch) {
-		super(ctx, patch.id());
+		super(ctx, patch);
 	}
 
 	@Override

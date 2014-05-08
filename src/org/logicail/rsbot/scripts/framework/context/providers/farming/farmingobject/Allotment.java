@@ -16,7 +16,7 @@ import java.awt.*;
  * Date: 13/04/2014
  * Time: 21:29
  */
-public class Allotment extends FarmingObject<Allotment.CropType> implements ICanWater, IWeeds, ICanDie {
+public class Allotment extends FarmingObject<Allotment.CropType, AllotmentEnum> implements ICanWater, IWeeds, ICanDie {
 	// An allotment is made up of several instances of the 1x1 tile dynamic object
 	// You should use nearest() & shuffle() and not always interact with the one at the tile()
 
@@ -29,7 +29,7 @@ public class Allotment extends FarmingObject<Allotment.CropType> implements ICan
 	private final Polygon polygon;
 
 	public Allotment(IClientContext ctx, AllotmentEnum patch) {
-		super(ctx, patch.id());
+		super(ctx, patch);
 
 		switch (patch) {
 			case ARDOUGNE_N:

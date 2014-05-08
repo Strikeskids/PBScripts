@@ -15,13 +15,13 @@ import java.awt.*;
  * Date: 13/04/2014
  * Time: 12:25
  */
-public class Compost extends FarmingObject<Compost.CompostType> implements IGrowthStage {
+public class Compost extends FarmingObject<Compost.CompostType, CompostEnum> implements IGrowthStage {
 	private static final int[] NORMAL_STAGE = {31, 32, 94};
 	private static final int[] SUPER_STAGE = {95, 96, 126};
 	private static final int[] TOMATO_STAGE = {159, 160, 222};
 
 	public Compost(IClientContext ctx, CompostEnum patch) {
-		super(ctx, patch.id());
+		super(ctx, patch);
 	}
 
 	public int count() {

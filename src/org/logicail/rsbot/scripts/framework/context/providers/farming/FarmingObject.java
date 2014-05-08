@@ -18,7 +18,8 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 16:41
  */
-public abstract class FarmingObject<T extends Enum> extends IClientAccessor implements Locatable, Identifiable, IClearable {
+public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifiable> extends IClientAccessor implements Locatable, Identifiable, IClearable {
+	public final E parent;
 	protected final int setting;
 	protected final int shift;
 	protected final int mask;
@@ -26,18 +27,16 @@ public abstract class FarmingObject<T extends Enum> extends IClientAccessor impl
 	protected final Tile tile;
 	protected final int[] children;
 
-	public FarmingObject(IClientContext context, int dynamicParentId) {
-		this(context, context.farming().dynamic(dynamicParentId));
-	}
-
-	private FarmingObject(IClientContext ctx, FarmingDynamicDefinition parentDefinition) {
+	public FarmingObject(IClientContext ctx, E enumType) {
 		super(ctx);
-		this.setting = parentDefinition.setting;
-		this.shift = parentDefinition.shift;
-		this.mask = parentDefinition.mask;
-		this.object = parentDefinition.object;
-		this.tile = parentDefinition.tile;
-		this.children = parentDefinition.children;
+		parent = enumType;
+		final FarmingDynamicDefinition dynamic = ctx.farming().dynamic(enumType.id());
+		this.setting = dynamic.setting;
+		this.shift = dynamic.shift;
+		this.mask = dynamic.mask;
+		this.object = dynamic.object;
+		this.tile = dynamic.tile;
+		this.children = dynamic.children;
 	}
 
 	@Override

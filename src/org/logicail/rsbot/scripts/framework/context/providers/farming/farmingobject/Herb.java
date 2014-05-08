@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.Herb
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
+import org.powerbot.script.Filter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,17 +16,21 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 14/04/2014
  * Time: 17:18
  */
-public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, IWeeds, ICanDie {
+public class Herb extends FarmingObject<Herb.HerbType, HerbEnum> implements IGrowthStage, IWeeds, ICanDie {
 	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875};
 	public static final int[] MODEL_IDS_GROWTH_STAGE_TROLLHEIM = {19144, 19150, 19143, 19149, 19140};
 
-	public Herb(IClientContext ctx, HerbEnum patch) {
-		super(ctx, patch.id());
+	private static Filter<Integer> filter(final int start, final int end) {
+		return new Filter<Integer>() {
+			@Override
+			public boolean accept(Integer i) {
+				return i >= start && i <= end;
+			}
+		};
 	}
 
-	@Override
-	public boolean dead() {
-		return FarmingHelper.dead(this);
+	public Herb(IClientContext ctx, HerbEnum patch) {
+		super(ctx, patch);
 	}
 
 	@Override
@@ -64,7 +69,27 @@ public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, 
 
 	@Override
 	public HerbType type() {
-		return HerbType.UNKNOWN; // TODO
+		if (empty()) {
+			return HerbType.HERB_PATCH;
+		}
+
+		if (dead()) {
+			return HerbType.DEAD;
+		}
+
+		final int bits = bits();
+		for (HerbType type : HerbType.values()) {
+			if (type.valid(bits)) {
+				return type;
+			}
+		}
+
+		throw new IllegalArgumentException("Unknown herb type!");
+	}
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
 	}
 
 	@Override
@@ -73,6 +98,56 @@ public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, 
 	}
 
 	public enum HerbType {
-		UNKNOWN // TODO
+		HERB_PATCH(),
+		DEAD(),
+		GUAM(4, 10, 128, 130),
+		MARRENTIL(11, 17, 131, 133),
+		TARROMIN(18, 24, 134, 136),
+		HARRALANDER(25, 31, 137, 139),
+		RANARR(32, 38, 140, 142),
+		TOADFLAX(39, 45, 143, 145),
+		IRIT(46, 52, 146, 148),
+		AVANTOE(53, 59, 149, 151),
+		WERGALI(60, 66, 152, 154),
+		KWUARM(68, 74, 155, 157),
+		SNAPDRAGON(75, 81, 158, 160),
+		CADANTINE(82, 88, 161, 163),
+		LANTADYME(89, 95, 164, 166),
+		DWARF_WEED(96, 102, 167, 169),
+		TORSTOL(103, 109, 173, 175),
+		FELLSTALK(new Filter<Integer>() {
+			@Override
+			public boolean accept(Integer i) {
+				return i == 67 || (i >= 110 && i <= 115);
+			}
+		}, 176, 178),
+		GOUTWEED(192, 203);
+
+		private final Filter<Integer> filterGrowing;
+		private final Filter<Integer> diseasedFilter;
+
+		public boolean valid(int i) {
+			return (filterGrowing != null && filterGrowing.accept(i))
+					|| (diseasedFilter != null && diseasedFilter.accept(i));
+		}
+
+		HerbType() {
+			filterGrowing = null;
+			diseasedFilter = null;
+		}
+
+		HerbType(int start, int end) {
+			filterGrowing = filter(start, end);
+			diseasedFilter = null;
+		}
+
+		HerbType(int start, int end, int diseasedStart, int diseasedEnd) {
+			this(filter(start, end), diseasedStart, diseasedEnd);
+		}
+
+		HerbType(Filter<Integer> filterGrowing, int diseasedStart, int diseasedEnd) {
+			this.filterGrowing = filterGrowing;
+			diseasedFilter = filter(diseasedStart, diseasedEnd);
+		}
 	}
 }
