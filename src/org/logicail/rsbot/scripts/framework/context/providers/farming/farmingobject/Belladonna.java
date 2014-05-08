@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.BelladonnaEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
@@ -14,7 +15,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 08/05/2014
  * Time: 09:04
  */
-public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> implements IGrowthStage, IWeeds {
+public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> implements IGrowthStage, IWeeds, ICanDie {
 	public Belladonna(IClientContext ctx, BelladonnaEnum patch) {
 		super(ctx, patch.id());
 	}
@@ -54,6 +55,16 @@ public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> impleme
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
+	}
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
 	}
 
 	public enum BelladonnaType {

@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.HerbEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 
@@ -14,7 +15,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 14/04/2014
  * Time: 17:18
  */
-public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, IWeeds {
+public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, IWeeds, ICanDie {
 	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875};
 	public static final int[] MODEL_IDS_GROWTH_STAGE_TROLLHEIM = {19144, 19150, 19143, 19149, 19140};
 
@@ -57,6 +58,16 @@ public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, 
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
+	}
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
 	}
 
 	public enum HerbType {

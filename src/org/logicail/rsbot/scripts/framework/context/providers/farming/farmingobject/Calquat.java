@@ -5,10 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.CalquatEnum;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFruit;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +13,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 15/04/2014
  * Time: 22:48
  */
-public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds {
+public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
 	public Calquat(IClientContext ctx, CalquatEnum patch) {
 		super(ctx, patch.id());
 	}
@@ -82,6 +79,16 @@ public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFrui
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
+	}
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
 	}
 
 	public enum CalquatType {

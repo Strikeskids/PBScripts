@@ -5,10 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.TreeEnum;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IStump;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.*;
 
 import java.awt.*;
 
@@ -18,7 +15,7 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 19:18
  */
-public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowthStage, IWeeds {
+public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
 	public Tree(IClientContext ctx, TreeEnum tree) {
 		super(ctx, tree.id());
 	}
@@ -121,6 +118,16 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
+	}
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
 	}
 
 	public enum TreeType {
