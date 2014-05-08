@@ -22,7 +22,7 @@ public enum TreeEnum implements Identifiable, IFarmingObjectAccessor<Tree> {
 
 	private final int id;
 
-	private Tree instance = null;
+	private volatile Tree instance = null;
 
 	private final String pretty;
 
@@ -42,6 +42,13 @@ public enum TreeEnum implements Identifiable, IFarmingObjectAccessor<Tree> {
 	}
 
 	public Tree object(IClientContext ctx) {
-		return instance == null ? instance = new Tree(ctx, this) : instance;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new Tree(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

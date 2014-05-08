@@ -21,7 +21,7 @@ public enum FlowerEnum implements Identifiable, IFarmingObjectAccessor<Flower> {
 	PORT_PHASMATYS(FLOWER[3]);
 	private final int id;
 
-	private Flower instance = null;
+	private  volatile Flower instance = null;
 
 	private final String pretty;
 
@@ -41,6 +41,13 @@ public enum FlowerEnum implements Identifiable, IFarmingObjectAccessor<Flower> {
 	}
 
 	public Flower object(IClientContext ctx) {
-		return instance == null ? instance = new Flower(ctx, this) : instance;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new Flower(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

@@ -25,7 +25,7 @@ public enum AllotmentEnum implements Identifiable, IFarmingObjectAccessor<Allotm
 	PORT_PHASMATYS_S(ALLOTMENT[7]);
 	private final int id;
 
-	private Allotment instance = null;
+	private volatile Allotment instance = null;
 
 	private final String pretty;
 
@@ -45,6 +45,13 @@ public enum AllotmentEnum implements Identifiable, IFarmingObjectAccessor<Allotm
 	}
 
 	public Allotment object(IClientContext ctx) {
-		return instance == null ? instance = new Allotment(ctx, this) : instance;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new Allotment(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

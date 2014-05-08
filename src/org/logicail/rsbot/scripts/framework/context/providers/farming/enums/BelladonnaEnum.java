@@ -2,29 +2,27 @@ package org.logicail.rsbot.scripts.framework.context.providers.farming.enums;
 
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.SpiritTree;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Belladonna;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFarmingObjectAccessor;
 import org.powerbot.script.Identifiable;
 
-import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.SPIRIT_TREE;
+import static org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming.BELLADONNA;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Logicail
- * Date: 15/04/2014
- * Time: 23:36
+ * Date: 08/05/2014
+ * Time: 09:05
  */
-public enum SpiritTreeEnum implements Identifiable, IFarmingObjectAccessor<SpiritTree> {
-	PORT_SARIM(SPIRIT_TREE[0]),
-	ETCETERIA(SPIRIT_TREE[1]),
-	BRIMHAVEN(SPIRIT_TREE[2]);
+public enum BelladonnaEnum implements Identifiable, IFarmingObjectAccessor<Belladonna> {
+	DRAYNOR(BELLADONNA);
 	private final int id;
 
-	private volatile SpiritTree instance = null;
+	private volatile Belladonna instance = null;
 
 	private final String pretty;
 
-	SpiritTreeEnum(int id) {
+	BelladonnaEnum(int id) {
 		this.id = id;
 		pretty = IFarming.pretty(name());
 	}
@@ -39,11 +37,11 @@ public enum SpiritTreeEnum implements Identifiable, IFarmingObjectAccessor<Spiri
 		return id;
 	}
 
-	public SpiritTree object(IClientContext ctx) {
+	public Belladonna object(IClientContext ctx) {
 		if (instance == null) {
 			synchronized (this) {
 				if (instance == null) {
-					instance = new SpiritTree(ctx, this);
+					instance = new Belladonna(ctx, this);
 				}
 			}
 		}
