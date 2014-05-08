@@ -16,11 +16,11 @@ public class FarmingDynamicDefinition {
 	protected final Tile tile;
 	protected final int[] children;
 
-	public FarmingDynamicDefinition(int object, int setting, int shift, int mask, Tile tile, int[] children) {
+	public FarmingDynamicDefinition(int object, Config config, Tile tile, int[] children) {
 		this.object = object;
-		this.setting = setting;
-		this.shift = shift;
-		this.mask = mask;
+		this.setting = config.index;
+		this.shift = config.shift;
+		this.mask = config.mask;
 		this.tile = tile;
 		this.children = children;
 	}

@@ -18,7 +18,7 @@ public enum CalquatEnum implements Identifiable, IFarmingObjectAccessor<Calquat>
 	TAI_BWO_WANNAI(CALQUAT);
 	private final int id;
 
-	private Calquat instance = null;
+	private volatile Calquat instance = null;
 
 	private final String pretty;
 
@@ -38,6 +38,13 @@ public enum CalquatEnum implements Identifiable, IFarmingObjectAccessor<Calquat>
 	}
 
 	public Calquat object(IClientContext ctx) {
-		return instance == null ? instance = new Calquat(ctx, this) : instance;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new Calquat(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

@@ -18,7 +18,7 @@ public enum CactusEnum implements Identifiable, IFarmingObjectAccessor<Cactus> {
 	AL_KHARID(CACTUS);
 	private final int id;
 
-	private Cactus instance = null;
+	private volatile Cactus instance = null;
 
 	private final String pretty;
 
@@ -38,6 +38,13 @@ public enum CactusEnum implements Identifiable, IFarmingObjectAccessor<Cactus> {
 	}
 
 	public Cactus object(IClientContext ctx) {
-		return instance == null ? instance = new Cactus(ctx, this) : instance;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new Cactus(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

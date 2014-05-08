@@ -24,7 +24,7 @@ public enum FruitTreeEnum implements Identifiable, IFarmingObjectAccessor<FruitT
 
 	private final int id;
 
-	private FruitTree instance = null;
+	private volatile FruitTree instance = null;
 
 	private final String pretty;
 
@@ -44,6 +44,13 @@ public enum FruitTreeEnum implements Identifiable, IFarmingObjectAccessor<FruitT
 	}
 
 	public FruitTree object(IClientContext ctx) {
-		return instance == null ? instance = new FruitTree(ctx, this) : instance;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new FruitTree(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

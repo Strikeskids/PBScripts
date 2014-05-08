@@ -23,7 +23,7 @@ public enum CompostEnum implements Identifiable, IFarmingObjectAccessor<Compost>
 	TAVERLEY(COMPOST[5]);
 	private final int id;
 
-	private Compost instance = null;
+	private volatile Compost instance = null;
 
 	private final String pretty;
 
@@ -43,6 +43,13 @@ public enum CompostEnum implements Identifiable, IFarmingObjectAccessor<Compost>
 	}
 
 	public Compost object(IClientContext ctx) {
-		return instance == null ? instance = new Compost(ctx, this) : instance;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new Compost(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

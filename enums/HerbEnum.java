@@ -22,7 +22,7 @@ public enum HerbEnum implements Identifiable, IFarmingObjectAccessor<Herb> {
 	TROLLHEIM(HERB[4]);
 	private final int id;
 
-	private Herb herb = null;
+	private volatile Herb instance = null;
 
 	private final String pretty;
 
@@ -42,6 +42,13 @@ public enum HerbEnum implements Identifiable, IFarmingObjectAccessor<Herb> {
 	}
 
 	public Herb object(IClientContext ctx) {
-		return herb == null ? herb = new Herb(ctx, this) : herb;
+		if (instance == null) {
+			synchronized (this) {
+				if (instance == null) {
+					instance = new Herb(ctx, this);
+				}
+			}
+		}
+		return instance;
 	}
 }

@@ -7,6 +7,7 @@ import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.HerbEnum;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.farmingobject.Herb;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.QuestDefinition;
 import org.logicail.rsbot.util.IOUtil;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
@@ -39,10 +40,15 @@ public class IFarming extends IClientAccessor {
 
 	private static final int SETTING_SUPPLIES_EXTRA = 1611;
 	private static final int SETTING_SUPPLIES = 29;
+
+	private static final String FAIRY_TALE_I = "Fairy Tale I - Growing Pains";
+	private static final String FAIRY_TALE_III = "Fairy Tale III - Battle at Orks Rift";
+
 	private final Map<Integer, FarmingDefinition> cache = new HashMap<Integer, FarmingDefinition>();
 	private final Map<Integer, FarmingDynamicDefinition> dynamicObjects = new HashMap<Integer, FarmingDynamicDefinition>();
+	private final Map<String, QuestDefinition> quests = new HashMap<String, QuestDefinition>();
 
-	public static final String pretty(String string) {
+	public static String pretty(String string) {
 		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
 	}
 
@@ -60,6 +66,13 @@ public class IFarming extends IClientAccessor {
 
 			JsonObject map = JsonObject.readFrom(IOUtil.read(stream));
 
+			for (JsonObject.Member member : map.get("quests").asObject()) {
+				final JsonObject object = member.getValue().asObject();
+				final Config config = new Config(object.get("config").asObject());
+				QuestDefinition questDefinition = new QuestDefinition(member.getName(), config, object.get("start").asInt(), object.get("end").asInt());
+				quests.put(questDefinition.name, questDefinition);
+			}
+
 			for (JsonObject.Member member : map.get("definitions").asObject()) {
 				final FarmingDefinition definition = new FarmingDefinition(member);
 				cache.put(definition.id(), definition);
@@ -75,10 +88,10 @@ public class IFarming extends IClientAccessor {
 					i++;
 				}
 
-				final JsonObject config = object.get("config").asObject();
+				final Config config = new Config(object.get("config").asObject());
 				final JsonObject tile = object.get("tile").asObject();
 				Tile t = new Tile(tile.get("x").asInt(), tile.get("y").asInt(), tile.get("z") != null ? tile.get("z").asInt() : 0);
-				dynamicObjects.put(Integer.parseInt(member.getName()), new FarmingDynamicDefinition(Integer.parseInt(member.getName()), config.get("id").asInt(), config.get("shift").asInt(), config.get("mask").asInt(), t, definitions));
+				dynamicObjects.put(Integer.parseInt(member.getName()), new FarmingDynamicDefinition(Integer.parseInt(member.getName()), config, t, definitions));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -172,7 +185,11 @@ public class IFarming extends IClientAccessor {
 		NONE, NORMAL, MAGIC
 	}
 
+	public boolean canUseMagicWateringCan() {
+		return quests.get(FAIRY_TALE_III).complete(ctx);
+	}
+
 	public boolean canUseMagicSecateurs() {
-		return false;
+		return quests.get(FAIRY_TALE_I).complete(ctx);
 	}
 }
