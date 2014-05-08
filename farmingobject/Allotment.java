@@ -53,14 +53,17 @@ public class Allotment extends FarmingObject<Allotment.CropType> implements ICan
 		}
 	}
 
+	@Override
 	public boolean canWater() {
 		return !watered() && !grown() && type() != CropType.ALLOTMENT;
 	}
 
+	@Override
 	public boolean grown() {
 		return definition().containsAction("Harvest");
 	}
 
+	@Override
 	public CropType type() {
 		final String name = definition().name().toLowerCase();
 		for (CropType cropType : CropType.values()) {
@@ -72,6 +75,7 @@ public class Allotment extends FarmingObject<Allotment.CropType> implements ICan
 		return CropType.ALLOTMENT;
 	}
 
+	@Override
 	public boolean watered() {
 		return definition().containsModel(MODEL_ID_WATERED);
 	}

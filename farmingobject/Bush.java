@@ -36,10 +36,12 @@ public class Bush extends FarmingObject<Bush.BushType> implements ICheckHealth, 
 		return FarmingHelper.diseased(this);
 	}
 
+	@Override
 	public boolean empty() {
 		return type() == BushType.BUSH_PATCH;
 	}
 
+	@Override
 	public BushType type() {
 		final String name = definition().name().toLowerCase();
 		for (BushType cropType : BushType.values()) {
@@ -78,6 +80,7 @@ public class Bush extends FarmingObject<Bush.BushType> implements ICheckHealth, 
 		return definition().containsAction("Pick-from");
 	}
 
+	@Override
 	public int stage() {
 		final FarmingDefinition definition = definition();
 		final BushType type = type();

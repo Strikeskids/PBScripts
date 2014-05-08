@@ -20,6 +20,7 @@ public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> impleme
 		super(ctx, patch.id());
 	}
 
+	@Override
 	public boolean grown() {
 		return definition().containsAction("Pick");
 	}
@@ -35,6 +36,7 @@ public class Belladonna extends FarmingObject<Belladonna.BelladonnaType> impleme
 		return BelladonnaType.BELLADONNA_PATCH;
 	}
 
+	@Override
 	public int stage() {
 		final FarmingDefinition definition = definition();
 		final BelladonnaType type = type();

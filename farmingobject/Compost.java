@@ -44,6 +44,7 @@ public class Compost extends FarmingObject<Compost.CompostType> implements IGrow
 		return definition().containsModel(7844);
 	}
 
+	@Override
 	public void repaint(Graphics2D g, int x, int y) {
 		if (empty()) {
 			g.setColor(CropState.EMPTY.color());
@@ -58,10 +59,12 @@ public class Compost extends FarmingObject<Compost.CompostType> implements IGrow
 		g.drawRect(x, y, 5, 5);
 	}
 
+	@Override
 	public boolean empty() {
 		return bits() == 0;
 	}
 
+	@Override
 	public boolean grown() {
 		final FarmingDefinition definition = definition();
 		if (definition.containsAction("Empty") || definition.containsAction("Take-tomato")) {
@@ -72,6 +75,7 @@ public class Compost extends FarmingObject<Compost.CompostType> implements IGrow
 		return bits == NORMAL_STAGE[2] || bits == SUPER_STAGE[2] || bits == TOMATO_STAGE[2];
 	}
 
+	@Override
 	public int stage() {
 		final int bits = bits();
 
@@ -101,6 +105,7 @@ public class Compost extends FarmingObject<Compost.CompostType> implements IGrow
 		return CropState.EMPTY;
 	}
 
+	@Override
 	public CompostType type() {
 		if (empty()) {
 			return CompostType.EMPTY;
