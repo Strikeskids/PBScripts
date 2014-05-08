@@ -47,6 +47,7 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 		return 0;
 	}
 
+	@Override
 	public boolean checkHealth() {
 		return definition().containsAction("Check-health");
 	}
@@ -57,6 +58,7 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 	 * @return <tt>true</tt> if the tree has reached its final stage of growing, otherwise <tt>false</tt>
 	 * @see TreeType#stages
 	 */
+	@Override
 	public boolean grown() {
 		final TreeType type = type();
 		return type != TreeType.TREE_PATCH && definition().containsModel(type.numberOfStages() - 1);
@@ -67,6 +69,7 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 	 *
 	 * @return the type of tree growing, or TREE_PATCH if nothing is growing
 	 */
+	@Override
 	public TreeType type() {
 		final String name = definition().name().toLowerCase();
 		for (TreeType cropType : TreeType.values()) {
@@ -83,10 +86,12 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 	 *
 	 * @return <tt>true</tt> if patch has no weeeds and is ready to plant a seed, otherwise <tt>false</tt>
 	 */
+	@Override
 	public boolean empty() {
 		return type() == TreeType.TREE_PATCH;
 	}
 
+	@Override
 	public void repaint(Graphics2D g, int x, int y) {
 		g.setColor(state().color());
 		g.fillRect(x, y, 9, 9);
@@ -94,6 +99,7 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 		g.drawRect(x, y, 9, 9);
 	}
 
+	@Override
 	public int stage() {
 		final FarmingDefinition definition = definition();
 		final TreeType type = type();
@@ -111,6 +117,7 @@ public class Tree extends FarmingObject implements IStump, ICheckHealth, IGrowth
 		return 0;
 	}
 
+	@Override
 	public boolean stump() {
 		return FarmingHelper.stump(this);
 	}

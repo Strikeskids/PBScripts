@@ -59,6 +59,7 @@ public class Calquat extends FarmingObject<Calquat.CalquatType> implements IFrui
 		return CalquatType.CALQUAT_PATCH;
 	}
 
+	@Override
 	public int stage() {
 		final FarmingDefinition definition = definition();
 		final CalquatType type = type();

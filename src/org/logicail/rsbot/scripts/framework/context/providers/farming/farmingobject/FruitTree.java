@@ -57,6 +57,7 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 	 *
 	 * @return <tt>true</tt> if the tree has finished growing, otherwise <tt>false</tt>
 	 */
+	@Override
 	public boolean grown() {
 		final FruitTreeType type = type();
 		return type.grownModel > -1 && definition().containsModel(type.grownModel);
@@ -67,6 +68,7 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 	 *
 	 * @return the type of trr growing, or ALLOTMENT if nothing is growing
 	 */
+	@Override
 	public FruitTreeType type() {
 		final String name = definition().name().toLowerCase();
 		for (FruitTreeType cropType : FruitTreeType.values()) {

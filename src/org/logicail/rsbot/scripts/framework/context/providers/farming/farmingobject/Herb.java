@@ -28,6 +28,7 @@ public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, 
 	 *
 	 * @return <tt>true</tt> if the patch has finished growing and can be picked, otherwise <tt>false</tt>
 	 */
+	@Override
 	public boolean grown() {
 		return definition().containsAction("Pick");
 	}
@@ -37,6 +38,7 @@ public class Herb extends FarmingObject<Herb.HerbType> implements IGrowthStage, 
 	 *
 	 * @return 0 (empty) to 5 (grown)
 	 */
+	@Override
 	public int stage() {
 		final FarmingDefinition definition = definition();
 

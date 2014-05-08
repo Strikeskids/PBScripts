@@ -70,6 +70,7 @@ public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, 
 		return FarmingHelper.diseased(this);
 	}
 
+	@Override
 	public int stage() {
 		final FarmingDefinition definition = definition();
 		final CactusType type = type();
