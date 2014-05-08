@@ -10,6 +10,7 @@ import org.powerbot.script.Identifiable;
 import org.powerbot.script.Locatable;
 import org.powerbot.script.Nameable;
 import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.GameObject;
 
 import java.awt.*;
 
@@ -119,6 +120,10 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 
 	@Override
 	public Tile tile() {
+		final GameObject nearest = ctx.objects.select().id(id()).nearest().poll();
+		if (nearest.valid()) {
+			return nearest.tile();
+		}
 		return tile;
 	}
 
