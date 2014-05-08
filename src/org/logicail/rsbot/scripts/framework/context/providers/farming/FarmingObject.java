@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
 import org.powerbot.script.Identifiable;
 import org.powerbot.script.Locatable;
+import org.powerbot.script.Nameable;
 import org.powerbot.script.Tile;
 
 import java.awt.*;
@@ -18,7 +19,7 @@ import java.awt.*;
  * Date: 14/04/2014
  * Time: 16:41
  */
-public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifiable> extends IClientAccessor implements Locatable, Identifiable, IClearable {
+public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifiable> extends IClientAccessor implements Locatable, Identifiable, IClearable, Nameable {
 	public final E parent;
 	protected final int setting;
 	protected final int shift;
@@ -26,6 +27,11 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 	protected final int object;
 	protected final Tile tile;
 	protected final int[] children;
+
+	@Override
+	public String name() {
+		return definition().name();
+	}
 
 	public FarmingObject(IClientContext ctx, E enumType) {
 		super(ctx);
