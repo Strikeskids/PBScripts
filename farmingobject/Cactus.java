@@ -5,10 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.CactusEnum;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFruit;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +13,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 16/04/2014
  * Time: 00:26
  */
-public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds {
+public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, ICheckHealth, IGrowthStage, IWeeds, ICanDie {
 	public Cactus(IClientContext ctx, CactusEnum patch) {
 		super(ctx, patch.id());
 	}
@@ -60,6 +57,17 @@ public class Cactus extends FarmingObject<Cactus.CactusType> implements IFruit, 
 		}
 
 		return CactusType.CACTUS_PATCH;
+	}
+
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
 	}
 
 	public int stage() {

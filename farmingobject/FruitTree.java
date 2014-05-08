@@ -5,10 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.FruitTreeEnum;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IFruit;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IStump;
-import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +13,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 14/04/2014
  * Time: 21:00
  */
-public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements IFruit, IStump, ICheckHealth, IWeeds {
+public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements IFruit, IStump, ICheckHealth, IWeeds, ICanDie {
 	public FruitTree(IClientContext ctx, FruitTreeEnum tree) {
 		super(ctx, tree.id());
 	}
@@ -89,6 +86,16 @@ public class FruitTree extends FarmingObject<FruitTree.FruitTreeType> implements
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
+	}
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
 	}
 
 	public enum FruitTreeType {

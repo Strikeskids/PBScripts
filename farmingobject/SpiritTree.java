@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingDef
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.enums.SpiritTreeEnum;
+import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.ICheckHealth;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IGrowthStage;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces.IWeeds;
@@ -15,7 +16,7 @@ import org.logicail.rsbot.scripts.framework.context.providers.farming.interfaces
  * Date: 15/04/2014
  * Time: 23:35
  */
-public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> implements IGrowthStage, ICheckHealth, IWeeds {
+public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> implements IGrowthStage, ICheckHealth, IWeeds, ICanDie {
 	public SpiritTree(IClientContext ctx, SpiritTreeEnum patch) {
 		super(ctx, patch.id());
 	}
@@ -64,6 +65,16 @@ public class SpiritTree extends FarmingObject<SpiritTree.SpiritTreeType> impleme
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
+	}
+
+	@Override
+	public boolean dead() {
+		return FarmingHelper.dead(this);
+	}
+
+	@Override
+	public boolean diseased() {
+		return FarmingHelper.diseased(this);
 	}
 
 	public enum SpiritTreeType {
