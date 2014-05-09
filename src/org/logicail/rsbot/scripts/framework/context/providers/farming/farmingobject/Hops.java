@@ -61,11 +61,6 @@ public class Hops extends FarmingObject<Hops.HopsType, HopsEnum> implements IGro
 	}
 
 	@Override
-	public int weeds() {
-		return FarmingHelper.weeds(this);
-	}
-
-	@Override
 	public int stage() {
 		final FarmingDefinition definition = definition();
 		final HopsType type = type();
@@ -81,6 +76,11 @@ public class Hops extends FarmingObject<Hops.HopsType, HopsEnum> implements IGro
 		}
 
 		return 0;
+	}
+
+	@Override
+	public int weeds() {
+		return FarmingHelper.weeds(this);
 	}
 
 	public enum HopsType {
