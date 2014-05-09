@@ -56,7 +56,7 @@ public class IFarming extends IClientAccessor {
 	public IFarming(final IClientContext ctx) {
 		super(ctx);
 		try {
-			final String json = ctx.script.downloadString(URL_FARMING_JSON);
+			final String json = ctx.controller.script().downloadString(URL_FARMING_JSON);
 			JsonObject map = JsonObject.readFrom(json);
 
 			for (JsonObject.Member member : map.get("quests").asObject()) {
@@ -88,7 +88,7 @@ public class IFarming extends IClientAccessor {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			ctx.script.log.info("Failed to download/load json data");
+			ctx.controller.script().log.info("Failed to download/load json data");
 			Condition.sleep(2000); // I add a log handler so that the log shows on the screen, so give the user chance to read it
 			ctx.controller.stop();
 		}
