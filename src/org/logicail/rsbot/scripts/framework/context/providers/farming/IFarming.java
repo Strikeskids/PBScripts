@@ -136,7 +136,7 @@ public class IFarming extends IClientAccessor {
 
 			@Override
 			public Herb nil() {
-				return null;
+				return new Herb(ctx, null);
 			}
 		};
 	}
