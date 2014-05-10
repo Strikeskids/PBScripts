@@ -31,7 +31,7 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 		parent = enumType;
 
 		if (enumType != null) {
-			final FarmingDynamicDefinition dynamic = ctx.farming().dynamic(enumType.id());
+			final FarmingDynamicDefinition dynamic = ctx.farming.dynamic(enumType.id());
 			this.setting = dynamic.setting;
 			this.shift = dynamic.shift;
 			this.mask = dynamic.mask;
@@ -140,7 +140,7 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 			return FarmingDefinition.NIL;
 		}
 
-		return ctx.farming().definition(children[bits]);
+		return ctx.farming.definition(children[bits]);
 	}
 
 	public int bits() {

@@ -49,12 +49,38 @@ public class IFarming extends IClientAccessor {
 	private final Map<Integer, FarmingDynamicDefinition> dynamicObjects = new HashMap<Integer, FarmingDynamicDefinition>();
 	private final Map<String, QuestDefinition> quests = new HashMap<String, QuestDefinition>();
 
+	private volatile boolean initialised = false;
+	private final Object lock = new Object();
+
 	public static String pretty(String string) {
 		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
 	}
 
 	public IFarming(final IClientContext ctx) {
 		super(ctx);
+	}
+
+	public int buckets() {
+		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 9, 0x1f) + 32 * ctx.varpbits.varpbit(SETTING_SUPPLIES_EXTRA, 17, 0x7);
+	}
+
+	public boolean canUseMagicSecateurs() {
+		ensureInitialised();
+		return quests.get(FAIRY_TALE_I).complete(ctx);
+	}
+
+	private void ensureInitialised() {
+		if (!initialised) {
+			synchronized (lock) {
+				if (!initialised) {
+					initialise();
+					initialised = true;
+				}
+			}
+		}
+	}
+
+	private void initialise() {
 		try {
 			final String json = ctx.controller.script().downloadString(URL_FARMING_JSON);
 			JsonObject map = JsonObject.readFrom(json);
@@ -94,15 +120,8 @@ public class IFarming extends IClientAccessor {
 		}
 	}
 
-	public int buckets() {
-		return ctx.varpbits.varpbit(SETTING_SUPPLIES, 9, 0x1f) + 32 * ctx.varpbits.varpbit(SETTING_SUPPLIES_EXTRA, 17, 0x7);
-	}
-
-	public boolean canUseMagicSecateurs() {
-		return quests.get(FAIRY_TALE_I).complete(ctx);
-	}
-
 	public boolean canUseMagicWateringCan() {
+		ensureInitialised();
 		return quests.get(FAIRY_TALE_III).complete(ctx);
 	}
 
@@ -111,11 +130,13 @@ public class IFarming extends IClientAccessor {
 	}
 
 	public FarmingDefinition definition(int id) {
+		ensureInitialised();
 		final FarmingDefinition definition = cache.get(id);
 		return definition != null ? definition : FarmingDefinition.NIL;
 	}
 
 	public FarmingDynamicDefinition dynamic(int id) {
+		ensureInitialised();
 		final FarmingDynamicDefinition object = dynamicObjects.get(id);
 		if (object == null) {
 			throw new IllegalArgumentException("Don't have id " + id);
