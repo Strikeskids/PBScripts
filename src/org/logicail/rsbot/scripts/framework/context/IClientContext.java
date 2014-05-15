@@ -37,18 +37,7 @@ public class IClientContext extends ClientContext {
 	public final IMovement movement;
 	public final IMagic magic;
 	public final IBank bank;
-	private volatile IFarming farming = null;
-
-	public final IFarming farming() {
-		if (farming == null) {
-			synchronized (this) {
-				if (farming == null) {
-					farming = new IFarming(this);
-				}
-			}
-		}
-		return farming;
-	}
+	public final IFarming farming;
 
 	// SK
 	public final SkKeyboard keyboard;
@@ -110,6 +99,7 @@ public class IClientContext extends ClientContext {
 		magic = new IMagic(this);
 		movement = new IMovement(this);
 		bank = new IBank(this);
+		farming = new IFarming(this);
 	}
 
 	public boolean isPaused() {

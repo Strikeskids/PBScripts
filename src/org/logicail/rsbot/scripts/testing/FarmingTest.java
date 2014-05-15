@@ -24,14 +24,14 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 		farmingPaint = new FarmingPaint(ctx);
 		paint.location(new Point(50, 350));
 
-		final Herb herb = ctx.farming().herbs().select().select(new Filter<Herb>() {
+		final Herb herb = ctx.farming.herbs().select().select(new Filter<Herb>() {
 			@Override
 			public boolean accept(Herb herb) {
 				return herb.state() != CropState.GROWING;
 			}
 		}).nearest().poll();
 
-		log.info(herb.parent + " " + herb.type() + " " + herb.state());
+		log.info(herb.parent + " valid: " + herb.valid() + " " + herb.type() + " " + herb.state());
 	}
 
 	@Override
@@ -67,11 +67,11 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 //			properties.put(treeEnum, sb.toString());
 //		}
 
-		properties.put("Super compost", ctx.farming().superCompost());
-		properties.put("Compost", ctx.farming().compost());
-		properties.put("Plant cure", ctx.farming().plantCure());
-		properties.put("Buckets", ctx.farming().buckets());
-		properties.put("Watering can type", ctx.farming().wateringCan());
+		properties.put("Super compost", ctx.farming.superCompost());
+		properties.put("Compost", ctx.farming.compost());
+		properties.put("Plant cure", ctx.farming.plantCure());
+		properties.put("Buckets", ctx.farming.buckets());
+		properties.put("Watering can type", ctx.farming.wateringCan());
 
 		return properties;
 	}
