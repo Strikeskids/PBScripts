@@ -236,7 +236,7 @@ public class BankWithdraw extends BankingAbstract {
 
 	private void withdrawRequiredItems(Branch delegation) {
 		for (Object node : delegation.getNodes()) {
-			if (ctx.controller().isStopping() || ctx.controller().isSuspended()) {
+			if (ctx.controller.isStopping() || ctx.controller.isSuspended()) {
 				return;
 			}
 			if (!(node instanceof NodePath)) {

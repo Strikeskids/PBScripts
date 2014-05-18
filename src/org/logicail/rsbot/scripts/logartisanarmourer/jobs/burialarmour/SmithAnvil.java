@@ -109,7 +109,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return ctx.controller().isStopping() || ctx.controller().isSuspended() || !options.isSmithing
+								return ctx.controller.isStopping() || ctx.controller.isSuspended() || !options.isSmithing
 										|| ctx.backpack.select().id(getMakeNextId()).count() >= target
 										|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000
 										|| (options.followInstructions && options.mode == Mode.BURIAL_ARMOUR && !options.currentlyMaking.equals(ctx.widgets.component(WIDGET_INSTRUCTION, WIDGET_INSTRUCTION_CHILD).text()));

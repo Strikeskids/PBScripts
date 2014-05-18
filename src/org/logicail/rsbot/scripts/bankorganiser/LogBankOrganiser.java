@@ -66,11 +66,11 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 					}
 				}
 			});
-			ctx.controller().stop();
+			ctx.controller.stop();
 			return;
 		}
 
-		ctx.controller().offer(new Task<LogBankOrganiser>(this) {
+		ctx.controller.offer(new Task<LogBankOrganiser>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -80,7 +80,7 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 							gui = new BankOrganiserInterface(LogBankOrganiser.this);
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							ctx.controller().stop();
+							ctx.controller.stop();
 						}
 					}
 				});

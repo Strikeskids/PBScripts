@@ -270,8 +270,8 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
                 } else if (e.getMessage().contains("You collect the"))
                     failedConsecutiveWithdrawals = 0;
             } else */
-			String s = e.getMessage();
-			switch (e.getId()) {
+			String s = e.text();
+			switch (e.type()) {
 				case 0:
 					if (s.equals("You need plans to make a sword.")) {
 						options.gotPlan.set(false);
@@ -332,7 +332,7 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 
 	@Override
 	public void start() {
-		ctx.controller().offer(new Task<LogArtisanWorkshop>(this) {
+		ctx.controller.offer(new Task<LogArtisanWorkshop>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {

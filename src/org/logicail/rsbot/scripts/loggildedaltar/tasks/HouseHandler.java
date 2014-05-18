@@ -147,8 +147,8 @@ public class HouseHandler extends IClientAccessor implements MessageListener {
 
 	@Override
 	public void messaged(MessageEvent messageEvent) {
-		if (messageEvent.getId() == 0) { // TODO find friends chat
-			parseHouses(messageEvent.getMessage());
+		if (messageEvent.type() == 0) { // TODO find friends chat
+			parseHouses(messageEvent.text());
 		}
 	}
 

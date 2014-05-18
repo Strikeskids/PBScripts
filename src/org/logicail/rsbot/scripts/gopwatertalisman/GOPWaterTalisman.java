@@ -37,7 +37,7 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 	public AtomicInteger priceWaterTalisman = new AtomicInteger();
 
 	public GOPWaterTalisman() {
-		ctx.controller().offer(new Runnable() {
+		ctx.controller.offer(new Runnable() {
 			@Override
 			public void run() {
 				priceWaterTalisman.set(GeItem.price(WATER_TALISMAN));
@@ -71,7 +71,7 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 
 	@Override
 	public void messaged(MessageEvent messageEvent) {
-		if (messageEvent.getId() == 0 && messageEvent.getMessage().equals("You do not have enough tokens to buy that item.")) {
+		if (messageEvent.type() == 0 && messageEvent.text().equals("You do not have enough tokens to buy that item.")) {
 			try {
 				final StringBuilder sb = new StringBuilder();
 				final LinkedHashMap<Object, Object> properties = getPaintInfo();
@@ -90,7 +90,7 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 					}
 				});
 			} finally {
-				ctx.controller().stop();
+				ctx.controller.stop();
 			}
 		}
 	}

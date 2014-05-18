@@ -342,7 +342,7 @@ public class LogGildedAltarGUI extends JFrame {
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
 					if (script != null) {
-						script.ctx.controller().stop();
+						script.ctx.controller.stop();
 					}
 				}
 			}
@@ -1060,7 +1060,7 @@ public class LogGildedAltarGUI extends JFrame {
 		options.onlySummoningPotions.set(summoningPotionCheckbox.isSelected());
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
-		final Script.Controller executor = script.ctx.controller();
+		final Script.Controller executor = script.ctx.controller;
 		executor.offer(new Runnable() {
 			@Override
 			public void run() {

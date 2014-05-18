@@ -108,7 +108,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 			}
 		}
 
-		ctx.controller().stop();
+		ctx.controller.stop();
 	}
 
 	public boolean swap(final Item item, Item destination) {

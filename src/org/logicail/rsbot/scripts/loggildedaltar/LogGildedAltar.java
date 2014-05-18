@@ -119,9 +119,9 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	@Override
 	public void messaged(MessageEvent messageEvent) {
-		String message = messageEvent.getMessage();
+		String message = messageEvent.text();
 
-		switch (messageEvent.getId()) {
+		switch (messageEvent.type()) {
 			case 0:
 				if (message.equals("They have locked their house to visitors.") || message.equals("They do not seem to be at home.") || message.equals("That player is in building mode at the moment.")) {
 					housePortal.enteringHouse.set(false);
@@ -170,7 +170,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 					housePortal.enteringHouse.set(false);
 					log.info(options.status = "Can't enter friends house anymore");
 
-					ctx.controller().offer(new Task<LogGildedAltar>(this) {
+					ctx.controller.offer(new Task<LogGildedAltar>(this) {
 						@Override
 						public void run() {
 							houseHandler.currentHouseFailed();
@@ -246,7 +246,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 
 	@Override
 	public void start() {
-		ctx.controller().offer(new Task<LogGildedAltar>(this) {
+		ctx.controller.offer(new Task<LogGildedAltar>(this) {
 			@Override
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -256,7 +256,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							gui = new LogGildedAltarGUI(LogGildedAltar.this);
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							ctx.controller().stop();
+							ctx.controller.stop();
 						}
 					}
 				});

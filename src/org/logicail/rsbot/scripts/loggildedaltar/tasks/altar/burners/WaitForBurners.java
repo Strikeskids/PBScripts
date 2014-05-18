@@ -35,7 +35,7 @@ public class WaitForBurners extends BurnerAbstract {
 	public void run() {
 		Timer timer = new Timer(Random.nextInt(50000, 70000));
 
-		final Script.Controller controller = ctx.controller();
+		final Script.Controller controller = ctx.controller;
 
 		while (timer.running()) {
 			if (controller == null || controller.isSuspended() || controller.isStopping()) {
