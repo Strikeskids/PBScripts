@@ -180,7 +180,7 @@ public class Postback extends LogGildedAltarTask {
 									//}
 								}
 							} catch (ParseException e) {
-								ctx.script.log.info("Postback: " + e.getMessage());
+								ctx.controller.script().log.info("Postback: " + e.getMessage());
 							}
 						}
 					}

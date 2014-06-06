@@ -35,7 +35,7 @@ public class ItemData extends IClientAccessor {
 
 	public ItemData(final IClientContext ctx) {
 		super(ctx);
-		final File file = ctx.script.download(ITEMDATA_ADDRESS, "bankorganiser.json");
+		final File file = ctx.controller.script().download(ITEMDATA_ADDRESS, "bankorganiser.json");
 		try {
 			final DataInputStream stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 

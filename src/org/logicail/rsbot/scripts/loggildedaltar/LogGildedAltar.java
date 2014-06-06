@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Script.Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		properties = "topic=1141536;client=6;version=7.00;hidden=true"
+		properties = "topic=1141536;client=6;version=7.01"
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
@@ -197,7 +197,7 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		super.repaint(g);
 
 		if (options.newVersionAvailable.get()) {
-			final Point point = ctx.mouse.getLocation();
+			final Point point = ctx.input.getLocation();
 			int x = point.x + 10;
 			int y = point.y + 6;
 			g.setColor(Color.BLACK);

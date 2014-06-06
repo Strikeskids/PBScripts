@@ -46,16 +46,16 @@ public class IChat extends Chat {
 			if (text == null || !text.equalsIgnoreCase(input)) {
 				if (text != null) {
 					for (int i = 0; i <= text.length(); ++i) {
-						ctx.keyboard.send("{VK_BACK_SPACE down}");
+						ctx.input.send("{VK_BACK_SPACE down}");
 						Condition.sleep(Random.nextInt(5, 50));
-						ctx.keyboard.send("{VK_BACK_SPACE up}");
+						ctx.input.send("{VK_BACK_SPACE up}");
 						Condition.sleep(Random.nextInt(5, 50));
 					}
 				}
-				ctx.keyboard.send(input);
+				ctx.input.send(input);
 				text = textBox.text();
 			}
-			return text != null && text.equalsIgnoreCase(input) && textBox.valid() && textBox.visible() && ctx.keyboard.sendln("");
+			return text != null && text.equalsIgnoreCase(input) && textBox.valid() && textBox.visible() && ctx.input.sendln("");
 		}
 
 		return false;

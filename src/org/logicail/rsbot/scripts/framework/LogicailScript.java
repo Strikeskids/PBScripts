@@ -5,7 +5,6 @@ import org.logicail.rsbot.scripts.framework.tasks.Tree;
 import org.logicail.rsbot.util.Painter;
 import org.powerbot.script.PaintListener;
 import org.powerbot.script.PollingScript;
-import org.powerbot.script.rt6.ClientContext;
 import org.powerbot.script.rt6.Game;
 
 import javax.swing.*;
@@ -18,17 +17,17 @@ import java.util.LinkedHashMap;
  * Date: 07/12/13
  * Time: 21:07
  */
-public abstract class LogicailScript<T extends LogicailScript> extends PollingScript<ClientContext> implements PaintListener {
+public abstract class LogicailScript<T extends LogicailScript> extends PollingScript<IClientContext> implements PaintListener, ILogicailScript {
 	public final IClientContext ctx;
 	public final Tree<T> tree;
 	protected final Painter paint;
 	protected JFrame gui;
 
 	protected LogicailScript() {
-		this.ctx = new IClientContext(super.ctx, this);
+		this.ctx = new IClientContext(super.ctx);
 
 		tree = new Tree<T>((T) this);
-		paint = new Painter(this);
+		paint = new Painter(ctx, getName(), version());
 
 		getExecQueue(State.STOP).add(new Runnable() {
 			@Override

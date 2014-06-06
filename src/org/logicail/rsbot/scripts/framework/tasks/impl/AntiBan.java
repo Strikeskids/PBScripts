@@ -32,10 +32,12 @@ public class AntiBan<T extends LogicailScript<T>> extends LoopTask<T> {
 					ctx.camera.angle(Random.nextBoolean() ? Random.nextInt(0, 360) : Random.nextInt(-359, 0));
 					break;
 				case 1:
-					ctx.mouse.move(Random.nextInt(0, (int) (dimension.getWidth() + 1)), Random.nextInt(0, (int) (dimension.getHeight() + 1)));
+					ctx.input.move(Random.nextInt(0, (int) (dimension.getWidth() + 1)), Random.nextInt(0, (int) (dimension.getHeight() + 1)));
 					break;
 				case 2:
 					//Util.mouseOffScreen();
+					ctx.input.defocus();
+					ctx.sleep(4000);
 					break;
 				case 3:
 					for (GameObject object : ctx.objects.select().select(new Filter<GameObject>() {
@@ -58,7 +60,7 @@ public class AntiBan<T extends LogicailScript<T>> extends LoopTask<T> {
 	}
 
 	private void wiggleMouse() {
-		final Point currentPoint = ctx.mouse.getLocation();
-		ctx.mouse.move(new Point(currentPoint.x + Random.nextInt(-250, 251), currentPoint.y + Random.nextInt(-250, 251)));
+		final Point currentPoint = ctx.input.getLocation();
+		ctx.input.move(new Point(currentPoint.x + Random.nextInt(-250, 251), currentPoint.y + Random.nextInt(-250, 251)));
 	}
 }

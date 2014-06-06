@@ -145,7 +145,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 		if (item.hover()) {
 			ctx.sleep(100);
 			try {
-				if (ctx.mouse.press(1)) {
+				if (ctx.input.press(1)) {
 					ctx.sleep(50);
 					// scroll
 
@@ -159,7 +159,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 				}
 			} catch (Exception e) {
 			} finally {
-				ctx.mouse.release(1);
+				ctx.input.release(1);
 				ctx.sleep(50);
 			}
 			return Condition.wait(new Callable<Boolean>() {
@@ -187,10 +187,10 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 				return false;
 			}
 			if (!bankContainer.viewportRect().contains(destination.component().viewportRect())) {
-				if (!bankContainer.viewportRect().contains(ctx.mouse.getLocation())) {
+				if (!bankContainer.viewportRect().contains(ctx.input.getLocation())) {
 					bankContainer.hover();
 				}
-				ctx.mouse.scroll(destination.component().relativePoint().y > item.component().relativePoint().y);
+				ctx.input.scroll(destination.component().relativePoint().y > item.component().relativePoint().y);
 				ctx.sleep(100);
 			} else {
 				break;

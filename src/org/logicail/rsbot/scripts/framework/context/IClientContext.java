@@ -1,8 +1,5 @@
 package org.logicail.rsbot.scripts.framework.context;
 
-import com.sk.methods.Combat;
-import com.sk.methods.SkKeyboard;
-import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.providers.*;
 import org.logicail.rsbot.scripts.framework.context.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.util.Timer;
@@ -39,42 +36,35 @@ public class IClientContext extends ClientContext {
 	public final IBank bank;
 	public final IFarming farming;
 
-	// SK
-	public final SkKeyboard keyboard;
-	//public final ActionBar actionBar;
-	public final Combat combat;
-	// SK
 	public final String useragent;
-	public final LogicailScript script;
 	// Concurrent task executor
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AtomicBoolean paused = new AtomicBoolean();
 	private final AtomicBoolean shutdown = new AtomicBoolean();
 	public final ClientContext original;
 
-	public IClientContext(final ClientContext original, LogicailScript script) {
+	public IClientContext(final ClientContext original) {
 		super(original);
 		this.original = original;
-		this.script = script;
-		script.log.addHandler(log);
+		controller.script().log.addHandler(log);
 
-		useragent = script.getName().toUpperCase().replaceAll(" ", "_") + "/" + script.version();
+		useragent = controller.script().getName().toUpperCase().replaceAll(" ", "_") + "/" + controller.script().getProperties().get("version");
 
-		script.getExecQueue(Script.State.SUSPEND).add(new Runnable() {
+		controller.script().getExecQueue(Script.State.SUSPEND).add(new Runnable() {
 			@Override
 			public void run() {
 				paused.set(true);
 			}
 		});
 
-		script.getExecQueue(Script.State.RESUME).add(new Runnable() {
+		controller.script().getExecQueue(Script.State.RESUME).add(new Runnable() {
 			@Override
 			public void run() {
 				paused.set(false);
 			}
 		});
 
-		script.getExecQueue(Script.State.STOP).add(new Runnable() {
+		controller.script().getExecQueue(Script.State.STOP).add(new Runnable() {
 			@Override
 			public void run() {
 				paused.set(true);
@@ -92,9 +82,7 @@ public class IClientContext extends ClientContext {
 		lodestones = new ILodestone(this);
 
 		/*super.keyboard =*/
-		this.keyboard = new SkKeyboard(this);
 		//actionBar = new ActionBar(this);
-		combat = new Combat(this);
 
 		magic = new IMagic(this);
 		movement = new IMovement(this);

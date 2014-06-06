@@ -253,7 +253,7 @@ public class ISkillingInterface extends ItemQuery<Item> {
 			return true;
 		}
 
-		ctx.script.log.info("Failed to select item " + itemId + " selected " + getSelectedItem().id());
+		ctx.controller.script().log.info("Failed to select item " + itemId + " selected " + getSelectedItem().id());
 
 		return false;
 	}

@@ -123,7 +123,7 @@ public class ItemTeleport extends NodePath {
 		final Tile startLocation = ctx.players.local().tile();
 		final TeleportSucceeded teleportSucceeded = new TeleportSucceeded(ctx, startLocation);
 
-		if (item.contains(ctx.mouse.getLocation()) || item.hover()) {
+		if (item.contains(ctx.input.getLocation()) || item.hover()) {
 			final Filter<Menu.Command> filter = new Filter<Menu.Command>() {
 				@Override
 				public boolean accept(Menu.Command entry) {

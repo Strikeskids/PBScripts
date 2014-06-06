@@ -1,7 +1,7 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.powerbot.script.PaintListener;
 
 import java.awt.*;
@@ -25,13 +25,12 @@ public class Painter extends IClientAccessor implements PaintListener {
 		location = point;
 	}
 
-	public Painter(LogicailScript script) {
-		super(script.ctx);
-		final String version = script.version();
+	public Painter(IClientContext ctx, String name, String version) {
+		super(ctx);
 		if (version != null) {
-			title = String.format("%s v%s", script.getName(), version);
+			title = String.format("%s v%s", name, version);
 		} else {
-			title = script.getName();
+			title = name;
 		}
 	}
 
@@ -94,7 +93,7 @@ public class Painter extends IClientAccessor implements PaintListener {
 		g2d.setStroke(mouseStroke);
 		//g2d.setColor(ctx.mouse.press() ? Color.RED : Color.WHITE);
 
-		final Point mouse = ctx.mouse.getLocation();
+		final Point mouse = ctx.input.getLocation();
 		g2d.drawLine(mouse.x - 5, mouse.y - 5, mouse.x + 5, mouse.y + 5);
 		g2d.drawLine(mouse.x - 5, mouse.y + 5, mouse.x + 5, mouse.y - 5);
 	}

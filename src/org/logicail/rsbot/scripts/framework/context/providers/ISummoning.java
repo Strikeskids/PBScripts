@@ -94,7 +94,7 @@ public class ISummoning extends Summoning {
 					if (amount == 0) {
 						amount = Random.nextInt(backpackCount, (int) (backpackCount * Random.nextDouble(1.0, 5.0)));
 					}
-					if (ctx.chat.isInputWidgetOpen() && ctx.keyboard.sendln(amount + "")) {
+					if (ctx.chat.isInputWidgetOpen() && ctx.input.sendln(amount + "")) {
 						return Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {

@@ -199,12 +199,12 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 
 		if (item.hover()) {
 			try {
-				ctx.mouse.press(1);
+				ctx.input.press(1);
 				ctx.sleep(50);
 				destination.hover();
 				ctx.sleep(50);
 			} finally {
-				ctx.mouse.release(1);
+				ctx.input.release(1);
 				ctx.sleep(50);
 			}
 			if (Condition.wait(new Callable<Boolean>() {
