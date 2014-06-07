@@ -110,14 +110,15 @@ public class ISummoning extends Summoning {
 			return item.interact(new Filter<Menu.Command>() {
 				@Override
 				public boolean accept(Menu.Command entry) {
-					return entry.action.startsWith(action) && entry.option.startsWith(item.name()) && Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return familiar.select().count() != familiarStartCount;
-						}
-					}, 100, 15);
+					final String name = item.name();
+					return entry.action.startsWith(action) && (name == null || entry.option.startsWith(name));
 				}
-			});
+			}) && Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return familiar.select().count() != familiarStartCount;
+				}
+			}, 100, 15);
 		}
 
 		return false;
@@ -163,12 +164,14 @@ public class ISummoning extends Summoning {
 	}
 
 	private void closeBankIfInTheWay() {
-		final Component bank = ctx.bank.getWidget(); // 54, 48
-		if (bank.valid()) {
-			final Component orb = ctx.widgets.component(WIDGET_ORB, WIDGET_ORB_BUTTON);
-			if (bank.boundingRect().intersects(orb.boundingRect())) {
-				ctx.bank.close();
-				ctx.sleep(75);
+		if (ctx.bank.opened()) {
+			final Component bank = ctx.bank.getWidget();
+			if (bank.valid()) {
+				final Component orb = ctx.widgets.component(WIDGET_ORB, WIDGET_ORB_BUTTON);
+				if (bank.boundingRect().intersects(orb.boundingRect())) {
+					ctx.bank.close();
+					ctx.sleep(75);
+				}
 			}
 		}
 	}
