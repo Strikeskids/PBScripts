@@ -76,6 +76,7 @@ public class ISummoning extends Summoning {
 		if (open()) {
 			int spaceLeft = familiar().bobSpace() - familiar.select().count();
 			if (spaceLeft == 0) {
+				ctx.controller.script().log.info("No space left in familiar");
 				return false;
 			}
 
@@ -84,6 +85,7 @@ public class ISummoning extends Summoning {
 			final Item item = backpack.shuffle().poll();
 			final String action = getStoreString(amount);
 			if (action.equals("Store-X")) {
+				ctx.controller.script().log.info("deposit: Store-X");
 				if (item.interact(new Filter<Menu.Command>() {
 					@Override
 					public boolean accept(Menu.Command entry) {
@@ -104,6 +106,7 @@ public class ISummoning extends Summoning {
 					}
 				}
 			}
+			ctx.controller.script().log.info("deposit:" + action);
 			return item.interact(new Filter<Menu.Command>() {
 				@Override
 				public boolean accept(Menu.Command entry) {
