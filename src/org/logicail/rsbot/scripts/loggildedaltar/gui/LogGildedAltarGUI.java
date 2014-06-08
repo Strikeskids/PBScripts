@@ -880,6 +880,7 @@ public class LogGildedAltarGUI extends JFrame {
 	}
 
 	private void saveActionPerformed() {
+		script.log.info("Save GUI settings");
 		final Properties settings = new Properties();
 		settings.setProperty("offering", comboBoxOffering.getSelectedItem().toString());
 		settings.setProperty("mode", comboBoxHouseMode.getSelectedItem().toString());
@@ -929,6 +930,7 @@ public class LogGildedAltarGUI extends JFrame {
 	}
 
 	private void startButtonActionPerformed() {
+		script.log.info("Start script");
 		if (startPressed) {
 			return;
 		}
@@ -1155,6 +1157,7 @@ public class LogGildedAltarGUI extends JFrame {
 	}
 
 	private void loadActionPerformed() {
+		script.log.info("Load GUI settings");
 		try {
 			final Properties settings = options.load();
 			if (settings.size() > 0) {

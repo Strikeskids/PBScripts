@@ -106,12 +106,15 @@ public class ISummoning extends Summoning {
 					}
 				}
 			}
-			ctx.controller.script().log.info("deposit:" + action);
 			return item.interact(new Filter<Menu.Command>() {
 				@Override
 				public boolean accept(Menu.Command entry) {
 					final String name = item.name();
-					return entry.action.startsWith(action) && (name == null || entry.option.startsWith(name));
+					if (entry.action.startsWith(action) && (name == null || entry.option.startsWith(name))) {
+						ctx.controller.script().log.info("deposit: \"" + entry.action + ", " + entry.option + "\"");
+						return true;
+					}
+					return false;
 				}
 			}) && Condition.wait(new Callable<Boolean>() {
 				@Override

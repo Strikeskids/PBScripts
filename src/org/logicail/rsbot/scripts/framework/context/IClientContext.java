@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Time: 20:53
  */
 public class IClientContext extends ClientContext {
-	public final ILogger log = new ILogger(10);
+	public final ILogger log;
 	// Providers
 	public final ISkillingInterface skillingInterface;
 	public final IBackpack backpack;
@@ -46,9 +46,16 @@ public class IClientContext extends ClientContext {
 	public IClientContext(final ClientContext original) {
 		super(original);
 		this.original = original;
-		controller.script().log.addHandler(log);
+		log = new ILogger(10);
 
 		useragent = controller.script().getName().toUpperCase().replaceAll(" ", "_") + "/" + controller.script().getProperties().get("version");
+
+		controller.script().getExecQueue(Script.State.START).add(new Runnable() {
+			@Override
+			public void run() {
+				controller.script().log.addHandler(log);
+			}
+		});
 
 		controller.script().getExecQueue(Script.State.SUSPEND).add(new Runnable() {
 			@Override
@@ -70,6 +77,13 @@ public class IClientContext extends ClientContext {
 				paused.set(true);
 				shutdown.set(true);
 				executor.shutdown();
+			}
+		});
+
+		controller.script().getExecQueue(Script.State.STOP).add(new Runnable() {
+			@Override
+			public void run() {
+				controller.script().log.removeHandler(log);
 			}
 		});
 
