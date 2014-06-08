@@ -36,7 +36,7 @@ public class IClientContext extends ClientContext {
 	public final IBank bank;
 	public final IFarming farming;
 
-	public final String useragent;
+	public String useragent;
 	// Concurrent task executor
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final AtomicBoolean paused = new AtomicBoolean();
@@ -48,7 +48,12 @@ public class IClientContext extends ClientContext {
 		this.original = original;
 		log = new ILogger(10);
 
-		useragent = controller.script().getName().toUpperCase().replaceAll(" ", "_") + "/" + controller.script().getProperties().get("version");
+		controller.script().getExecQueue(Script.State.START).add(new Runnable() {
+			@Override
+			public void run() {
+				useragent = controller.script().getName().toUpperCase().replaceAll(" ", "_") + "/" + controller.script().getProperties().get("version");
+			}
+		});
 
 		controller.script().getExecQueue(Script.State.START).add(new Runnable() {
 			@Override
