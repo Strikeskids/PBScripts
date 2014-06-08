@@ -135,10 +135,7 @@ public class Postback extends LogGildedAltarTask {
 		}
 		//json.add("settings", options.toJson());
 
-		script.log.info("Postback: " + json.toString());
-
 		final String data = "data=" + bytesToHex(encrypt(json.toString()));
-		script.log.info("Enc: " + data);
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(POSTBACK_URL).openConnection();
 
