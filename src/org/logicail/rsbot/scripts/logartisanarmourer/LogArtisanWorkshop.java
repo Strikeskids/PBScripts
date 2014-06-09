@@ -33,7 +33,7 @@ import java.util.LinkedHashMap;
 @Script.Manifest(
 		name = "Log Artisan Workshop",
 		description = "Cheap smithing xp at Artisans Workshop",
-		properties = "topic=1134701;client=6;hidden=true"
+		properties = "topic=1134701;client=6"
 )
 public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> implements MessageListener {
 	public static final int[] INGOT_IDS = {20632, 20633, 20634, 20635, 20636,
