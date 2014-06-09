@@ -21,6 +21,7 @@ public class ILogger extends Handler {
 	private final AtomicBoolean painted = new AtomicBoolean();
 	private final LinkedBlockingDeque<LogEntry> logEntries = new LinkedBlockingDeque<LogEntry>();
 	private long lastLoop = System.currentTimeMillis();
+	private final Object lock = new Object();
 
 	private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
 
@@ -40,15 +41,20 @@ public class ILogger extends Handler {
 	@Override
 	public void publish(LogRecord record) {
 		if (painted.get()) {
-			final LogEntry peek = logEntries.peek();
+			synchronized (lock) {
+				final LogEntry peek = logEntries.peekLast();
 
-			if (peek == null || !peek.text.equals(record.getMessage())) {
-				logEntries.push(new LogEntry(record));
-			} else if (peek.text.equals(record.getMessage())) {
-				logEntries.remove(peek);
-				peek.timeSent = System.currentTimeMillis();
-				peek.alpha = 1f;
-				logEntries.add(peek);
+				if (peek == null || !peek.text.equals(record.getMessage())) {
+					logEntries.offer(new LogEntry(record));
+				} else if (peek.text.equals(record.getMessage())) {
+					if (logEntries.removeLastOccurrence(peek)) {
+						peek.timeSent = System.currentTimeMillis();
+						peek.alpha = 1f;
+						logEntries.offer(peek);
+					} else {
+						logEntries.offer(new LogEntry(record));
+					}
+				}
 			}
 		}
 	}
@@ -109,6 +115,9 @@ public class ILogger extends Handler {
 		public String toString() {
 			return "LogEntry{" +
 					"text='" + text + '\'' +
+					", color=" + color +
+					", timeSent=" + timeSent +
+					", alpha=" + alpha +
 					'}';
 		}
 
@@ -119,8 +128,6 @@ public class ILogger extends Handler {
 
 			LogEntry logEntry = (LogEntry) o;
 
-			if (timeSent != logEntry.timeSent) return false;
-			if (color != null ? !color.equals(logEntry.color) : logEntry.color != null) return false;
 			if (text != null ? !text.equals(logEntry.text) : logEntry.text != null) return false;
 
 			return true;
@@ -128,10 +135,7 @@ public class ILogger extends Handler {
 
 		@Override
 		public int hashCode() {
-			int result = text != null ? text.hashCode() : 0;
-			result = 31 * result + (color != null ? color.hashCode() : 0);
-			result = 31 * result + (int) (timeSent ^ (timeSent >>> 32));
-			return result;
+			return text != null ? text.hashCode() : 0;
 		}
 	}
 }
