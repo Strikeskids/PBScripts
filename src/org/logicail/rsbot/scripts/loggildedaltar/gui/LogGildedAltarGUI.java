@@ -1083,7 +1083,7 @@ public class LogGildedAltarGUI extends JFrame {
 					script.altarTask = new AltarTask(script);
 
 					script.ctx.submit(new AnimationMonitor<LogGildedAltar>(script));
-					script.ctx.submit(new AntiBan<LogGildedAltar>(script));
+					script.tree.add(new AntiBan<LogGildedAltar>(script));
 
 					// v4
 		/*

@@ -137,8 +137,9 @@ public class LogArtisanWorkshop extends LogicailScript<LogArtisanWorkshop> imple
 		} catch (NullPointerException ignored) {
 		}
 
+
+		tree.add(new AntiBan<LogArtisanWorkshop>(this));
 		ctx.submit(new AnimationMonitor<LogArtisanWorkshop>(this));
-		ctx.submit(new AntiBan<LogArtisanWorkshop>(this));
 
 		//tree.add(new LogoutIdle());
 

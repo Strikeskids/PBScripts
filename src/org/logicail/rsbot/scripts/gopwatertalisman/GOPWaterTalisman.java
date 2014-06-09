@@ -64,9 +64,9 @@ public class GOPWaterTalisman extends LogicailScript<GOPWaterTalisman> implement
 
 	@Override
 	public void start() {
+		tree.add(new AntiBan<GOPWaterTalisman>(this));
 		tree.add(new ExchangeTask(this));
 		tree.add(new BankingTask(this));
-		ctx.submit(new AntiBan<GOPWaterTalisman>(this));
 	}
 
 	@Override
