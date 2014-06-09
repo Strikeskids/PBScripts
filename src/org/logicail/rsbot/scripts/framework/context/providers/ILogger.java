@@ -111,5 +111,27 @@ public class ILogger extends Handler {
 					"text='" + text + '\'' +
 					'}';
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			LogEntry logEntry = (LogEntry) o;
+
+			if (timeSent != logEntry.timeSent) return false;
+			if (color != null ? !color.equals(logEntry.color) : logEntry.color != null) return false;
+			if (text != null ? !text.equals(logEntry.text) : logEntry.text != null) return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = text != null ? text.hashCode() : 0;
+			result = 31 * result + (color != null ? color.hashCode() : 0);
+			result = 31 * result + (int) (timeSent ^ (timeSent >>> 32));
+			return result;
+		}
 	}
 }
