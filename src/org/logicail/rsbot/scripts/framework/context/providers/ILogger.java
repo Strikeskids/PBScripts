@@ -47,6 +47,7 @@ public class ILogger extends Handler {
 			} else if (peek.text.equals(record.getMessage())) {
 				logEntries.remove(peek);
 				peek.timeSent = System.currentTimeMillis();
+				peek.alpha = 1f;
 				logEntries.add(peek);
 			}
 		}
