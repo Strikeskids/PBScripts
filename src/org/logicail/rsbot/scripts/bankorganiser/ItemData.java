@@ -19,10 +19,9 @@ import java.util.*;
  */
 public class ItemData extends IClientAccessor {
 	public final Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
-	private final Map<Integer, String> itemToCategory = new HashMap<Integer, String>();
 	private final Map<String, LinkedHashSet<Integer>> categoryToItems = new LinkedHashMap<String, LinkedHashSet<Integer>>();
 	private static String ITEMDATA_ADDRESS = "http://logicail.co.uk/resources/bankorganiser.json";
-	private int version = -1;
+	private long version = -1;
 	private Comparator<? super Item> sorter = null;
 
 	public boolean loaded() {
@@ -59,7 +58,7 @@ public class ItemData extends IClientAccessor {
 				categoryToItems.put(member.getName(), set);
 			}
 			sorter = new ItemSorter(this, new ArrayList<Integer>(all));
-			version = map.get("version").asInt();
+			version = map.get("version").asLong();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -81,7 +80,7 @@ public class ItemData extends IClientAccessor {
 		return result;
 	}
 
-	public int getVersion() {
+	public long getVersion() {
 		return version;
 	}
 
