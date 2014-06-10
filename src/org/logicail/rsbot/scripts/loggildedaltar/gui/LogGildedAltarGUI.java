@@ -1068,7 +1068,7 @@ public class LogGildedAltarGUI extends JFrame {
 			public void run() {
 				try {
 					if (options.detectHouses.get()) {
-						script.ctx.property("login.world", Integer.toString(31));
+						script.ctx.properties.put("login.world", Integer.toString(31));
 					}
 
 				/*if (options.useBOB) {
