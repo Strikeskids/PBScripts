@@ -118,8 +118,8 @@ public class Postback extends LogGildedAltarTask {
 
 		JsonObject json = new JsonObject();
 		json.add("script", script.getName());
-		json.add("userid", Integer.parseInt(ctx.original.properties.get("user.id")));
-		json.add("username", ctx.original.properties.get("user.name"));
+		json.add("userid", Integer.parseInt((String) (ctx.properties.get("user.id"))));
+		json.add("username", (String) (ctx.properties.get("user.name")));
 		final long timeRunning = script.getRuntime() / 1000;
 		json.add("timerunning", timeRunning - previousTimeRunning);
 		final int experience = script.experience();
