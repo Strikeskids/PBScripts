@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.tasks.LoopTask;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AnimationMonitor<T extends LogicailScript<T>> extends LoopTask<T> {
 	private static final Map<Integer, Long> map = new ConcurrentHashMap<Integer, Long>();
 	private long nextClear = System.currentTimeMillis() + 600000;
+	private static AtomicLong timeLast = new AtomicLong(Long.MAX_VALUE);
 
 	/**
 	 * Time since since animation
@@ -66,7 +68,13 @@ public class AnimationMonitor<T extends LogicailScript<T>> extends LoopTask<T> {
 
 	public static void put(int animation) {
 		if (animation != -1) {
-			map.put(animation, System.currentTimeMillis());
+			final long time = System.currentTimeMillis();
+			timeLast.set(time);
+			map.put(animation, time);
 		}
+	}
+
+	public static long timeSinceAnimation() {
+		return timeLast.get();
 	}
 }
