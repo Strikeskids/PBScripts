@@ -135,7 +135,7 @@ public class HouseGlory extends NodePath {
 						}
 					}
 				} else {
-					ctx.camera.prepare(destination);
+					ctx.camera.prepare(destination.matrix(ctx));
 				}
 			}
 		} else {

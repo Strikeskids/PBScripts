@@ -1,7 +1,9 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.banking;
 
 import org.powerbot.script.Locatable;
+import org.powerbot.script.rt6.GameObject;
 import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.Npc;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,7 +39,11 @@ public class BankOpen extends BankingAbstract {
 
 		if (!ctx.bank.open()) {
 			final Locatable nearest = ctx.bank.nearest();
-			ctx.camera.prepare(nearest);
+			if (nearest instanceof Npc) {
+				ctx.camera.prepare((Npc) nearest);
+			} else if (nearest instanceof GameObject) {
+				ctx.camera.prepare((GameObject) nearest);
+			}
 		}
 	}
 }

@@ -102,7 +102,7 @@ public class HousePath extends IClientAccessor implements Comparable<HousePath> 
 				}
 			} else {
 				if (Random.nextBoolean() && destination.matrix(ctx).onMap()) {
-					if (ctx.camera.prepare(destination.tile())) {
+					if (ctx.camera.prepare(destination.matrix(ctx))) {
 						if (destination.matrix(ctx).interact("Walk here")) {
 							success = true;
 						}

@@ -32,60 +32,53 @@ public class ICamera extends Camera {
 	 * +TurnTo
 	 * +WalkTowards
 	 *
-	 * @param locatable
-	 * @return if object is on screen
+	 * @param entity
+	 * @param <T>
+	 * @return
 	 */
-	public boolean prepare(final Locatable locatable) {
-		if (!(locatable instanceof Interactive)) {
-			//ctx.log.severe("ICamera.prepare: Not an instance of interactive");
-			return false;
-		}
-		final Interactive interactive = (Interactive) locatable;
-		if (!interactive.valid()) {
+	public <T extends Interactive & Locatable> boolean prepare(final T entity) {
+		if (!entity.valid()) {
 			return false;
 		}
 
-		if (interactive.inViewport()) {
+		if (entity.inViewport()) {
 			return true;
 		}
 
 		final int distance = Random.nextInt(6, 10);
-		final double currentDistance = locatable.tile().distanceTo(ctx.players.local());
+		final double currentDistance = entity.tile().distanceTo(ctx.players.local());
 		if (currentDistance > distance) {
-			final Tile tile = getReachableTile(locatable);
+			final Tile tile = getReachableTile(entity);
 			if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return interactive.inViewport() || locatable.tile().distanceTo(ctx.players.local()) <= distance;
+						return entity.inViewport() || entity.tile().distanceTo(ctx.players.local()) <= distance;
 					}
 				}, 100, (int) Math.max(currentDistance * 10, 10));
 				ctx.sleep(300);
 			}
 		}
 
-		if (!interactive.inViewport()) {
-			ctx.camera.turnTo(locatable);
-			if (interactive.inViewport()) {
-				return true;
-			}
-		} else return true;
-
-		if (!interactive.inViewport()) {
-			final Tile tile = getReachableTile(locatable);
-			if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return interactive.inViewport() || locatable.tile().distanceTo(ctx.players.local()) <= 4;
-					}
-				}, 100, (int) Math.max(currentDistance * 10, 10));
-				ctx.sleep(300);
-			}
-			ctx.camera.pitch(Random.nextInt(0, 40));
+		if (entity.inViewport() || combineCamera(entity, 50 + Random.nextInt(-40, 25))) {
+			return true;
 		}
 
-		return interactive.inViewport();
+		final Tile tile = getReachableTile(entity);
+		if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return entity.inViewport() || entity.tile().distanceTo(ctx.players.local()) <= 4;
+				}
+			}, 100, (int) Math.max(currentDistance * 10, 10));
+			ctx.sleep(300);
+			if (!entity.inViewport()) {
+				return combineCamera(entity, 50 + Random.nextInt(-40, 25));
+			}
+		}
+
+		return entity.inViewport();
 	}
 
 	private Tile getReachableTile(Locatable locatable) {
@@ -97,6 +90,55 @@ public class ICamera extends Camera {
 			return reachable.get(Random.nextInt(0, reachable.size()));
 		}
 
-		return location/*.randomize(2, 2)*/;
+		return location;
+	}
+
+	/**
+	 * If necessary adjust the camera so that the entity is in the viewport
+	 *
+	 * @param entity to turn to
+	 * @param pitch
+	 * @param <T>
+	 * @return if the entity is now inViewport
+	 */
+	public <T extends Interactive & Locatable> boolean combineCamera(final T entity, final int pitch) {
+		if (!entity.valid()) {
+			return false;
+		}
+
+		if (entity.inViewport()) {
+			return true;
+		}
+
+		final Thread angleThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ctx.camera.turnTo(entity);
+			}
+		});
+		final Thread pitchThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ctx.camera.pitch(pitch);
+			}
+		});
+
+		if (Random.nextBoolean()) {
+			angleThread.start();
+			ctx.sleep(150); // my sleep does Thread.sleep(Math.max(5, (int) (millis * Random.nextDouble(0.75, 1.5))))
+			pitchThread.start();
+		} else {
+			pitchThread.start();
+			ctx.sleep(150);
+			angleThread.start();
+		}
+
+		try {
+			angleThread.join();
+			pitchThread.join();
+		} catch (InterruptedException ignored) {
+		}
+
+		return entity.inViewport();
 	}
 }
