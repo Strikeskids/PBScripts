@@ -97,30 +97,52 @@ public enum Sword {
 			return null;
 		}
 
-		switch (hitsNeeded) {
-			case 1:
-				if (ctx.skills.realLevel(Skills.SMITHING) < 95 && makeSword.getCooldown() >= 2) {
-					final int hitsRemaining = getSwordPartsRemaining(ctx);
-					if (hitsRemaining * 2 <= makeSword.getCooldown()) {
-						// Have to risk some Softs
-						return HitType.CAREFUL;
-					} /*else {
-						LogArtisanWorkshop.get().getLogHandler().print("Not enough cooldown, risking soft");
-					}*/
-				}
-				return HitType.SOFT; // Take chance with soft
-			case 2:
-				return HitType.SOFT;
-			case 3:
-			case 4:
+		boolean isTip = this == Eighth || this == Sixteenth;
+		if (ctx.skills.realLevel(Skills.SMITHING) >= 95) {
+			if (hitsNeeded >= 4) {
+				return HitType.HARD;
+			} else if (hitsNeeded == 3) {
 				return HitType.MEDIUM;
-			default:
-				if ((this == Eighth || this == Sixteenth) && hitsNeeded <= 4) {
-					return HitType.MEDIUM; // Don't risk chance of breaking tip
+			} else if (hitsNeeded == 2) {
+				final int remaining = getSwordPartsRemaining(ctx);
+				// can we soft hit to completion
+				if (isTip || remaining * 1.5d < makeSword.getCooldown()) {
+					return HitType.SOFT;
+				} else {
+					return HitType.MEDIUM;
 				}
+			} else if (hitsNeeded == 1) {
+				return HitType.SOFT;
+			}
+		} else {
+			if (isTip) {
+				if (hitsNeeded >= 5) {
+					return HitType.HARD;
+				} else if (hitsNeeded >= 3) {
+					return HitType.MEDIUM;
+				} else if (hitsNeeded >= 2) {
+					return HitType.SOFT;
+				}
+			} else {
+				if (hitsNeeded >= 4) {
+					return HitType.HARD;
+				} else if (hitsNeeded >= 2) {
+					return HitType.MEDIUM;
+				} else if (hitsNeeded >= 1) {
+					return HitType.SOFT;
+				}
+			}
 
-				return /*ctx.skills.getRealLevel(Skills.SMITHING) < 95 ?*/ HitType.HARD /*: HitType.MEDIUM*/; // Ignore chance of 5
+			if (hitsNeeded == 1) {
+				final int swordPartsRemaining = getSwordPartsRemaining(ctx);
+				if (swordPartsRemaining * 2 <= makeSword.getCooldown()) {
+					return HitType.CAREFUL;
+				} else {
+					return HitType.SOFT;
+				}
+			}
 		}
+		return null;
 	}
 
 	public int getHitsNeeded(IClientContext ctx) {
