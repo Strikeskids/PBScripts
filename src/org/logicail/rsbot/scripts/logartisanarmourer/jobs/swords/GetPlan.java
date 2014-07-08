@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.logartisanarmourer.jobs.ArtisanArmourerTask;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
+import org.powerbot.script.rt6.ChatOption;
 import org.powerbot.script.rt6.Menu;
 import org.powerbot.script.rt6.Npc;
 import org.powerbot.script.rt6.Skills;
@@ -19,6 +20,12 @@ import java.util.concurrent.Callable;
  */
 public class GetPlan extends ArtisanArmourerTask {
 	public static final int[] EGIL_ABEL = {6642, 6647};
+	private static final String[] CHAT_TEXT = {
+			"Would you like to have that sword you made?",
+			"Ah, the order for this sword has been cancelled.",
+			"Yes please",
+			"No, thanks"
+	};
 	private final MakeSword makeSword;
 	private final Filter<Menu.Command> interactFilter = new Filter<Menu.Command>() {
 		@Override
@@ -56,6 +63,37 @@ public class GetPlan extends ArtisanArmourerTask {
 
 		if (makeSword.isOpen()) {
 			makeSword.closeInterface();
+			return;
+		}
+
+		if (ctx.chat.queryContinue()) {
+			for (final String text : CHAT_TEXT) {
+				if (ctx.chat.isTextVisible(text)) {
+					if (ctx.chat.clickContinue(Random.nextBoolean())) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !ctx.chat.isTextVisible(text);
+							}
+						}, 150, 10);
+					}
+					return;
+				}
+			}
+			ctx.chat.clickContinue(Random.nextBoolean());
+			sleep(250);
+			return;
+		}
+
+		for (final ChatOption option : ctx.chat.select().text("No, thanks.").first()) {
+			if (option.select(Random.nextBoolean())) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.chat.queryContinue();
+					}
+				}, 150, 10);
+			}
 			return;
 		}
 

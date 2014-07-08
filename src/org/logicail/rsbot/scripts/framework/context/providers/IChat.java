@@ -5,6 +5,7 @@ import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt6.Chat;
 import org.powerbot.script.rt6.Component;
+import org.powerbot.script.rt6.Widget;
 
 import java.util.concurrent.Callable;
 
@@ -59,5 +60,54 @@ public class IChat extends Chat {
 		}
 
 		return false;
+	}
+
+//	public Component getChat(String needle) {
+//		for (Component child : ctx.widgets.widget(0).components()) {
+//			if (child.valid()) {
+//				final Component search = getComponentByText(child, needle);
+//				if (search.valid()) {
+//					return search;
+//				}
+//			}
+//		}
+//		return ctx.widgets.component(0, 0);
+//	}
+
+
+	private Component getComponentByText(Component component, String needle) {
+		if (component.text().contains(needle)) {
+			return component;
+		}
+
+		for (Component child : component.components()) {
+			if (child.valid()) {
+				final Component search = getComponentByText(child, needle);
+				if (search.valid()) {
+					return search;
+				}
+			}
+		}
+
+		return ctx.widgets.component(0, 0);
+	}
+
+	public Component getComponentByText(String needle) {
+		for (Widget widget : ctx.widgets.array()) {
+			for (Component component : widget.components()) {
+				if (component.valid()) {
+					final Component search = getComponentByText(component, needle);
+					if (search.valid()) {
+						return search;
+					}
+				}
+			}
+		}
+
+		return ctx.widgets.component(0, 0);
+	}
+
+	public boolean isTextVisible(String needle) {
+		return getComponentByText(needle).visible();
 	}
 }
