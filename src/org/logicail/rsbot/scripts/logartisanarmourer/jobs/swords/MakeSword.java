@@ -57,11 +57,13 @@ public class MakeSword extends ArtisanArmourerTask {
 
 		Sword hitPart = null;
 
-		Sword[] parts = org.powerbot.script.Random.nextBoolean() ? new Sword[]{Sword.Eighth, Sword.Sixteenth} : new Sword[]{Sword.Sixteenth, Sword.Eighth};
-		for (Sword part : parts) {
-			if (part.getHitsNeeded(ctx) > 0) {
-				hitPart = part;
-				break;
+		if (getCooldown() < 6) {
+			Sword[] parts = org.powerbot.script.Random.nextBoolean() ? new Sword[]{Sword.Eighth, Sword.Sixteenth} : new Sword[]{Sword.Sixteenth, Sword.Eighth};
+			for (Sword part : parts) {
+				if (part.getHitsNeeded(ctx) > 0) {
+					hitPart = part;
+					break;
+				}
 			}
 		}
 
@@ -73,14 +75,13 @@ public class MakeSword extends ArtisanArmourerTask {
 		}
 
 		if (hitPart == null || getCooldown() == 0) {
-			//LogArtisanWorkshop.get().getLogHandler().print("No more parts can be hit");
+			//script.log.info("No more parts can be hit");
 			options.finishedSword = true;
 			closeInterface();
 			return;
 		}
 
 		if (HitType.setHitType(ctx, hitPart.getRequiredHitType(ctx, this))) {
-			//LogHandler.print("Hit " + hitPart + " with " + hitPart.getRequiredHitType());
 			//script.log.info("Hit [" + hitPart + "] require=" + hitPart.getHitsNeeded(ctx) + " hittype=" + hitPart.getRequiredHitType(ctx, this));
 			hitPart.clickButton(ctx, this);
 			sleep(300);
