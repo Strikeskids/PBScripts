@@ -59,11 +59,12 @@ public class Banker extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
+		ctx.inventory.deselect();
+
 		if (ctx.npcs.select().name("Giant rat").poll().valid()) {
 			if (ctx.chat.visible(CombatExpert.YOU_HAVE_COMPLETED_THE_TASKS_HERE)) {
 				final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
 //				LogTutorialIsland.interactive.set(ladder);
-				ctx.inventory.deselect();
 				if (ctx.camera.prepare(ladder) && ladder.click("Climb-up")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override

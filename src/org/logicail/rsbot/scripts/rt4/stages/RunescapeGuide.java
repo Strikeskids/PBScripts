@@ -27,6 +27,8 @@ public class RunescapeGuide extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
+		ctx.inventory.deselect();
+
 		if (ctx.game.tab() != Game.Tab.OPTIONS && ctx.chat.visible("You will notice the flashing icon of a spanner", "Please click on the flashing spanner icon")) {
 			ctx.game.tab(Game.Tab.OPTIONS);
 			return;

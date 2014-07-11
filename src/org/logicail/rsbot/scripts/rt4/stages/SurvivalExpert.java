@@ -60,9 +60,6 @@ public class SurvivalExpert extends Talker {
 		}
 
 		if (!ctx.inventory.select().name("Raw shrimps").isEmpty() && ctx.chat.visible("Now you have caught some shrimp", "then use them on a fire")) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-			}
 			cook();
 			return;
 		}
@@ -72,11 +69,10 @@ public class SurvivalExpert extends Talker {
 				ctx.game.tab(Game.Tab.INVENTORY);
 			}
 
-			ctx.inventory.deselect();
-
 			ctx.inventory.select().name("Burnt shrimp").each(new Filter<Item>() {
 				@Override
 				public boolean accept(final Item item) {
+					ctx.inventory.deselect();
 					if (item.interact("Drop")) {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
@@ -130,7 +126,6 @@ public class SurvivalExpert extends Talker {
 	private void chop() {
 		final GameObject tree = ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).within(ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).nearest().poll().tile().distanceTo(ctx.players.local()) + Random.nextInt(1, 5)).shuffle().poll();
 		if (ctx.camera.prepare(tree)) {
-			ctx.inventory.deselect();
 			if (tree.interact("Chop down", "Tree")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -143,6 +138,10 @@ public class SurvivalExpert extends Talker {
 	}
 
 	private boolean cook() {
+		if (ctx.game.tab() != Game.Tab.INVENTORY) {
+			ctx.game.tab(Game.Tab.INVENTORY);
+		}
+
 		final GameObject fire = ctx.objects.select().select(ObjectDefinition.name(ctx, "Fire")).select(new Filter<GameObject>() {
 			@Override
 			public boolean accept(GameObject gameObject) {

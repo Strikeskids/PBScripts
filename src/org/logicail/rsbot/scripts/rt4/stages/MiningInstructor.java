@@ -31,25 +31,6 @@ public class MiningInstructor extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
-		if (ctx.chat.visible("To prospect a mineable rock")) {
-			prospect(TIN_FILTER);
-			return;
-		}
-		if (ctx.chat.visible("So now you know there's tin in the grey rocks")) {
-			prospect(COPPER_FILTER);
-			return;
-		}
-
-		if (ctx.chat.visible("It's quite simple really. All you need to do is right click")) {
-			mine(TIN_FILTER);
-			return;
-		}
-
-		if (ctx.chat.visible("Now you have some tin ore you just need some copper ore")) {
-			mine(COPPER_FILTER);
-			return;
-		}
-
 		if (ctx.chat.visible("To smith you'll need a hammer")) {
 			if (ctx.game.tab() != Game.Tab.INVENTORY) {
 				ctx.game.tab(Game.Tab.INVENTORY);
@@ -85,36 +66,6 @@ public class MiningInstructor extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("Now you have the Smithing menu open")) {
-			// Find dagger, no hardcoding (except widget)
-			final Component dagger = ctx.chat.getComponentByText("Dagger");
-			if (dagger.valid()) {
-				final Component[] components = dagger.parent().components();
-				if (components.length > 0 && components[Random.nextInt(0, components.length)].click("Smith 1", "Bronze dagger")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return !ctx.inventory.select().name("Bronze dagger").isEmpty();
-						}
-					}, 200, 10);
-				}
-			}
-			return;
-		}
-
-		if (ctx.chat.visible("You've finished in this area")) {
-			final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_EW)).nearest().poll();
-			if (ctx.camera.prepare(gate) && gate.click("Open")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible("In this area you will find out about combat with swords");
-					}
-				});
-			}
-			return;
-		}
-
 		if (ctx.chat.visible("You should now have both some copper and tin ore")) {
 			if (ctx.game.tab() != Game.Tab.INVENTORY) {
 				ctx.game.tab(Game.Tab.INVENTORY);
@@ -146,6 +97,57 @@ public class MiningInstructor extends Talker {
 						}
 					}
 				}
+			}
+			return;
+		}
+
+		ctx.inventory.deselect();
+
+		if (ctx.chat.visible("To prospect a mineable rock")) {
+			prospect(TIN_FILTER);
+			return;
+		}
+		if (ctx.chat.visible("So now you know there's tin in the grey rocks")) {
+			prospect(COPPER_FILTER);
+			return;
+		}
+
+		if (ctx.chat.visible("It's quite simple really. All you need to do is right click")) {
+			mine(TIN_FILTER);
+			return;
+		}
+
+		if (ctx.chat.visible("Now you have some tin ore you just need some copper ore")) {
+			mine(COPPER_FILTER);
+			return;
+		}
+
+		if (ctx.chat.visible("Now you have the Smithing menu open")) {
+			// Find dagger, no hardcoding (except widget)
+			final Component dagger = ctx.chat.getComponentByText("Dagger");
+			if (dagger.valid()) {
+				final Component[] components = dagger.parent().components();
+				if (components.length > 0 && components[Random.nextInt(0, components.length)].click("Smith 1", "Bronze dagger")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return !ctx.inventory.select().name("Bronze dagger").isEmpty();
+						}
+					}, 200, 10);
+				}
+			}
+			return;
+		}
+
+		if (ctx.chat.visible("You've finished in this area")) {
+			final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_EW)).nearest().poll();
+			if (ctx.camera.prepare(gate) && gate.click("Open")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.chat.visible("In this area you will find out about combat with swords");
+					}
+				});
 			}
 			return;
 		}

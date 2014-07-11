@@ -32,20 +32,6 @@ public class MasterChef extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
-		if (ctx.chat.visible("Follow the path until you get to the door with the yellow arrow")) {
-			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(new int[]{0, 32, -240, 0, 0, 120})).nearest().poll();
-			ctx.inventory.deselect();
-			if (door.valid() && ctx.camera.prepare(door) && door.click("Open", "Door")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible("Talk to the chef indicated.");
-					}
-				}, 200, 50);
-			}
-			return;
-		}
-
 		if (ctx.chat.visible("This is the base for many of the meals. To make dough")) {
 			final Item flour = ctx.inventory.select().id(POT_OF_FLOUR).shuffle().poll();
 			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != POT_OF_FLOUR) {
@@ -66,6 +52,21 @@ public class MasterChef extends Talker {
 						}, 200, 6);
 					}
 				}
+			}
+			return;
+		}
+
+		ctx.inventory.deselect();
+
+		if (ctx.chat.visible("Follow the path until you get to the door with the yellow arrow")) {
+			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(new int[]{0, 32, -240, 0, 0, 120})).nearest().poll();
+			if (door.valid() && ctx.camera.prepare(door) && door.click("Open", "Door")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.chat.visible("Talk to the chef indicated.");
+					}
+				}, 200, 50);
 			}
 			return;
 		}
