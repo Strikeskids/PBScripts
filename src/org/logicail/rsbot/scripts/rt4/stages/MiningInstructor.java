@@ -51,10 +51,20 @@ public class MiningInstructor extends Talker {
 		}
 
 		if (ctx.chat.visible("To smith you'll need a hammer")) {
+			if (ctx.game.tab() != Game.Tab.INVENTORY) {
+				ctx.game.tab(Game.Tab.INVENTORY);
+			}
+
 			final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().poll();
 			if (ctx.camera.prepare(anvil)) {
 				final Item bar = ctx.inventory.select().name("Bronze bar").poll();
-				if (bar.click("Use")) {
+
+				if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != bar.id()) {
+					ctx.inventory.deselect();
+					return;
+				}
+
+				if (ctx.inventory.selectedItem().id() == bar.id() || bar.click("Use")) {
 					if (Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {

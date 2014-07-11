@@ -71,6 +71,9 @@ public class SurvivalExpert extends Talker {
 			if (ctx.game.tab() != Game.Tab.INVENTORY) {
 				ctx.game.tab(Game.Tab.INVENTORY);
 			}
+
+			ctx.inventory.deselect();
+
 			ctx.inventory.select().name("Burnt shrimp").each(new Filter<Item>() {
 				@Override
 				public boolean accept(final Item item) {
@@ -127,11 +130,12 @@ public class SurvivalExpert extends Talker {
 	private void chop() {
 		final GameObject tree = ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).within(ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).nearest().poll().tile().distanceTo(ctx.players.local()) + Random.nextInt(1, 5)).shuffle().poll();
 		if (ctx.camera.prepare(tree)) {
+			ctx.inventory.deselect();
 			if (tree.click("Chop down", "Tree")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !tree.valid() || !ctx.inventory.select().name("Logs").isEmpty();
+						return !tree.valid() || !ctx.inventory.select().id(LOGS).isEmpty();
 					}
 				}, 333, 10);
 			}
@@ -146,7 +150,7 @@ public class SurvivalExpert extends Talker {
 			}
 		}).nearest().poll();
 		if (!fire.valid()) {
-			if (ctx.inventory.select().name("Logs").isEmpty()) {
+			if (ctx.inventory.select().id(LOGS).isEmpty()) {
 				chop();
 				return true;
 			} else {
@@ -164,7 +168,7 @@ public class SurvivalExpert extends Talker {
 		}
 
 		if (ctx.camera.prepare(fire) && raw.valid()) {
-			if (ctx.inventory.selectedItem().id() != RAW_SHRIMP || raw.click("Use")) {
+			if (ctx.inventory.selectedItem().id() == RAW_SHRIMP || raw.click("Use")) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -196,7 +200,7 @@ public class SurvivalExpert extends Talker {
 				return;
 			}
 
-			if (ctx.inventory.selectedItem().id() != LOGS || logs.click("Use")) {
+			if (ctx.inventory.selectedItem().id() == LOGS || logs.click("Use")) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
