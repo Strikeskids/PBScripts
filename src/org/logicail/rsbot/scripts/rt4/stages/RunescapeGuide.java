@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.Game;
@@ -17,7 +16,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 12:24
  */
-@ActionManifest(name = "Runescape Guide")
 public class RunescapeGuide extends Talker {
 	public static final String RUNESCAPE_GUIDE = "RuneScape Guide";
 

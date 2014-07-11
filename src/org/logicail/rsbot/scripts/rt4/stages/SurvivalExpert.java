@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -20,7 +19,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 13:09
  */
-@ActionManifest(name = "Survival Expert")
 public class SurvivalExpert extends Talker {
 	public SurvivalExpert(IClientContext ctx) {
 		super(ctx, "Survival Expert");

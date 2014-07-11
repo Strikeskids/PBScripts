@@ -39,9 +39,10 @@ public class OSTutorialIsland extends GraphScript<IClientContext> implements Pai
 		graphics.drawString(getName(), 25, 125);
 		final Action<IClientContext> action = current.get();
 		if (action != null) {
-			// TODO: Fix flashing
-			final ActionManifest manifest = action.getClass().getAnnotation(ActionManifest.class);
-			task.set((manifest != null ? manifest.name() : "unknown"));
+			final String s = action.toString();
+			if (!s.equals("")) {
+				task.set(s);
+			}
 			lastSet = System.currentTimeMillis();
 		}
 

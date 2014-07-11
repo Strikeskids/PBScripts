@@ -15,6 +15,11 @@ public class LoggedIn extends GraphScript.Action<IClientContext> {
 	}
 
 	@Override
+	public String toString() {
+		return "";
+	}
+
+	@Override
 	public boolean valid() {
 		return ctx.game.loggedIn();
 	}

@@ -17,6 +17,11 @@ public class SetRun extends GraphScript.Action<IClientContext> {
 		super(ctx);
 	}
 
+	@Override
+	public String toString() {
+		return "Set Run";
+	}
+
 	private int nextPercentValid = Random.nextInt(20, 40);
 
 	private long nextrun;

@@ -3,7 +3,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -18,7 +17,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 21:03
  */
-@ActionManifest(name = "Banker")
 public class Banker extends Talker {
 	public Banker(final IClientContext ctx) {
 		super(ctx, "Banker");

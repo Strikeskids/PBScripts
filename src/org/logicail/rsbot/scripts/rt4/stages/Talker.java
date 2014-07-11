@@ -18,6 +18,11 @@ import java.util.concurrent.Callable;
 public abstract class Talker extends GraphScript.Action<IClientContext> {
 	protected final String name;
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 	public Talker(IClientContext ctx, String name) {
 		super(ctx);
 		this.name = name;

@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
@@ -20,7 +19,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 21:41
  */
-@ActionManifest(name = "Magic Instructor")
 public class MagicInstructor extends Talker {
 	public MagicInstructor(IClientContext ctx) {
 		super(ctx, "Magic Instructor");

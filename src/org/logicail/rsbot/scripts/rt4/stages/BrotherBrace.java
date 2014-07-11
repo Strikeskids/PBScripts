@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -20,7 +19,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 21:22
  */
-@ActionManifest(name = "Brother Brace")
 public class BrotherBrace extends Talker {
 	public BrotherBrace(IClientContext ctx) {
 		super(ctx, "Brother Brace");

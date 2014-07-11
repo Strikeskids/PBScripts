@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -20,7 +19,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 18:06
  */
-@ActionManifest(name = "Quest Guide")
 public class QuestGuide extends Talker {
 	private static final String NOW_THAT_YOU_HAVE_THE_RUN_BUTTON_TURNED_ON = "Now that you have the run button turned on";
 

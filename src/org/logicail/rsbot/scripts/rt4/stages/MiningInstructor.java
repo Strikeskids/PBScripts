@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.logicail.rsbot.scripts.rt4.Rocks;
 import org.powerbot.script.Condition;
@@ -18,7 +17,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 18:18
  */
-@ActionManifest(name = "Mining Instructor")
 public class MiningInstructor extends Talker {
 	private final Filter<GameObject> TIN_FILTER = Rocks.TIN.filter(ctx);
 	private final Filter<GameObject> COPPER_FILTER = Rocks.COPPER.filter(ctx);

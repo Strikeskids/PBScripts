@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -18,7 +17,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 20:19
  */
-@ActionManifest(name = "Combat Expert")
 public class CombatExpert extends Talker {
 	private static final String LEFT_CLICK_YOUR_DAGGER_TO = "Left click your dagger to";
 	private static final String TO_ATTACK_THE_RAT_RIGHT_CLICK_IT = "To attack the rat, right click it";

@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.GameObject;
 
@@ -14,7 +13,6 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 21:18
  */
-@ActionManifest(name = "Financial Advisor")
 public class FinancialAdvisor extends Talker {
 	public FinancialAdvisor(IClientContext ctx) {
 		super(ctx, "Financial Advisor");

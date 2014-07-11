@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt4.Component;
@@ -21,9 +20,13 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 11:54
  */
-@ActionManifest(name = "Random Character")
 public class RandomCharacter extends GraphScript.Action<IClientContext> {
 	private static final int WIDGET_CHARACTER = 269;
+
+	@Override
+	public String toString() {
+		return "Random Character";
+	}
 
 	private static int ACCEPT = 100;
 	private static int[] GENDER = {138, 139};

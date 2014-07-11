@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.Game;
 
@@ -12,10 +11,14 @@ import org.powerbot.script.rt4.Game;
  * Date: 10/07/2014
  * Time: 18:00
  */
-@ActionManifest(name = "Running")
 public class Running extends GraphScript.Action<IClientContext> {
 	private static final String IT_S_ONLY_A_SHORT_DISTANCE_TO_THE_NEXT_GUIDE = "It's only a short distance to the next guide.";
 	private static final String CLICK_ON_THE_RUN_BUTTON_NOW = "click on the run button now.";
+
+	@Override
+	public String toString() {
+		return "Running";
+	}
 
 	public Running(IClientContext ctx) {
 		super(ctx);

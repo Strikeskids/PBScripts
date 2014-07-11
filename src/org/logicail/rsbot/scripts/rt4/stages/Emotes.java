@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ActionManifest;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt4.Component;
@@ -16,10 +15,14 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 17:53
  */
-@ActionManifest(name = "Emotes")
 public class Emotes extends GraphScript.Action<IClientContext> {
 	public Emotes(IClientContext ctx) {
 		super(ctx);
+	}
+
+	@Override
+	public String toString() {
+		return "Emotes";
 	}
 
 	@Override
