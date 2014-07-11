@@ -26,6 +26,7 @@ public class SurvivalExpert extends Talker {
 	private static final int LOGS = 2511;
 	private static final int TINDERBOX = 590;
 	private static final int BURNT_SHRIMP = 7954;
+	private static final int[] BOUNDS_FISHING_SPOT = {-48, 40, -8, 0, -52, 36};
 
 	public SurvivalExpert(IClientContext ctx) {
 		super(ctx, "Survival Expert");
@@ -88,7 +89,7 @@ public class SurvivalExpert extends Talker {
 				}
 			});
 
-			final Npc fishingSpot = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Fishing spot")).nearest().poll();
+			final Npc fishingSpot = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Fishing spot")).each(Interactive.doSetBounds(BOUNDS_FISHING_SPOT)).nearest().poll();
 			if (ctx.camera.prepare(fishingSpot) && fishingSpot.interact("Net")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
