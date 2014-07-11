@@ -68,7 +68,7 @@ public class IChat extends ClientAccessor {
 			}
 		}
 
-		return ctx.widgets.widget(0).component(0);
+		return null;
 	}
 
 	public Component getComponentByText(String... needle) {
@@ -76,7 +76,7 @@ public class IChat extends ClientAccessor {
 			for (Component component : widget.components()) {
 				if (component.valid()) {
 					final Component search = getComponentByText(component, needle);
-					if (search.valid() && search.visible()) {
+					if (search != null && search.valid() && search.visible()) {
 						return search;
 					}
 				}
