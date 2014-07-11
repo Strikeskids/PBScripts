@@ -43,11 +43,6 @@ public class CombatExpert extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible("icon of a man, the one to the right of your backpack")) {
-			ctx.game.tab(Game.Tab.EQUIPMENT);
-			return;
-		}
-
 		if (ctx.chat.visible("From here you can see what items you have equipped")) {
 			final Component stats = ctx.widgets.widget(387).component(17);
 			if (stats.click("View equipment stats")) {
@@ -106,11 +101,6 @@ public class CombatExpert extends Talker {
 					}
 				}, 200, 5);
 			}
-			return;
-		}
-
-		if (ctx.chat.visible("Click on the flashing crossed swords")) {
-			ctx.game.tab(Game.Tab.ATTACK);
 			return;
 		}
 

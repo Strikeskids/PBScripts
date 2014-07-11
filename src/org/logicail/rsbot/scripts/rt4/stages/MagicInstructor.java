@@ -22,7 +22,6 @@ import java.util.concurrent.Callable;
  * Time: 21:41
  */
 public class MagicInstructor extends Talker {
-	private static final String OPEN_UP_THE_MAGIC_MENU_BY = "Open up the Magic menu by";
 	private static final String JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE = "Just follow the path to the Wizard's house";
 	private static final String NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE = "Now you have some runes you should see the Wind Strike";
 	private final HashSet<Tile> ignored = new HashSet<Tile>();
@@ -43,11 +42,6 @@ public class MagicInstructor extends Talker {
 				ctx.movement.myWalk(table.tile().derive(-3, 0));
 				Condition.sleep(200);
 			}
-			return;
-		}
-
-		if (ctx.chat.visible(OPEN_UP_THE_MAGIC_MENU_BY)) {
-			ctx.game.tab(Game.Tab.MAGIC);
 			return;
 		}
 
@@ -155,6 +149,6 @@ public class MagicInstructor extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE, OPEN_UP_THE_MAGIC_MENU_BY, NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE);
+		return super.valid() || ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE, NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE);
 	}
 }

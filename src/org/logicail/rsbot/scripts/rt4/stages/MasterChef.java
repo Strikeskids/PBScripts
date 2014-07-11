@@ -4,7 +4,6 @@ import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
-import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.GameObject;
 import org.powerbot.script.rt4.Interactive;
 import org.powerbot.script.rt4.Item;
@@ -119,11 +118,6 @@ public class MasterChef extends Talker {
 					Condition.sleep(500);
 				}
 			}
-			return;
-		}
-
-		if (ctx.chat.visible("Click on the flashing icon")) {
-			ctx.game.tab(Game.Tab.MUSIC);
 			return;
 		}
 

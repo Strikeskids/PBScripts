@@ -7,7 +7,6 @@ import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
-import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.GameObject;
 import org.powerbot.script.rt4.Interactive;
 
@@ -66,11 +65,6 @@ public class QuestGuide extends Talker {
 					}
 				}, 200, 50);
 			}
-			return;
-		}
-
-		if (ctx.chat.visible("Open the Quest Journal.")) {
-			ctx.game.tab(Game.Tab.QUESTS);
 			return;
 		}
 

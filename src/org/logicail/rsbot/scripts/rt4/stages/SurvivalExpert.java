@@ -51,18 +51,6 @@ public class SurvivalExpert extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("Click on the flashing backpack icon to the")) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-			}
-			return;
-		}
-
-		if (ctx.chat.visible("Click on the flashing bar graph icon")) {
-			ctx.game.tab(Game.Tab.STATS);
-			return;
-		}
-
 		if (!ctx.inventory.select().id(RAW_SHRIMP).isEmpty() && ctx.chat.visible("Now you have caught some shrimp", "then use them on a fire", "Now right click on the shrimp and select the use option.")) {
 			cook();
 			return;

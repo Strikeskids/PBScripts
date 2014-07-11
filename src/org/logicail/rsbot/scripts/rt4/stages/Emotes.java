@@ -28,10 +28,9 @@ public class Emotes extends GraphScript.Action<IClientContext> {
 	@Override
 	public void run() {
 		Condition.sleep(500);
-		if (ctx.game.tab(Game.Tab.EMOTES)) {
-			// 57 max
+		if (ctx.game.tab() == Game.Tab.EMOTES || ctx.game.tab(Game.Tab.EMOTES)) {
 			final Component emote = ctx.widgets.widget(464).component(Random.nextInt(38, 58));
-			if (emote.click()) {
+			if (emote.valid() && emote.click()) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

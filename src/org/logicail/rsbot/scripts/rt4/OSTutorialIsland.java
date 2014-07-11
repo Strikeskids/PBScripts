@@ -99,6 +99,8 @@ public class OSTutorialIsland extends GraphScript<IClientContext> implements Pai
 	public void start() {
 		LoggedIn loggedIn = new LoggedIn(ctx);
 
+		loggedIn.add(new TabOpener(ctx));
+
 		final RandomCharacter randomCharacter = new RandomCharacter(ctx);
 		loggedIn.add(randomCharacter);
 

@@ -4,7 +4,6 @@ import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
-import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.GameObject;
 import org.powerbot.script.rt4.Interactive;
 
@@ -28,11 +27,6 @@ public class RunescapeGuide extends Talker {
 		if (tryContinue()) return;
 
 		ctx.inventory.deselect();
-
-		if (ctx.game.tab() != Game.Tab.OPTIONS && ctx.chat.visible("You will notice the flashing icon of a spanner", "Please click on the flashing spanner icon")) {
-			ctx.game.tab(Game.Tab.OPTIONS);
-			return;
-		}
 
 		if (ctx.chat.visible("To continue the tutorial go through that door", "try it with the things in this room, then click on the door", "Follow the path to find the next instructor.")) {
 			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_E)).nearest().poll();
