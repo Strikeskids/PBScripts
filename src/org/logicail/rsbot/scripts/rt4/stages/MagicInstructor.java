@@ -12,6 +12,7 @@ import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.GameObject;
 import org.powerbot.script.rt4.Npc;
 
+import java.util.HashSet;
 import java.util.concurrent.Callable;
 
 /**
@@ -21,13 +22,13 @@ import java.util.concurrent.Callable;
  * Time: 21:41
  */
 public class MagicInstructor extends Talker {
+	private static final String NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE = "Now you have some runes you should see the Wind Strike";
+	private static final String OPEN_UP_THE_MAGIC_MENU_BY = "Open up the Magic menu by";
+	private static final String JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE = "Just follow the path to the Wizard's house";
+	private final HashSet<Tile> ignored = new HashSet<Tile>();
+
 	public MagicInstructor(IClientContext ctx) {
 		super(ctx, "Magic Instructor");
-	}
-
-	@Override
-	public boolean valid() {
-		return super.valid() || ctx.chat.visible("Just follow the path to the Wizard's house");
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class MagicInstructor extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible("Just follow the path to the Wizard's house") && !npc().valid()) {
+		if (ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE) && !npc().valid()) {
 			final GameObject table = table();
 			if (table.valid()) {
 				ctx.movement.myWalk(table.tile().derive(-3, 0));
@@ -45,34 +46,29 @@ public class MagicInstructor extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("Open up the Magic menu by")) {
+		if (ctx.chat.visible(OPEN_UP_THE_MAGIC_MENU_BY)) {
 			ctx.game.tab(Game.Tab.MAGIC);
 			return;
 		}
 
-		if (ctx.chat.visible("Now you have runes you should see the Wind Strike")) {
+		if (ctx.chat.visible(NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE)) {
 			if (ctx.game.tab() != Game.Tab.MAGIC) {
 				ctx.game.tab(Game.Tab.MAGIC);
 			}
 
-			final GameObject table = table();
-			if (table.valid()) {
-				final Tile spellFrom = table.tile().derive(-3, -4);
-				final int distance = ctx.movement.distance(spellFrom, ctx.players.local());
-				if (distance > 2) {
-					final Tile derive = spellFrom.derive(Random.nextInt(-1, 1), 0);
-					ctx.camera.turnTo(derive);
-					if (derive.matrix(ctx).inViewport()) {
-						derive.matrix(ctx).interact("Walk here");
-						Condition.sleep(500);
-					} else {
-						ctx.movement.myWalk(derive);
-					}
-					return;
-				}
+			final Tile spellFrom = spellLocation();
+			final int distance = ctx.movement.distance(spellFrom, ctx.players.local());
+			if (distance > 2) {
+				walkSpellFrom();
+				return;
 			}
 
 			final Npc chicken = ctx.npcs.select().select(new Filter<Npc>() {
+				@Override
+				public boolean accept(Npc npc) {
+					return !ignored.contains(npc.tile());
+				}
+			}).select(new Filter<Npc>() {
 				@Override
 				public boolean accept(Npc npc) {
 					return !npc.inCombat();
@@ -84,13 +80,32 @@ public class MagicInstructor extends Talker {
 				if (windStrike.valid()) {
 					if (windStrike.click("Cast")) {
 						Condition.sleep(250);
-						chicken.interact("Cast", "Wind Strike -> Chicken");
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return ctx.chat.visible("All you need to do now is move on to the mainland");
+						if (chicken.interact("Cast", "Wind Strike -> Chicken")) {
+							final Tile ignore = chicken.tile();
+							final Tile tile = spellLocation();
+							if (Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									final Tile destination = ctx.movement.destination();
+									return destination != Tile.NIL && ctx.movement.distance(tile, destination) > 3;
+								}
+							}, 100, 5)) {
+								if (chicken.tile().equals(ignore)) {
+									ignored.add(ignore);
+								}
+								Condition.sleep(200);
+								walkSpellFrom();
+								Condition.sleep(200);
 							}
-						}, 200, 5);
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return ctx.chat.visible("All you need to do now is move on to the mainland");
+								}
+							}, 200, 5);
+						} else {
+							Condition.sleep(500);
+						}
 					} else {
 						windStrike.interact("Cancel");
 						Condition.sleep(200);
@@ -114,7 +129,32 @@ public class MagicInstructor extends Talker {
 		super.run();
 	}
 
+	private Tile spellLocation() {
+		final GameObject table = table();
+		if (table.valid()) {
+			return table.tile().derive(-4, 7);
+		}
+		return Tile.NIL;
+	}
+
 	private GameObject table() {
 		return ctx.objects.select().select(ObjectDefinition.name(ctx, "Table")).nearest(ctx.objects.select().select(ObjectDefinition.name(ctx, "Dragon's head")).poll()).poll();
+	}
+
+	private void walkSpellFrom() {
+		final Tile derive = spellLocation().derive(Random.nextInt(-1, 1), 0);
+		ctx.camera.prepare(derive.matrix(ctx));
+		if (derive.matrix(ctx).inViewport()) {
+			derive.matrix(ctx).interact("Walk here");
+			Condition.sleep(500);
+		} else {
+			log.info("MYWALK!");
+			ctx.movement.myWalk(derive);
+		}
+	}
+
+	@Override
+	public boolean valid() {
+		return super.valid() || ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE, NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE);
 	}
 }
