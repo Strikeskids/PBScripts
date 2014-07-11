@@ -90,7 +90,7 @@ public class SurvivalExpert extends Talker {
 			});
 
 			final Npc fishingSpot = ctx.npcs.select().name("Fishing Spot").nearest().poll();
-			if (ctx.camera.prepare(fishingSpot) && fishingSpot.click("Net")) {
+			if (ctx.camera.prepare(fishingSpot) && fishingSpot.interact("Net")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -131,7 +131,7 @@ public class SurvivalExpert extends Talker {
 		final GameObject tree = ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).within(ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).nearest().poll().tile().distanceTo(ctx.players.local()) + Random.nextInt(1, 5)).shuffle().poll();
 		if (ctx.camera.prepare(tree)) {
 			ctx.inventory.deselect();
-			if (tree.click("Chop down", "Tree")) {
+			if (tree.interact("Chop down", "Tree")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

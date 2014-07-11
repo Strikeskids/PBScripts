@@ -22,6 +22,8 @@ public class FinancialAdvisor extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
+		ctx.inventory.deselect();
+
 		if (ctx.chat.visible("Continue through the next door.")) {
 			final GameObject bank = ctx.objects.select().select(ObjectDefinition.name(ctx, "Bank booth")).nearest().poll();
 			if (bank.valid()) {

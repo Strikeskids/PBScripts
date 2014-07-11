@@ -33,6 +33,8 @@ public class MagicInstructor extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
+		ctx.inventory.deselect();
+
 		if (ctx.chat.visible("Just follow the path to the Wizard's house") && !npc().valid()) {
 			final GameObject table = table();
 			if (table.valid()) {

@@ -122,8 +122,14 @@ public class MiningInstructor extends Talker {
 
 			final GameObject furnace = ctx.objects.select().select(ObjectDefinition.name(ctx, "Furnace")).each(Interactive.doSetBounds(FURNACE_BOUND)).nearest().poll();
 			final Item ore = ctx.inventory.select().name("Tin ore", "Copper ore").shuffle().poll();
+
+			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != ore.id()) {
+				ctx.inventory.deselect();
+				return;
+			}
+
 			if (ctx.camera.prepare(furnace) && ore.valid()) {
-				if (ore.click("Use")) {
+				if (ctx.inventory.selectedItem().id() == ore.id() || ore.click("Use")) {
 					if (Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {

@@ -35,6 +35,8 @@ public class CombatExpert extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
+		ctx.inventory.deselect();
+
 		if (ctx.chat.visible("icon of a man, the one to the right of your backpack")) {
 			ctx.game.tab(Game.Tab.EQUIPMENT);
 			return;
@@ -89,6 +91,7 @@ public class CombatExpert extends Talker {
 				ctx.game.tab(Game.Tab.INVENTORY);
 				return;
 			}
+			ctx.inventory.deselect();
 			for (final Item item : ctx.inventory.select().name("Bronze sword", "Wooden shield").shuffle()) {
 				item.click("Wield");
 				Condition.wait(new Callable<Boolean>() {
@@ -145,6 +148,7 @@ public class CombatExpert extends Talker {
 				ctx.game.tab(Game.Tab.INVENTORY);
 				return;
 			}
+			ctx.inventory.deselect();
 			for (final Item item : ctx.inventory.select().id(841, 882).shuffle()) {
 				item.click("Wield");
 				Condition.wait(new Callable<Boolean>() {
@@ -201,6 +205,7 @@ public class CombatExpert extends Talker {
 		}
 		if (ctx.chat.visible(YOU_HAVE_COMPLETED_THE_TASKS_HERE)) {
 			final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
+			ctx.inventory.deselect();
 			if (ctx.camera.prepare(ladder) && ladder.click("Climb-up")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -217,6 +222,7 @@ public class CombatExpert extends Talker {
 
 	private void traverseCage() {
 		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_NS)).nearest(ctx.players.local()).poll();
+		ctx.inventory.deselect();
 		if (ctx.camera.prepare(gate) && gate.click("Open")) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
