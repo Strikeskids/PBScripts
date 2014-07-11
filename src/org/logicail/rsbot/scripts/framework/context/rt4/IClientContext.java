@@ -12,23 +12,48 @@ import java.io.FileNotFoundException;
  * Time: 12:41
  */
 public class IClientContext extends ClientContext {
-	public IChat chat;
-	public ICamera camera;
-	public IMovement movement;
-	public IInventory inventory;
-	public DefinitionManager definitions;
+	public final IChat chat;
+	public final ICamera camera;
+	public final IMovement movement;
+	public final IInventory inventory;
+	public final DefinitionManager definitions;
 
-	public IClientContext(ClientContext ctx) {
-		super(ctx);
-		chat = new IChat(ctx);
-		camera = new ICamera(ctx);
-		movement = new IMovement(ctx);
-		inventory = new IInventory(ctx);
+	public IClientContext(IClientContext o) {
+		super(o);
+
+		System.out.println("Constructor IClientContext with IClientContext " + o.getClass().getCanonicalName());
+
+		chat = new IChat(this);
+		camera = new ICamera(this);
+		movement = new IMovement(this);
+		inventory = new IInventory(this);
+
+		DefinitionManager manger = null;
+
 		try {
-			this.definitions = new DefinitionManager(ctx);
+			manger = new DefinitionManager(this);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			ctx.controller.stop();
+			this.controller.stop();
 		}
+
+		this.definitions = manger;
 	}
+
+//	public IClientContext(ClientContext ctx) {
+//		super(ctx);
+//
+//		System.out.println("Constructor IClientContext with " + ctx.getClass().getCanonicalName());
+//
+//		chat = new IChat(ctx);
+//		camera = new ICamera(ctx);
+//		movement = new IMovement(ctx);
+//		inventory = new IInventory(ctx);
+//		try {
+//			this.definitions = new DefinitionManager(ctx);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//			ctx.controller.stop();
+//		}
+//	}
 }
