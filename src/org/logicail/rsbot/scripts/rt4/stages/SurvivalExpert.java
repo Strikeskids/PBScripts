@@ -62,7 +62,7 @@ public class SurvivalExpert extends Talker {
 			return;
 		}
 
-		if (!ctx.inventory.select().id(RAW_SHRIMP).isEmpty() && ctx.chat.visible("Now you have caught some shrimp", "then use them on a fire")) {
+		if (!ctx.inventory.select().id(RAW_SHRIMP).isEmpty() && ctx.chat.visible("Now you have caught some shrimp", "then use them on a fire", "Now right click on the shrimp and select the use option.")) {
 			cook();
 			return;
 		}
