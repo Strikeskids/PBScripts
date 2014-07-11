@@ -66,7 +66,7 @@ public class MasterChef extends Talker {
 					public Boolean call() throws Exception {
 						return ctx.chat.visible("Talk to the chef indicated.");
 					}
-				}, 200, 50);
+				}, 200, 40);
 			}
 			return;
 		}
@@ -110,12 +110,14 @@ public class MasterChef extends Talker {
 			}).poll();
 			door.bounds(OSTutorialIsland.BOUNDS_DOOR_EW);
 			if (ctx.camera.prepare(door) && door.click("Open")) {
-				Condition.wait(new Callable<Boolean>() {
+				if(Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return ctx.chat.visible("Now, how about showing some feelings?");
 					}
-				}, 200, 40);
+				}, 200, 40)) {
+					Condition.sleep(500);
+				}
 			}
 			return;
 		}
