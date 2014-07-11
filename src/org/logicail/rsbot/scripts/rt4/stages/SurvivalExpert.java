@@ -20,6 +20,10 @@ import java.util.concurrent.Callable;
  * Time: 13:09
  */
 public class SurvivalExpert extends Talker {
+
+	private static final int RAW_SHRIMP = 2514;
+	private static final int LOGS = 2511;
+
 	public SurvivalExpert(IClientContext ctx) {
 		super(ctx, "Survival Expert");
 	}
@@ -87,7 +91,7 @@ public class SurvivalExpert extends Talker {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.players.local().animation() == -1 && !ctx.inventory.select().name("Raw shrimps").isEmpty();
+						return ctx.players.local().animation() == -1 && !ctx.inventory.select().id(RAW_SHRIMP).isEmpty();
 					}
 				}, 200, 50);
 			}
@@ -151,9 +155,16 @@ public class SurvivalExpert extends Talker {
 			return true;
 		}
 
-		final Item raw = ctx.inventory.select().name("Raw shrimps").shuffle().poll();
+
+		final Item raw = ctx.inventory.select().id(RAW_SHRIMP).shuffle().poll();
+
+		if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != RAW_SHRIMP) {
+			ctx.inventory.deselect();
+			return false;
+		}
+
 		if (ctx.camera.prepare(fire) && raw.valid()) {
-			if (raw.click("Use")) {
+			if (ctx.inventory.selectedItem().id() != RAW_SHRIMP || raw.click("Use")) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -177,9 +188,15 @@ public class SurvivalExpert extends Talker {
 	private void makeFire() {
 		final Tile playerTile = ctx.players.local().tile();
 		if (ctx.objects.select().at(playerTile).select(ObjectDefinition.name(ctx, "Fire")).isEmpty()) {
-			final Item logs = ctx.inventory.select().name("Logs").shuffle().poll();
+			final Item logs = ctx.inventory.select().id(LOGS).shuffle().poll();
 			final Item tinderbox = ctx.inventory.select().name("Tinderbox").shuffle().poll();
-			if (logs.click("Use")) {
+
+			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != RAW_SHRIMP) {
+				ctx.inventory.deselect();
+				return;
+			}
+
+			if (ctx.inventory.selectedItem().id() != LOGS || logs.click("Use")) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
