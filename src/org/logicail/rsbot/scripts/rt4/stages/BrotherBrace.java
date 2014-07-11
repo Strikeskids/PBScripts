@@ -23,6 +23,7 @@ public class BrotherBrace extends Talker {
 
 	private static final String CLICK_ON_THE_FLASHING_ICON_TO_OPEN_THE_PRAYER = "Click on the flashing icon to open the Prayer";
 	private static final String SMILING_FACE_TO_OPEN_YOUR_FRIENDS_LIST = "smiling face to open your friends list";
+	private static final String ON_THE_OTHER_FLASHING_FACE_TO_THE_RIGHT = "on the other flashing face to the right";
 
 	public BrotherBrace(IClientContext ctx) {
 		super(ctx, "Brother Brace");
@@ -95,7 +96,7 @@ public class BrotherBrace extends Talker {
 			ctx.game.tab(Game.Tab.FRIENDS_LIST);
 			return;
 		}
-		if (ctx.chat.visible("on the other flashing face to the right")) {
+		if (ctx.chat.visible(ON_THE_OTHER_FLASHING_FACE_TO_THE_RIGHT)) {
 			//ctx.game.tab(Game.Tab.IGNORED_LIST);
 			final Component component = findTextureId(905);
 			if (component != null && component.click("Ignore List")) {
@@ -124,6 +125,6 @@ public class BrotherBrace extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.chat.visible("Follow the path to the chapel", CLICK_ON_THE_FLASHING_ICON_TO_OPEN_THE_PRAYER, SMILING_FACE_TO_OPEN_YOUR_FRIENDS_LIST);
+		return super.valid() || ctx.chat.visible("Follow the path to the chapel", CLICK_ON_THE_FLASHING_ICON_TO_OPEN_THE_PRAYER, SMILING_FACE_TO_OPEN_YOUR_FRIENDS_LIST, ON_THE_OTHER_FLASHING_FACE_TO_THE_RIGHT);
 	}
 }

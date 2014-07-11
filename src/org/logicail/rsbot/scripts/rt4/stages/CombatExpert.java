@@ -28,6 +28,7 @@ public class CombatExpert extends Talker {
 	private static final int BRONZE_SWORD = 1277;
 	private static final int WOODEN_SHIELD = 1171;
 	private static final int[] BOUNDS_GIANT_RAT = {-48, 48, -68, 0, -48, 48};
+	private static final String FROM_THIS_INTERFACE_YOU_CAN_SELECT_THE_TYPE_OF_ATTACK = "From this interface you can select the type of attack";
 
 	public CombatExpert(IClientContext ctx) {
 		super(ctx, "Combat Instructor");
@@ -113,7 +114,7 @@ public class CombatExpert extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("From this interface you can select the type of attack")) {
+		if (ctx.chat.visible(FROM_THIS_INTERFACE_YOU_CAN_SELECT_THE_TYPE_OF_ATTACK)) {
 			traverseCage();
 			return;
 		}
@@ -246,6 +247,6 @@ public class CombatExpert extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.chat.visible(PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT, TO_ATTACK_THE_RAT_RIGHT_CLICK_IT);
+		return super.valid() || ctx.chat.visible(PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT, TO_ATTACK_THE_RAT_RIGHT_CLICK_IT, FROM_THIS_INTERFACE_YOU_CAN_SELECT_THE_TYPE_OF_ATTACK);
 	}
 }
