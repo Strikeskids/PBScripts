@@ -53,17 +53,21 @@ public class OSTutorialIsland extends GraphScript<IClientContext> implements Pai
 
 //		final Interactive target = interactive.get();
 //		if (target != null && target.valid()) {
-//			try {
-//				final BoundingModel model = BoundsUtil.getBoundingModel(target);
-//				if (model != null) {
-//					model.drawWireFrame(graphics);
-//				} else {
-//					target.draw(g2d);
+//			if (target instanceof GameObject) {
+//				try {
+//					final BoundingModel model = BoundsUtil.getBoundingModel(target);
+//					if (model != null) {
+//						model.drawWireFrame(graphics);
+//					} else {
+//						target.draw(g2d);
+//					}
+//				} catch (IllegalAccessException e) {
+//					e.printStackTrace();
+//				} catch (NoSuchFieldException e) {
+//					e.printStackTrace();
 //				}
-//			} catch (IllegalAccessException e) {
-//				e.printStackTrace();
-//			} catch (NoSuchFieldException e) {
-//				e.printStackTrace();
+//			} else {
+//				target.draw(graphics);
 //			}
 //		}
 

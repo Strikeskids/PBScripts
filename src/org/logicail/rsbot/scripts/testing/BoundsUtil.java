@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Date: 10/07/2014
  * Time: 22:47
  */
-@Script.Manifest(name = "BoundsUtil", description = "Bounds Util for GameObjects since RSBot is broken")
+@Script.Manifest(name = "BoundsUtil", description = "Bounds Util for GameObjects since RSBot is broken", properties = "hidden=true")
 public class BoundsUtil extends PollingScript<ClientContext> implements PaintListener, KeyListener {
 	private AtomicReference<GameObject> objectAtomicReference = new AtomicReference<GameObject>(null);
 	private AtomicBoolean selecting = new AtomicBoolean();
