@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.rt4;
 
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.ClientContext;
+import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.Inventory;
 
 import java.util.concurrent.Callable;
@@ -26,7 +27,7 @@ public class IInventory extends Inventory {
 			return true;
 		}
 
-		return selectedItem().interact("Cancel") && Condition.wait(new Callable<Boolean>() {
+		return (ctx.game.tab() == Game.Tab.INVENTORY || ctx.game.tab(Game.Tab.INVENTORY)) && selectedItem().interact("Cancel") && Condition.wait(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return !selected();
