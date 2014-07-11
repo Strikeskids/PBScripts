@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.rt4;
 
 import org.powerbot.script.Condition;
+import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Movement;
 
@@ -33,7 +34,7 @@ public class IMovement extends Movement {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return !ctx.players.local().inMotion() || ctx.movement.destination().distanceTo(ctx.players.local()) <= 4 || tile.tile().distanceTo(ctx.players.local()) <= 4;
+					return !ctx.players.local().inMotion() || ctx.movement.destination() == Tile.NIL || ctx.movement.destination().distanceTo(ctx.players.local()) <= 4 || tile.tile().distanceTo(ctx.players.local()) <= 4;
 				}
 			}, 100, (int) Math.max(currentDistance * 10, 10));
 			Condition.sleep(250);

@@ -20,6 +20,10 @@ import java.util.concurrent.Callable;
  * Time: 21:22
  */
 public class BrotherBrace extends Talker {
+
+	private static final String CLICK_ON_THE_FLASHING_ICON_TO_OPEN_THE_PRAYER = "Click on the flashing icon to open the Prayer";
+	private static final String SMILING_FACE_TO_OPEN_YOUR_FRIENDS_LIST = "smiling face to open your friends list";
+
 	public BrotherBrace(IClientContext ctx) {
 		super(ctx, "Brother Brace");
 	}
@@ -57,7 +61,7 @@ public class BrotherBrace extends Talker {
 				}
 			}).nearest().poll();
 			if (support.valid()) {
-				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Large door")).nearest(support).select(new Filter<GameObject>() {
+				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Large door")).select(new Filter<GameObject>() {
 					@Override
 					public boolean accept(GameObject gameObject) {
 						final ObjectDefinition definition = ctx.definitions.get(gameObject);
@@ -70,7 +74,8 @@ public class BrotherBrace extends Talker {
 						}
 						return false;
 					}
-				}).each(Interactive.doSetBounds(LARGE_DOOR_BOUNDS)).nearest(npc()).poll();
+				}).each(Interactive.doSetBounds(LARGE_DOOR_BOUNDS)).nearest(support).limit(2).shuffle().poll();
+				log.info("Open door");
 				if (ctx.camera.prepare(door) && door.click("Open")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
@@ -82,11 +87,11 @@ public class BrotherBrace extends Talker {
 			}
 			return;
 		}
-		if (ctx.chat.visible("Click on the flashing icon to open the Prayer")) {
+		if (ctx.chat.visible(CLICK_ON_THE_FLASHING_ICON_TO_OPEN_THE_PRAYER)) {
 			ctx.game.tab(Game.Tab.PRAYER);
 			return;
 		}
-		if (ctx.chat.visible("smiling face to open your friends list")) {
+		if (ctx.chat.visible(SMILING_FACE_TO_OPEN_YOUR_FRIENDS_LIST)) {
 			ctx.game.tab(Game.Tab.FRIENDS_LIST);
 			return;
 		}
@@ -119,6 +124,6 @@ public class BrotherBrace extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.chat.visible("Follow the path to the chapel");
+		return super.valid() || ctx.chat.visible("Follow the path to the chapel", CLICK_ON_THE_FLASHING_ICON_TO_OPEN_THE_PRAYER, SMILING_FACE_TO_OPEN_YOUR_FRIENDS_LIST);
 	}
 }
