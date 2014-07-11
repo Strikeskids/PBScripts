@@ -18,10 +18,8 @@ public class IClientContext extends ClientContext {
 	public final IInventory inventory;
 	public final DefinitionManager definitions;
 
-	public IClientContext(IClientContext o) {
-		super(o);
-
-		System.out.println("Constructor IClientContext with IClientContext " + o.getClass().getCanonicalName());
+	public IClientContext(ClientContext ctx) {
+		super(ctx);
 
 		chat = new IChat(this);
 		camera = new ICamera(this);
@@ -39,21 +37,4 @@ public class IClientContext extends ClientContext {
 
 		this.definitions = manger;
 	}
-
-//	public IClientContext(ClientContext ctx) {
-//		super(ctx);
-//
-//		System.out.println("Constructor IClientContext with " + ctx.getClass().getCanonicalName());
-//
-//		chat = new IChat(ctx);
-//		camera = new ICamera(ctx);
-//		movement = new IMovement(ctx);
-//		inventory = new IInventory(ctx);
-//		try {
-//			this.definitions = new DefinitionManager(ctx);
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//			ctx.controller.stop();
-//		}
-//	}
 }
