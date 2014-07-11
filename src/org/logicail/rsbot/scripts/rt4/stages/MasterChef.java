@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.rt4.stages;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.ActionManifest;
-import org.logicail.rsbot.scripts.rt4.LogTutorialIsland;
+import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.GameObject;
@@ -114,7 +114,7 @@ public class MasterChef extends Talker {
 					return Integer.valueOf(o2.tile().y()).compareTo(o1.tile().y());
 				}
 			}).poll();
-			door.bounds(LogTutorialIsland.BOUNDS_DOOR_EW);
+			door.bounds(OSTutorialIsland.BOUNDS_DOOR_EW);
 			if (ctx.camera.prepare(door) && door.click("Open")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override

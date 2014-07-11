@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.rt4.stages;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.ActionManifest;
-import org.logicail.rsbot.scripts.rt4.LogTutorialIsland;
+import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Tile;
@@ -218,7 +218,7 @@ public class CombatExpert extends Talker {
 	}
 
 	private void traverseCage() {
-		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(LogTutorialIsland.BOUNDS_CHAIN_GATE_NS)).nearest(ctx.players.local()).poll();
+		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_NS)).nearest(ctx.players.local()).poll();
 		if (ctx.camera.prepare(gate) && gate.click("Open")) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override

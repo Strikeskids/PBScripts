@@ -4,7 +4,7 @@ import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.ActionManifest;
-import org.logicail.rsbot.scripts.rt4.LogTutorialIsland;
+import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt4.*;
@@ -122,7 +122,7 @@ public class Banker extends Talker {
 			public boolean accept(GameObject gameObject) {
 				return gameObject.tile().y() == bank.tile().y();
 			}
-		}).each(Interactive.doSetBounds(LogTutorialIsland.BOUNDS_DOOR_EW)).sort(new Comparator<GameObject>() {
+		}).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_EW)).sort(new Comparator<GameObject>() {
 			@Override
 			public int compare(GameObject o1, GameObject o2) {
 				return Integer.valueOf(o1.tile().x()).compareTo(o2.tile().x());

@@ -3,7 +3,7 @@ package org.logicail.rsbot.scripts.rt4.stages;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.ActionManifest;
-import org.logicail.rsbot.scripts.rt4.LogTutorialIsland;
+import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt4.Component;
@@ -36,7 +36,7 @@ public class BrotherBrace extends Talker {
 		if (ctx.chat.visible("You're almost finished on tutorial island.", "Nope, I'm ready to move on!", "Just follow the path to the Wizard's house")) {
 			final GameObject altar = ctx.objects.select().select(ObjectDefinition.name(ctx, "Altar")).nearest().poll();
 			if (altar.valid()) {
-				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(LogTutorialIsland.BOUNDS_DOOR_S)).nearest(altar).poll();
+				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_S)).nearest(altar).poll();
 				if (ctx.camera.prepare(door) && door.click("Open")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
