@@ -74,37 +74,50 @@ public class IChat extends Chat {
 //		return ctx.widgets.component(0, 0);
 //	}
 
-
-	private Component getComponentByText(Component component, String needle) {
-		if (component.text().contains(needle)) {
-			return component;
+	/**
+	 * Recursively search a <code>component</code> for visible components with one of the texts from <code>needle</code>
+	 *
+	 * @param component to search
+	 * @param needle    text to find
+	 * @return <code>null</code> if no matches found, otherwise the visible component
+	 */
+	private Component getComponentByText(Component component, String... needle) {
+		final String text = component.text().toLowerCase();
+		for (String s : needle) {
+			if (text.contains(s.toLowerCase())) {
+				return component;
+			}
 		}
 
 		for (Component child : component.components()) {
 			if (child.valid()) {
 				final Component search = getComponentByText(child, needle);
-				if (search.valid()) {
+				if (search.valid() && search.visible()) {
 					return search;
 				}
 			}
 		}
 
-		return ctx.widgets.component(0, 0);
+		return null;
 	}
 
-	public Component getComponentByText(String needle) {
+	/**
+	 * Find a visible component which contains one of text from <code>needle</code>
+	 *
+	 * @return the component or <code>ctx.widgets.widget(0).component(0)</code> if non found therefore use {@link Component#valid()} to see if it was found
+	 */
+	public Component getComponentByText(String... needle) {
 		for (Widget widget : ctx.widgets.array()) {
 			for (Component component : widget.components()) {
 				if (component.valid()) {
 					final Component search = getComponentByText(component, needle);
-					if (search.valid()) {
+					if (search != null && search.valid() && search.visible()) {
 						return search;
 					}
 				}
 			}
 		}
-
-		return ctx.widgets.component(0, 0);
+		return ctx.widgets.widget(0).component(0);
 	}
 
 	public boolean isTextVisible(String needle) {
