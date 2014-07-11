@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.house;
 
-import com.sk.methods.action.magic.Spellbook;
-import com.sk.methods.action.magic.StandardSpell;
+import com.sk.oldcombatapi.methods.action.magic.Spellbook;
+import com.sk.oldcombatapi.methods.action.magic.StandardSpell;
 import org.logicail.rsbot.scripts.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.Path;

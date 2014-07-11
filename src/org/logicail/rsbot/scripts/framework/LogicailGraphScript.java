@@ -1,7 +1,6 @@
 package org.logicail.rsbot.scripts.framework;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
-import org.logicail.rsbot.scripts.framework.graphscript.GraphScript;
+import org.powerbot.script.ClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,6 +8,17 @@ import org.logicail.rsbot.scripts.framework.graphscript.GraphScript;
  * Date: 21/05/2014
  * Time: 21:10
  */
-public class LogicailGraphScript extends GraphScript<IClientContext> {
+public class LogicailGraphScript<C extends ClientContext> extends GraphScript<C> {
+	private String status = "";
 
+	public String status() {
+		return status;
+	}
+
+	public void status(String status) {
+		if (status != null) {
+			log.info(status);
+		}
+		this.status = status == null ? "" : status;
+	}
 }

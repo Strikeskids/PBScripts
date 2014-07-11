@@ -1,8 +1,7 @@
 package org.logicail.rsbot.scripts.logfarming;
 
+import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
-import org.logicail.rsbot.scripts.framework.graphscript.Action;
-import org.logicail.rsbot.scripts.framework.graphscript.GraphScript;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +9,7 @@ import org.logicail.rsbot.scripts.framework.graphscript.GraphScript;
  * Date: 21/05/2014
  * Time: 22:02
  */
-public class Herbs extends Action<IClientContext> {
+public class Herbs extends GraphScript.Action<IClientContext> {
 	public Herbs(GraphScript<IClientContext> script) {
 		super(script);
 

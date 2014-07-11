@@ -59,6 +59,18 @@ public class LogicailArea extends Area {
 		return reachable;
 	}
 
+	public Set<Tile> getReachable(org.powerbot.script.rt4.ClientContext ctx) {
+		HashSet<Tile> reachable = new HashSet<Tile>();
+
+		for (Tile tile : getTileArray()) {
+			if (tile.matrix(ctx).reachable()) {
+				reachable.add(tile);
+			}
+		}
+
+		return reachable;
+	}
+
 	public Set<Tile> getTileArray() {
 		if (tiles != null) {
 			return tiles;

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.providers;
 
-import com.sk.methods.action.structure.Spell;
+import com.sk.oldcombatapi.methods.action.structure.Spell;
 import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.IClientContext;
 import org.powerbot.script.rt6.Action;
