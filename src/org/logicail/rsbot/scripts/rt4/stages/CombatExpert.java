@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.rt4.stages;
 
+import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
@@ -24,6 +25,8 @@ public class CombatExpert extends Talker {
 	private static final String PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT = "Pass through the gate and talk to the combat";
 	public static final String YOU_HAVE_COMPLETED_THE_TASKS_HERE = "You have completed the tasks here.";
 	private static final int BRONZE_DAGGER_ID = 1205;
+	private static final int BRONZE_SWORD = 1277;
+	private static final int WOODEN_SHIELD = 1171;
 
 	public CombatExpert(IClientContext ctx) {
 		super(ctx, "Combat Instructor");
@@ -92,7 +95,7 @@ public class CombatExpert extends Talker {
 				ctx.game.tab(Game.Tab.INVENTORY);
 				return;
 			}
-			for (final Item item : ctx.inventory.select().name("Bronze sword", "Wooden shield").shuffle()) {
+			for (final Item item : ctx.inventory.select().id(BRONZE_SWORD, WOODEN_SHIELD).shuffle()) {
 				item.click("Wield");
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -115,7 +118,7 @@ public class CombatExpert extends Talker {
 		}
 
 		if (ctx.chat.visible(TO_ATTACK_THE_RAT_RIGHT_CLICK_IT)) {
-			final Npc rat = ctx.npcs.select().name("Giant rat").select(new Filter<Npc>() {
+			final Npc rat = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).select(new Filter<Npc>() {
 				@Override
 				public boolean accept(Npc npc) {
 					return !npc.inCombat();
@@ -162,7 +165,7 @@ public class CombatExpert extends Talker {
 
 		if (ctx.chat.visible("try killing another rat")) {
 
-			Npc rat = ctx.npcs.select().name("Giant rat").select(new Filter<Npc>() {
+			Npc rat = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).select(new Filter<Npc>() {
 				@Override
 				public boolean accept(Npc npc) {
 					return npc.interacting().equals(ctx.players.local());
@@ -170,7 +173,7 @@ public class CombatExpert extends Talker {
 			}).nearest().poll();
 
 			if (!rat.valid()) {
-				rat = ctx.npcs.select().name("Giant rat").select(new Filter<Npc>() {
+				rat = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).select(new Filter<Npc>() {
 					@Override
 					public boolean accept(Npc npc) {
 						return !npc.inCombat() && !unreachable.contains(npc.tile());
@@ -228,7 +231,7 @@ public class CombatExpert extends Talker {
 						return npc().valid();
 					}
 					if (ctx.chat.visible(PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT)) {
-						return ctx.npcs.select().name("Giant rat").nearest().poll().valid();
+						return ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).nearest().poll().valid();
 					}
 					return false;
 				}

@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.rt4.stages;
 
+import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.util.LogicailArea;
@@ -23,6 +24,8 @@ public class SurvivalExpert extends Talker {
 
 	private static final int RAW_SHRIMP = 2514;
 	private static final int LOGS = 2511;
+	private static final int TINDERBOX = 590;
+	private static final int BURNT_SHRIMP = 7954;
 
 	public SurvivalExpert(IClientContext ctx) {
 		super(ctx, "Survival Expert");
@@ -59,7 +62,7 @@ public class SurvivalExpert extends Talker {
 			return;
 		}
 
-		if (!ctx.inventory.select().name("Raw shrimps").isEmpty() && ctx.chat.visible("Now you have caught some shrimp", "then use them on a fire")) {
+		if (!ctx.inventory.select().id(RAW_SHRIMP).isEmpty() && ctx.chat.visible("Now you have caught some shrimp", "then use them on a fire")) {
 			cook();
 			return;
 		}
@@ -69,7 +72,7 @@ public class SurvivalExpert extends Talker {
 				ctx.game.tab(Game.Tab.INVENTORY);
 			}
 
-			ctx.inventory.select().name("Burnt shrimp").each(new Filter<Item>() {
+			ctx.inventory.select().id(BURNT_SHRIMP).each(new Filter<Item>() {
 				@Override
 				public boolean accept(final Item item) {
 					ctx.inventory.deselect();
@@ -85,7 +88,7 @@ public class SurvivalExpert extends Talker {
 				}
 			});
 
-			final Npc fishingSpot = ctx.npcs.select().name("Fishing Spot").nearest().poll();
+			final Npc fishingSpot = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Fishing spot")).nearest().poll();
 			if (ctx.camera.prepare(fishingSpot) && fishingSpot.interact("Net")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -101,19 +104,6 @@ public class SurvivalExpert extends Talker {
 			makeFire();
 			return;
 		}
-
-//		if (ctx.chat.visible("To continue the tutorial go through that door")) {
-//			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).nearest().poll();
-//			if (ctx.camera.prepare(door) && door.click("Open", "Door")) {
-//				Condition.wait(new Callable<Boolean>() {
-//					@Override
-//					public Boolean call() throws Exception {
-//						return !valid();
-//					}
-//				}, 200, 25);
-//			}
-//			return;
-//		}
 
 		if (ctx.players.local().animation() == -1 && ctx.chat.visible("Cut down a tree", "Your character is now attempting to cut down the tree")) {
 			chop();
@@ -192,7 +182,7 @@ public class SurvivalExpert extends Talker {
 		final Tile playerTile = ctx.players.local().tile();
 		if (ctx.objects.select().at(playerTile).select(ObjectDefinition.name(ctx, "Fire")).isEmpty()) {
 			final Item logs = ctx.inventory.select().id(LOGS).shuffle().poll();
-			final Item tinderbox = ctx.inventory.select().name("Tinderbox").shuffle().poll();
+			final Item tinderbox = ctx.inventory.select().id(TINDERBOX).shuffle().poll();
 
 			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != RAW_SHRIMP) {
 				ctx.inventory.deselect();
@@ -221,7 +211,7 @@ public class SurvivalExpert extends Talker {
 			final ArrayList<Tile> tiles = new ArrayList<Tile>(area.getReachable(ctx));
 			Collections.shuffle(tiles);
 			for (final Tile tile : tiles) {
-				if (!ctx.objects.select().at(tile).name("Fire").isEmpty()) {
+				if (!ctx.objects.select().at(tile).select(ObjectDefinition.name(ctx, "Fire")).isEmpty()) {
 					continue;
 				}
 

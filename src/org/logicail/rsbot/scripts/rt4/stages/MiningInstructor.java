@@ -18,6 +18,10 @@ import java.util.concurrent.Callable;
  * Time: 18:18
  */
 public class MiningInstructor extends Talker {
+	private static final int BRONZE_BAR = 2349;
+	private static final int TIN_ORE = 438;
+	private static final int COPPER_ORE = 436;
+	private static final int BRONZE_DAGGER = 1205;
 	private final Filter<GameObject> TIN_FILTER = Rocks.TIN.filter(ctx);
 	private final Filter<GameObject> COPPER_FILTER = Rocks.COPPER.filter(ctx);
 
@@ -38,7 +42,7 @@ public class MiningInstructor extends Talker {
 
 			final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().poll();
 			if (ctx.camera.prepare(anvil)) {
-				final Item bar = ctx.inventory.select().name("Bronze bar").poll();
+				final Item bar = ctx.inventory.select().id(BRONZE_BAR).poll();
 
 				if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != bar.id()) {
 					ctx.inventory.deselect();
@@ -72,7 +76,7 @@ public class MiningInstructor extends Talker {
 			}
 
 			final GameObject furnace = ctx.objects.select().select(ObjectDefinition.name(ctx, "Furnace")).each(Interactive.doSetBounds(FURNACE_BOUND)).nearest().poll();
-			final Item ore = ctx.inventory.select().name("Tin ore", "Copper ore").shuffle().poll();
+			final Item ore = ctx.inventory.select().id(TIN_ORE, COPPER_ORE).shuffle().poll();
 
 			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != ore.id()) {
 				ctx.inventory.deselect();
@@ -131,7 +135,7 @@ public class MiningInstructor extends Talker {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return !ctx.inventory.select().name("Bronze dagger").isEmpty();
+							return !ctx.inventory.select().id(BRONZE_DAGGER).isEmpty();
 						}
 					}, 200, 10);
 				}

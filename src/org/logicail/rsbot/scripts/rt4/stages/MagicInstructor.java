@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.rt4.stages;
 
+import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
@@ -71,12 +72,12 @@ public class MagicInstructor extends Talker {
 				}
 			}
 
-			final Npc chicken = ctx.npcs.select().name("Chicken").select(new Filter<Npc>() {
+			final Npc chicken = ctx.npcs.select().select(new Filter<Npc>() {
 				@Override
 				public boolean accept(Npc npc) {
 					return !npc.inCombat();
 				}
-			}).nearest().poll();
+			}).select(NpcDefinition.filter(ctx, "Chicken")).nearest().poll();
 
 			if (ctx.camera.combineCamera(chicken, Random.nextInt(0, 50))) {
 				final Component windStrike = ctx.widgets.widget(192).component(1);

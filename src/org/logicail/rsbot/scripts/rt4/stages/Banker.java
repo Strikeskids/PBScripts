@@ -24,7 +24,7 @@ public class Banker extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.npcs.select().name("Giant rat").poll().valid() && ctx.chat.visible(CombatExpert.YOU_HAVE_COMPLETED_THE_TASKS_HERE);
+		return super.valid() || ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid() && ctx.chat.visible(CombatExpert.YOU_HAVE_COMPLETED_THE_TASKS_HERE);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class Banker extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.npcs.select().name("Giant rat").poll().valid()) {
+		if (ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid()) {
 			if (ctx.chat.visible(CombatExpert.YOU_HAVE_COMPLETED_THE_TASKS_HERE)) {
 				final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
 //				LogTutorialIsland.interactive.set(ladder);
