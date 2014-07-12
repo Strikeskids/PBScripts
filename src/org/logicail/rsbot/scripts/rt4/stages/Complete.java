@@ -22,6 +22,11 @@ public class Complete extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public void run() {
+		if (ctx.chat.queryContinue()) {
+			ctx.chat.clickContinue();
+			return;
+		}
+
 		// TODO: Logout
 		ctx.controller.stop();
 	}
