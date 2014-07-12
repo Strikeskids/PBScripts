@@ -37,7 +37,7 @@ public class MagicInstructor extends Talker {
 		if (ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE) && !npc().valid()) {
 			final GameObject table = table();
 			if (table.valid()) {
-				ctx.movement.myWalk(table.tile().derive(-3, 0));
+				ctx.movement.myWalk(table.tile().derive(-3, 0).derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)));
 				Condition.sleep(200);
 			}
 			return;
