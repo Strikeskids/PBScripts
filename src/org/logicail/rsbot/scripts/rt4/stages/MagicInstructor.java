@@ -134,7 +134,7 @@ public class MagicInstructor extends Talker {
 	}
 
 	private void walkSpellFrom() {
-		final Tile derive = spellLocation().derive(Random.nextInt(-1, 1), 0);
+		final Tile derive = spellLocation().derive(Random.nextInt(-1, 1), Random.nextInt(0, 2));
 		ctx.camera.prepare(derive.matrix(ctx));
 		if (derive.matrix(ctx).inViewport()) {
 			derive.matrix(ctx).interact("Walk here");
