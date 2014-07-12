@@ -19,23 +19,40 @@ import java.util.concurrent.Callable;
  * Time: 20:19
  */
 public class CombatExpert extends Talker {
+	public static final String YOU_HAVE_COMPLETED_THE_TASKS_HERE = "You have completed the tasks here.";
 	private static final String LEFT_CLICK_YOUR_DAGGER_TO = "Left click your dagger to";
 	private static final String TO_ATTACK_THE_RAT_RIGHT_CLICK_IT = "To attack the rat, right click it";
 	private static final String WHILE_YOU_ARE_FIGHTING_YOU_WILL_SEE_A_BAR = "While you are fighting you will see a bar";
 	private static final String PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT = "Pass through the gate and talk to the combat";
-	public static final String YOU_HAVE_COMPLETED_THE_TASKS_HERE = "You have completed the tasks here.";
 	private static final int BRONZE_DAGGER_ID = 1205;
 	private static final int BRONZE_SWORD = 1277;
 	private static final int WOODEN_SHIELD = 1171;
 	private static final int[] BOUNDS_GIANT_RAT = {-48, 48, -68, 0, -48, 48};
 	private static final String FROM_THIS_INTERFACE_YOU_CAN_SELECT_THE_TYPE_OF_ATTACK = "From this interface you can select the type of attack";
+	private static final String FROM_HERE_YOU_CAN_SEE_WHAT_ITEMS_YOU_HAVE_EQUIPPED = "From here you can see what items you have equipped";
+	private static final String IN_YOUR_WORN_INVENTORY_PANEL_RIGHT_CLICK_ON_THE_DAGGER = "In your worn inventory panel, right click on the dagger";
+
+	public static final String[] VALID_STRINGS = {
+			LEFT_CLICK_YOUR_DAGGER_TO,
+			TO_ATTACK_THE_RAT_RIGHT_CLICK_IT,
+			WHILE_YOU_ARE_FIGHTING_YOU_WILL_SEE_A_BAR,
+			PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT,
+			FROM_THIS_INTERFACE_YOU_CAN_SELECT_THE_TYPE_OF_ATTACK,
+			FROM_HERE_YOU_CAN_SEE_WHAT_ITEMS_YOU_HAVE_EQUIPPED,
+			IN_YOUR_WORN_INVENTORY_PANEL_RIGHT_CLICK_ON_THE_DAGGER
+	};
+
+	private static final String TRY_KILLING_ANOTHER_RAT = "try killing another rat";
+
+	private HashSet<Tile> unreachable = new HashSet<Tile>();
 
 	public CombatExpert(IClientContext ctx) {
 		super(ctx, "Combat Instructor");
 	}
 
-	private HashSet<Tile> unreachable = new HashSet<Tile>();
-
+	private BasicQuery<Npc> rat() {
+		return ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).each(Interactive.doSetBounds(BOUNDS_GIANT_RAT));
+	}
 
 	@Override
 	public void run() {
@@ -43,7 +60,7 @@ public class CombatExpert extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible("From here you can see what items you have equipped")) {
+		if (ctx.chat.visible(FROM_HERE_YOU_CAN_SEE_WHAT_ITEMS_YOU_HAVE_EQUIPPED)) {
 			final Component stats = ctx.widgets.widget(387).component(17);
 			if (stats.click("View equipment stats")) {
 				Condition.wait(new Callable<Boolean>() {
@@ -87,7 +104,7 @@ public class CombatExpert extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("In your worn inventory panel, right click on the dagger")) {
+		if (ctx.chat.visible(IN_YOUR_WORN_INVENTORY_PANEL_RIGHT_CLICK_ON_THE_DAGGER)) {
 			if (ctx.game.tab() != Game.Tab.INVENTORY) {
 				ctx.game.tab(Game.Tab.INVENTORY);
 				return;
@@ -155,8 +172,7 @@ public class CombatExpert extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("try killing another rat")) {
-
+		if (ctx.chat.visible(TRY_KILLING_ANOTHER_RAT)) {
 			Npc rat = rat().select(new Filter<Npc>() {
 				@Override
 				public boolean accept(Npc npc) {
@@ -211,10 +227,6 @@ public class CombatExpert extends Talker {
 		}
 
 		super.run();
-	}
-
-	private BasicQuery<Npc> rat() {
-		return ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).each(Interactive.doSetBounds(BOUNDS_GIANT_RAT));
 	}
 
 	private void traverseCage() {

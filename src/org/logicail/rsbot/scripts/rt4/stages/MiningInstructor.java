@@ -143,7 +143,7 @@ public class MiningInstructor extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("You've finished in this area")) {
+		if (ctx.chat.visible("You've finished in this area") || ctx.chat.visible(CombatExpert.VALID_STRINGS)) {
 			final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_EW)).nearest().poll();
 			if (ctx.camera.prepare(gate) && gate.click("Open")) {
 				Condition.wait(new Callable<Boolean>() {
