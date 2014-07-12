@@ -7,10 +7,7 @@ import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
-import org.powerbot.script.rt4.Component;
-import org.powerbot.script.rt4.Game;
-import org.powerbot.script.rt4.GameObject;
-import org.powerbot.script.rt4.Npc;
+import org.powerbot.script.rt4.*;
 
 import java.util.HashSet;
 import java.util.concurrent.Callable;
@@ -24,6 +21,7 @@ import java.util.concurrent.Callable;
 public class MagicInstructor extends Talker {
 	private static final String JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE = "Just follow the path to the Wizard's house";
 	private static final String NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE = "Now you have some runes you should see the Wind Strike";
+	private static final int[] BOUNDS_CHICKEN = {-40, 40, -48, 0, -40, 40};
 	private final HashSet<Tile> ignored = new HashSet<Tile>();
 
 	public MagicInstructor(IClientContext ctx) {
@@ -67,7 +65,7 @@ public class MagicInstructor extends Talker {
 				public boolean accept(Npc npc) {
 					return !npc.inCombat();
 				}
-			}).select(NpcDefinition.filter(ctx, "Chicken")).nearest().poll();
+			}).select(NpcDefinition.filter(ctx, "Chicken")).each(Interactive.doSetBounds(BOUNDS_CHICKEN)).nearest().limit(2).shuffle().poll();
 
 			if (ctx.camera.combineCamera(chicken, Random.nextInt(0, 50))) {
 				final Component windStrike = ctx.widgets.widget(192).component(1);
