@@ -35,13 +35,16 @@ public class SetRun extends GraphScript.Action<IClientContext> {
 		Condition.sleep(200);
 	}
 
-	private int percent() {
+	private int energy() {
+		final int energy = ctx.movement.energyLevel();
+		if (energy > 0) {
+			return energy;
+		}
+
 		final Component component = ctx.widgets.widget(548).component(95);
-		if (component.visible()) {
-			final String text = component.text();
+		if (component.valid()) {
 			try {
-				final int i = Integer.parseInt(text);
-				return i;
+				return Integer.parseInt(component.text().trim());
 			} catch (NumberFormatException e) {
 				log.severe("Run widget wrong");
 			}
@@ -51,6 +54,6 @@ public class SetRun extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public boolean valid() {
-		return System.currentTimeMillis() > nextrun && !ctx.movement.running() && percent() > nextPercentValid;
+		return System.currentTimeMillis() > nextrun && !ctx.movement.running() && energy() > nextPercentValid;
 	}
 }
