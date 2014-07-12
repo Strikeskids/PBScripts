@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.rt4;
 
 import org.powerbot.script.Condition;
-import org.powerbot.script.Tile;
+import org.powerbot.script.Random;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Movement;
 
@@ -24,20 +24,24 @@ public class IMovement extends Movement {
 			return true;
 		}
 
-		if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return ctx.players.local().inMotion();
-				}
-			}, 50, 10);
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return !ctx.players.local().inMotion() || ctx.movement.destination() == Tile.NIL || ctx.movement.destination().distanceTo(ctx.players.local()) <= 4 || tile.tile().distanceTo(ctx.players.local()) <= 4;
-				}
-			}, 100, (int) Math.max(currentDistance * 10, 10));
-			Condition.sleep(250);
+		if (!ctx.players.local().inMotion() || ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) < Random.nextInt(2, 5)) {
+			if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.players.local().inMotion();
+					}
+				}, 50, 10);
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) <= 4 || tile.tile().distanceTo(ctx.players.local()) <= 4;
+					}
+				}, 100, (int) Math.max(currentDistance * 10, 10));
+				Condition.sleep(250);
+			}
+		} else {
+			Condition.sleep(400);
 		}
 
 		return tile.tile().distanceTo(ctx.players.local()) <= 4;
