@@ -40,7 +40,7 @@ public class SurvivalExpert extends Talker {
 
 		if (ctx.chat.visible("Well done, you've just cooked your first")) {
 			final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(BOUNDS_GATE)).nearest().poll();
-			if (ctx.camera.prepare(gate) && gate.click("Open")) {
+			if (ctx.camera.prepare(gate) && gate.interact("Open")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

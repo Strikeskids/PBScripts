@@ -56,7 +56,7 @@ public class MiningInstructor extends Talker {
 							return ctx.inventory.selectedItemIndex() > -1;
 						}
 					}, 200, 5)) {
-						if (anvil.click("Use", bar.name() + " -> Anvil")) {
+						if (anvil.interact("Use", bar.name() + " -> Anvil")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
@@ -91,7 +91,7 @@ public class MiningInstructor extends Talker {
 							return ctx.inventory.selectedItemIndex() > -1;
 						}
 					}, 200, 5)) {
-						if (furnace.click("Use", ore.name() + " -> Furnace")) {
+						if (furnace.interact("Use", ore.name() + " -> Furnace")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
