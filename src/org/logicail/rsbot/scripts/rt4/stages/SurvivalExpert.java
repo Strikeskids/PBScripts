@@ -6,7 +6,6 @@ import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
-import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.*;
 
@@ -103,7 +102,7 @@ public class SurvivalExpert extends Talker {
 	}
 
 	private void chop() {
-		final GameObject tree = ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).within(ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).nearest().poll().tile().distanceTo(ctx.players.local()) + Random.nextInt(1, 5)).shuffle().poll();
+		final GameObject tree = ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).nearest().limit(3).shuffle().poll();
 		if (ctx.camera.prepare(tree)) {
 			if (tree.interact("Chop down", "Tree")) {
 				Condition.wait(new Callable<Boolean>() {

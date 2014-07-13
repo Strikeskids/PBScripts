@@ -47,7 +47,7 @@ public class IInventory extends Inventory {
 		}
 
 		if ((ctx.game.tab() == Game.Tab.INVENTORY || ctx.game.tab(Game.Tab.INVENTORY)) && item.click("Use")) {
-			Condition.wait(new Callable<Boolean>() {
+			return Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return selectedIsOnOf(ids);
@@ -61,10 +61,12 @@ public class IInventory extends Inventory {
 	}
 
 	private boolean selectedIsOnOf(int... ids) {
-		final int selected = ctx.inventory.selectedItem().id();
-		for (int id : ids) {
-			if (selected == id) {
-				return true;
+		final Item selected = ctx.inventory.selectedItem();
+		if (selected.valid()) {
+			for (int id : ids) {
+				if (selected.id() == id) {
+					return true;
+				}
 			}
 		}
 		return false;
