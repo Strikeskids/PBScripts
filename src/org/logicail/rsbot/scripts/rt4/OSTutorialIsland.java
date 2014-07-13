@@ -55,8 +55,7 @@ public class OSTutorialIsland extends GraphScript<IClientContext> implements Pai
 		}
 
 		graphics.drawString("Last action: " + task.get(), 25, 140);
-		graphics.drawString("Config 300: " + ctx.varpbits.varpbit(300), 25, 155);
-		graphics.drawString("Config 406: " + ctx.varpbits.varpbit(406), 25, 170);
+		graphics.drawString("Config 406: " + ctx.varpbits.varpbit(406), 25, 155);
 
 //		final Interactive target = interactive.get();
 //		if (target != null && target.valid()) {
