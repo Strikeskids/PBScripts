@@ -37,6 +37,7 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 		TAB_MAPPING.put("It's only a short distance to the next guide.", Game.Tab.OPTIONS);
 		TAB_MAPPING.put("Click on the flashing backpack icon to the right hand side of", Game.Tab.INVENTORY);
 		TAB_MAPPING.put("Click on the flashing bar graph icon", Game.Tab.STATS);
+		TAB_MAPPING.put("Well done! Your first load fo bread. As you gain experience in", Game.Tab.MUSIC);
 
 		Set<String> set = TAB_MAPPING.keySet();
 		TAB_STRINGS = set.toArray(new String[set.size()]);
