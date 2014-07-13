@@ -80,7 +80,7 @@ public class Banker extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("window and move on through the door indicated")) {
+		if (stage() >= 14 || ctx.chat.visible("window and move on through the door indicated")) {
 			leave();
 			return;
 		}
