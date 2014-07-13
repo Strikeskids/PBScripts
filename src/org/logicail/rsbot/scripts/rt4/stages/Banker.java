@@ -83,7 +83,7 @@ public class Banker extends Talker {
 		}
 
 		final Component component = ctx.chat.getComponentByText("Yes.");
-		if (component.valid() && component.visible()) {
+		if (component.valid()) {
 			component.click();
 			Condition.wait(new Callable<Boolean>() {
 				@Override

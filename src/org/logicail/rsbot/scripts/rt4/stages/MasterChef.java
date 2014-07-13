@@ -33,13 +33,7 @@ public class MasterChef extends Talker {
 		if (tryContinue()) return;
 
 		if (ctx.chat.visible("This is the base for many of the meals. To make dough")) {
-			final Item flour = ctx.inventory.select().id(POT_OF_FLOUR).shuffle().poll();
-			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != POT_OF_FLOUR) {
-				ctx.inventory.deselect();
-				return;
-			}
-
-			if (ctx.inventory.selectedItem().id() == POT_OF_FLOUR || flour.click("Use")) {
+			if (ctx.inventory.select(POT_OF_FLOUR)) {
 				Condition.sleep(333);
 				if (ctx.inventory.selected()) {
 					final Item water = ctx.inventory.select().id(BUCKET_OF_WATER).shuffle().poll();
@@ -47,7 +41,7 @@ public class MasterChef extends Talker {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return !flour.valid();
+								return !water.valid();
 							}
 						}, 200, 6);
 					}
@@ -84,19 +78,7 @@ public class MasterChef extends Talker {
 		if (ctx.chat.visible("Now you have made dough, you can cook it.")) {
 			final GameObject range = ctx.objects.select().select(ObjectDefinition.name(ctx, "Range")).each(Interactive.doSetBounds(BOUNDS_RANGE)).nearest().poll();
 
-			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != DOUGH) {
-				ctx.inventory.selectedItem().interact("Cancel");
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !ctx.inventory.selected();
-					}
-				}, 200, 5);
-				return;
-			}
-
-			final Item dough = ctx.inventory.select().id(DOUGH).poll();
-			if (dough.valid() && ctx.camera.prepare(range) && dough.click("Use")) {
+			if (ctx.camera.prepare(range) && ctx.inventory.select(DOUGH)) {
 				Condition.sleep(333);
 				if (ctx.inventory.selected() && range.interact("Use", "Bread dough -> Range")) {
 					Condition.wait(new Callable<Boolean>() {

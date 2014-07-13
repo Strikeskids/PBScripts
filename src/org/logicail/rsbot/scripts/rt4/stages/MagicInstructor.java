@@ -118,6 +118,7 @@ public class MagicInstructor extends Talker {
 					return ctx.chat.queryContinue();
 				}
 			}, 200, 20);
+			return;
 		}
 
 		super.run();

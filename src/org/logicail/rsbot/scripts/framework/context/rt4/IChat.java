@@ -29,13 +29,13 @@ public class IChat extends ClientAccessor {
 			if (Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return getComponentByText("Please wait...").valid();
+					return visible("Please wait...");
 				}
 			}, 50, 5)) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !getComponentByText("Please wait...").valid();
+						return !visible("Please wait..."));
 					}
 				}, 50, 5);
 			} else {

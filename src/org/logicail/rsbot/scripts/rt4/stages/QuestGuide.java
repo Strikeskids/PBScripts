@@ -49,7 +49,7 @@ public class QuestGuide extends Talker {
 			}
 		}
 
-		if (ctx.chat.getComponentByText(NOW_THAT_YOU_HAVE_THE_RUN_BUTTON_TURNED_ON).valid()) {
+		if (ctx.chat.visible(NOW_THAT_YOU_HAVE_THE_RUN_BUTTON_TURNED_ON)) {
 			final GameObject armour = ctx.objects.select().select(new Filter<GameObject>() {
 				@Override
 				public boolean accept(GameObject gameObject) {
@@ -88,6 +88,6 @@ public class QuestGuide extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.chat.getComponentByText(NOW_THAT_YOU_HAVE_THE_RUN_BUTTON_TURNED_ON).valid();
+		return super.valid() || ctx.chat.visible(NOW_THAT_YOU_HAVE_THE_RUN_BUTTON_TURNED_ON);
 	}
 }

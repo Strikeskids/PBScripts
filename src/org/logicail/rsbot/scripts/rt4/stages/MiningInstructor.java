@@ -42,28 +42,16 @@ public class MiningInstructor extends Talker {
 
 			final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().poll();
 			if (ctx.camera.prepare(anvil)) {
-				final Item bar = ctx.inventory.select().id(BRONZE_BAR).poll();
 
-				if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != bar.id()) {
-					ctx.inventory.deselect();
-					return;
-				}
-
-				if (ctx.inventory.selectedItem().id() == bar.id() || bar.click("Use")) {
-					if (Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.inventory.selectedItemIndex() > -1;
-						}
-					}, 200, 5)) {
-						if (anvil.interact("Use", bar.name() + " -> Anvil")) {
-							Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									return ctx.chat.getComponentByText("What would you like to make?").valid();
-								}
-							}, 200, 20);
-						}
+				if (ctx.inventory.select(BRONZE_BAR)) {
+					final Item bar = ctx.inventory.select().id(BRONZE_BAR).poll();
+					if (anvil.interact("Use", bar.name() + " -> Anvil")) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return ctx.chat.visible("What would you like to make?");
+							}
+						}, 200, 20);
 					}
 				}
 			}
@@ -76,29 +64,22 @@ public class MiningInstructor extends Talker {
 			}
 
 			final GameObject furnace = ctx.objects.select().select(ObjectDefinition.name(ctx, "Furnace")).each(Interactive.doSetBounds(FURNACE_BOUND)).nearest().poll();
-			final Item ore = ctx.inventory.select().id(TIN_ORE, COPPER_ORE).shuffle().poll();
 
-			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != ore.id()) {
-				ctx.inventory.deselect();
-				return;
-			}
-
-			if (ctx.camera.prepare(furnace) && ore.valid()) {
-				if (ctx.inventory.selectedItem().id() == ore.id() || ore.click("Use")) {
-					if (Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.inventory.selectedItemIndex() > -1;
-						}
-					}, 200, 5)) {
-						if (furnace.interact("Use", ore.name() + " -> Furnace")) {
-							Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									return ctx.chat.queryContinue();
-								}
-							}, 200, 20);
-						}
+			if (ctx.camera.prepare(furnace) && ctx.inventory.select(TIN_ORE, COPPER_ORE)) {
+				if (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.inventory.selectedItemIndex() > -1;
+					}
+				}, 200, 5)) {
+					final Item item = ctx.inventory.selectedItem();
+					if (item.valid() && furnace.interact("Use", item.name() + " -> Furnace")) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return ctx.chat.queryContinue();
+							}
+						}, 200, 20);
 					}
 				}
 			}

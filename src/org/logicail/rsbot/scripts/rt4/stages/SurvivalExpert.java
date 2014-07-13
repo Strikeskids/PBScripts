@@ -89,7 +89,7 @@ public class SurvivalExpert extends Talker {
 			return;
 		}
 
-		if (!ctx.chat.visible("all: making a fire") && ctx.chat.getComponentByText("Making a fire").visible()) {
+		if (!ctx.chat.visible("all: making a fire") && ctx.chat.visible("Making a fire")) {
 			makeFire();
 			return;
 		}
@@ -138,31 +138,24 @@ public class SurvivalExpert extends Talker {
 		}
 
 
-		final Item raw = ctx.inventory.select().id(RAW_SHRIMP).shuffle().poll();
-
-		if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != RAW_SHRIMP) {
-			ctx.inventory.deselect();
-			return false;
-		}
-
-		if (ctx.camera.prepare(fire) && raw.valid()) {
-			if (ctx.inventory.selectedItem().id() == RAW_SHRIMP || raw.click("Use")) {
-				if (Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.inventory.selectedItemIndex() > -1;
-					}
-				}, 200, 5)) {
-					if (fire.interact("Use", "Raw shrimps -> Fire")) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return !raw.valid();
-							}
-						}, 200, 20);
-					}
+		if (ctx.camera.prepare(fire) && ctx.inventory.select(RAW_SHRIMP)) {
+			final Item item = ctx.inventory.selectedItem();
+			if (Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.inventory.selectedItemIndex() > -1;
+				}
+			}, 200, 5)) {
+				if (fire.interact("Use", item.name() + " -> Fire")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return !item.valid();
+						}
+					}, 200, 20);
 				}
 			}
+
 		}
 		return false;
 	}
@@ -170,15 +163,9 @@ public class SurvivalExpert extends Talker {
 	private void makeFire() {
 		final Tile playerTile = ctx.players.local().tile();
 		if (ctx.objects.select().at(playerTile).select(ObjectDefinition.name(ctx, "Fire")).isEmpty()) {
-			final Item logs = ctx.inventory.select().id(LOGS).shuffle().poll();
 			final Item tinderbox = ctx.inventory.select().id(TINDERBOX).shuffle().poll();
 
-			if (ctx.inventory.selected() && ctx.inventory.selectedItem().id() != RAW_SHRIMP) {
-				ctx.inventory.deselect();
-				return;
-			}
-
-			if (ctx.inventory.selectedItem().id() == LOGS || logs.click("Use")) {
+			if (ctx.inventory.select(LOGS)) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
