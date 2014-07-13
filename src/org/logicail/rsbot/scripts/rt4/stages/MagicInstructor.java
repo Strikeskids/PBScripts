@@ -138,6 +138,12 @@ public class MagicInstructor extends Talker {
 		ctx.camera.prepare(derive.matrix(ctx));
 		if (derive.matrix(ctx).inViewport()) {
 			derive.matrix(ctx).interact("Walk here");
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.players.local().tile().equals(derive);
+				}
+			}, 300, 10);
 			Condition.sleep(500);
 		} else {
 			log.info("MYWALK!");
