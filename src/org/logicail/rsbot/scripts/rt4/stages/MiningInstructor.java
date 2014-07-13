@@ -40,9 +40,8 @@ public class MiningInstructor extends Talker {
 				ctx.game.tab(Game.Tab.INVENTORY);
 			}
 
-			final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().poll();
+			final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().limit(2).shuffle().poll();
 			if (ctx.camera.prepare(anvil)) {
-
 				if (ctx.inventory.select(BRONZE_BAR)) {
 					final Item bar = ctx.inventory.select().id(BRONZE_BAR).poll();
 					if (anvil.interact("Use", bar.name() + " -> Anvil")) {
@@ -153,7 +152,7 @@ public class MiningInstructor extends Talker {
 	}
 
 	private GameObject rock(Filter<GameObject> filter) {
-		return ctx.objects.select().select(ObjectDefinition.name(ctx, "Rocks")).select(filter).nearest().limit(6).shuffle().poll();
+		return ctx.objects.select().select(ObjectDefinition.name(ctx, "Rocks")).select(filter).nearest().limit(4).shuffle().poll();
 	}
 
 	private void prospect(Filter<GameObject> filter) {
