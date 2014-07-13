@@ -31,12 +31,19 @@ public class Emotes extends GraphScript.Action<IClientContext> {
 		if (ctx.game.tab() == Game.Tab.EMOTES || ctx.game.tab(Game.Tab.EMOTES)) {
 			final Component emote = ctx.widgets.widget(464).component(Random.nextInt(38, 58));
 			if (emote.valid() && emote.click()) {
-				Condition.wait(new Callable<Boolean>() {
+				if (Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.players.local().animation() == -1 && ctx.chat.visible("It's only a short distance to the next guide");
+						return ctx.players.local().animation() != -1;
 					}
-				}, 200, 25);
+				}, 100, 10)) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return ctx.players.local().animation() == -1 && ctx.chat.visible("It's only a short distance to the next guide");
+						}
+					}, 200, 30);
+				}
 			}
 		}
 	}
