@@ -6,9 +6,6 @@ import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.Component;
 import org.powerbot.script.rt4.Game;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -18,35 +15,12 @@ import java.util.concurrent.Callable;
  * Time: 23:52
  */
 public class TabOpener extends GraphScript.Action<IClientContext> {
-	private final static String[] TAB_STRINGS;
 
 	@Override
 	public String toString() {
 		return "Tab Opener";
 	}
 
-	private static final HashMap<String, Game.Tab> TAB_MAPPING;
-
-	static {
-		TAB_MAPPING = new HashMap<String, Game.Tab>();
-		TAB_MAPPING.put("Click on the flashing icon to open the Prayer", Game.Tab.PRAYER);
-		TAB_MAPPING.put("smiling face to open your friends list", Game.Tab.FRIENDS_LIST);
-		TAB_MAPPING.put("on the other flashing face to the right", Game.Tab.IGNORED_LIST);
-		TAB_MAPPING.put("icon of a man, the one to the right of your backpack", Game.Tab.EQUIPMENT);
-		TAB_MAPPING.put("Click on the flashing crossed swords", Game.Tab.ATTACK);
-		TAB_MAPPING.put("Open up the Magic menu by", Game.Tab.MAGIC);
-		TAB_MAPPING.put("and even kebabs. Now you've got the hang", Game.Tab.EMOTES);
-		TAB_MAPPING.put("Open the Quest Journal.", Game.Tab.QUESTS);
-		TAB_MAPPING.put("You will notice the flashing icon of a spanner", Game.Tab.OPTIONS);
-		TAB_MAPPING.put("Please click on the flashing spanner icon", Game.Tab.OPTIONS);
-		TAB_MAPPING.put("It's only a short distance to the next guide.", Game.Tab.OPTIONS);
-		TAB_MAPPING.put("Click on the flashing backpack icon to the right hand side of", Game.Tab.INVENTORY);
-		TAB_MAPPING.put("Click on the flashing bar graph icon", Game.Tab.STATS);
-		TAB_MAPPING.put("Well done! Your first load fo bread. As you gain experience in", Game.Tab.MUSIC);
-
-		Set<String> set = TAB_MAPPING.keySet();
-		TAB_STRINGS = set.toArray(new String[set.size()]);
-	}
 
 	public TabOpener(IClientContext ctx) {
 		super(ctx);
@@ -54,31 +28,60 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public void run() {
-		for (Map.Entry<String, Game.Tab> entry : TAB_MAPPING.entrySet()) {
-			if (ctx.chat.visible(entry.getKey())) {
-				final Game.Tab tab = entry.getValue();
-				if (tab == Game.Tab.IGNORED_LIST) {
-					final Component component = findTextureId(905);
-					if (component != null && component.click("Ignore List")) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() {
-								return ctx.game.tab() == Game.Tab.IGNORED_LIST;
-							}
-						}, 50, 10);
-					}
+		final int i = tab();
+		switch (i) {
+			case 1:
+				ctx.game.tab(Game.Tab.ATTACK);
+				break;
+			case 2:
+				ctx.game.tab(Game.Tab.STATS);
+				break;
+			case 3:
+				ctx.game.tab(Game.Tab.QUESTS);
+				break;
+			case 4:
+				ctx.game.tab(Game.Tab.INVENTORY);
+				break;
+			case 5:
+				ctx.game.tab(Game.Tab.EQUIPMENT);
+				break;
+			case 6:
+				ctx.game.tab(Game.Tab.PRAYER);
+				break;
+			case 7:
+				ctx.game.tab(Game.Tab.MAGIC);
+				break;
+			case 9:
+				ctx.game.tab(Game.Tab.FRIENDS_LIST);
+				break;
+			case 10:
+				final Component component = findTextureId(905);
+				if (component != null && component.click("Ignore List")) {
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() {
+							return ctx.game.tab() == Game.Tab.IGNORED_LIST;
+						}
+					}, 50, 10);
 				} else {
-					ctx.game.tab(tab);
+					ctx.game.tab(Game.Tab.IGNORED_LIST);
 				}
-				Condition.sleep(250);
+				break;
+			case 12:
+				ctx.game.tab(Game.Tab.OPTIONS);
+				break;
+			case 13:
+				ctx.game.tab(Game.Tab.EMOTES);
+				break;
+			case 14:
+				ctx.game.tab(Game.Tab.MUSIC);
+				break;
+			default:
+				log.severe("I don't know which tab to open [" + i + "]");
+				ctx.controller.stop();
 				return;
-			}
 		}
-
-		if (ctx.chat.visible("Range cooking.")) {
-			ctx.game.tab(Game.Tab.MUSIC);
-			Condition.sleep(250);
-		}
+		Condition.sleep(200);
 	}
 
 	private Component findTextureId(final int texture) {
@@ -93,6 +96,10 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public boolean valid() {
-		return ctx.chat.visible(TAB_STRINGS) || ctx.chat.visible("Range cooking.") && !ctx.chat.visible("Music.");
+		return tab() > 0;
+	}
+
+	private int tab() {
+		return ctx.varpbits.varpbit(1021) & 0xf;
 	}
 }
