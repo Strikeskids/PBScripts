@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
  */
 public class MagicInstructor extends Talker {
 	private static final String JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE = "Just follow the path to the Wizard's house";
+	private static final String NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE = "Now you have runes you should see the Wind Strike";
 	private static final String NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE = "Now you have some runes you should see the Wind Strike";
 	private static final int[] BOUNDS_CHICKEN = {-40, 40, -48, 0, -40, 40};
 	private final HashSet<Tile> ignored = new HashSet<Tile>();
@@ -45,14 +46,13 @@ public class MagicInstructor extends Talker {
 			}
 		}
 
-		if (ctx.chat.visible(NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE)) {
+		if (ctx.chat.visible(NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE, NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE)) {
 			if (ctx.game.tab() != Game.Tab.MAGIC) {
 				ctx.game.tab(Game.Tab.MAGIC);
 			}
 
 			final Tile spellFrom = spellLocation();
-			final int distance = ctx.movement.distance(spellFrom, ctx.players.local());
-			if (distance > 2) {
+			if (ctx.players.local().tile().y() != spellFrom.y()) {
 				walkSpellFrom();
 				return;
 			}
@@ -126,7 +126,7 @@ public class MagicInstructor extends Talker {
 	private Tile spellLocation() {
 		final GameObject table = table();
 		if (table.valid()) {
-			return table.tile().derive(-4, 7);
+			return table.tile().derive(-3, 4);
 		}
 		return Tile.NIL;
 	}
@@ -136,22 +136,21 @@ public class MagicInstructor extends Talker {
 		if (dragonshead.valid()) {
 			return ctx.objects.select().select(ObjectDefinition.name(ctx, "Table")).nearest(dragonshead).poll();
 		}
-		log.info("Dragons head invalid");
 		return ctx.objects.nil();
 	}
 
 	private void walkSpellFrom() {
-		final Tile derive = spellLocation().derive(Random.nextInt(-1, 1), Random.nextInt(0, 2));
+		final Tile derive = spellLocation().derive(Random.nextInt(-1, 1), 0);
 		ctx.camera.prepare(derive.matrix(ctx));
 		if (derive.matrix(ctx).inViewport()) {
 			derive.matrix(ctx).interact("Walk here");
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return ctx.players.local().tile().equals(derive);
+					return !ctx.movement.destination().equals(derive) || ctx.players.local().tile().equals(derive);
 				}
 			}, 300, 10);
-			Condition.sleep(500);
+			Condition.sleep(250);
 		} else {
 			log.info("MYWALK!");
 			ctx.movement.myWalk(derive);
@@ -160,6 +159,6 @@ public class MagicInstructor extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE, NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE);
+		return super.valid() || ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE, NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE, NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE);
 	}
 }
