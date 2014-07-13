@@ -4,11 +4,14 @@ import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
+import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.Callable;
 
@@ -200,6 +203,25 @@ public class CombatExpert extends Talker {
 					}
 				}, 200, 5)) {
 					unreachable.add(tile);
+					if (unreachable.size() > 5) {
+						final GameObject gate = gate();
+						if (gate.valid()) {
+							LogicailArea area = new LogicailArea(gate.tile().derive(-4, -4), gate.tile().derive(5, 5));
+							HashSet<Tile> reachable = new HashSet<Tile>();
+
+							for (Tile dest : area.getTileArray()) {
+								if (dest.matrix(ctx).reachable()) {
+									reachable.add(dest);
+								}
+							}
+							java.util.List<Tile> reachableShuffle = new ArrayList<Tile>(reachable);
+							Collections.shuffle(reachableShuffle);
+							for (Tile t : reachableShuffle) {
+								ctx.movement.step(t);
+								break;
+							}
+						}
+					}
 					return;
 				}
 				Condition.wait(new Callable<Boolean>() {
@@ -230,8 +252,7 @@ public class CombatExpert extends Talker {
 	}
 
 	private void traverseCage() {
-		final GameObject wall = ctx.objects.select().select(ObjectDefinition.name(ctx, "Spear wall")).nearest().poll();
-		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_NS)).nearest(wall).poll();
+		final GameObject gate = gate();
 
 		if (!ctx.definitions.get(gate).name.equals("Gate")) {
 			return;
@@ -251,6 +272,11 @@ public class CombatExpert extends Talker {
 				}
 			}, 200, 20);
 		}
+	}
+
+	private GameObject gate() {
+		final GameObject wall = ctx.objects.select().select(ObjectDefinition.name(ctx, "Spear wall")).nearest().poll();
+		return ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_NS)).nearest(wall).poll();
 	}
 
 	@Override
