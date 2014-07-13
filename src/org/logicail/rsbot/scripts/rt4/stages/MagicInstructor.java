@@ -34,13 +34,15 @@ public class MagicInstructor extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE) && !npc().valid()) {
-			final GameObject table = table();
-			if (table.valid()) {
-				ctx.movement.myWalk(table.tile().derive(-3, 0).derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)));
-				Condition.sleep(200);
+		if (ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE)) {
+			if (!npc().valid()) {
+				final GameObject table = table();
+				if (table.valid()) {
+					ctx.movement.myWalk(table.tile().derive(-3, 0).derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)));
+					Condition.sleep(200);
+				}
+				return;
 			}
-			return;
 		}
 
 		if (ctx.chat.visible(NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE)) {
@@ -70,7 +72,7 @@ public class MagicInstructor extends Talker {
 			if (ctx.camera.combineCamera(chicken, Random.nextInt(0, 50))) {
 				final Component windStrike = ctx.widgets.widget(192).component(1);
 				if (windStrike.valid()) {
-					if (windStrike.click("Cast")) {
+					if (windStrike.click()) {
 						Condition.sleep(250);
 						if (chicken.interact("Cast", "Wind Strike -> Chicken")) {
 							final Tile ignore = chicken.tile();
@@ -130,7 +132,12 @@ public class MagicInstructor extends Talker {
 	}
 
 	private GameObject table() {
-		return ctx.objects.select().select(ObjectDefinition.name(ctx, "Table")).nearest(ctx.objects.select().select(ObjectDefinition.name(ctx, "Dragon's head")).poll()).poll();
+		final GameObject dragonshead = ctx.objects.select().select(ObjectDefinition.name(ctx, "Dragon's head")).poll();
+		if (dragonshead.valid()) {
+			return ctx.objects.select().select(ObjectDefinition.name(ctx, "Table")).nearest(dragonshead).poll();
+		}
+		log.info("Dragons head invalid");
+		return ctx.objects.nil();
 	}
 
 	private void walkSpellFrom() {

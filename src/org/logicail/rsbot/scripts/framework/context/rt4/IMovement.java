@@ -37,7 +37,7 @@ public class IMovement extends Movement {
 					public Boolean call() throws Exception {
 						return ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) <= 4 || tile.tile().distanceTo(ctx.players.local()) <= 4;
 					}
-				}, 100, (int) Math.max(currentDistance * 10, 10));
+				}, 250, (int) Math.max(Math.min(currentDistance, Random.nextInt(5, 15)), 10));
 				Condition.sleep(250);
 			}
 		} else {
