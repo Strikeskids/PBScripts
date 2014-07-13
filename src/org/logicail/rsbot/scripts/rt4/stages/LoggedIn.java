@@ -2,6 +2,8 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,9 +26,14 @@ public class LoggedIn extends GraphScript.Action<IClientContext> {
 		return ctx.game.loggedIn();
 	}
 
+	private long nextsleep = 0;
+
 	@Override
 	public void run() {
-
+		if (System.currentTimeMillis() > nextsleep) {
+			nextsleep = System.currentTimeMillis() + Random.nextInt(5000, 45000);
+			Condition.sleep(Random.nextInt(50, 1500));
+		}
 	}
 
 	public void add(GraphScript.Action<IClientContext> action) {
