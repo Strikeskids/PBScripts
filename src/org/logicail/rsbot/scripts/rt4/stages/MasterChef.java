@@ -61,7 +61,7 @@ public class MasterChef extends Talker {
 		if (ctx.chat.visible("Follow the path until you get to the door with the yellow arrow")) {
 			if (!ctx.players.local().inMotion() || ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) < Random.nextInt(2, 5)) {
 				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(new int[]{0, 32, -240, 0, 0, 120})).nearest().poll();
-				if (door.valid() && ctx.camera.prepare(door) && door.click("Open", "Door")) {
+				if (door.valid() && ctx.camera.prepare(door) && door.interact("Open", "Door")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
@@ -110,7 +110,7 @@ public class MasterChef extends Talker {
 			return;
 		}
 
-		if (ctx.chat.visible("Once you've examined this menu use the next door")) {
+		if (ctx.chat.visible("Once you've examined this menu use the next door") || ctx.chat.visible("Range cooking.") && ctx.chat.visible("Music.")) {
 			// Find north most door
 			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).within(15).sort(new Comparator<GameObject>() {
 				@Override

@@ -69,6 +69,11 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 				return;
 			}
 		}
+
+		if (ctx.chat.visible("Range cooking.")) {
+			ctx.game.tab(Game.Tab.MUSIC);
+			Condition.sleep(250);
+		}
 	}
 
 	private Component findTextureId(final int texture) {
@@ -83,6 +88,6 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public boolean valid() {
-		return ctx.chat.visible(TAB_STRINGS);
+		return ctx.chat.visible(TAB_STRINGS) || ctx.chat.visible("Range cooking.") && !ctx.chat.visible("Music.");
 	}
 }
