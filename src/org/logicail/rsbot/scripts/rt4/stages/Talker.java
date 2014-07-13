@@ -82,6 +82,6 @@ public abstract class Talker extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public boolean valid() {
-		return ctx.players.local().animation() == -1 && !ctx.players.local().inMotion() && npc().valid();
+		return ctx.players.local().animation() == -1 && (!ctx.players.local().inMotion() || ctx.movement.distance(ctx.players.local(), ctx.movement.destination()) < 4) && npc().valid();
 	}
 }
