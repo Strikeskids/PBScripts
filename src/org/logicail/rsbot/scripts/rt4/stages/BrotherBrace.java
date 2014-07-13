@@ -36,7 +36,7 @@ public class BrotherBrace extends Talker {
 			final GameObject altar = ctx.objects.select().select(ObjectDefinition.name(ctx, "Altar")).nearest().poll();
 			if (altar.valid()) {
 				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_S)).nearest(altar).poll();
-				if (ctx.camera.prepare(door) && door.click("Open")) {
+				if (ctx.camera.prepare(door) && door.interact("Open")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
@@ -71,7 +71,7 @@ public class BrotherBrace extends Talker {
 					}
 				}).each(Interactive.doSetBounds(LARGE_DOOR_BOUNDS)).nearest(support).limit(2).shuffle().poll();
 				log.info("Open door");
-				if (ctx.camera.prepare(door) && door.click("Open")) {
+				if (ctx.camera.prepare(door) && door.interact("Open")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {

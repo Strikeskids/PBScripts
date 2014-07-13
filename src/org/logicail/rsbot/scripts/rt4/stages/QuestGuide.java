@@ -57,7 +57,7 @@ public class QuestGuide extends Talker {
 				}
 			}).select(ObjectDefinition.name(ctx, "Suit of armour")).poll();
 			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_N)).nearest(armour).poll();
-			if (ctx.camera.prepare(door) && door.click("Open")) {
+			if (ctx.camera.prepare(door) && door.interact("Open")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -71,7 +71,7 @@ public class QuestGuide extends Talker {
 		if (ctx.chat.visible("It's time to enter some caves")) {
 			final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
 			if (ctx.camera.prepare(ladder)) {
-				if (ladder.click("Climb-down")) {
+				if (ladder.interact("Climb-down")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {

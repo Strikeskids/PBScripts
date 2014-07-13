@@ -145,7 +145,7 @@ public class MiningInstructor extends Talker {
 
 		if (ctx.chat.visible("You've finished in this area") || ctx.chat.visible(CombatExpert.VALID_STRINGS)) {
 			final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_EW)).nearest().poll();
-			if (ctx.camera.prepare(gate) && gate.click("Open")) {
+			if (ctx.camera.prepare(gate) && gate.interact("Open")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {

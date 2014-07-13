@@ -215,7 +215,7 @@ public class CombatExpert extends Talker {
 		}
 		if (ctx.chat.visible(YOU_HAVE_COMPLETED_THE_TASKS_HERE)) {
 			final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
-			if (ctx.camera.prepare(ladder) && ladder.click("Climb-up")) {
+			if (ctx.camera.prepare(ladder) && ladder.interact("Climb-up")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -230,8 +230,14 @@ public class CombatExpert extends Talker {
 	}
 
 	private void traverseCage() {
-		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_NS)).nearest(ctx.players.local()).poll();
-		if (ctx.camera.prepare(gate) && gate.click("Open")) {
+		final GameObject wall = ctx.objects.select().select(ObjectDefinition.name(ctx, "Spear wall")).nearest().poll();
+		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_NS)).nearest(wall).poll();
+
+		if (!ctx.definitions.get(gate).name.equals("Gate")) {
+			return;
+		}
+
+		if (ctx.camera.prepare(gate) && gate.interact("Open")) {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
