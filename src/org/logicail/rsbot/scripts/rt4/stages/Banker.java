@@ -24,7 +24,7 @@ public class Banker extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid() && ctx.chat.visible(CombatExpert.YOU_HAVE_COMPLETED_THE_TASKS_HERE);
+		return super.valid() || stage() >= 14 && ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid();
 	}
 
 	@Override
@@ -61,21 +61,7 @@ public class Banker extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid()) {
-			if (ctx.chat.visible(CombatExpert.YOU_HAVE_COMPLETED_THE_TASKS_HERE)) {
-				final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
-//				LogTutorialIsland.interactive.set(ladder);
-				if (ctx.camera.prepare(ladder) && ladder.interact("Climb-up")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.chat.visible("Banking.");
-						}
-					}, 200, 30);
-				}
-				return;
-			}
-		}
+		enter();
 
 		if (ctx.bank.opened()) {
 			ctx.bank.close();
@@ -95,25 +81,45 @@ public class Banker extends Talker {
 		}
 
 		if (ctx.chat.visible("window and move on through the door indicated")) {
-			final GameObject bank = ctx.objects.select().select(ObjectDefinition.name(ctx, "Bank booth")).nearest().poll();
-			if (bank.valid()) {
-				final BasicQuery<GameObject> doors = doorsInYByX(ctx, bank);
-				doors.poll();
-				final GameObject first = doors.poll();
-				if (ctx.camera.prepare(first)) {
-					first.interact("Open");
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.chat.visible("The guide here will tell you all about making cash");
-						}
-					}, 200, 10);
-				}
-			}
+			leave();
 			return;
 		}
 
 		super.run();
+	}
+
+	@Override
+	protected void enter() {
+		if (ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid()) {
+			final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
+			if (ctx.camera.prepare(ladder) && ladder.interact("Climb-up")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.chat.visible("Banking.");
+					}
+				}, 200, 30);
+			}
+		}
+	}
+
+	@Override
+	protected void leave() {
+		final GameObject bank = ctx.objects.select().select(ObjectDefinition.name(ctx, "Bank booth")).nearest().poll();
+		if (bank.valid()) {
+			final BasicQuery<GameObject> doors = doorsInYByX(ctx, bank);
+			doors.poll();
+			final GameObject first = doors.poll();
+			if (ctx.camera.prepare(first)) {
+				first.interact("Open");
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.chat.visible("The guide here will tell you all about making cash");
+					}
+				}, 200, 10);
+			}
+		}
 	}
 
 	public static BasicQuery<GameObject> doorsInYByX(IClientContext ctx, final GameObject bank) {

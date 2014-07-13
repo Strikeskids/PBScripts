@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.rt4;
 
 import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.Inventory;
@@ -69,6 +70,35 @@ public class IInventory extends Inventory {
 				}
 			}
 		}
+		return false;
+	}
+
+	public boolean itemOnItem(int a, int b) {
+		final Item itemA = select().id(a).shuffle().poll();
+		final Item itemB = select().id(b).shuffle().poll();
+
+		if (!itemA.valid() || !itemB.valid()) {
+			return false;
+		}
+
+		if (ctx.game.tab() == Game.Tab.INVENTORY || ctx.game.tab(Game.Tab.INVENTORY)) {
+			if (selectedItem().id() == a || Random.nextBoolean() && select(a)) {
+				return itemB.click("Use", selectedItem().name() + " -> " + itemB.name()) && Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !selectedItem().valid();
+					}
+				}, 200, 4);
+			}
+
+			return select(b) && itemB.click("Use", selectedItem().name() + " -> " + itemA.name()) && Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !selectedItem().valid();
+				}
+			}, 200, 4);
+		}
+
 		return false;
 	}
 }

@@ -63,192 +63,211 @@ public class CombatExpert extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible(FROM_HERE_YOU_CAN_SEE_WHAT_ITEMS_YOU_HAVE_EQUIPPED)) {
-			final Component stats = ctx.widgets.widget(387).component(17);
-			if (stats.click("View equipment stats")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible(LEFT_CLICK_YOUR_DAGGER_TO);
-					}
-				}, 200, 5);
-			}
-			return;
-		}
-
-		final Component close = ctx.widgets.widget(84).component(3);
-		if (close.valid()) {
-			close.click("Close");
-			Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return !close.valid();
-				}
-			}, 200, 5);
-			return;
-		}
-
-		if (ctx.chat.visible(LEFT_CLICK_YOUR_DAGGER_TO)) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-				return;
-			}
-
-			for (final Item item : ctx.inventory.select().id(BRONZE_DAGGER_ID).first()) {
-				item.interact("Wield", "Bronze dagger");
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !item.valid();
-					}
-				}, 200, 5);
-			}
-
-			return;
-		}
-
-		if (ctx.chat.visible(IN_YOUR_WORN_INVENTORY_PANEL_RIGHT_CLICK_ON_THE_DAGGER)) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-				return;
-			}
-			for (final Item item : ctx.inventory.select().id(BRONZE_SWORD, WOODEN_SHIELD).shuffle()) {
-				item.click("Wield");
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !item.valid();
-					}
-				}, 200, 5);
-			}
-			return;
-		}
-
-		if (ctx.chat.visible(FROM_THIS_INTERFACE_YOU_CAN_SELECT_THE_TYPE_OF_ATTACK)) {
-			traverseCage();
-			return;
-		}
-
-		if (ctx.chat.visible(TO_ATTACK_THE_RAT_RIGHT_CLICK_IT)) {
-			final Npc rat = rat().select(new Filter<Npc>() {
-				@Override
-				public boolean accept(Npc npc) {
-					return !npc.inCombat();
-				}
-			}).nearest().limit(3).shuffle().poll();
-
-			if (ctx.camera.prepare(rat) && rat.interact("Attack", "Giant rat")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible(WHILE_YOU_ARE_FIGHTING_YOU_WILL_SEE_A_BAR);
-					}
-				});
-			}
-			return;
-		}
-
-		if (ctx.chat.visible(WHILE_YOU_ARE_FIGHTING_YOU_WILL_SEE_A_BAR)) {
-			Condition.sleep(333);
-			return;
-		}
-
-		if (ctx.chat.visible(PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT) && !npc().valid()) {
-			traverseCage();
-			return;
-		}
-
-		if (!ctx.inventory.select().id(841, 882).isEmpty()) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-				return;
-			}
-			for (final Item item : ctx.inventory.select().id(841, 882).shuffle()) {
-				item.click("Wield");
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !item.valid();
-					}
-				}, 200, 5);
-			}
-			return;
-		}
-
-		if (ctx.chat.visible(TRY_KILLING_ANOTHER_RAT)) {
-			Npc rat = rat().select(new Filter<Npc>() {
-				@Override
-				public boolean accept(Npc npc) {
-					return npc.interacting().equals(ctx.players.local());
-				}
-			}).nearest().poll();
-
-			if (!rat.valid()) {
-				rat = rat().select(new Filter<Npc>() {
-					@Override
-					public boolean accept(Npc npc) {
-						return !npc.inCombat() && !unreachable.contains(npc.tile());
-					}
-				}).nearest().limit(2).shuffle().poll();
-			}
-
-			final Tile tile = rat.tile();
-
-			if (ctx.camera.prepare(rat) && rat.interact("Attack", "Giant rat")) {
-				Condition.sleep(333);
-				if (Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible("I can't reach that!") && ctx.chat.queryContinue();
-					}
-				}, 200, 5)) {
-					unreachable.add(tile);
-					if (unreachable.size() > 5) {
-						final GameObject gate = gate();
-						if (gate.valid()) {
-							LogicailArea area = new LogicailArea(gate.tile().derive(-4, -4), gate.tile().derive(5, 5));
-							HashSet<Tile> reachable = new HashSet<Tile>();
-
-							for (Tile dest : area.getTileArray()) {
-								if (dest.matrix(ctx).reachable()) {
-									reachable.add(dest);
+		switch (stage()) {
+			case 10:
+				if (ctx.chat.visible(FROM_HERE_YOU_CAN_SEE_WHAT_ITEMS_YOU_HAVE_EQUIPPED)) {
+					final Component stats = ctx.widgets.widget(387).component(17);
+					if (stats.valid()) {
+						if (stats.click("View equipment stats")) {
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return ctx.chat.visible(LEFT_CLICK_YOUR_DAGGER_TO);
 								}
-							}
-							java.util.List<Tile> reachableShuffle = new ArrayList<Tile>(reachable);
-							Collections.shuffle(reachableShuffle);
-							for (Tile t : reachableShuffle) {
-								ctx.movement.step(t);
-								break;
-							}
+							}, 200, 5);
 						}
+						return;
+					}
+				}
+
+				final Component close = ctx.widgets.widget(84).component(3);
+				if (close.valid()) {
+					close.click("Close");
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return !close.valid();
+						}
+					}, 200, 5);
+					return;
+				}
+
+				if (ctx.chat.visible(LEFT_CLICK_YOUR_DAGGER_TO)) {
+					if (ctx.game.tab() != Game.Tab.INVENTORY) {
+						ctx.game.tab(Game.Tab.INVENTORY);
+						return;
+					}
+
+					for (final Item item : ctx.inventory.select().id(BRONZE_DAGGER_ID).first()) {
+						item.interact("Wield", "Bronze dagger");
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !item.valid();
+							}
+						}, 200, 5);
 					}
 					return;
 				}
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						final Actor actor = ctx.players.local().interacting();
-						return actor == null || !actor.valid() || ctx.chat.visible(YOU_HAVE_COMPLETED_THE_TASKS_HERE);
+
+				ctx.inventory.deselect();
+
+
+				if (!ctx.inventory.select().id(BRONZE_SWORD, WOODEN_SHIELD).isEmpty()) {
+					if (ctx.game.tab() != Game.Tab.INVENTORY) {
+						ctx.game.tab(Game.Tab.INVENTORY);
+						return;
 					}
-				}, 200, 50);
-				Condition.sleep(333);
-			}
-			return;
+					for (final Item item : ctx.inventory.shuffle()) {
+						item.click("Wield");
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !item.valid();
+							}
+						}, 200, 5);
+					}
+					return;
+				}
+
+				break;
+			case 11:
+				if (ctx.chat.visible(WHILE_YOU_ARE_FIGHTING_YOU_WILL_SEE_A_BAR)) {
+					Condition.sleep(333);
+					return;
+				}
+
+				if (ctx.chat.visible(FROM_THIS_INTERFACE_YOU_CAN_SELECT_THE_TYPE_OF_ATTACK) || ctx.chat.visible(PASS_THROUGH_THE_GATE_AND_TALK_TO_THE_COMBAT) && !npc().valid()) {
+					traverseCage();
+					return;
+				}
+
+				if (ctx.chat.visible(TO_ATTACK_THE_RAT_RIGHT_CLICK_IT)) {
+					final Npc rat = rat().select(new Filter<Npc>() {
+						@Override
+						public boolean accept(Npc npc) {
+							return !npc.inCombat();
+						}
+					}).nearest().limit(3).shuffle().poll();
+
+					if (ctx.camera.prepare(rat) && rat.interact("Attack", "Giant rat")) {
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return ctx.chat.visible(WHILE_YOU_ARE_FIGHTING_YOU_WILL_SEE_A_BAR);
+							}
+						});
+					}
+					return;
+				}
+				break;
+			case 12:
+				if (!ctx.inventory.select().id(841, 882).isEmpty()) {
+					if (ctx.game.tab() != Game.Tab.INVENTORY) {
+						ctx.game.tab(Game.Tab.INVENTORY);
+						return;
+					}
+					for (final Item item : ctx.inventory.shuffle()) {
+						item.click("Wield");
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return !item.valid();
+							}
+						}, 200, 5);
+					}
+					return;
+				}
+
+
+				if (ctx.chat.visible(TRY_KILLING_ANOTHER_RAT)) {
+					Npc rat = rat().select(new Filter<Npc>() {
+						@Override
+						public boolean accept(Npc npc) {
+							return npc.interacting().equals(ctx.players.local());
+						}
+					}).nearest().poll();
+
+					if (!rat.valid()) {
+						rat = rat().select(new Filter<Npc>() {
+							@Override
+							public boolean accept(Npc npc) {
+								return !npc.inCombat() && !unreachable.contains(npc.tile());
+							}
+						}).nearest().limit(2).shuffle().poll();
+					}
+
+					final Tile tile = rat.tile();
+
+					if (ctx.camera.prepare(rat) && rat.interact("Attack", "Giant rat")) {
+						Condition.sleep(333);
+						if (Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								return ctx.chat.visible("I can't reach that!") && ctx.chat.queryContinue();
+							}
+						}, 200, 5)) {
+							unreachable.add(tile);
+							if (unreachable.size() > 5) {
+								final GameObject gate = gate();
+								if (gate.valid()) {
+									LogicailArea area = new LogicailArea(gate.tile().derive(-4, -4), gate.tile().derive(5, 5));
+									HashSet<Tile> reachable = new HashSet<Tile>();
+
+									for (Tile dest : area.getTileArray()) {
+										if (dest.matrix(ctx).reachable()) {
+											reachable.add(dest);
+										}
+									}
+									java.util.List<Tile> reachableShuffle = new ArrayList<Tile>(reachable);
+									Collections.shuffle(reachableShuffle);
+									for (Tile t : reachableShuffle) {
+										ctx.movement.step(t);
+										break;
+									}
+								}
+							}
+							return;
+						}
+						Condition.wait(new Callable<Boolean>() {
+							@Override
+							public Boolean call() throws Exception {
+								final Actor actor = ctx.players.local().interacting();
+								return actor == null || !actor.valid() || ctx.chat.visible(YOU_HAVE_COMPLETED_THE_TASKS_HERE);
+							}
+						}, 200, 50);
+						Condition.sleep(333);
+					}
+					return;
+				}
+
+				leave();
+				return;
 		}
+
 		if (ctx.chat.visible(YOU_HAVE_COMPLETED_THE_TASKS_HERE)) {
-			final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
-			if (ctx.camera.prepare(ladder) && ladder.interact("Climb-up")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible("Banking.");
-					}
-				}, 200, 40);
-			}
 			return;
 		}
 
 		super.run();
+	}
+
+	@Override
+	protected void enter() {
+
+	}
+
+	@Override
+	protected void leave() {
+		final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
+		if (ctx.camera.prepare(ladder) && ladder.interact("Climb-up")) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.chat.visible("Banking.");
+				}
+			}, 200, 40);
+		}
 	}
 
 	private void traverseCage() {

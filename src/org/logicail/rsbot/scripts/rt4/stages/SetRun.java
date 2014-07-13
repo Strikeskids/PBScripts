@@ -54,6 +54,6 @@ public class SetRun extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public boolean valid() {
-		return System.currentTimeMillis() > nextrun && !ctx.movement.running() && energy() > nextPercentValid;
+		return System.currentTimeMillis() > nextrun && !ctx.movement.running() && energy() > nextPercentValid && ctx.varpbits.varpbit(406) > 0;
 	}
 }

@@ -22,6 +22,8 @@ public class MiningInstructor extends Talker {
 	private static final int TIN_ORE = 438;
 	private static final int COPPER_ORE = 436;
 	private static final int BRONZE_DAGGER = 1205;
+	private static final int BRONZE_PICKAXE = 1265;
+	private static final int HAMMER = 2347;
 	private final Filter<GameObject> TIN_FILTER = Rocks.TIN.filter(ctx);
 	private final Filter<GameObject> COPPER_FILTER = Rocks.COPPER.filter(ctx);
 
@@ -35,108 +37,138 @@ public class MiningInstructor extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
-		if (ctx.chat.visible("To smith you'll need a hammer")) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-			}
+		if (!npc().valid()) {
+			enter();
+			return;
+		}
 
-			final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().limit(2).shuffle().poll();
-			if (ctx.camera.prepare(anvil)) {
-				if (ctx.inventory.select(BRONZE_BAR)) {
-					final Item bar = ctx.inventory.select().id(BRONZE_BAR).poll();
-					if (anvil.interact("Use", bar.name() + " -> Anvil")) {
-						Condition.wait(new Callable<Boolean>() {
+		switch (stage()) {
+			case 8:
+				if (ctx.chat.visible("To prospect a mineable rock")) {
+					prospect(TIN_FILTER);
+					return;
+				}
+				if (ctx.chat.visible("So now you know there's tin in the grey rocks")) {
+					prospect(COPPER_FILTER);
+					return;
+				}
+
+				if (mine()) return;
+				break;
+			case 9:
+			default:
+				if (!ctx.inventory.select().id(BRONZE_DAGGER).isEmpty()) {
+					leave();
+					return;
+				}
+
+				if (ctx.inventory.select().id(BRONZE_BAR).isEmpty()) {
+					if (mine()) return;
+
+					if (ctx.game.tab() != Game.Tab.INVENTORY) {
+						ctx.game.tab(Game.Tab.INVENTORY);
+					}
+
+					final GameObject furnace = ctx.objects.select().select(ObjectDefinition.name(ctx, "Furnace")).each(Interactive.doSetBounds(FURNACE_BOUND)).nearest().poll();
+
+					if (ctx.camera.prepare(furnace) && ctx.inventory.select(TIN_ORE, COPPER_ORE)) {
+						if (Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return ctx.chat.visible("What would you like to make?");
+								return ctx.inventory.selectedItemIndex() > -1;
 							}
-						}, 200, 20);
-					}
-				}
-			}
-			return;
-		}
-
-		if (ctx.chat.visible("You should now have both some copper and tin ore")) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-			}
-
-			final GameObject furnace = ctx.objects.select().select(ObjectDefinition.name(ctx, "Furnace")).each(Interactive.doSetBounds(FURNACE_BOUND)).nearest().poll();
-
-			if (ctx.camera.prepare(furnace) && ctx.inventory.select(TIN_ORE, COPPER_ORE)) {
-				if (Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.inventory.selectedItemIndex() > -1;
-					}
-				}, 200, 5)) {
-					final Item item = ctx.inventory.selectedItem();
-					if (item.valid() && furnace.interact("Use", item.name() + " -> Furnace")) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return ctx.chat.queryContinue();
+						}, 200, 5)) {
+							final Item item = ctx.inventory.selectedItem();
+							if (item.valid() && furnace.interact("Use", item.name() + " -> Furnace")) {
+								Condition.wait(new Callable<Boolean>() {
+									@Override
+									public Boolean call() throws Exception {
+										return ctx.chat.queryContinue();
+									}
+								}, 200, 20);
 							}
-						}, 200, 20);
-					}
-				}
-			}
-			return;
-		}
-
-		ctx.inventory.deselect();
-
-		if (ctx.chat.visible("To prospect a mineable rock")) {
-			prospect(TIN_FILTER);
-			return;
-		}
-		if (ctx.chat.visible("So now you know there's tin in the grey rocks")) {
-			prospect(COPPER_FILTER);
-			return;
-		}
-
-		if (ctx.chat.visible("It's quite simple really. All you need to do is right click")) {
-			mine(TIN_FILTER);
-			return;
-		}
-
-		if (ctx.chat.visible("Now you have some tin ore you just need some copper ore")) {
-			mine(COPPER_FILTER);
-			return;
-		}
-
-		if (ctx.chat.visible("Now you have the Smithing menu open")) {
-			// Find dagger, no hardcoding (except widget)
-			final Component dagger = ctx.chat.getComponentByText("Dagger");
-			if (dagger.valid()) {
-				final Component[] components = dagger.parent().components();
-				if (components.length > 0 && components[Random.nextInt(0, components.length)].click("Smith 1", "Bronze dagger")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return !ctx.inventory.select().id(BRONZE_DAGGER).isEmpty();
 						}
-					}, 200, 10);
-				}
-			}
-			return;
-		}
-
-		if (ctx.chat.visible("You've finished in this area") || ctx.chat.visible(CombatExpert.VALID_STRINGS)) {
-			final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_EW)).nearest().poll();
-			if (ctx.camera.prepare(gate) && gate.interact("Open")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible("In this area you will find out about combat with swords");
 					}
-				});
-			}
-			return;
+					return;
+				}
+
+				if (!ctx.inventory.select().id(HAMMER).isEmpty()) {
+					if (ctx.chat.visible("What would you like to make?")) {
+						final Component dagger = ctx.chat.getComponentByText("Dagger");
+						if (dagger.valid()) {
+							final Component parent = dagger.parent();
+							if (parent != null) {
+								final Component[] components = parent.components();
+								if (components.length > 0 && components[Random.nextInt(0, components.length)].click("Smith 1", "Bronze dagger")) {
+									Condition.wait(new Callable<Boolean>() {
+										@Override
+										public Boolean call() throws Exception {
+											return !ctx.inventory.select().id(BRONZE_DAGGER).isEmpty();
+										}
+									}, 200, 10);
+								}
+								return;
+							}
+						}
+					}
+
+					if (ctx.game.tab() != Game.Tab.INVENTORY) {
+						ctx.game.tab(Game.Tab.INVENTORY);
+					}
+
+					final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().limit(2).shuffle().poll();
+					if (ctx.camera.prepare(anvil)) {
+						if (ctx.inventory.select(BRONZE_BAR)) {
+							final Item bar = ctx.inventory.select().id(BRONZE_BAR).poll();
+							if (anvil.interact("Use", bar.name() + " -> Anvil")) {
+								Condition.wait(new Callable<Boolean>() {
+									@Override
+									public Boolean call() throws Exception {
+										return ctx.chat.visible("What would you like to make?");
+									}
+								}, 200, 20);
+							}
+						}
+					}
+					return;
+				}
+
+				break;
 		}
 
 		super.run();
+	}
+
+	private boolean mine() {
+		if (!ctx.inventory.select().id(BRONZE_PICKAXE).isEmpty()) {
+			if (ctx.inventory.select().id(TIN_ORE).isEmpty()) {
+				mine(TIN_FILTER);
+				return true;
+			}
+			if (ctx.inventory.select().id(COPPER_ORE).isEmpty()) {
+				mine(COPPER_FILTER);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	protected void enter() {
+		QuestGuide.leave(ctx);
+	}
+
+	@Override
+	protected void leave() {
+		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_CHAIN_GATE_EW)).nearest().poll();
+		if (ctx.camera.prepare(gate) && gate.interact("Open")) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.chat.visible("In this area you will find out about combat with swords");
+				}
+			});
+		}
 	}
 
 	private void mine(Filter<GameObject> filter) {

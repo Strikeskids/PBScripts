@@ -81,7 +81,7 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 				ctx.controller.stop();
 				return;
 		}
-		Condition.sleep(200);
+		Condition.sleep(333);
 	}
 
 	private Component findTextureId(final int texture) {

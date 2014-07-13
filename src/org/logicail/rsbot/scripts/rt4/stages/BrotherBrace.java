@@ -32,58 +32,69 @@ public class BrotherBrace extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible("You're almost finished on tutorial island.", "Nope, I'm ready to move on!", "Just follow the path to the Wizard's house")) {
-			final GameObject altar = ctx.objects.select().select(ObjectDefinition.name(ctx, "Altar")).nearest().poll();
-			if (altar.valid()) {
-				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_S)).nearest(altar).poll();
-				if (ctx.camera.prepare(door) && door.interact("Open")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return ctx.chat.visible("Just follow the path to the Wizard's house");
-						}
-					}, 200, 20);
-				}
-			}
+		if (stage() >= 17) {
+			leave();
 			return;
 		}
+
 		if (!npc().tile().matrix(ctx).reachable()) {
-			final GameObject support = ctx.objects.select().select(new Filter<GameObject>() {
-				@Override
-				public boolean accept(GameObject gameObject) {
-					final ObjectDefinition definition = ctx.definitions.get(gameObject);
-					return definition != null && Arrays.equals(SUPPORT_MODELS, definition.modelIds);
-				}
-			}).nearest().poll();
-			if (support.valid()) {
-				final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Large door")).select(new Filter<GameObject>() {
-					@Override
-					public boolean accept(GameObject gameObject) {
-						final ObjectDefinition definition = ctx.definitions.get(gameObject);
-						if (definition != null) {
-							for (String s : definition.actions) {
-								if (s != null && s.equals("Open")) {
-									return true;
-								}
-							}
-						}
-						return false;
-					}
-				}).each(Interactive.doSetBounds(LARGE_DOOR_BOUNDS)).nearest(support).limit(2).shuffle().poll();
-				log.info("Open door");
-				if (ctx.camera.prepare(door) && door.interact("Open")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							return npc().tile().matrix(ctx).reachable();
-						}
-					}, 200, 20);
-				}
-			}
+			enter();
 			return;
 		}
 
 		super.run();
+	}
+
+	@Override
+	protected void enter() {
+		final GameObject support = ctx.objects.select().select(new Filter<GameObject>() {
+			@Override
+			public boolean accept(GameObject gameObject) {
+				final ObjectDefinition definition = ctx.definitions.get(gameObject);
+				return definition != null && Arrays.equals(SUPPORT_MODELS, definition.modelIds);
+			}
+		}).nearest().poll();
+		if (support.valid()) {
+			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Large door")).select(new Filter<GameObject>() {
+				@Override
+				public boolean accept(GameObject gameObject) {
+					final ObjectDefinition definition = ctx.definitions.get(gameObject);
+					if (definition != null) {
+						for (String s : definition.actions) {
+							if (s != null && s.equals("Open")) {
+								return true;
+							}
+						}
+					}
+					return false;
+				}
+			}).each(Interactive.doSetBounds(LARGE_DOOR_BOUNDS)).nearest(support).limit(2).shuffle().poll();
+			log.info("Open door");
+			if (ctx.camera.prepare(door) && door.interact("Open")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return npc().tile().matrix(ctx).reachable();
+					}
+				}, 200, 20);
+			}
+		}
+	}
+
+	@Override
+	protected void leave() {
+		final GameObject altar = ctx.objects.select().select(ObjectDefinition.name(ctx, "Altar")).nearest().poll();
+		if (altar.valid()) {
+			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_S)).nearest(altar).poll();
+			if (ctx.camera.prepare(door) && door.interact("Open")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.chat.visible("Just follow the path to the Wizard's house");
+					}
+				}, 200, 20);
+			}
+		}
 	}
 
 

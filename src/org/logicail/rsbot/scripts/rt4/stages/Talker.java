@@ -18,21 +18,36 @@ import java.util.concurrent.Callable;
 public abstract class Talker extends GraphScript.Action<IClientContext> {
 	protected final String name;
 
-	@Override
-	public String toString() {
-		return name;
-	}
-
 	public Talker(IClientContext ctx, String name) {
 		super(ctx);
 		this.name = name;
 	}
 
 	@Override
+	public String toString() {
+		return name;
+	}
+
+	protected abstract void enter();
+
+	protected abstract void leave();
+
+	@Override
 	public void run() {
+		ctx.inventory.deselect();
+
 		if (tryContinue()) return;
 
 		tryTalk();
+	}
+
+	protected boolean tryContinue() {
+		if (ctx.chat.queryContinue()) {
+			log.info("[" + name + "] Continue");
+			ctx.chat.clickContinue();
+			return true;
+		}
+		return false;
 	}
 
 	protected void tryTalk() {
@@ -52,22 +67,17 @@ public abstract class Talker extends GraphScript.Action<IClientContext> {
 		}
 	}
 
-	protected boolean tryContinue() {
-		if (ctx.chat.queryContinue()) {
-			log.info("[" + name + "] Continue");
-			ctx.chat.clickContinue();
-			return true;
-		}
-		return false;
-	}
-
 	protected Npc npc() {
 		return ctx.npcs.select().select(NpcDefinition.filter(ctx, name)).select(new Filter<Npc>() {
 			@Override
 			public boolean accept(Npc npc) {
 				return npc.tile().matrix(ctx).reachable();
 			}
-		}).nearest().poll();
+		}).shuffle().poll();
+	}
+
+	public int stage() {
+		return ctx.varpbits.varpbit(406);
 	}
 
 	@Override

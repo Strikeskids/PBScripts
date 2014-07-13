@@ -21,10 +21,13 @@ import java.util.concurrent.Callable;
  */
 public class SurvivalExpert extends Talker {
 
+	private static final int SHRIMP = 315;
 	private static final int RAW_SHRIMP = 2514;
-	private static final int LOGS = 2511;
-	private static final int TINDERBOX = 590;
 	private static final int BURNT_SHRIMP = 7954;
+	private static final int LOGS = 2511;
+	private static final int SMALL_FISHING_NET = 303;
+	private static final int BRONZE_AXE = 1351;
+	private static final int TINDERBOX = 590;
 	private static final int[] BOUNDS_FISHING_SPOT = {-48, 40, -8, 0, -52, 36};
 
 	public SurvivalExpert(IClientContext ctx) {
@@ -37,68 +40,85 @@ public class SurvivalExpert extends Talker {
 	public void run() {
 		if (tryContinue()) return;
 
-		if (ctx.chat.visible("Well done, you've just cooked your first")) {
-			final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(BOUNDS_GATE)).nearest().poll();
-			if (ctx.camera.prepare(gate) && gate.interact("Open")) {
-				Condition.wait(new Callable<Boolean>() {
+		ctx.inventory.deselect();
+
+		switch (stage()) {
+			case 2:
+				if (!ctx.inventory.select().id(TINDERBOX).isEmpty() && !ctx.inventory.select().id(LOGS).isEmpty()) {
+					makeFire();
+					return;
+				}
+
+				if (!ctx.inventory.select().id(BRONZE_AXE).isEmpty() && !ctx.chat.visible("Your skill stats.")) {
+					chop();
+					return;
+				}
+
+				break;
+			case 3:
+				ctx.inventory.select().id(BURNT_SHRIMP).each(new Filter<Item>() {
 					@Override
-					public Boolean call() throws Exception {
-						return ctx.chat.visible("Follow the path until you get to the door with the yellow arrow");
+					public boolean accept(final Item item) {
+						ctx.inventory.deselect();
+						if (ctx.game.tab() != Game.Tab.INVENTORY) {
+							ctx.game.tab(Game.Tab.INVENTORY);
+						}
+						if (item.interact("Drop")) {
+							Condition.wait(new Callable<Boolean>() {
+								@Override
+								public Boolean call() throws Exception {
+									return !item.valid();
+								}
+							}, 100, 10);
+						}
+						return true;
 					}
-				}, 200, 50);
-			}
-			return;
-		}
+				});
 
-		if (!ctx.inventory.select().id(RAW_SHRIMP).isEmpty() && ctx.chat.visible("Now you have caught some shrimp", "then use them on a fire", "Now right click on the shrimp and select the use option.")) {
-			cook();
-			return;
-		}
+				if (!ctx.inventory.select().id(SMALL_FISHING_NET).isEmpty() && ctx.inventory.select().id(SHRIMP).isEmpty()) {
+					if (!ctx.inventory.select().id(RAW_SHRIMP).isEmpty()) {
+						cook();
+						return;
+					}
 
-		if (ctx.chat.visible("Catch some Shrimp.", "Let's try cooking without burning")) {
-			if (ctx.game.tab() != Game.Tab.INVENTORY) {
-				ctx.game.tab(Game.Tab.INVENTORY);
-			}
-
-			ctx.inventory.select().id(BURNT_SHRIMP).each(new Filter<Item>() {
-				@Override
-				public boolean accept(final Item item) {
-					ctx.inventory.deselect();
-					if (item.interact("Drop")) {
+					final Npc fishingSpot = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Fishing spot")).each(Interactive.doSetBounds(BOUNDS_FISHING_SPOT)).nearest().limit(2).shuffle().poll();
+					if (ctx.camera.prepare(fishingSpot) && fishingSpot.interact("Net")) {
 						Condition.wait(new Callable<Boolean>() {
 							@Override
 							public Boolean call() throws Exception {
-								return !item.valid();
+								return ctx.players.local().animation() == -1 && !ctx.inventory.select().id(RAW_SHRIMP).isEmpty();
 							}
-						}, 100, 10);
+						}, 200, 50);
 					}
-					return true;
+					return;
 				}
-			});
 
-			final Npc fishingSpot = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Fishing spot")).each(Interactive.doSetBounds(BOUNDS_FISHING_SPOT)).nearest().poll();
-			if (ctx.camera.prepare(fishingSpot) && fishingSpot.interact("Net")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.players.local().animation() == -1 && !ctx.inventory.select().id(RAW_SHRIMP).isEmpty();
-					}
-				}, 200, 50);
-			}
-			return;
-		}
-
-		if (!ctx.chat.visible("all: making a fire") && ctx.chat.visible("Making a fire")) {
-			makeFire();
-			return;
-		}
-
-		if (ctx.players.local().animation() == -1 && ctx.chat.visible("Cut down a tree", "Your character is now attempting to cut down the tree")) {
-			chop();
-			return;
+				leave();
+				return;
+			default:
+				leave();
+				return;
 		}
 
 		super.run();
+	}
+
+	@Override
+	protected void enter() {
+
+	}
+
+	@Override
+	protected void leave() {
+		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(BOUNDS_GATE)).nearest().poll();
+		if (ctx.camera.prepare(gate) && gate.interact("Open")) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return stage() == 4;
+				}
+			}, 200, 50);
+		}
 	}
 
 	private void chop() {
@@ -135,7 +155,6 @@ public class SurvivalExpert extends Talker {
 			}
 			return true;
 		}
-
 
 		if (ctx.camera.prepare(fire) && ctx.inventory.select(RAW_SHRIMP)) {
 			final Item item = ctx.inventory.selectedItem();

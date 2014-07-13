@@ -28,19 +28,29 @@ public class RunescapeGuide extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible("To continue the tutorial go through that door", "try it with the things in this room, then click on the door", "Follow the path to find the next instructor.")) {
-			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_E)).nearest().poll();
-			if (ctx.camera.prepare(door) && door.interact("Open", "Door")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !valid();
-					}
-				}, 200, 25);
-			}
+		if (stage() >= 2 || ctx.chat.visible("You can interact with many items of scenery by simply clicking")) {
+			leave();
 			return;
 		}
 
 		super.run();
+	}
+
+	@Override
+	protected void enter() {
+
+	}
+
+	@Override
+	protected void leave() {
+		final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_E)).nearest().poll();
+		if (ctx.camera.prepare(door) && door.interact("Open", "Door")) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !valid();
+				}
+			}, 200, 25);
+		}
 	}
 }

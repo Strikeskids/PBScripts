@@ -28,6 +28,7 @@ public class Emotes extends GraphScript.Action<IClientContext> {
 	@Override
 	public void run() {
 		Condition.sleep(500);
+		ctx.inventory.deselect();
 		if (ctx.game.tab() == Game.Tab.EMOTES || ctx.game.tab(Game.Tab.EMOTES)) {
 			final Component emote = ctx.widgets.widget(464).component(Random.nextInt(38, 58));
 			if (emote.valid() && emote.click()) {

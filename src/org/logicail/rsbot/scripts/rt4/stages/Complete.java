@@ -22,6 +22,8 @@ public class Complete extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public void run() {
+		ctx.inventory.deselect();
+
 		if (ctx.chat.queryContinue()) {
 			ctx.chat.clickContinue();
 			return;

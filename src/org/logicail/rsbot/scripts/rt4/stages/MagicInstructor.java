@@ -35,80 +35,97 @@ public class MagicInstructor extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible(JUST_FOLLOW_THE_PATH_TO_THE_WIZARD_S_HOUSE)) {
-			if (!npc().valid()) {
-				final GameObject table = table();
-				if (table.valid()) {
-					ctx.movement.myWalk(table.tile().derive(-3, 0).derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)));
-					Condition.sleep(200);
-				}
-				return;
-			}
-		}
-
-		if (ctx.chat.visible(NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE, NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE)) {
-			if (ctx.game.tab() != Game.Tab.MAGIC) {
-				ctx.game.tab(Game.Tab.MAGIC);
-			}
-
-			final Tile spellFrom = spellLocation();
-			if (ctx.players.local().tile().y() != spellFrom.y()) {
-				walkSpellFrom();
-				return;
-			}
-
-			final Npc chicken = ctx.npcs.select().select(new Filter<Npc>() {
-				@Override
-				public boolean accept(Npc npc) {
-					return !ignored.contains(npc.tile());
-				}
-			}).select(new Filter<Npc>() {
-				@Override
-				public boolean accept(Npc npc) {
-					return !npc.inCombat();
-				}
-			}).select(NpcDefinition.filter(ctx, "Chicken")).each(Interactive.doSetBounds(BOUNDS_CHICKEN)).nearest().limit(2).shuffle().poll();
-
-			if (ctx.camera.combineCamera(chicken, Random.nextInt(0, 50))) {
-				final Component windStrike = ctx.widgets.widget(192).component(1);
-				if (windStrike.valid()) {
-					if (windStrike.click()) {
-						Condition.sleep(250);
-						if (chicken.interact("Cast", "Wind Strike -> Chicken")) {
-							final Tile ignore = chicken.tile();
-							final Tile tile = spellLocation();
-							if (Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									final Tile destination = ctx.movement.destination();
-									return destination != Tile.NIL && ctx.movement.distance(tile, destination) > 3;
-								}
-							}, 100, 5)) {
-								if (chicken.tile().equals(ignore)) {
-									ignored.add(ignore);
-								}
-								Condition.sleep(200);
-								walkSpellFrom();
-								Condition.sleep(200);
-							}
-							Condition.wait(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-									return ctx.chat.visible("All you need to do now is move on to the mainland");
-								}
-							}, 200, 5);
-						} else {
-							Condition.sleep(500);
-						}
-					} else {
-						windStrike.interact("Cancel");
-						Condition.sleep(200);
-					}
-				}
-			}
+		if (!npc().valid() || npc().tile().distanceTo(ctx.players.local()) > 10) {
+			enter();
 			return;
 		}
 
+		switch (stage()) {
+			case 18:
+				break; // talk
+
+			case 20:
+				if (ctx.chat.visible(NOW_YOU_HAVE_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE, NOW_YOU_HAVE_SOME_RUNES_YOU_SHOULD_SEE_THE_WIND_STRIKE)) {
+					if (ctx.game.tab() != Game.Tab.MAGIC) {
+						ctx.game.tab(Game.Tab.MAGIC);
+					}
+
+					final Tile spellFrom = spellLocation();
+					if (ctx.players.local().tile().y() != spellFrom.y()) {
+						walkSpellFrom();
+						return;
+					}
+
+					final Npc chicken = ctx.npcs.select().select(new Filter<Npc>() {
+						@Override
+						public boolean accept(Npc npc) {
+							return !ignored.contains(npc.tile());
+						}
+					}).select(new Filter<Npc>() {
+						@Override
+						public boolean accept(Npc npc) {
+							return !npc.inCombat();
+						}
+					}).select(NpcDefinition.filter(ctx, "Chicken")).each(Interactive.doSetBounds(BOUNDS_CHICKEN)).nearest().limit(2).shuffle().poll();
+
+					if (ctx.camera.combineCamera(chicken, Random.nextInt(0, 50))) {
+						final Component windStrike = ctx.widgets.widget(192).component(1);
+						if (windStrike.valid()) {
+							if (windStrike.click()) {
+								Condition.sleep(250);
+								if (chicken.interact("Cast", "Wind Strike -> Chicken")) {
+									final Tile ignore = chicken.tile();
+									final Tile tile = spellLocation();
+									if (Condition.wait(new Callable<Boolean>() {
+										@Override
+										public Boolean call() throws Exception {
+											final Tile destination = ctx.movement.destination();
+											return destination != Tile.NIL && ctx.movement.distance(tile, destination) > 3;
+										}
+									}, 100, 5)) {
+										if (chicken.tile().equals(ignore)) {
+											ignored.add(ignore);
+										}
+										Condition.sleep(200);
+										walkSpellFrom();
+										Condition.sleep(200);
+									}
+									Condition.wait(new Callable<Boolean>() {
+										@Override
+										public Boolean call() throws Exception {
+											return ctx.chat.visible("All you need to do now is move on to the mainland");
+										}
+									}, 200, 5);
+								} else {
+									Condition.sleep(500);
+								}
+							} else {
+								windStrike.interact("Cancel");
+								Condition.sleep(200);
+							}
+						}
+					}
+					return;
+				}
+				break;
+		}
+
+		leave();
+
+		super.run();
+	}
+
+	@Override
+	protected void enter() {
+		final GameObject table = table();
+		if (table.valid()) {
+			ctx.movement.myWalk(table.tile().derive(-3, 0).derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)));
+			Condition.sleep(200);
+		}
+	}
+
+	@Override
+	protected void leave() {
 		final Component leave = ctx.chat.getComponentByText("Yes.");
 		if (leave.valid()) {
 			leave.click("Continue");
@@ -118,10 +135,7 @@ public class MagicInstructor extends Talker {
 					return ctx.chat.queryContinue();
 				}
 			}, 200, 20);
-			return;
 		}
-
-		super.run();
 	}
 
 	private Tile spellLocation() {
