@@ -20,6 +20,11 @@ import java.util.concurrent.Callable;
 public class TabOpener extends GraphScript.Action<IClientContext> {
 	private final static String[] TAB_STRINGS;
 
+	@Override
+	public String toString() {
+		return "Tab Opener";
+	}
+
 	private static final HashMap<String, Game.Tab> TAB_MAPPING;
 
 	static {
