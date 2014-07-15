@@ -3,7 +3,7 @@ package com.sk.oldcombatapi.methods.action.ability;
 import com.sk.oldcombatapi.methods.action.structure.Ability;
 import com.sk.oldcombatapi.windows.InnerAbilityTab;
 import com.sk.oldcombatapi.windows.Window;
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.rt6.Component;
 import org.powerbot.script.rt6.Skills;
 

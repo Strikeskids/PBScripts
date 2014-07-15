@@ -1,6 +1,6 @@
 package com.sk.oldcombatapi.windows;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.rt6.Hud;
 
 public enum MainWindow implements Window {

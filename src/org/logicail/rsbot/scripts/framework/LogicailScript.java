@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.tasks.Tree;
 import org.logicail.rsbot.util.Painter;
 import org.powerbot.script.PaintListener;

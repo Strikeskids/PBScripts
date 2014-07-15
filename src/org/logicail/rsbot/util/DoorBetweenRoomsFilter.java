@@ -1,6 +1,6 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.loggildedaltar.tasks.pathfinding.astar.Room;
+import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt6.GameObject;
 

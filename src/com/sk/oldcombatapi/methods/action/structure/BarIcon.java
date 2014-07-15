@@ -1,6 +1,6 @@
 package com.sk.oldcombatapi.methods.action.structure;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.Identifiable;
 import org.powerbot.script.Validatable;
 import org.powerbot.script.rt6.Component;

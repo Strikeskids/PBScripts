@@ -1,6 +1,6 @@
 package com.sk.oldcombatapi.windows;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 public enum InnerAbilityTab implements Window {
 	ATTACK_ABILITY(MainWindow.MELEE_ABILITIES, 0, "Attack", 4),

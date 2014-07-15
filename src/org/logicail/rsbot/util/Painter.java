@@ -1,7 +1,7 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.PaintListener;
 
 import java.awt.*;

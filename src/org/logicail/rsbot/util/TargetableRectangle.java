@@ -1,6 +1,6 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.Random;
 import org.powerbot.script.Targetable;
 import org.powerbot.script.rt6.Interactive;

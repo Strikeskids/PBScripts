@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.testing;
 
-import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 /**
  * Created with IntelliJ IDEA.

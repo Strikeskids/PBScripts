@@ -1,6 +1,6 @@
 package com.sk.oldcombatapi.methods.action.magic;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 public enum Spellbook {
 	STANDARD(0), ANCIENT(1), LUNAR(2), NONE(-1), ALL(-1) {

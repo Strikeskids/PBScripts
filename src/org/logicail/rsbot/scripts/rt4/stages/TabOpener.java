@@ -3,10 +3,7 @@ package org.logicail.rsbot.scripts.rt4.stages;
 import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
-import org.powerbot.script.rt4.Component;
 import org.powerbot.script.rt4.Game;
-
-import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,17 +52,7 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 				ctx.game.tab(Game.Tab.FRIENDS_LIST);
 				break;
 			case 10:
-				final Component component = findTextureId(905);
-				if (component != null && component.click("Ignore List")) {
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() {
-							return ctx.game.tab() == Game.Tab.IGNORED_LIST;
-						}
-					}, 50, 10);
-				} else {
-					ctx.game.tab(Game.Tab.IGNORED_LIST);
-				}
+				ctx.game.tab(Game.Tab.IGNORED_LIST);
 				break;
 			case 12:
 				ctx.game.tab(Game.Tab.OPTIONS);
@@ -82,16 +69,6 @@ public class TabOpener extends GraphScript.Action<IClientContext> {
 				return;
 		}
 		Condition.sleep(333);
-	}
-
-	private Component findTextureId(final int texture) {
-		for (Component component : this.ctx.widgets.widget(548).components()) {
-			if (component.textureId() == texture) {
-				return component;
-			}
-		}
-
-		return null;
 	}
 
 	@Override

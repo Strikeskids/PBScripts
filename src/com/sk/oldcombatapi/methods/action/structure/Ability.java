@@ -3,7 +3,7 @@ package com.sk.oldcombatapi.methods.action.structure;
 import com.sk.oldcombatapi.methods.action.ability.AbilityLevel;
 import com.sk.oldcombatapi.methods.action.ability.AbilityStyle;
 import com.sk.oldcombatapi.windows.Window;
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.rt6.Component;
 
 public interface Ability extends BookIcon {

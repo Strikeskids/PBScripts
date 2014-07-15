@@ -1,6 +1,6 @@
 package com.sk.oldcombatapi.windows;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 public interface Window {
 	public static final Window NIL = new Window() {

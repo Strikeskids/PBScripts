@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.logfarming;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 /**
  * Created with IntelliJ IDEA.

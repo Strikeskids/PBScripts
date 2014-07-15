@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.framework.tasks;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.context.IClientAccessor;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 
 /**
  * Created with IntelliJ IDEA.

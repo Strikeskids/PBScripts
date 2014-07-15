@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.rt4;
 
 import com.logicail.accessors.DefinitionManager;
+import org.logicail.rsbot.scripts.framework.context.rt4.providers.*;
 import org.powerbot.script.rt4.ClientContext;
 
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ public class IClientContext extends ClientContext {
 	public final ICamera camera;
 	public final IMovement movement;
 	public final IInventory inventory;
+	public final IGame game;
 	public final DefinitionManager definitions;
 
 	public IClientContext(ClientContext ctx) {
@@ -25,6 +27,7 @@ public class IClientContext extends ClientContext {
 		camera = new ICamera(this);
 		movement = new IMovement(this);
 		inventory = new IInventory(this);
+		game = new IGame(this);
 
 		DefinitionManager manger = null;
 

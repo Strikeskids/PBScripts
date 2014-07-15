@@ -1,7 +1,7 @@
 package org.logicail.rsbot.util;
 
-import org.logicail.rsbot.scripts.framework.context.IClientContext;
-import org.logicail.rsbot.scripts.framework.context.providers.IMovement;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.IMovement;
 import org.logicail.rsbot.scripts.framework.wrappers.ITile;
 import org.powerbot.script.Area;
 import org.powerbot.script.Tile;
