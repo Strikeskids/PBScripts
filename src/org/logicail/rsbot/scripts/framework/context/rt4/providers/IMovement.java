@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.rt4.providers;
 
+import org.logicail.rsbot.scripts.framework.util.LoopCondition;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt4.ClientContext;
@@ -26,18 +27,17 @@ public class IMovement extends Movement {
 
 		if (!ctx.players.local().inMotion() || ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) < Random.nextInt(2, 5)) {
 			if (ctx.movement.findPath(tile).traverse() || ctx.movement.step(tile)) {
-				Condition.wait(new Callable<Boolean>() {
+				LoopCondition.wait(new LoopCondition(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return !ctx.players.local().inMotion() || ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) <= 4 || tile.tile().distanceTo(ctx.players.local()) <= 4;
+					}
+				}, new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return ctx.players.local().inMotion();
 					}
-				}, 50, 10);
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) <= 4 || tile.tile().distanceTo(ctx.players.local()) <= 4;
-					}
-				}, 250, (int) Math.max(Math.min(currentDistance, Random.nextInt(5, 15)), 10));
+				}), 250, 10);
 				Condition.sleep(250);
 			}
 		} else {
