@@ -80,7 +80,7 @@ public class Banker extends Talker {
 			return;
 		}
 
-		if (stage() >= 14 || ctx.chat.visible("window and move on through the door indicated")) {
+		if (stage() > 14 || ctx.chat.visible("window and move on through the door indicated")) {
 			leave();
 			return;
 		}
@@ -128,7 +128,7 @@ public class Banker extends Talker {
 			public boolean accept(GameObject gameObject) {
 				return gameObject.tile().y() == bank.tile().y();
 			}
-		}).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_EW)).sort(new Comparator<GameObject>() {
+		}).each(Interactive.doSetBounds(OSTutorialIsland.BOUNDS_DOOR_E)).sort(new Comparator<GameObject>() {
 			@Override
 			public int compare(GameObject o1, GameObject o2) {
 				return Integer.valueOf(o1.tile().x()).compareTo(o2.tile().x());

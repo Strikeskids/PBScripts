@@ -69,7 +69,12 @@ public class BrotherBrace extends Talker {
 					return false;
 				}
 			}).each(Interactive.doSetBounds(LARGE_DOOR_BOUNDS)).nearest(support).limit(2).shuffle().poll();
-			log.info("Open door");
+
+			if (door.tile().distanceTo(ctx.players.local()) > 10) {
+				ctx.movement.myWalk(door.tile());
+				return;
+			}
+
 			if (ctx.camera.prepare(door) && door.interact("Open")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -100,6 +105,6 @@ public class BrotherBrace extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || ctx.chat.visible("Follow the path to the chapel");
+		return super.valid() || ctx.chat.visible("Follow the path to the chapel") || stage() == 16;
 	}
 }

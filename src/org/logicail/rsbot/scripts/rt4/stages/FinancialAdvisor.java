@@ -24,7 +24,7 @@ public class FinancialAdvisor extends Talker {
 
 		ctx.inventory.deselect();
 
-		if (ctx.chat.visible("Continue through the next door.")) {
+		if (ctx.chat.visible("Continue through the next door.") || stage() > 15) {
 			leave();
 			return;
 		}
@@ -46,9 +46,10 @@ public class FinancialAdvisor extends Talker {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.chat.visible("Follow the path to the chapel");
+						return !valid() || ctx.chat.visible("Follow the path to the chapel");
 					}
 				}, 200, 20);
+				Condition.sleep(200);
 			}
 		}
 	}
