@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
+import org.powerbot.script.Random;
 import org.powerbot.script.rt4.GameObject;
 import org.powerbot.script.rt4.Interactive;
 
@@ -71,7 +72,7 @@ public class BrotherBrace extends Talker {
 			}).each(Interactive.doSetBounds(LARGE_DOOR_BOUNDS)).nearest(support).limit(2).shuffle().poll();
 
 			if (door.tile().distanceTo(ctx.players.local()) > 10) {
-				ctx.movement.myWalk(door.tile());
+				ctx.movement.myWalk(door.tile().derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)));
 				return;
 			}
 
