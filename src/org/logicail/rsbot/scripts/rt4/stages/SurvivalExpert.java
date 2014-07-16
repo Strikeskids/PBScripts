@@ -81,7 +81,7 @@ public class SurvivalExpert extends Talker {
 						return;
 					}
 
-					final Npc fishingSpot = ctx.npcs.select().select(NpcDefinition.filter(ctx, "Fishing spot")).each(Interactive.doSetBounds(BOUNDS_FISHING_SPOT)).nearest().limit(2).shuffle().poll();
+					final Npc fishingSpot = ctx.npcs.select().select(NpcDefinition.name(ctx, "Fishing spot")).each(Interactive.doSetBounds(BOUNDS_FISHING_SPOT)).nearest().limit(2).shuffle().poll();
 					if (ctx.camera.prepare(fishingSpot) && fishingSpot.interact("Net")) {
 						Condition.wait(new Callable<Boolean>() {
 							@Override

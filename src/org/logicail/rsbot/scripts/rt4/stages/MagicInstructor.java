@@ -66,7 +66,7 @@ public class MagicInstructor extends Talker {
 						public boolean accept(Npc npc) {
 							return !npc.inCombat();
 						}
-					}).select(NpcDefinition.filter(ctx, "Chicken")).each(Interactive.doSetBounds(BOUNDS_CHICKEN)).nearest().limit(2).shuffle().poll();
+					}).select(NpcDefinition.name(ctx, "Chicken")).each(Interactive.doSetBounds(BOUNDS_CHICKEN)).nearest().limit(2).shuffle().poll();
 
 					if (ctx.camera.combineCamera(chicken, Random.nextInt(0, 50))) {
 						final Component windStrike = ctx.widgets.widget(192).component(1);

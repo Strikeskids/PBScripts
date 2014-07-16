@@ -54,7 +54,7 @@ public class CombatExpert extends Talker {
 	}
 
 	private BasicQuery<Npc> rat() {
-		return ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).each(Interactive.doSetBounds(BOUNDS_GIANT_RAT));
+		return ctx.npcs.select().select(NpcDefinition.name(ctx, "Giant rat")).each(Interactive.doSetBounds(BOUNDS_GIANT_RAT));
 	}
 
 	@Override

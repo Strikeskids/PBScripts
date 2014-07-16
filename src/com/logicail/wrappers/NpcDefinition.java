@@ -1,6 +1,7 @@
 package com.logicail.wrappers;
 
 import com.logicail.accessors.DefinitionManager;
+import com.logicail.wrappers.loaders.NpcDefinitionLoader;
 import com.sk.datastream.Stream;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Filter;
@@ -41,13 +42,11 @@ public class NpcDefinition extends Definition {
 	private int headIcon = -1;
 	private int shadowModifier = 0;
 
-	public NpcDefinition(int id, Stream stream) {
-		super(id);
-		decode(stream);
+	public NpcDefinition(NpcDefinitionLoader loader, int id) {
+		super(loader, id);
 	}
 
-
-	public static Filter<Npc> filter(final IClientContext ctx, final String name) {
+	public static Filter<Npc> name(final IClientContext ctx, final String name) {
 		return new Filter<Npc>() {
 			@Override
 			public boolean accept(Npc npc) {
@@ -58,7 +57,7 @@ public class NpcDefinition extends Definition {
 	}
 
 	@Override
-	protected void decode(Stream s, int opcode) {
+	public void decode(Stream s, int opcode) {
 		if (1 == opcode) {
 			int count = s.getUByte();
 			this.modelIds = new int[count];
@@ -156,7 +155,7 @@ public class NpcDefinition extends Definition {
 		} else {
 			final VarpDefinition varpDefinition = manager.varp(scriptId);
 			if (varpDefinition != null) {
-				index = manager.ctx.varpbits.varpbit(varpDefinition.configId) >> varpDefinition.lowerBitIndex & VarpDefinition.MASKS[varpDefinition.upperBitIndex - varpDefinition.lowerBitIndex];
+				index = varpDefinition.execute(manager.ctx);
 			}
 		}
 		if (index >= 0 && index < childrenIds.length && childrenIds[index] != -1) {

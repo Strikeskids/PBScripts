@@ -35,6 +35,6 @@ public class Complete extends GraphScript.Action<IClientContext> {
 
 	@Override
 	public boolean valid() {
-		return ctx.npcs.select().select(NpcDefinition.filter(ctx, "Lumbridge Guide")).poll().valid();
+		return ctx.npcs.select().select(NpcDefinition.name(ctx, "Lumbridge Guide")).poll().valid();
 	}
 }

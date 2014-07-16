@@ -24,12 +24,12 @@ public class Banker extends Talker {
 
 	@Override
 	public boolean valid() {
-		return super.valid() || stage() >= 14 && ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid();
+		return super.valid() || stage() >= 14 && ctx.npcs.select().select(NpcDefinition.name(ctx, "Giant rat")).poll().valid();
 	}
 
 	@Override
 	protected Npc npc() {
-		return ctx.npcs.select().select(NpcDefinition.filter(ctx, name)).select(new Filter<Npc>() {
+		return ctx.npcs.select().select(NpcDefinition.name(ctx, name)).select(new Filter<Npc>() {
 			@Override
 			public boolean accept(Npc npc) {
 				return npc.tile().derive(0, -2).matrix(ctx).reachable();
@@ -90,7 +90,7 @@ public class Banker extends Talker {
 
 	@Override
 	protected void enter() {
-		if (ctx.npcs.select().select(NpcDefinition.filter(ctx, "Giant rat")).poll().valid()) {
+		if (ctx.npcs.select().select(NpcDefinition.name(ctx, "Giant rat")).poll().valid()) {
 			final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
 			if (ctx.camera.prepare(ladder) && ladder.interact("Climb-up")) {
 				Condition.wait(new Callable<Boolean>() {

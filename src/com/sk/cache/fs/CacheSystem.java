@@ -17,8 +17,7 @@ public class CacheSystem {
 	public final ScriptDefinitionLoader varpLoader;
 	public final NpcDefinitionLoader npcLoader;
 	private final CacheSource cache;
-	private final Map<Type, Loader<?>> loaderMap = new HashMap<Type, Loader<?>>();
-	public ClientScriptDefinitionLoader clientScriptLoader;
+	private final Map<Type, WrapperLoader<?>> loaderMap = new HashMap<Type, WrapperLoader<?>>();
 
 	public CacheSystem(CacheSource cache) {
 		this.cache = cache;
@@ -26,10 +25,9 @@ public class CacheSystem {
 		addLoader(objectLoader = new ObjectDefinitionLoader(this));
 		addLoader(varpLoader = new ScriptDefinitionLoader(this));
 		addLoader(npcLoader = new NpcDefinitionLoader(this));
-		addLoader(clientScriptLoader = new ClientScriptDefinitionLoader(this));
 	}
 
-	public <T extends Definition> void addLoader(Loader<T> loader) {
+	public <T extends Definition> void addLoader(WrapperLoader<T> loader) {
 		ParameterizedType type = (ParameterizedType) loader.getClass().getGenericSuperclass();
 		loaderMap.put(type.getActualTypeArguments()[0], loader);
 	}
@@ -47,7 +45,7 @@ public class CacheSystem {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Definition> Loader<T> getLoader(Class<T> wrapperClass) {
-		return (Loader<T>) loaderMap.get(wrapperClass);
+	public <T extends Definition> WrapperLoader<T> getLoader(Class<T> wrapperClass) {
+		return (WrapperLoader<T>) loaderMap.get(wrapperClass);
 	}
 }

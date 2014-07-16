@@ -68,7 +68,7 @@ public abstract class Talker extends GraphScript.Action<IClientContext> {
 	}
 
 	protected Npc npc() {
-		return ctx.npcs.select().select(NpcDefinition.filter(ctx, name)).select(new Filter<Npc>() {
+		return ctx.npcs.select().select(NpcDefinition.name(ctx, name)).select(new Filter<Npc>() {
 			@Override
 			public boolean accept(Npc npc) {
 				return npc.tile().matrix(ctx).reachable();

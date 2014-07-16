@@ -1,6 +1,7 @@
 package com.logicail.wrappers;
 
 import com.logicail.accessors.DefinitionManager;
+import com.logicail.wrappers.loaders.ObjectDefinitionLoader;
 import com.sk.datastream.Stream;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Filter;
@@ -25,7 +26,7 @@ public class ObjectDefinition extends Definition {
 	public int configId = -1;
 	public int[] childrenIds;
 	private boolean unwalkable = true;
-	private int offsetx = 0;
+	private int offsetX = 0;
 	private int offsetY = 0;
 	private int minimapIcon = -1;
 	private int mapSceneId = -1;
@@ -44,16 +45,16 @@ public class ObjectDefinition extends Definition {
 	private short[] unknown41a;
 	private short[] unknown41b;
 
-	public ObjectDefinition(int id, Stream stream) {
-		super(id);
-		decode(stream);
+	public ObjectDefinition(ObjectDefinitionLoader loader, int id) {
+		super(loader, id);
 	}
+
 
 	public static Filter<GameObject> name(final IClientContext ctx, final String name) {
 		return new Filter<GameObject>() {
 			@Override
-			public boolean accept(GameObject gameObject) {
-				final ObjectDefinition definition = ctx.definitions.get(gameObject);
+			public boolean accept(GameObject o) {
+				final ObjectDefinition definition = ctx.definitions.get(o);
 				return definition != null && definition.name != null && definition.name.equalsIgnoreCase(name);
 			}
 		};
@@ -152,7 +153,7 @@ public class ObjectDefinition extends Definition {
 		} else if (69 == opcode) {
 			s.getUByte();
 		} else if (70 == opcode) {
-			this.offsetx = s.getShort();
+			this.offsetX = s.getShort();
 		} else if (opcode == 71) {
 			this.offsetH = s.getShort();
 		} else if (72 == opcode) {
