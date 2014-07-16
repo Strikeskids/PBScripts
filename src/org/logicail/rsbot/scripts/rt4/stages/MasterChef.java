@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.rt4.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.util.LoopCondition;
 import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
@@ -76,20 +77,19 @@ public class MasterChef extends Talker {
 	protected void enter() {
 		if (!ctx.players.local().inMotion() || ctx.movement.distance(ctx.movement.destination(), ctx.players.local()) < Random.nextInt(2, 5)) {
 			final GameObject door = ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).each(Interactive.doSetBounds(new int[]{0, 32, -240, 0, 0, 120})).nearest().poll();
-			if (door.valid() && ctx.camera.prepare(door) && door.interact("Open", "Door")) {
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return ctx.players.local().inMotion();
-					}
-				}, 50, 5);
-				Condition.wait(new Callable<Boolean>() {
+			if (door.valid() && ctx.camera.prepare(door) && !npc().valid() && door.interact("Open", "Door")) {
+				LoopCondition.wait(new LoopCondition(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return npc().valid();
 					}
-				}, 200, 20);
-				Condition.sleep(250);
+				}, new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return ctx.players.local().inMotion();
+					}
+				}), 200, 10);
+				Condition.sleep(500);
 			}
 		} else {
 			Condition.sleep(400);
