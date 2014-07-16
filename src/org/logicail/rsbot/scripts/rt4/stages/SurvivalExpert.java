@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.rt4.stages;
 import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.util.LoopCondition;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -29,6 +30,7 @@ public class SurvivalExpert extends Talker {
 	private static final int BRONZE_AXE = 1351;
 	private static final int TINDERBOX = 590;
 	private static final int[] BOUNDS_FISHING_SPOT = {-48, 40, -8, 0, -52, 36};
+	private static final int[] TREE_BOUNDS = {-32, 32, -240, 0, -28, 48};
 
 	public SurvivalExpert(IClientContext ctx) {
 		super(ctx, "Survival Expert");
@@ -59,10 +61,8 @@ public class SurvivalExpert extends Talker {
 				ctx.inventory.select().id(BURNT_SHRIMP).each(new Filter<Item>() {
 					@Override
 					public boolean accept(final Item item) {
+						ctx.game.tab(Game.Tab.INVENTORY);
 						ctx.inventory.deselect();
-						if (ctx.game.tab() != Game.Tab.INVENTORY) {
-							ctx.game.tab(Game.Tab.INVENTORY);
-						}
 						if (item.interact("Drop")) {
 							Condition.wait(new Callable<Boolean>() {
 								@Override
@@ -112,17 +112,30 @@ public class SurvivalExpert extends Talker {
 	protected void leave() {
 		final GameObject gate = ctx.objects.select().select(ObjectDefinition.name(ctx, "Gate")).each(Interactive.doSetBounds(BOUNDS_GATE)).nearest().poll();
 		if (ctx.camera.prepare(gate) && gate.interact("Open")) {
-			Condition.wait(new Callable<Boolean>() {
+			LoopCondition.wait(new LoopCondition(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return stage() == 4;
+					return stage() >= 4;
 				}
-			}, 200, 50);
+			}, new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return ctx.players.local().inMotion();
+				}
+			}), 200, 10);
 		}
 	}
 
 	private void chop() {
-		final GameObject tree = ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).nearest().limit(3).shuffle().poll();
+		final GameObject tree = ctx.objects.select().select(ObjectDefinition.name(ctx, "Tree")).nearest().select(new Filter<GameObject>() {
+			@Override
+			public boolean accept(GameObject o) {
+				return o.tile().derive(-1, 0).matrix(ctx).reachable()
+						|| o.tile().derive(1, 0).matrix(ctx).reachable()
+						|| o.tile().derive(0, 1).matrix(ctx).reachable()
+						|| o.tile().derive(0, -1).matrix(ctx).reachable();
+			}
+		}).limit(3).each(Interactive.doSetBounds(TREE_BOUNDS)).shuffle().poll();
 		if (ctx.camera.prepare(tree)) {
 			if (tree.interact("Chop down", "Tree")) {
 				Condition.wait(new Callable<Boolean>() {
@@ -136,9 +149,7 @@ public class SurvivalExpert extends Talker {
 	}
 
 	private boolean cook() {
-		if (ctx.game.tab() != Game.Tab.INVENTORY) {
-			ctx.game.tab(Game.Tab.INVENTORY);
-		}
+		ctx.game.tab(Game.Tab.INVENTORY);
 
 		final GameObject fire = ctx.objects.select().select(ObjectDefinition.name(ctx, "Fire")).select(new Filter<GameObject>() {
 			@Override
