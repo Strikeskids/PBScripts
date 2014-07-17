@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.rt4.stages;
+package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;

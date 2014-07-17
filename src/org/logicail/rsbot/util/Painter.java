@@ -91,8 +91,6 @@ public class Painter extends IClientAccessor implements PaintListener {
 
 	private void drawMouse(Graphics2D g2d) {
 		g2d.setStroke(mouseStroke);
-		//g2d.setColor(ctx.mouse.press() ? Color.RED : Color.WHITE);
-
 		final Point mouse = ctx.input.getLocation();
 		g2d.drawLine(mouse.x - 5, mouse.y - 5, mouse.x + 5, mouse.y + 5);
 		g2d.drawLine(mouse.x - 5, mouse.y + 5, mouse.x + 5, mouse.y - 5);

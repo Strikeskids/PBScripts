@@ -1,8 +1,8 @@
-package org.logicail.rsbot.scripts.rt4.stages;
+package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.OSTutorialIsland;
+import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.GameObject;
 import org.powerbot.script.rt4.Interactive;

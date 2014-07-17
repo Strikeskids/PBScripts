@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.rt4.stages;
+package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.wrappers.NpcDefinition;
 import com.logicail.wrappers.ObjectDefinition;
@@ -192,24 +192,13 @@ public class SurvivalExpert extends Talker {
 	private void makeFire() {
 		final Tile playerTile = ctx.players.local().tile();
 		if (ctx.objects.select().at(playerTile).select(ObjectDefinition.name(ctx, "Fire")).isEmpty()) {
-			final Item tinderbox = ctx.inventory.select().id(TINDERBOX).shuffle().poll();
-
-			if (ctx.inventory.select(LOGS)) {
-				if (Condition.wait(new Callable<Boolean>() {
+			if (ctx.inventory.itemOnItem(TINDERBOX, LOGS)) {
+				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return ctx.inventory.selectedItemIndex() > -1;
+						return ctx.chat.visible("Click on the flashing bar graph icon");
 					}
-				}, 200, 5)) {
-					if (tinderbox.click("Use", "Logs -> Tinderbox")) {
-						Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return ctx.chat.visible("Click on the flashing bar graph icon");
-							}
-						}, 200, 20);
-					}
-				}
+				}, 200, 20);
 			}
 		} else {
 			LogicailArea area = new LogicailArea(playerTile.derive(-3, -3), playerTile.derive(4, 4));

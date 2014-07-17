@@ -1,8 +1,8 @@
-package org.logicail.rsbot.scripts.rt4;
+package org.logicail.rsbot.scripts.rt4.ostutorialisland;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.stages.*;
+import org.logicail.rsbot.scripts.rt4.ostutorialisland.stages.*;
 import org.powerbot.script.PaintListener;
 import org.powerbot.script.Script;
 

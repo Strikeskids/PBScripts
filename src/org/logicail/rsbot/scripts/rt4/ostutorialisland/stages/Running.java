@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.rt4.stages;
+package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;

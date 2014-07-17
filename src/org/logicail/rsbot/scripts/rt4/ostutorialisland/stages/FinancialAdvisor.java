@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.rt4.stages;
+package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
