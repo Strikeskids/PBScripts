@@ -56,8 +56,7 @@ public class Main {
 		}
 		PrintWriter writer = null;
 		try {
-			final File output = new File("output" + File.separator + loader.getClass().getDeclaredMethod("get", int.class).getReturnType().getSimpleName().toLowerCase() + "-" + loader.version + ".txt");
-			output.mkdirs();
+			final File output = new File("output" + File.separator + loader.getClass().getDeclaredMethod("load", int.class).getReturnType().getSimpleName().toLowerCase() + "-" + loader.version + ".txt");
 			writer = new PrintWriter(output);
 			writer.println("Version: " + loader.version);
 			writer.println("Generated: " + new Date().toString());
@@ -82,8 +81,7 @@ public class Main {
 	private static void print(ArchiveLoader<?> loader) throws FileNotFoundException, NoSuchMethodException {
 		PrintWriter writer = null;
 		try {
-			final File output = new File("output" + File.separator + loader.getClass().getDeclaredMethod("get", int.class).getReturnType().getSimpleName().toLowerCase() + "-" + loader.version + ".txt");
-			output.mkdirs();
+			final File output = new File("output" + File.separator + loader.getClass().getDeclaredMethod("load", int.class).getReturnType().getSimpleName().toLowerCase() + "-" + loader.version + ".txt");
 			writer = new PrintWriter(output);
 			writer.println("Version: " + loader.version);
 			writer.println("Generated: " + new Date().toString());
