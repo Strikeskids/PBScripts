@@ -84,7 +84,6 @@ public abstract class Wrapper {
 				}
 				output.append(", ");
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 			}
 		}
 		output.delete(output.length() - 2, output.length());
