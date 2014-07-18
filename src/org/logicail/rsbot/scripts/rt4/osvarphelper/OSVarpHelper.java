@@ -13,7 +13,7 @@ import javax.swing.*;
  * Date: 18/07/2014
  * Time: 17:34
  */
-@Script.Manifest(name = "OS Varp Helper", description = "Loads varps from the cache")
+@Script.Manifest(name = "OS Varp Helper", description = "Loads varps from the cache", properties = "hidden=true;")
 public class OSVarpHelper extends PollingScript<IClientContext> {
 	VarpHelperGUI gui = null;
 
