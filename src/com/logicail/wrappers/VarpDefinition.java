@@ -33,7 +33,11 @@ public class VarpDefinition extends Definition {
 
 	@Override
 	public String toString() {
-		return "ScriptDef " + id + " => ctx.varpbits.varpbit(" + configId + ", " + lowerBitIndex + ", 0x" + Integer.toHexString(mask) + ")";
+		return "ScriptDef " + id + " => " + code();
+	}
+
+	public String code() {
+		return "ctx.varpbits.varpbit(" + configId + ", " + lowerBitIndex + ", 0x" + Integer.toHexString(mask) + ")";
 	}
 
 	@Override

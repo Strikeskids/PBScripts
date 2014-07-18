@@ -24,6 +24,10 @@ public class DefinitionManager extends ClientAccessor {
 	private final DefinitionCache<ObjectDefinition> object;
 	private final DefinitionCache<ItemDefinition> item;
 
+	public CacheSystem system() {
+		return system;
+	}
+
 	public NpcDefinition get(Npc npc) {
 		return this.npc.get(npc.id());
 	}
