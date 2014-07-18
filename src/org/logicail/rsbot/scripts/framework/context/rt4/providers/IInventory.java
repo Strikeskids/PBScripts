@@ -38,7 +38,6 @@ public class IInventory extends Inventory {
 	}
 
 	public boolean select(final int... ids) {
-		final Item item = ctx.inventory.select().id(ids).shuffle().poll();
 		if (selected() && !selectedIsOnOf(ids)) {
 			deselect();
 		}
@@ -47,6 +46,7 @@ public class IInventory extends Inventory {
 			return true;
 		}
 
+		final Item item = ctx.inventory.select().id(ids).shuffle().poll();
 		if ((ctx.game.tab() == Game.Tab.INVENTORY || ctx.game.tab(Game.Tab.INVENTORY)) && item.click("Use")) {
 			return Condition.wait(new Callable<Boolean>() {
 				@Override
