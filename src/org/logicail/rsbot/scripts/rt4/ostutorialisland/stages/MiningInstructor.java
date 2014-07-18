@@ -2,8 +2,8 @@ package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
-import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.logicail.rsbot.scripts.rt4.Rocks;
+import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
@@ -65,9 +65,7 @@ public class MiningInstructor extends Talker {
 				if (ctx.inventory.select().id(BRONZE_BAR).isEmpty()) {
 					if (mine()) return;
 
-					if (ctx.game.tab() != Game.Tab.INVENTORY) {
-						ctx.game.tab(Game.Tab.INVENTORY);
-					}
+					ctx.game.tab(Game.Tab.INVENTORY);
 
 					final GameObject furnace = ctx.objects.select().select(ObjectDefinition.name(ctx, "Furnace")).each(Interactive.doSetBounds(FURNACE_BOUND)).nearest().poll();
 
@@ -112,9 +110,7 @@ public class MiningInstructor extends Talker {
 						}
 					}
 
-					if (ctx.game.tab() != Game.Tab.INVENTORY) {
-						ctx.game.tab(Game.Tab.INVENTORY);
-					}
+					ctx.game.tab(Game.Tab.INVENTORY);
 
 					final GameObject anvil = ctx.objects.select().select(ObjectDefinition.name(ctx, "Anvil")).nearest().limit(2).shuffle().poll();
 					if (ctx.camera.prepare(anvil)) {
