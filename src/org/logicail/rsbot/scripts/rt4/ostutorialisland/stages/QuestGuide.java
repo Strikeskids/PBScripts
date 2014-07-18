@@ -34,7 +34,7 @@ public class QuestGuide extends Talker {
 			enter();
 		}
 
-		if (ctx.chat.visible("It's time to enter some caves")) {
+		if (stage() >= 8 || ctx.chat.visible("It's time to enter some caves")) {
 			leave();
 			return;
 		}
