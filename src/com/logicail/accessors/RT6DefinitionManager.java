@@ -1,0 +1,49 @@
+package com.logicail.accessors;
+
+import com.logicail.DefinitionCache;
+import com.logicail.loader.rt6.RT6CacheSystem;
+import com.logicail.loader.rt6.wrapper.ItemDefinition;
+import org.powerbot.script.rt4.Item;
+import org.powerbot.script.rt6.ClientAccessor;
+import org.powerbot.script.rt6.ClientContext;
+import org.powerbot.script.rt6.GroundItem;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Logicail
+ * Date: 20/07/2014
+ * Time: 15:28
+ */
+public class RT6DefinitionManager extends ClientAccessor {
+	private final DefinitionCache<org.powerbot.script.rt6.ClientContext, com.logicail.loader.rt6.wrapper.ItemDefinition> item;
+	private final RT6CacheSystem system;
+
+	public RT6CacheSystem system() {
+		return system;
+	}
+
+	public ItemDefinition get(Item item) {
+		return this.item.get(item.id());
+	}
+
+	public ItemDefinition get(GroundItem item) {
+		return this.item.get(item.id());
+	}
+
+	public RT6DefinitionManager(ClientContext ctx) throws FileNotFoundException {
+		super(ctx);
+
+		String directory = System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "runescape" + File.separator + "LIVE" + File.separator;
+
+		system = new RT6CacheSystem(new File(directory));
+
+		item = new DefinitionCache<org.powerbot.script.rt6.ClientContext, com.logicail.loader.rt6.wrapper.ItemDefinition>(this.ctx, system.itemLoader);
+	}
+
+	public ItemDefinition item(int id) {
+		return item.get(id);
+	}
+}

@@ -1,6 +1,6 @@
-package com.logicail.wrappers.loaders;
+package com.logicail.loader.rt4.wrappers.loaders;
 
-import com.logicail.wrappers.ItemDefinition;
+import com.logicail.loader.rt4.wrappers.ItemDefinition;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.fs.FileData;
 

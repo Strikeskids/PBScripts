@@ -1,14 +1,17 @@
 package com.logicail;
 
-import com.logicail.wrappers.VarpDefinition;
-import com.logicail.wrappers.loaders.ArchiveLoader;
-import com.logicail.wrappers.loaders.ScriptDefinitionLoader;
-import com.sk.cache.DataSource;
-import com.sk.cache.fs.CacheSystem;
+import com.logicail.loader.VersionWrapperLoader;
+import com.logicail.loader.rt4.wrappers.VarpDefinition;
+import com.logicail.loader.rt4.wrappers.loaders.ArchiveLoader;
+import com.logicail.loader.rt4.wrappers.loaders.ScriptDefinitionLoader;
+import com.logicail.loader.rt6.RT6CacheSystem;
+import z.Bc;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,12 +24,15 @@ import java.util.TreeMap;
  * Time: 16:37
  */
 public class Main {
-	public static void main(String[] args) throws FileNotFoundException, NoSuchMethodException {
-		final CacheSystem system = new CacheSystem(new DataSource(new File(System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "oldschool" + File.separator + "LIVE" + File.separator)));
-		print(system.itemLoader);
-		print(system.objectLoader);
-		print(system.npcLoader);
-		print(system.varpLoader);
+	public static void main(String[] args) throws FileNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		final RT6CacheSystem system = new RT6CacheSystem(new File(System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "runescape" + File.separator + "LIVE" + File.separator));
+//		print(system.itemLoader);
+//		print(system.objectLoader);
+//		print(system.npcLoader);
+//		print(system.varpLoader);
+
+		Method method = Bc.class.getDeclaredMethod("char", String.class);
+		System.out.println(method.invoke(null, "WSWpL^\u0015\u001f"));
 
 	}
 
@@ -71,6 +77,36 @@ public class Main {
 				}
 				writer.println("");
 			}
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
+	}
+
+	private static void print(VersionWrapperLoader<?> loader) throws FileNotFoundException, NoSuchMethodException {
+		PrintWriter writer = null;
+		try {
+			final File output = new File("outputrt6" + File.separator + loader.getClass().getDeclaredMethod("load", int.class).getReturnType().getSimpleName().toLowerCase() + "-" + loader.version + ".txt");
+			writer = new PrintWriter(output);
+			writer.println("Version: " + loader.version);
+			writer.println("Generated: " + new Date().toString());
+			writer.println();
+
+			for (int i = 0; i < 60000; i++) {
+				if (!loader.canLoad(i)) {
+					break;
+				}
+
+				try {
+					writer.println(loader.load(i));
+				} catch (IllegalArgumentException e) {
+					if (!e.getMessage().equals("Bad id") && !e.getMessage().equals("Empty")) {
+						throw e;
+					}
+				}
+			}
+
 		} finally {
 			if (writer != null) {
 				writer.close();

@@ -1,6 +1,6 @@
-package com.logicail.wrappers;
+package com.logicail.loader.rt4.wrappers;
 
-import com.logicail.wrappers.loaders.ItemDefinitionLoader;
+import com.logicail.loader.rt4.wrappers.loaders.WrapperLoader;
 import com.sk.datastream.Stream;
 
 /**
@@ -10,51 +10,52 @@ import com.sk.datastream.Stream;
  * Time: 10:37
  */
 public class ItemDefinition extends Definition {
-	public static ItemDefinitionLoader loader = null;
+	public static WrapperLoader<ItemDefinition> loader = null;
 	public String name = null;
 	public boolean noted;
 	public boolean members;
 	public String[] groundActions = new String[]{null, null, "Take", null, null};
 	public int noteId;
 	public String[] actions = new String[]{null, null, null, null, "Drop"};
-	private short[] recolorOriginal;
-	private int equippedModelMaleTranslationY;
-	private int equippedModelMale2;
-	private int equippedModelMale3;
-	private int translateX = 0;
-	private short[] unknown41a;
-	private int noteTemplateId = -1;
-	private int lightMag;
-	private int equippedModelFemale;
-	private int equippedModelFemaleDialogue1;
-	private int modelId;
-	private int[] stackSizes;
-	private int rotationX = 0;
-	private int team = 0;
-	private int rotationZ = 0;
-	private int stackOffset = 0;
-	private int modelScaleZ = 128;
-	private int equippedModelMale1;
-	private int value = 1;
-	private int equippedModelFemateTranslationY;
-	private int lightIntensity;
-	private int equippedModelMaleDiaglogue2;
-	private int[] stackVarient;
-	private int modelscaleY = 128;
-	private int equippedModelFemateDialogue2;
-	private int equippedModelFemale2;
-	private int rotationY = 0;
-	private short[] unknown41b;
-	private int rotationLength = 2000;
-	private int tranlateY = 0;
-	private short[] recolorTarget;
-	private int modelScaleX = 128;
-	private int equippedModelFemale1;
-	private int equippedModelMaleDialogue1;
+	protected short[] recolorOriginal;
+	protected int equippedModelMaleTranslationY;
+	protected int equippedModelMale2;
+	protected int equippedModelMale3;
+	protected int translateX = 0;
+	protected short[] unknown41a;
+	protected int noteTemplateId = -1;
+	protected int lightMag;
+	protected int equippedModelFemale;
+	protected int equippedModelFemaleDialogue1;
+	protected int modelId;
+	protected int[] stackSizes;
+	protected int rotationX = 0;
+	protected int team = 0;
+	protected int rotationZ = 0;
+	protected int stackOffset = 0;
+	protected int modelScaleZ = 128;
+	protected int equippedModelMale1;
+	protected int value = 1;
+	protected int equippedModelFemateTranslationY;
+	protected int lightIntensity;
+	protected int equippedModelMaleDiaglogue2;
+	protected int[] stackVarient;
+	protected int modelscaleY = 128;
+	protected int equippedModelFemateDialogue2;
+	protected int equippedModelFemale2;
+	protected int rotationY = 0;
+	protected short[] unknown41b;
+	protected int rotationLength = 2000;
+	protected int tranlateY = 0;
+	protected short[] recolorTarget;
+	protected int modelScaleX = 128;
+	protected int equippedModelFemale1;
+	protected int equippedModelMaleDialogue1;
 
-	public ItemDefinition(ItemDefinitionLoader loader, int id) {
+	public ItemDefinition(WrapperLoader<?> loader, int id) {
 		super(loader, id);
 	}
+
 
 	public void fix() {
 		if (noteTemplateId > -1) {

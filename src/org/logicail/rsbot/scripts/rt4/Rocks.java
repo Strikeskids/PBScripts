@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.rt4;
 
-import com.logicail.wrappers.ObjectDefinition;
+import com.logicail.loader.rt4.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt4.GameObject;

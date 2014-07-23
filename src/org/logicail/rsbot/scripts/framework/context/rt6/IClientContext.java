@@ -1,5 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.rt6;
 
+import com.logicail.accessors.RT6DefinitionManager;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.*;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.util.Timer;
@@ -10,6 +11,7 @@ import org.powerbot.script.Script;
 import org.powerbot.script.rt6.ClientContext;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,6 +37,7 @@ public class IClientContext extends ClientContext {
 	public final IMagic magic;
 	public final IBank bank;
 	public final IFarming farming;
+	public final RT6DefinitionManager definitions;
 
 	public String useragent;
 	// Concurrent task executor
@@ -107,6 +110,18 @@ public class IClientContext extends ClientContext {
 		movement = new IMovement(this);
 		bank = new IBank(this);
 		farming = new IFarming(this);
+
+
+		RT6DefinitionManager manger = null;
+
+		try {
+			manger = new RT6DefinitionManager(this);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			this.controller.stop();
+		}
+
+		this.definitions = manger;
 	}
 
 	public boolean isPaused() {

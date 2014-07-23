@@ -1,7 +1,6 @@
-package com.logicail.wrappers;
+package com.logicail.loader.rt4.wrappers;
 
-import com.logicail.accessors.DefinitionManager;
-import com.logicail.wrappers.loaders.NpcDefinitionLoader;
+import com.logicail.loader.rt4.wrappers.loaders.NpcDefinitionLoader;
 import com.sk.datastream.Stream;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Filter;
@@ -148,18 +147,18 @@ public class NpcDefinition extends Definition {
 		}
 	}
 
-	public NpcDefinition child(DefinitionManager manager) {
+	public NpcDefinition child(IClientContext ctx) {
 		int index = 0;
 		if (scriptId == -1) {
-			index = configId != -1 ? manager.ctx.varpbits.varpbit(configId) : -1;
+			index = configId != -1 ? ctx.varpbits.varpbit(configId) : -1;
 		} else {
-			final VarpDefinition varpDefinition = manager.varp(scriptId);
+			final VarpDefinition varpDefinition = ctx.definitions.varp(scriptId);
 			if (varpDefinition != null) {
-				index = varpDefinition.execute(manager.ctx);
+				index = varpDefinition.execute(ctx);
 			}
 		}
 		if (index >= 0 && index < childrenIds.length && childrenIds[index] != -1) {
-			return manager.npc(childrenIds[index]);
+			return ctx.definitions.npc(childrenIds[index]);
 		}
 		return null;
 	}

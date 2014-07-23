@@ -1,7 +1,6 @@
-package com.logicail.wrappers;
+package com.logicail.loader.rt4.wrappers;
 
-import com.logicail.accessors.DefinitionManager;
-import com.logicail.wrappers.loaders.ObjectDefinitionLoader;
+import com.logicail.loader.rt4.wrappers.loaders.ObjectDefinitionLoader;
 import com.sk.datastream.Stream;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Filter;
@@ -198,18 +197,18 @@ public class ObjectDefinition extends Definition {
 		return childrenIds != null;
 	}
 
-	public ObjectDefinition child(DefinitionManager manager) {
+	public ObjectDefinition child(IClientContext ctx) {
 		int index = 0;
 		if (scriptId == -1) {
-			index = configId != -1 ? manager.ctx.varpbits.varpbit(configId) : -1;
+			index = configId != -1 ? ctx.varpbits.varpbit(configId) : -1;
 		} else {
-			final VarpDefinition varpDefinition = manager.varp(scriptId);
+			final VarpDefinition varpDefinition = ctx.definitions.varp(scriptId);
 			if (varpDefinition != null) {
-				index = manager.ctx.varpbits.varpbit(varpDefinition.configId) >> varpDefinition.lowerBitIndex & VarpDefinition.MASKS[varpDefinition.upperBitIndex - varpDefinition.lowerBitIndex];
+				index = ctx.varpbits.varpbit(varpDefinition.configId) >> varpDefinition.lowerBitIndex & VarpDefinition.MASKS[varpDefinition.upperBitIndex - varpDefinition.lowerBitIndex];
 			}
 		}
 		if (index >= 0 && index < childrenIds.length && childrenIds[index] != -1) {
-			return manager.object(childrenIds[index]);
+			return ctx.definitions.object(childrenIds[index]);
 		}
 		return null;
 	}

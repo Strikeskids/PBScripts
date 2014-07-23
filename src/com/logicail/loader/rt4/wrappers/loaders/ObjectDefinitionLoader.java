@@ -1,8 +1,8 @@
-package com.logicail.wrappers.loaders;
+package com.logicail.loader.rt4.wrappers.loaders;
 
 import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.fs.FileData;
-import com.logicail.wrappers.ObjectDefinition;
+import com.logicail.loader.rt4.wrappers.ObjectDefinition;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.rt4;
 
-import com.logicail.accessors.DefinitionManager;
+import com.logicail.accessors.RT4DefinitionManager;
 import org.logicail.rsbot.scripts.framework.context.rt4.providers.*;
 import org.powerbot.script.rt4.ClientContext;
 
@@ -18,7 +18,7 @@ public class IClientContext extends ClientContext {
 	public final IMovement movement;
 	public final IInventory inventory;
 	public final IGame game;
-	public final DefinitionManager definitions;
+	public final RT4DefinitionManager definitions;
 
 	public IClientContext(ClientContext ctx) {
 		super(ctx);
@@ -29,10 +29,10 @@ public class IClientContext extends ClientContext {
 		inventory = new IInventory(this);
 		game = new IGame(this);
 
-		DefinitionManager manger = null;
+		RT4DefinitionManager manger = null;
 
 		try {
-			manger = new DefinitionManager(this);
+			manger = new RT4DefinitionManager(this);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			this.controller.stop();

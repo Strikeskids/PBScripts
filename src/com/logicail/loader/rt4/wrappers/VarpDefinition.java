@@ -1,6 +1,6 @@
-package com.logicail.wrappers;
+package com.logicail.loader.rt4.wrappers;
 
-import com.logicail.wrappers.loaders.ScriptDefinitionLoader;
+import com.logicail.loader.rt4.wrappers.loaders.ScriptDefinitionLoader;
 import com.sk.datastream.Stream;
 import org.powerbot.script.rt4.ClientContext;
 

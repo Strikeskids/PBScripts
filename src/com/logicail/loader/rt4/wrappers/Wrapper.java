@@ -1,6 +1,6 @@
-package com.logicail.wrappers;
+package com.logicail.loader.rt4.wrappers;
 
-import com.logicail.wrappers.loaders.WrapperLoader;
+import com.logicail.loader.rt4.wrappers.loaders.WrapperLoader;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -49,7 +49,7 @@ public abstract class Wrapper {
 		output.append(" ");
 		output.append(getId());
 		output.append(" {");
-		for (Field f : getClass().getDeclaredFields()) {
+		for (Field f : getClass().getFields()) {
 			if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) != 0) {
 				continue;
 			}
