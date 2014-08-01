@@ -5,7 +5,7 @@ import com.logicail.loader.rt4.RT4CacheSystem;
 import com.logicail.loader.rt4.wrappers.ItemDefinition;
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import com.logicail.loader.rt4.wrappers.VarpDefinition;
+import com.logicail.loader.rt4.wrappers.Script;
 import org.powerbot.script.rt4.*;
 
 import java.io.File;
@@ -19,7 +19,7 @@ import java.io.FileNotFoundException;
  */
 public class RT4DefinitionManager extends ClientAccessor {
 	private final DefinitionCache<ClientContext, NpcDefinition> npc;
-	private final DefinitionCache<ClientContext, VarpDefinition> varp;
+	private final DefinitionCache<ClientContext, Script> varp;
 	private final DefinitionCache<ClientContext, ObjectDefinition> object;
 	private final DefinitionCache<ClientContext, ItemDefinition> item;
 	private final RT4CacheSystem system;
@@ -35,7 +35,7 @@ public class RT4DefinitionManager extends ClientAccessor {
 		system = new RT4CacheSystem(new File(directory));
 
 		npc = new DefinitionCache<ClientContext, NpcDefinition>(this.ctx, system.npcLoader);
-		varp = new DefinitionCache<ClientContext, VarpDefinition>(this.ctx, system.varpLoader);
+		varp = new DefinitionCache<ClientContext, Script>(this.ctx, system.varpLoader);
 		object = new DefinitionCache<ClientContext, ObjectDefinition>(this.ctx, system.objectLoader);
 		item = new DefinitionCache<ClientContext, ItemDefinition>(this.ctx, system.itemLoader);
 	}
@@ -60,7 +60,7 @@ public class RT4DefinitionManager extends ClientAccessor {
 		return object.get(id);
 	}
 
-	public VarpDefinition varp(int scriptId) {
+	public Script varp(int scriptId) {
 		return this.varp.get(scriptId);
 	}
 }

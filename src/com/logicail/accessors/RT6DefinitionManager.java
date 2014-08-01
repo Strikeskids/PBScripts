@@ -18,7 +18,7 @@ import java.io.FileNotFoundException;
  * Time: 15:28
  */
 public class RT6DefinitionManager extends ClientAccessor {
-	private final DefinitionCache<org.powerbot.script.rt6.ClientContext, com.logicail.loader.rt6.wrapper.ItemDefinition> item;
+	private final DefinitionCache<ClientContext, ItemDefinition> item;
 	private final RT6CacheSystem system;
 
 	public RT6CacheSystem system() {
@@ -37,10 +37,10 @@ public class RT6DefinitionManager extends ClientAccessor {
 		super(ctx);
 
 		String directory = System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "runescape" + File.separator + "LIVE" + File.separator;
-
 		system = new RT6CacheSystem(new File(directory));
 
-		item = new DefinitionCache<org.powerbot.script.rt6.ClientContext, com.logicail.loader.rt6.wrapper.ItemDefinition>(this.ctx, system.itemLoader);
+		item = new DefinitionCache<ClientContext, ItemDefinition>(this.ctx, system.itemLoader);
+
 	}
 
 	public ItemDefinition item(int id) {

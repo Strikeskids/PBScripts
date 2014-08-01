@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.rt4.osvarphelper;
 
-import com.logicail.loader.rt4.wrappers.VarpDefinition;
+import com.logicail.loader.rt4.wrappers.Script;
 import com.logicail.loader.rt4.wrappers.loaders.ScriptDefinitionLoader;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 
@@ -46,18 +46,18 @@ public class VarpHelperGUI extends JFrame {
 	private final HashMap<Integer, Integer> previous = new HashMap<Integer, Integer>();
 	private int selected = -1;
 
-	HashMap<Integer, List<VarpDefinition>> varpMap = new HashMap<Integer, List<VarpDefinition>>();
+	HashMap<Integer, List<Script>> varpMap = new HashMap<Integer, List<Script>>();
 
 	public void updateSelected() {
 		if (selected > -1) {
 			final Integer value = previous.get(selected);
 			area.setText("Setting " + selected + "\nValue: " + value + "\nHex: 0x" + Integer.toHexString(value) + "\nBinary:" + Integer.toBinaryString(value));
-			List<VarpDefinition> list = varpMap.get(selected);
+			List<Script> list = varpMap.get(selected);
 			if (list == null) {
 				knownText.setText("");
 			} else {
 				StringBuilder sb = new StringBuilder();
-				for (VarpDefinition definition : list) {
+				for (Script definition : list) {
 					sb.append(definition.code()).append(" = ").append(definition.execute(ctx)).append("\n");
 				}
 				knownText.setText(sb.toString());
@@ -83,10 +83,10 @@ public class VarpHelperGUI extends JFrame {
 			}
 
 			try {
-				final VarpDefinition script = loader.load(i);
-				List<VarpDefinition> list;
+				final Script script = loader.load(i);
+				List<Script> list;
 				if (!varpMap.containsKey(script.configId)) {
-					list = new LinkedList<VarpDefinition>();
+					list = new LinkedList<Script>();
 					varpMap.put(script.configId, list);
 				}
 				list = varpMap.get(script.configId);

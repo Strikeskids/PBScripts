@@ -1,4 +1,4 @@
-package org.logicail;
+package org.logicail.rsbot.scripts.framework.context;
 
 import org.powerbot.script.AbstractQuery;
 import org.powerbot.script.Filter;

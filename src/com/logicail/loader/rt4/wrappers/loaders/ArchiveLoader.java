@@ -1,12 +1,13 @@
 package com.logicail.loader.rt4.wrappers.loaders;
 
-import com.logicail.loader.rt4.wrappers.Wrapper;
 import com.sk.cache.fs.Archive;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
 import com.sk.cache.meta.ArchiveMeta;
 import com.sk.cache.meta.ReferenceTable;
+import com.sk.cache.wrappers.ProtocolWrapper;
+import com.sk.cache.wrappers.loaders.ProtocolWrapperLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +15,7 @@ import com.sk.cache.meta.ReferenceTable;
  * Date: 15/07/2014
  * Time: 20:18
  */
-public abstract class ArchiveLoader<T extends Wrapper> extends WrapperLoader<T> {
+public abstract class ArchiveLoader<T extends ProtocolWrapper> extends ProtocolWrapperLoader<T> {
 	protected final int archiveId;
 	public final int size;
 	public final int version;

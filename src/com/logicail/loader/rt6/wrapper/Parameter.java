@@ -1,4 +1,6 @@
-package com.logicail.loader.rt6;
+package com.logicail.loader.rt6.wrapper;
+
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -211,6 +213,15 @@ public enum Parameter {
 	REDEMED_ID(3758), // ?
 	MINI_GAME(59);// ?
 	//DEFINITION_ID(236); // ? why
+
+	public static HashMap<Integer, Parameter> MAP;
+
+	static {
+		MAP = new HashMap<Integer, Parameter>();
+		for (Parameter parameter : Parameter.values()) {
+			MAP.put(parameter.value(), parameter);
+		}
+	}
 
 	private final int key;
 

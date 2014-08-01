@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * Time: 14:37
  */
 public class IBank extends Bank {
-	public static final int WIDGET_BANK_ITEMS = 120;
-	private static final int WIDGET_BOUNDS = 50;
+	public static final int WIDGET_BANK_ITEMS = 7;
+	private static final int WIDGET_BOUNDS = 12;
 
 	/**
 	 * Backpack when bank is open
@@ -122,15 +122,15 @@ public class IBank extends Bank {
 	}
 
 	public enum BankTab {
-		ONE(-1, 20),
-		TWO(0, 18),
-		THREE(1, 16),
-		FOUR(2, 14),
-		FIVE(3, 12),
-		SIX(4, 10),
-		SEVEN(5, 8),
-		EIGHT(6, 6),
-		NINE(7, 4);
+		ONE(-1, 142),
+		TWO(0, 150),
+		THREE(1, 158),
+		FOUR(2, 166),
+		FIVE(3, 174),
+		SIX(4, 182),
+		SEVEN(5, 190),
+		EIGHT(6, 198),
+		NINE(7, 206);
 		private final int i;
 		private final int bankWidget;
 

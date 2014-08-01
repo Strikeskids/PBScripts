@@ -1,7 +1,6 @@
 package com.logicail;
 
-import com.logicail.loader.rt4.wrappers.Definition;
-import com.logicail.loader.rt4.wrappers.loaders.WrapperLoader;
+import com.sk.cache.wrappers.Wrapper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,10 +11,10 @@ import java.util.Map;
  * Date: 07/07/2014
  * Time: 19:29
  */
-public class DefinitionCache<C extends org.powerbot.script.ClientContext, T extends Definition> extends org.powerbot.script.ClientAccessor<C> {
-	private static final int MAX_ENTRIES = 100;
+public class DefinitionCache<C extends org.powerbot.script.ClientContext, T extends Wrapper> extends org.powerbot.script.ClientAccessor<C> {
+	private static final int MAX_ENTRIES = 256;
 
-	private final WrapperLoader<T> loader;
+	private final com.sk.cache.wrappers.loaders.WrapperLoader<T> loader;
 
 	private LinkedHashMap<Integer, T> cache = new LinkedHashMap<Integer, T>(MAX_ENTRIES + 1, 0.75f, true) {
 		public boolean removeEldestEntry(Map.Entry eldest) {
@@ -23,7 +22,7 @@ public class DefinitionCache<C extends org.powerbot.script.ClientContext, T exte
 		}
 	};
 
-	public DefinitionCache(C ctx, WrapperLoader<T> loader) {
+	public DefinitionCache(C ctx, com.sk.cache.wrappers.loaders.WrapperLoader<T> loader) {
 		super(ctx);
 		this.loader = loader;
 	}

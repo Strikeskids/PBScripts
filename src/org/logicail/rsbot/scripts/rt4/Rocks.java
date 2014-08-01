@@ -15,14 +15,14 @@ import java.util.Arrays;
  */
 public enum Rocks {
 	// Animation ID 531 is gas random
-	TIN(new short[]{24}, new short[]{53}),
-	COPPER(new short[]{24}, new short[]{4510});
+	TIN(new int[]{24}, new int[]{53}),
+	COPPER(new int[]{24}, new int[]{4510});
 
-	private final short[] original;
-	private final short[] target;
+	private final int[] original;
+	private final int[] target;
 
 	// short[][] eventually
-	Rocks(short[] original, short[] target) {
+	Rocks(int[] original, int[] target) {
 		this.original = original;
 		this.target = target;
 	}
@@ -32,7 +32,7 @@ public enum Rocks {
 			@Override
 			public boolean accept(GameObject gameObject) {
 				final ObjectDefinition definition = ctx.definitions.get(gameObject);
-				return definition != null && definition.animationId == -1 && Arrays.equals(original, definition.recolorOriginal) && Arrays.equals(target, definition.recolorTarget);
+				return definition != null && definition.animationId == -1 && Arrays.equals(original, definition.originalColors) && Arrays.equals(target, definition.modifiedColors);
 			}
 		};
 	}
