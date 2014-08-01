@@ -8,7 +8,6 @@ import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt6.GameObject;
-import org.powerbot.script.rt6.MobileIdNameQuery;
 import org.powerbot.script.rt6.Player;
 
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class HousePath extends IClientAccessor implements Comparable<HousePath> 
 
 	public boolean traverse(Tile destination) {
 		boolean success = true;
-		MobileIdNameQuery<GameObject> nextDoor;
+		GameObject door;
 
 		final int endIndex = script.roomStorage.getIndex(destination);
 
@@ -73,32 +72,30 @@ public class HousePath extends IClientAccessor implements Comparable<HousePath> 
 		final Player local = ctx.players.local();
 		if (script.roomStorage.getIndex(local) != endIndex) {
 			success = false;
-			nextDoor = getNextDoor();
-			if (!nextDoor.isEmpty()) {
-				for (GameObject door : nextDoor) {
-					final double distanceToDoor = door.tile().distanceTo(local);
-					if (distanceToDoor > 12 || (Random.nextBoolean() && distanceToDoor > 6)) {
-						// Find correct area
-						for (Room room : getPath()) {
-							if (room.getWallArea().contains(door)) {
-								List<Tile> tiles = ctx.movement.getTilesNear(room.getArea(), door, 3);
-								for (Tile tile : tiles) {
-									if (ctx.movement.findPath(tile).traverse()) {
-										destination = tile;
-										success = true;
-										break;
-									}
+			door = getNextDoor();
+			if (!door.valid()) {
+				final double distanceToDoor = door.tile().distanceTo(local);
+				if (distanceToDoor > 12 || (Random.nextBoolean() && distanceToDoor > 6)) {
+					// Find correct area
+					for (Room room : getPath()) {
+						if (room.getWallArea().contains(door)) {
+							List<Tile> tiles = ctx.movement.getTilesNear(room.getArea(), door, 3);
+							for (Tile tile : tiles) {
+								if (ctx.movement.findPath(tile).traverse()) {
+									destination = tile;
+									success = true;
+									break;
 								}
-								break;
 							}
+							break;
 						}
-					} else {
-						// Not sure what this is for
-						final GameObject anotherdoor = nextDoor.poll();
-						anotherdoor.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
-						DoorOpener.open(ctx, anotherdoor);
-						return true;
 					}
+				} else {
+					// Not sure what this is for
+					final GameObject anotherdoor = getNextDoor();
+					anotherdoor.bounds(script.roomStorage.getRoom(anotherdoor).getEastWestDoorArea().contains(anotherdoor) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
+					DoorOpener.open(ctx, anotherdoor);
+					return true;
 				}
 			} else {
 				if (Random.nextBoolean() && destination.matrix(ctx).onMap()) {
@@ -146,29 +143,19 @@ public class HousePath extends IClientAccessor implements Comparable<HousePath> 
 		return success || script.roomStorage.getIndex(local) == endIndex;
 	}
 
-	public MobileIdNameQuery<GameObject> getNextDoor() {
+	public GameObject getNextDoor() {
 		final List<Room> roomPath = getPath();
 		if (!roomPath.isEmpty()) {
 			for (int i = 0; i < roomPath.size() - 1; i++) {
 				final Room current = roomPath.get(i);
 				final Room next = roomPath.get(i + 1);
 				if (!ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(current, next)).isEmpty()) {
-					return ctx.objects.shuffle().first();
+					return ctx.objects.shuffle().poll();
 				}
 			}
 		}
 
-		return new MobileIdNameQuery<GameObject>(ctx) {
-			@Override
-			protected List<GameObject> get() {
-				return new ArrayList<GameObject>();
-			}
-
-			@Override
-			public GameObject nil() {
-				return ctx.objects.nil();
-			}
-		};
+		return ctx.objects.nil();
 	}
 
 	public List<Room> getPath() {

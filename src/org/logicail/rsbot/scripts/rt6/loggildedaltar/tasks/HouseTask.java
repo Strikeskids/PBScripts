@@ -140,27 +140,27 @@ public class HouseTask extends Branch<LogGildedAltar> {
 						script.log.info("Failed to get to portal - trying failsafe");
 						final Room current = script.roomStorage.getRoom(ctx.players.local());
 						final Room end = script.roomStorage.getRoom(portal);
-						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(current, end)).shuffle().first()) {
-							door.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
-							if (DoorOpener.open(ctx, door)) {
-								ctx.sleep(300);
-							}
+						GameObject door = ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(current, end)).shuffle().poll();
+						door.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
+						if (DoorOpener.open(ctx, door)) {
+							ctx.sleep(300);
 						}
 					}
-
-					if (ctx.movement.findPath(destination).traverse()) {
-						ctx.sleep(300);
-					}
-
-					Condition.wait(new Callable<Boolean>() {
-						@Override
-						public Boolean call() throws Exception {
-							final Tile dest = ctx.movement.destination();
-							return dest == null || !dest.matrix(ctx).onMap() || dest.distanceTo(ctx.players.local()) <= 4;
-						}
-					}, 600, 8);
 				}
+
+				if (ctx.movement.findPath(destination).traverse()) {
+					ctx.sleep(300);
+				}
+
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						final Tile dest = ctx.movement.destination();
+						return dest == null || !dest.matrix(ctx).onMap() || dest.distanceTo(ctx.players.local()) <= 4;
+					}
+				}, 600, 8);
 			}
+
 
 			if (destination.distanceTo(ctx.players.local()) < 20) {
 				if (ctx.camera.prepare(portal) && (destination.matrix(ctx).reachable() || script.roomStorage.getIndex(ctx.players.local()) == script.roomStorage.getIndex(portal)) && portal.interact("Enter", "Portal")) {

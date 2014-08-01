@@ -82,7 +82,7 @@ public class HouseGlory extends NodePath {
 
 			//LogHandler.print("Can I reach glory?: " + (destination.canReach() ? "yes" : "no"));
 
-			if (gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || (destination.matrix(ctx).reachable() && pathToGlory.getNextDoor().isEmpty())) {
+			if (gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || (destination.matrix(ctx).reachable() && pathToGlory.getNextDoor().valid())) {
 				options.status = "Trying to click amulet of glory";
 				if (!mountedGlory.inViewport()) {
 					ctx.camera.turnTo(mountedGlory);
