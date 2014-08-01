@@ -250,20 +250,20 @@ public class BankWithdraw extends BankingAbstract {
 					if (bankRequiredItem.equip() && !ctx.equipment.select().id(bankRequiredItem.getIds()).isEmpty()) {
 						continue;
 					}
-					for (int id : bankRequiredItem.getIds()) {
-						if (bankRequiredItem.getQuantity() == 0) {
-							createSpaceInInventory(1);
-						} else {
-							createSpaceInInventory(bankRequiredItem.getQuantity());
-						}
+					for (final int id : bankRequiredItem.getIds()) {
+						createSpaceInInventory(Math.max(1, bankRequiredItem.getQuantity()));
 
 						for (Item item : ctx.bank.select().id(id).first()) {
-							if (ctx.bank.withdraw(id, Math.min(item.stackSize(), bankRequiredItem.getQuantity()))) {// Possible bug, if quantity > 1
+							if (success) {
+								break;
+							}
+							int quantity = Math.min(item.stackSize(), bankRequiredItem.getQuantity());
+							if (ctx.bank.withdraw(id, quantity)) {// Possible bug, if quantity > 1
 								success = true;
-								sleep(150);
+								sleep(200);
 								if (bankRequiredItem.equip()) {
 									if (ctx.equipment.equip(id)) {
-										if (!ctx.bank.isEmpty()) {
+										if (!ctx.bank.opened()) {
 											sleep(200);
 											ctx.bank.open();
 											sleep(400);
@@ -274,13 +274,18 @@ public class BankWithdraw extends BankingAbstract {
 									}
 								}
 								break;
+							} else {
+								if (!ctx.bank.select().id(id).isEmpty()) {
+									sleep(200);
+									script.log.info("ctx.bank.withdraw(" + id + ", " + quantity + ") reports fail");
+								}
 							}
 						}
 					}
 					if (!success) {
-						script.log.info("Ran out of required item for: " + ((NodePath) node).getPath().getLocation().name());
+						script.log.info("Ran out of required item for: " + nodePath.getPath().getLocation().name());
 					} else {
-						sleep(100);
+						sleep(150);
 					}
 				}
 			}
