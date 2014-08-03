@@ -38,6 +38,7 @@ public class IClientContext extends ClientContext {
 	public final IBank bank;
 	public final IFarming farming;
 	public final RT6DefinitionManager definitions;
+	public final ComponentQuery components;
 
 	public String useragent;
 	// Concurrent task executor
@@ -110,8 +111,6 @@ public class IClientContext extends ClientContext {
 		movement = new IMovement(this);
 		bank = new IBank(this);
 		farming = new IFarming(this);
-
-
 		RT6DefinitionManager manger = null;
 
 		try {
@@ -122,6 +121,7 @@ public class IClientContext extends ClientContext {
 		}
 
 		this.definitions = manger;
+		this.components = new ComponentQuery(this);
 	}
 
 	public boolean isPaused() {

@@ -213,8 +213,10 @@ public class HouseTask extends Branch<LogGildedAltar> {
 			return close();
 		}
 
+		script.log.info("Changing to teleport to " + (useOtherHouse ? "portal" : "house"));
+
 		if (ctx.hud.open(Hud.Menu.OPTIONS)) {
-			final Component gameSettings = ctx.widgets.component(1433, 0);
+			final Component gameSettings = ctx.components.select().text("Game Settings").poll();
 			final Component component = ctx.widgets.component(WIDGET_HOUSE_OPTIONS, useOtherHouse ? WIDGET_HOUSE_OPTIONS_PORTAL : WIDGET_HOUSE_OPTIONS_HOUSE);
 			if (gameSettings.visible()) {
 				if (gameSettings.interact("Select")) {
