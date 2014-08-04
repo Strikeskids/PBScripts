@@ -1,7 +1,6 @@
 package com.logicail.loader.rt4.wrappers;
 
 import com.logicail.loader.rt4.wrappers.loaders.NpcDefinitionLoader;
-import com.logicail.protocol.ChildrenReader;
 import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
@@ -112,7 +111,5 @@ public class NpcDefinition extends StreamedWrapper {
 				protocol.read(this, opcode, s);
 			}
 		}
-
-		new ChildrenReader(106).addSelfToGroup(protocol);
 	}
 }
