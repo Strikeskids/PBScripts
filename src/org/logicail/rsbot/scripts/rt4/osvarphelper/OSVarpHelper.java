@@ -16,6 +16,12 @@ import javax.swing.*;
 @Script.Manifest(name = "OS Varp Helper", description = "Loads varps from the cache", properties = "topic=1200465;client=4")
 public class OSVarpHelper extends PollingScript<IClientContext> {
 	VarpHelperGUI gui = null;
+	public IClientContext ctx;
+
+	public OSVarpHelper() {
+		ctx = new IClientContext(super.ctx);
+
+	}
 
 	@Override
 	public void start() {
