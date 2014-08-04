@@ -53,14 +53,6 @@ public class GetPlan extends ArtisanArmourerTask {
 
 	@Override
 	public void run() {
-		if (!ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty()) {
-			options.finishedSword = false;
-			options.gotPlan.set(true);
-			return;
-		}
-
-		options.status = "Talk to Egil/Abel";
-
 		if (makeSword.isOpen()) {
 			makeSword.closeInterface();
 			return;
@@ -85,7 +77,16 @@ public class GetPlan extends ArtisanArmourerTask {
 			return;
 		}
 
-		for (final ChatOption option : ctx.chat.select().text("No, thanks.").first()) {
+		if (!ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty()) {
+			options.finishedSword = false;
+			options.gotPlan.set(true);
+			return;
+		}
+
+		options.status = "Talk to Egil/Abel";
+
+		ChatOption option = ctx.chat.select().text("No, thanks.").poll();
+		if (option.valid()) {
 			if (option.select(Random.nextBoolean())) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
@@ -99,17 +100,16 @@ public class GetPlan extends ArtisanArmourerTask {
 
 		final int xp = ctx.skills.experience(Skills.SMITHING);
 
-		for (Npc egil : ctx.npcs.select().id(EGIL_ABEL).nearest()/*.limit(3).shuffle()*/.first()) {
-			if (ctx.camera.prepare(egil) && egil.interact(interactFilter)) {
-				ctx.sleep(500);
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty() || xp != ctx.skills.experience(Skills.SMITHING);
-					}
-				}, Random.nextInt(300, 600), Random.nextInt(9, 12));
-				ctx.sleep(500);
-			}
+		Npc egil = ctx.npcs.select().id(EGIL_ABEL).nearest()/*.limit(3).shuffle()*/.poll();
+		if (ctx.camera.prepare(egil) && egil.interact(interactFilter)) {
+			ctx.sleep(500);
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !ctx.backpack.select().id(MakeSword.SWORD_PLANS).isEmpty() || xp != ctx.skills.experience(Skills.SMITHING);
+				}
+			}, Random.nextInt(300, 600), Random.nextInt(9, 12));
+			ctx.sleep(500);
 		}
 	}
 }
