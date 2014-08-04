@@ -1,11 +1,12 @@
 package org.logicail.rsbot.scripts.rt6.bankorganiser;
 
-import org.logicail.rsbot.scripts.rt6.bankorganiser.gui.BankOrganiserInterface;
 import org.logicail.rsbot.scripts.framework.LogicailScript;
 import org.logicail.rsbot.scripts.framework.tasks.Task;
-import org.logicail.rsbot.util.ErrorDialog;
+import org.logicail.rsbot.scripts.rt6.bankorganiser.gui.BankOrganiserInterface;
 import org.powerbot.script.Script;
 import org.powerbot.script.rt6.Game;
+import org.powerbot.script.rt6.Interactive;
+import org.powerbot.script.rt6.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,12 +24,10 @@ import java.util.LinkedHashMap;
 		properties = "topic=1174066;client=6;version=1.00;hidden=true")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
-	public final ItemData itemData;
+	public ItemCategoriser itemCategoriser;
 
 	public LogBankOrganiser() {
 		super();
-
-		itemData = new ItemData(ctx);
 	}
 
 	@Override
@@ -55,20 +54,7 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 
 	@Override
 	public void start() {
-		if (!itemData.loaded()) {
-			EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						new ErrorDialog("Error", "Failed to load category data");
-					} catch (Exception exception) {
-						exception.printStackTrace();
-					}
-				}
-			});
-			ctx.controller.stop();
-			return;
-		}
+		itemCategoriser = new ItemCategoriser(ctx);
 
 		ctx.controller.offer(new Task<LogBankOrganiser>(this) {
 			@Override
@@ -86,5 +72,17 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 				});
 			}
 		});
+	}
+
+	@Override
+	public void repaint(Graphics g) {
+		super.repaint(g);
+
+		for (Item item : ctx.bank.select().select(Interactive.areInViewport())) {
+			org.powerbot.script.rt6.Component component = item.component();
+			component.draw(g);
+			Point point = component.screenPoint();
+			g.drawString(itemCategoriser.category(item.id()), point.x, point.y);
+		}
 	}
 }

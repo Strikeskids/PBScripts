@@ -74,7 +74,7 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 
 			ItemSorter sorter = sorters[i];
 			if (sorter == null) {
-				sorter = sorters[i] = new ItemSorter(script.itemData, mappingList.get(i));
+				sorter = sorters[i] = new ItemSorter(script.itemCategoriser, mappingList.get(i));
 			}
 
 			ArrayList<Item> current = new ArrayList<Item>();

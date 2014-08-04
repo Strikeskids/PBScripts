@@ -2,7 +2,6 @@ package org.logicail.rsbot.scripts.rt6.bankorganiser;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import org.logicail.rsbot.scripts.rt6.bankorganiser.tasks.ItemSorter;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.util.IOUtil;
@@ -57,7 +56,7 @@ public class ItemData extends IClientAccessor {
 
 				categoryToItems.put(member.getName(), set);
 			}
-			sorter = new ItemSorter(this, new ArrayList<Integer>(all));
+			//sorter = new ItemSorter(this, new ArrayList<Integer>(all));
 			version = map.get("version").asLong();
 		} catch (IOException e) {
 			e.printStackTrace();

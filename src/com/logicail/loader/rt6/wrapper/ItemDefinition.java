@@ -1,6 +1,7 @@
 package com.logicail.loader.rt6.wrapper;
 
 import com.logicail.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
+import com.logicail.loader.rt6.wrapper.requirements.*;
 import com.sk.cache.wrappers.ProtocolWrapper;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
@@ -8,8 +9,9 @@ import com.sk.cache.wrappers.protocol.StaticLocReader;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,6 +37,7 @@ public class ItemDefinition extends ProtocolWrapper {
 	public int value = 1;
 	public int[] stackVarient;
 	public int slot = -1;
+	public Slot slotEnum = null;
 	public boolean tradable;
 	public int equipmentType = -1;
 	public int lentId = -1;
@@ -42,8 +45,90 @@ public class ItemDefinition extends ProtocolWrapper {
 	public int cosmeticId = -1;
 	public int cosmeticTemplateId = -1;
 	public int lentTemplateId = -1;
+	//public Category category = Category.MISCELLANEOUS;
 	public String shardname = null;
-	public HashMap<Parameter, Object> parameters;
+
+	/**
+	 * GE category
+	 *
+	 * @return
+	 */
+	public Category category() {
+		loadParameters();
+		return parameters != null && parameters.containsKey(Parameter.CATEGORY) ? Category.values()[(Integer) parameters.get(Parameter.CATEGORY)] : Category.MISCELLANEOUS;
+	}
+
+	// All unedited 249 data
+	public LinkedHashMap<Integer, Object> clientScriptData = new LinkedHashMap<Integer, Object>();
+	private AtomicBoolean loaded = new AtomicBoolean();
+
+	private void loadParameters() {
+		if (loaded.get()) {
+			return;
+		}
+
+		loaded.set(true);
+
+		parameters = new LinkedHashMap<Parameter, Object>();
+		for (Parameter parameter : Parameter.values()) {
+			if (clientScriptData.containsKey(parameter.value())) {
+				parameters.put(parameter, clientScriptData.get(parameter.value()));
+			}
+		}
+
+		unknowns = new LinkedHashMap<Integer, Object>(clientScriptData);
+		for (Parameter parameter : parameters.keySet()) {
+			unknowns.remove(parameter.value());
+		}
+	}
+
+	private LinkedHashMap<Parameter, Object> parameters;
+
+	public LinkedHashMap<Parameter, Object> parameters() {
+		loadParameters();
+		return parameters;
+	}
+
+	public List<String> wornOptions() {
+		return ItemParameter.WORN_OPTIONS.get(clientScriptData);
+	}
+
+	public List<SkillRequirement> skillRequirements() {
+		return ItemParameter.SKILL_REQUIREMENT.get(clientScriptData);
+	}
+
+	public ItemRequirement tool() {
+		return ItemParameter.TOOL.get(clientScriptData);
+	}
+
+	public List<CombatSkillRequirement> wieldRequirements() {
+		return ItemParameter.WIELD_REQUIREMENT.get(clientScriptData);
+	}
+
+//	public Requirement[] combatLevelRequirement() {
+//		return ItemParameter.Equipment.COMBAT_LEVEL_REQUIREMENT.get(clientScriptData);
+//	}
+
+	public ItemParameter.EquipmentType equipmentTypeParam() {
+		return ItemParameter.EquipmentType.getType(clientScriptData);
+	}
+
+	public CreationSkillRequirement creationSkill() {
+		return ItemParameter.CREATION_SKILL.get(clientScriptData);
+	}
+
+	public List<ItemRequirement> resourceRequirement() {
+		return ItemParameter.RESOURCE_REQUIREMENT.get(clientScriptData);
+	}
+
+	private LinkedHashMap<Integer, Object> unknowns;
+
+	public LinkedHashMap<Integer, Object> unknowns() {
+		loadParameters();
+		return unknowns;
+	}
+
+
 	private final ItemDefinitionLoader loader;
 
 	public void fix() {
@@ -113,7 +198,7 @@ public class ItemDefinition extends ProtocolWrapper {
 			categoryId = rhs.categoryId;
 			team = rhs.team;
 			groundActions = rhs.groundActions;
-			parameters = rhs.parameters;
+			copyParams(rhs);
 			actions = new String[5];
 			if (null != rhs.actions) {
 				System.arraycopy(rhs.actions, 0, actions, 0, 4);
@@ -122,27 +207,42 @@ public class ItemDefinition extends ProtocolWrapper {
 		}
 	}
 
+	private void copyParams(ItemDefinition from) {
+		clientScriptData = from.clientScriptData;
+		parameters = from.parameters;
+		unknowns = from.unknowns;
+	}
+
+
 	public void fixNoted(ItemDefinition lhs, ItemDefinition rhs) {
 		fix(lhs, rhs, null);
 		noted = true;
 	}
 
 	static {
+		new StaticLocReader(13) {
+			@Override
+			public void read(Object obj, int type, Stream s) {
+				final int slot = s.getUByte();
+				FieldExtractor.setValue(obj, type, type, "slot", slot);
+
+				Slot slotEnum = Slot.get(slot);
+				FieldExtractor.setValue(obj, type, type, "slotEnum", slotEnum);
+			}
+		}.addSelfToGroup(protocol);
 		new StaticLocReader(249) {
 			@Override
 			public void read(Object obj, int type, Stream stream) {
 				int length = stream.getUByte();
 
-				HashMap<Integer, Object> parameters = new LinkedHashMap<Integer, Object>(length);
-
+				LinkedHashMap<Integer, Object> clientScriptData = new LinkedHashMap<Integer, Object>(length);
 				for (int index = 0; index < length; index++) {
 					boolean stringInstance = stream.getUByte() == 1;
 					int key = stream.getUInt24();
 					Object value = stringInstance ? stream.getString() : stream.getInt();
-					parameters.put(key, value);
+					clientScriptData.put(key, value);
 				}
-
-				FieldExtractor.setValue(obj, type, type, "parameters", parameters);
+				FieldExtractor.setValue(obj, type, type, "clientScriptData", clientScriptData);
 			}
 		}.addSelfToGroup(protocol);
 
@@ -159,7 +259,7 @@ public class ItemDefinition extends ProtocolWrapper {
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE)}, 113, 114).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT)}, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "lentTemplateId")}, 122).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "slot")}, 13).addSelfToGroup(protocol);
+		//new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "slot")}, 13).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT}, null)}, 132).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "shardname")}, 164).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "lentId")}, 121).addSelfToGroup(protocol);
@@ -207,5 +307,31 @@ public class ItemDefinition extends ProtocolWrapper {
 			return loader.load(noteId);
 		}
 		return this;
+	}
+
+	public boolean hasAnyParameter(Parameter... parameters) {
+		if (this.parameters == null) {
+			return false;
+		}
+
+		for (Parameter parameter : parameters) {
+			if (this.parameters.containsKey(parameter)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean hasParameter(Parameter parameter) {
+		if (parameters != null && parameters.containsKey(parameter)) {
+			final Object v = parameters.get(parameter);
+			if (v instanceof Integer) {
+				return (Integer) v > 0;
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -1,8 +1,8 @@
 package org.logicail.rsbot.scripts.rt6.bankorganiser.tasks;
 
-import org.logicail.rsbot.scripts.rt6.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.IBank;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
+import org.logicail.rsbot.scripts.rt6.bankorganiser.LogBankOrganiser;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt6.Bank;
@@ -57,7 +57,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 
 			if (sortingTab != IBank.BankTab.ONE) {
 				for (Integer integer : alreadyHave) {
-					if (!set.contains(script.itemData.getId(integer))) {
+					if (!set.contains(script.itemCategoriser.id(integer))) {
 						// Remove
 						final Item item = ctx.bank.getItemsInTab(sortingTab).id(integer).poll();
 						if (item.valid()) {
@@ -70,7 +70,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			if (!ctx.bank.select().select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
-					return set.contains(script.itemData.getId(item.id())) && !alreadyHave.contains(item.id());
+					return set.contains(script.itemCategoriser.id(item.id())) && !alreadyHave.contains(item.id());
 				}
 			}).isEmpty()) {
 				return true;
@@ -95,7 +95,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 
 			if (sortingTab != IBank.BankTab.ONE) {
 				for (Integer integer : alreadyHave) {
-					if (!set.contains(script.itemData.getId(integer))) {
+					if (!set.contains(script.itemCategoriser.id(integer))) {
 						// Remove
 						final Item item = ctx.bank.getItemsInTab(sortingTab).id(integer).poll();
 						if (item.valid()) {
@@ -112,9 +112,9 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 			for (Item item : ctx.bank.select().select(new Filter<Item>() {
 				@Override
 				public boolean accept(Item item) {
-					return set.contains(script.itemData.getId(item.id())) && !alreadyHave.contains(item.id());
+					return set.contains(script.itemCategoriser.id(item.id())) && !alreadyHave.contains(item.id());
 				}
-			}).sort(script.itemData.getSorter())) {
+			}).sort(script.itemCategoriser.getSorter())) {
 				move(item, sortingTab);
 				sleep(66);
 				return;
@@ -135,7 +135,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 					if (ctx.bank.select().select(new Filter<Item>() {
 						@Override
 						public boolean accept(Item item) {
-							return next.contains(script.itemData.getId(item.id()));
+							return next.contains(script.itemCategoriser.id(item.id()));
 						}
 					}).count() < 1) {
 						iterator.remove();

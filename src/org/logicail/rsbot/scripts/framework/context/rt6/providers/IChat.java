@@ -107,7 +107,7 @@ public class IChat extends Chat {
 	 * @return the component or <code>ctx.widgets.widget(0).component(0)</code> if non found therefore use {@link Component#valid()} to see if it was found
 	 */
 	public Component getComponentByText(String... needle) {
-		for (Widget widget : ctx.widgets.array()) {
+		for (Widget widget : ctx.widgets.select()) {
 			for (Component component : widget.components()) {
 				if (component.valid()) {
 					final Component search = getComponentByText(component, needle);

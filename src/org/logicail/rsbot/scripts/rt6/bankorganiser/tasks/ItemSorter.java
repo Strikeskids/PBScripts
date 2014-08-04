@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.rt6.bankorganiser.tasks;
 
-import org.logicail.rsbot.scripts.rt6.bankorganiser.ItemData;
+import org.logicail.rsbot.scripts.rt6.bankorganiser.ItemCategoriser;
 import org.powerbot.script.rt6.Item;
 
 import java.util.Comparator;
@@ -17,18 +17,18 @@ public class ItemSorter implements Comparator<Item> {
 		return order.size();
 	}
 
-	private final ItemData itemData;
+	private final ItemCategoriser itemCategoriser;
 	private final List<Integer> order;
 
-	public ItemSorter(ItemData itemData, List<Integer> order) {
-		this.itemData = itemData;
+	public ItemSorter(ItemCategoriser itemCategoriser, List<Integer> order) {
+		this.itemCategoriser = itemCategoriser;
 		this.order = order;
 	}
 
 	@Override
 	public int compare(Item lhs, Item rhs) {
-		final int indexlhs = order.indexOf(itemData.getId(lhs.id()));
-		final int indexrhs = order.indexOf(itemData.getId(rhs.id()));
+		final int indexlhs = order.indexOf(itemCategoriser.id(lhs.id()));
+		final int indexrhs = order.indexOf(itemCategoriser.id(rhs.id()));
 
 		if (indexlhs == -1 && indexrhs == -1) {
 			return lhs.name().compareTo(rhs.name());
