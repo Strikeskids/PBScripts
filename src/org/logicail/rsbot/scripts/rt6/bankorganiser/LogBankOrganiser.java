@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Script.Manifest(
 		name = "Log Bank Organiser",
 		description = "Organises your bank",
-		properties = "topic=1174066;client=6;version=1.50;hidden=true")
+		properties = "topic=1174066;client=6;version=1.50")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
 	public ItemCategoriser itemCategoriser;
