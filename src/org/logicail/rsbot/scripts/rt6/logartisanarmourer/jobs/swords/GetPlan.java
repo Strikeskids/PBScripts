@@ -54,11 +54,13 @@ public class GetPlan extends ArtisanArmourerTask {
 	@Override
 	public void run() {
 		if (makeSword.isOpen()) {
+			options.status = "Close sword interface";
 			makeSword.closeInterface();
 			return;
 		}
 
 		if (ctx.chat.queryContinue()) {
+			options.status = "Continue";
 			for (final String text : CHAT_TEXT) {
 				if (ctx.chat.isTextVisible(text)) {
 					if (ctx.chat.clickContinue(Random.nextBoolean())) {
