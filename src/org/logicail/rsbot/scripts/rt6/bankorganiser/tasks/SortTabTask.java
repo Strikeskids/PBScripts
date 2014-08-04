@@ -1,8 +1,8 @@
 package org.logicail.rsbot.scripts.rt6.bankorganiser.tasks;
 
-import org.logicail.rsbot.scripts.rt6.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.IBank;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
+import org.logicail.rsbot.scripts.rt6.bankorganiser.LogBankOrganiser;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt6.Bank;
@@ -32,10 +32,6 @@ public class SortTabTask extends Node<LogBankOrganiser> {
 	public SortTabTask(LogBankOrganiser script, MoveToTabTask moveToTabTask) {
 		super(script);
 		this.moveToTabTask = moveToTabTask;
-	}
-
-	private boolean isTabSorted(IBank.BankTab tab) {
-		return false;
 	}
 
 	@Override

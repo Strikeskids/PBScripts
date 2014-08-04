@@ -10,7 +10,9 @@ import org.powerbot.script.rt6.Item;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.LinkedHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +23,7 @@ import java.util.LinkedHashMap;
 @Script.Manifest(
 		name = "Log Bank Organiser",
 		description = "Organises your bank",
-		properties = "topic=1174066;client=6;version=1.00;hidden=true")
+		properties = "topic=1174066;client=6;version=1.50")
 public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
 	public ItemCategoriser itemCategoriser;
@@ -52,9 +54,14 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 		ctx.sleep(70);
 	}
 
+	private AtomicBoolean loaded = new AtomicBoolean();
+
 	@Override
 	public void start() {
+		status = "GUI will open once data loaded";
 		itemCategoriser = new ItemCategoriser(ctx);
+		loaded.set(true);
+		status = "Finished loading data";
 
 		ctx.controller.offer(new Task<LogBankOrganiser>(this) {
 			@Override
@@ -74,15 +81,29 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 		});
 	}
 
+	private Font font = new Font("SansSerif", Font.PLAIN, 10);
+
 	@Override
 	public void repaint(Graphics g) {
 		super.repaint(g);
 
+		if (!loaded.get()) {
+			return;
+		}
+
+		Graphics2D g2 = (Graphics2D) g;
+		AffineTransform orig = g2.getTransform();
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.rotate(Math.toRadians(-45), 0, 0);
+		Font rotatedFont = font.deriveFont(affineTransform);
+		g2.setFont(rotatedFont);
+
 		for (Item item : ctx.bank.select().select(Interactive.areInViewport())) {
 			org.powerbot.script.rt6.Component component = item.component();
-			component.draw(g);
 			Point point = component.screenPoint();
-			g.drawString(itemCategoriser.category(item.id()), point.x, point.y);
+			g.drawString(itemCategoriser.category(item.id()), point.x, point.y + component.height());
 		}
+
+		g2.setTransform(orig);
 	}
 }
