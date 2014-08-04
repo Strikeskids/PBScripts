@@ -2,10 +2,9 @@ package com.logicail.loader.rt6.wrapper;
 
 import com.logicail.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
 import com.logicail.loader.rt6.wrapper.requirements.*;
-import com.sk.cache.wrappers.ProtocolWrapper;
+import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
-import com.sk.cache.wrappers.protocol.StaticLocReader;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
 
@@ -19,8 +18,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 20/07/2014
  * Time: 12:32
  */
-public class ItemDefinition extends ProtocolWrapper {
+public class ItemDefinition extends StreamedWrapper {
 	private static final ProtocolGroup protocol = new ProtocolGroup();
+
 	public String name = null;
 	public boolean noted;
 	public boolean lent;
@@ -219,71 +219,9 @@ public class ItemDefinition extends ProtocolWrapper {
 		noted = true;
 	}
 
-	static {
-		new StaticLocReader(13) {
-			@Override
-			public void read(Object obj, int type, Stream s) {
-				final int slot = s.getUByte();
-				FieldExtractor.setValue(obj, type, type, "slot", slot);
-
-				Slot slotEnum = Slot.get(slot);
-				FieldExtractor.setValue(obj, type, type, "slotEnum", slotEnum);
-			}
-		}.addSelfToGroup(protocol);
-		new StaticLocReader(249) {
-			@Override
-			public void read(Object obj, int type, Stream stream) {
-				int length = stream.getUByte();
-
-				LinkedHashMap<Integer, Object> clientScriptData = new LinkedHashMap<Integer, Object>(length);
-				for (int index = 0; index < length; index++) {
-					boolean stringInstance = stream.getUByte() == 1;
-					int key = stream.getUInt24();
-					Object value = stringInstance ? stream.getString() : stream.getInt();
-					clientScriptData.put(key, value);
-				}
-				FieldExtractor.setValue(obj, type, type, "clientScriptData", clientScriptData);
-			}
-		}.addSelfToGroup(protocol);
-
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.SHORT, ParseType.SHORT}, null)}, 41).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "noteTemplateId")}, 98).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BIG_SMART, "modelId")}, 1).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BIG_SMART)}, 1, 23, 24, 25, 26, 78, 79, 90, 91, 92, 93).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(false))}, 156).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.BYTE}, null)}, 42).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true), "members")}, 16).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "noteId")}, 97).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(1), "stackOffset")}, 11).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "groundActions")}, 30, 31, 32, 33, 34).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE)}, 113, 114).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT)}, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "lentTemplateId")}, 122).addSelfToGroup(protocol);
-		//new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "slot")}, 13).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT}, null)}, 132).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "shardname")}, 164).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "lentId")}, 121).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "equipmentType")}, 14).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 96).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 27, 134).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "actions")}, 35, 36, 37, 38, 39).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "categoryId")}, 94).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "cosmeticId")}, 139).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "cosmeticTemplateId")}, 140).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT)}, 4, 5, 6, 7, 8, 18, 44, 45, 95, 110, 111, 112, /*139, 140,*/ 142, 143, 144, 145, 146, 150, 151, 152, 153, 154, 161, 162, 163).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE)}, 125, 126).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "name")}, 2).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.INT)}, 43).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true), "tradable")}, 65).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true))}, 157).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.INT, "value")}, 12).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "team")}, 115).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT, ParseType.USHORT}, null)}, 40).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(2))}, 165).addSelfToGroup(protocol);
-	}
 
 	public ItemDefinition(ItemDefinitionLoader loader, int id) {
-		super(loader, id, protocol);
+		super(loader, id);
 		this.loader = loader;
 	}
 
@@ -333,5 +271,120 @@ public class ItemDefinition extends ProtocolWrapper {
 			}
 		}
 		return false;
+	}
+
+	static {
+		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.SHORT, ParseType.SHORT}, null)}, 41).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BIG_SMART)}, 1, 23, 24, 25, 26, 78, 79, 90, 91, 92, 93).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(false))}, 156).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.BYTE}, null)}, 42).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE)}, 113, 114).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT)}, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT}, null)}, 132).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 96).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 27, 134).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT)}, 4, 5, 6, 7, 8, 18, 44, 45, 95, 110, 111, 112, /*139, 140,*/ 142, 143, 144, 145, 146, 150, 151, 152, 153, 154, 161, 162, 163).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE)}, 125, 126).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.INT)}, 43).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true))}, 157).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT, ParseType.USHORT}, null)}, 40).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(2))}, 165).addSelfToGroup(protocol);
+	}
+
+	@Override
+	public void decode(Stream s) {
+		int opcode;
+		while ((opcode = s.getUByte()) != 0) {
+			if (opcode == 13) {
+				slot = s.getUByte();
+				slotEnum = Slot.get(slot);
+				continue;
+			}
+			if (opcode == 249) {
+				int length = s.getUByte();
+				clientScriptData = new LinkedHashMap<Integer, Object>(length);
+				for (int index = 0; index < length; index++) {
+					boolean stringInstance = s.getUByte() == 1;
+					int key = s.getUInt24();
+					Object value = stringInstance ? s.getString() : s.getInt();
+					clientScriptData.put(key, value);
+				}
+				continue;
+			}
+			if (opcode == 98) {
+				noteTemplateId = s.getUShort();
+				continue;
+			}
+			if (opcode == 1) {
+				modelId = s.getBigSmart();
+				continue;
+			}
+			if (opcode == 16) {
+				members = true;
+				continue;
+			}
+			if (opcode == 97) {
+				noteId = s.getUShort();
+				continue;
+			}
+			if (opcode == 11) {
+				stackOffset = 1;
+				continue;
+			}
+			if (opcode >= 30 && opcode <= 34) {
+				groundActions[opcode - 30] = s.getString();
+				continue;
+			}
+			if (opcode == 122) {
+				lentTemplateId = s.getUShort();
+				continue;
+			}
+			if (opcode == 164) {
+				shardname = s.getString();
+				continue;
+			}
+			if (opcode == 121) {
+				lentId = s.getUShort();
+				continue;
+			}
+			if (opcode == 14) {
+				equipmentType = s.getUByte();
+				continue;
+			}
+			if (opcode >= 35 && opcode <= 39) {
+				actions[opcode - 35] = s.getString();
+				continue;
+			}
+			if (opcode == 94) {
+				categoryId = s.getUShort();
+				continue;
+			}
+			if (opcode == 139) {
+				cosmeticId = s.getUShort();
+				continue;
+			}
+			if (opcode == 140) {
+				cosmeticTemplateId = s.getUShort();
+				continue;
+			}
+			if (opcode == 2) {
+				name = s.getString();
+				continue;
+			}
+			if (opcode == 65) {
+				tradable = true;
+				continue;
+			}
+			if (opcode == 12) {
+				value = s.getInt();
+				continue;
+			}
+			if (opcode == 115) {
+				team = s.getUByte();
+				continue;
+			}
+
+			protocol.read(this, opcode, s);
+		}
 	}
 }

@@ -1,9 +1,11 @@
 package com.logicail.loader.rt6.wrapper.loaders;
 
 import com.logicail.loader.rt6.wrapper.ItemDefinition;
+import com.sk.cache.fs.Archive;
 import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
-import com.sk.cache.wrappers.loaders.ProtocolWrapperLoader;
+import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,9 +13,26 @@ import com.sk.cache.wrappers.loaders.ProtocolWrapperLoader;
  * Date: 20/07/2014
  * Time: 12:17
  */
-public class ItemDefinitionLoader extends ProtocolWrapperLoader<ItemDefinition> {
+public class ItemDefinitionLoader extends WrapperLoader<ItemDefinition> {
+	protected final CacheType cache;
+
 	public ItemDefinitionLoader(CacheSystem cacheSystem) {
-		super(cacheSystem, cacheSystem.getCacheSource().getCacheType(19));
+		super(cacheSystem);
+		this.cache = cacheSystem.getCacheSource().getCacheType(19);
+	}
+
+	protected FileData getValidFile(int id) {
+		FileData ret = getFile(id);
+		if (ret == null)
+			throw new IllegalArgumentException("Bad id");
+		return ret;
+	}
+
+	protected FileData getFile(int id) {
+		Archive archive = cache.getArchive(id >>> 8);
+		if (archive == null)
+			return null;
+		return archive.getFile(id & 0xff);
 	}
 
 	@Override
@@ -29,4 +48,7 @@ public class ItemDefinitionLoader extends ProtocolWrapperLoader<ItemDefinition> 
 	public boolean canLoad(int id) {
 		return getFile(id) != null;
 	}
+
 }
+
+
