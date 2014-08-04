@@ -111,6 +111,14 @@ public class IClientContext extends ClientContext {
 		movement = new IMovement(this);
 		bank = new IBank(this);
 		farming = new IFarming(this);
+
+		controller.script().getExecQueue(Script.State.START).add(new Runnable() {
+			@Override
+			public void run() {
+				controller.script().log.info("Loading cache from " + RT6DefinitionManager.directory());
+			}
+		});
+
 		RT6DefinitionManager manger = null;
 
 		try {

@@ -36,7 +36,7 @@ public class RT6DefinitionManager extends ClientAccessor {
 	public RT6DefinitionManager(ClientContext ctx) throws FileNotFoundException {
 		super(ctx);
 
-		String directory = System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "runescape" + File.separator + "LIVE" + File.separator;
+		String directory = directory();
 		system = new RT6CacheSystem(new File(directory));
 
 		item = new DefinitionCache<ClientContext, ItemDefinition>(this.ctx, system.itemLoader);
@@ -45,5 +45,9 @@ public class RT6DefinitionManager extends ClientAccessor {
 
 	public ItemDefinition item(int id) {
 		return item.get(id);
+	}
+
+	public static String directory() {
+		return System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "runescape" + File.separator + "LIVE" + File.separator;
 	}
 }

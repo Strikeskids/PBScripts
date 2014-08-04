@@ -467,6 +467,9 @@ public class ItemCategoriser extends IClientAccessor {
 
 	public static boolean contains(String[] values, String needle) {
 		for (String value : values) {
+			if (value == null) {
+				continue;
+			}
 			if (value.equals(needle)) {
 				return true;
 			}
