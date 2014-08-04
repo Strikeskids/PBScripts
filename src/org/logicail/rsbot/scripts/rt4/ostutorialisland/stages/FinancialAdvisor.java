@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.GameObject;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
  * Time: 21:18
  */
 public class FinancialAdvisor extends Talker {
-	public FinancialAdvisor(RT4ClientContext ctx) {
+	public FinancialAdvisor(IClientContext ctx) {
 		super(ctx, "Financial Advisor");
 	}
 

@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt4.Component;
@@ -15,8 +15,8 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 17:53
  */
-public class Emotes extends GraphScript.Action<RT4ClientContext> {
-	public Emotes(RT4ClientContext ctx) {
+public class Emotes extends GraphScript.Action<IClientContext> {
+	public Emotes(IClientContext ctx) {
 		super(ctx);
 	}
 

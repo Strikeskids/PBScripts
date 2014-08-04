@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
@@ -25,7 +25,7 @@ public class MagicInstructor extends Talker {
 	private static final int[] BOUNDS_CHICKEN = {-40, 40, -48, 0, -40, 40};
 	private final HashSet<Tile> ignored = new HashSet<Tile>();
 
-	public MagicInstructor(RT4ClientContext ctx) {
+	public MagicInstructor(IClientContext ctx) {
 		super(ctx, "Magic Instructor");
 	}
 

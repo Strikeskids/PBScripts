@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt4.Npc;
@@ -15,10 +15,10 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 13:11
  */
-public abstract class Talker extends GraphScript.Action<RT4ClientContext> {
+public abstract class Talker extends GraphScript.Action<IClientContext> {
 	protected final String name;
 
-	public Talker(RT4ClientContext ctx, String name) {
+	public Talker(IClientContext ctx, String name) {
 		super(ctx);
 		this.name = name;
 	}

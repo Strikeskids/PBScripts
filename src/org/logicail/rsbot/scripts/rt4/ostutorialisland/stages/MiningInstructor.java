@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.Rocks;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.powerbot.script.Condition;
@@ -27,7 +27,7 @@ public class MiningInstructor extends Talker {
 	private final Filter<GameObject> TIN_FILTER = Rocks.TIN.filter(ctx);
 	private final Filter<GameObject> COPPER_FILTER = Rocks.COPPER.filter(ctx);
 
-	public MiningInstructor(RT4ClientContext ctx) {
+	public MiningInstructor(IClientContext ctx) {
 		super(ctx, "Mining Instructor");
 	}
 

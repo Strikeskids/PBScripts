@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
 public class QuestGuide extends Talker {
 	private static final String NOW_THAT_YOU_HAVE_THE_RUN_BUTTON_TURNED_ON = "Now that you have the run button turned on";
 
-	public QuestGuide(RT4ClientContext ctx) {
+	public QuestGuide(IClientContext ctx) {
 		super(ctx, "Quest Guide");
 	}
 
@@ -77,7 +77,7 @@ public class QuestGuide extends Talker {
 		leave(ctx);
 	}
 
-	public static void leave(final RT4ClientContext ctx) {
+	public static void leave(final IClientContext ctx) {
 		final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
 		if (ctx.camera.prepare(ladder)) {
 			if (ladder.interact("Climb-down")) {

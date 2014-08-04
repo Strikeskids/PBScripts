@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  */
 public class BrotherBrace extends Talker {
 
-	public BrotherBrace(RT4ClientContext ctx) {
+	public BrotherBrace(IClientContext ctx) {
 		super(ctx, "Brother Brace");
 	}
 

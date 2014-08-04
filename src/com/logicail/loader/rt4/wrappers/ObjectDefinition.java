@@ -6,7 +6,7 @@ import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt4.GameObject;
 
@@ -36,7 +36,7 @@ public class ObjectDefinition extends StreamedWrapper {
 	public int[] modifiedColors;
 
 
-	public static Filter<GameObject> name(final RT4ClientContext ctx, final String name) {
+	public static Filter<GameObject> name(final IClientContext ctx, final String name) {
 		return new Filter<GameObject>() {
 			@Override
 			public boolean accept(GameObject o) {
@@ -60,7 +60,7 @@ public class ObjectDefinition extends StreamedWrapper {
 		super(loader, id);
 	}
 
-	public ObjectDefinition child(RT4ClientContext ctx) {
+	public ObjectDefinition child(IClientContext ctx) {
 		int index = 0;
 		if (scriptId == -1) {
 			index = configId != -1 ? ctx.varpbits.varpbit(configId) : -1;

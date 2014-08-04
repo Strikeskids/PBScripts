@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.framework.util.LoopCondition;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.Condition;
@@ -32,7 +32,7 @@ public class SurvivalExpert extends Talker {
 	private static final int[] BOUNDS_FISHING_SPOT = {-48, 40, -8, 0, -52, 36};
 	private static final int[] TREE_BOUNDS = {-32, 32, -240, 0, -28, 48};
 
-	public SurvivalExpert(RT4ClientContext ctx) {
+	public SurvivalExpert(IClientContext ctx) {
 		super(ctx, "Survival Expert");
 	}
 

@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.rt4.osvarphelper;
 
 import com.logicail.loader.rt4.wrappers.Script;
 import com.logicail.loader.rt4.wrappers.loaders.ScriptDefinitionLoader;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Time: 17:36
  */
 public class VarpHelperGUI extends JFrame {
-	private final RT4ClientContext ctx;
+	private final IClientContext ctx;
 	DefaultListModel listModel;
 	JTextArea historyText;
 	JTextArea knownText;
@@ -67,7 +67,7 @@ public class VarpHelperGUI extends JFrame {
 		}
 	}
 
-	public VarpHelperGUI(final RT4ClientContext ctx) {
+	public VarpHelperGUI(final IClientContext ctx) {
 		this.ctx = ctx;
 		addWindowListener(new WindowAdapter() {
 			@Override

@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
 
 /**
@@ -10,7 +10,7 @@ import org.powerbot.script.Condition;
  * Date: 10/07/2014
  * Time: 18:00
  */
-public class Running extends GraphScript.Action<RT4ClientContext> {
+public class Running extends GraphScript.Action<IClientContext> {
 	private static final String CLICK_ON_THE_RUN_BUTTON_NOW = "click on the run button now.";
 
 	@Override
@@ -18,7 +18,7 @@ public class Running extends GraphScript.Action<RT4ClientContext> {
 		return "Running";
 	}
 
-	public Running(RT4ClientContext ctx) {
+	public Running(IClientContext ctx) {
 		super(ctx);
 	}
 
