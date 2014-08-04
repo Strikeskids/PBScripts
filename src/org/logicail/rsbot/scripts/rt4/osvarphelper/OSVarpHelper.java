@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.rt4.osvarphelper;
 
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.PollingScript;
 import org.powerbot.script.Script;
@@ -14,14 +14,8 @@ import javax.swing.*;
  * Time: 17:34
  */
 @Script.Manifest(name = "OS Varp Helper", description = "Loads varps from the cache", properties = "topic=1200465;client=4")
-public class OSVarpHelper extends PollingScript<IClientContext> {
+public class OSVarpHelper extends PollingScript<RT4ClientContext> {
 	VarpHelperGUI gui = null;
-	public IClientContext ctx;
-
-	public OSVarpHelper() {
-		ctx = new IClientContext(super.ctx);
-
-	}
 
 	@Override
 	public void start() {

@@ -7,7 +7,7 @@ import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt4.Npc;
 
@@ -41,7 +41,7 @@ public class NpcDefinition extends StreamedWrapper {
 		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT, ParseType.USHORT}, null)}, 40, 41).addSelfToGroup(protocol);
 	}
 
-	public static Filter<Npc> name(final IClientContext ctx, final String name) {
+	public static Filter<Npc> name(final RT4ClientContext ctx, final String name) {
 		return new Filter<Npc>() {
 			@Override
 			public boolean accept(Npc npc) {
@@ -55,7 +55,7 @@ public class NpcDefinition extends StreamedWrapper {
 		super(loader, id);
 	}
 
-	public NpcDefinition child(IClientContext ctx) {
+	public NpcDefinition child(RT4ClientContext ctx) {
 		int index = 0;
 		if (scriptId == -1) {
 			index = configId != -1 ? ctx.varpbits.varpbit(configId) : -1;

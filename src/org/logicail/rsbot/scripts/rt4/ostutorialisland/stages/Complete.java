@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,8 +10,8 @@ import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
  * Date: 10/07/2014
  * Time: 21:54
  */
-public class Complete extends GraphScript.Action<IClientContext> {
-	public Complete(IClientContext ctx) {
+public class Complete extends GraphScript.Action<RT4ClientContext> {
+	public Complete(RT4ClientContext ctx) {
 		super(ctx);
 	}
 

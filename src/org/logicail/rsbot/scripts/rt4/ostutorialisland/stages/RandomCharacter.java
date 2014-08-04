@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt4.Component;
@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * Date: 10/07/2014
  * Time: 11:54
  */
-public class RandomCharacter extends GraphScript.Action<IClientContext> {
+public class RandomCharacter extends GraphScript.Action<RT4ClientContext> {
 	private static final int WIDGET_CHARACTER = 269;
 
 	@Override
@@ -36,7 +36,7 @@ public class RandomCharacter extends GraphScript.Action<IClientContext> {
 
 	private HashMap<Integer, Integer> count = new HashMap<Integer, Integer>();
 
-	public RandomCharacter(IClientContext ctx) {
+	public RandomCharacter(RT4ClientContext ctx) {
 		super(ctx);
 
 		reset();

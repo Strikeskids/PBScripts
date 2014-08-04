@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.Condition;
@@ -49,7 +49,7 @@ public class CombatExpert extends Talker {
 
 	private HashSet<Tile> unreachable = new HashSet<Tile>();
 
-	public CombatExpert(IClientContext ctx) {
+	public CombatExpert(RT4ClientContext ctx) {
 		super(ctx, "Combat Instructor");
 	}
 

@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.logicail.rsbot.scripts.framework.util.LoopCondition;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.powerbot.script.Condition;
@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
  * Time: 17:23
  */
 public class MasterChef extends Talker {
-	public MasterChef(IClientContext ctx) {
+	public MasterChef(RT4ClientContext ctx) {
 		super(ctx, "Master Chef");
 	}
 

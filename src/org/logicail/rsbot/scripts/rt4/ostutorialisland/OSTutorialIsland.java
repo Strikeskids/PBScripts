@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.stages.*;
 import org.powerbot.script.PaintListener;
 import org.powerbot.script.Script;
@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * Time: 11:39
  */
 @Script.Manifest(name = "OS Tutorial Island", description = "Completes tutorial island", properties = "topic=1198289;client=4")
-public class OSTutorialIsland extends GraphScript<IClientContext> implements PaintListener {
+public class OSTutorialIsland extends GraphScript<RT4ClientContext> implements PaintListener {
 	public OSTutorialIsland() {
-		ctx = new IClientContext(original());
+		ctx = new RT4ClientContext(original());
 	}
 
 	private final BasicStroke mouseStroke = new BasicStroke(2f);
@@ -41,7 +41,7 @@ public class OSTutorialIsland extends GraphScript<IClientContext> implements Pai
 		Graphics2D g2d = (Graphics2D) graphics;
 
 		graphics.drawString(getName(), 25, 125);
-		final Action<IClientContext> action = current.get();
+		final Action<RT4ClientContext> action = current.get();
 		if (action != null) {
 			final String s = action.toString();
 			if (!s.equals("")) {

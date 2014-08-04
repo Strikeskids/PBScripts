@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.rt4.GameObject;
@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 public class RunescapeGuide extends Talker {
 	public static final String RUNESCAPE_GUIDE = "RuneScape Guide";
 
-	public RunescapeGuide(IClientContext ctx) {
+	public RunescapeGuide(RT4ClientContext ctx) {
 		super(ctx, RUNESCAPE_GUIDE);
 	}
 

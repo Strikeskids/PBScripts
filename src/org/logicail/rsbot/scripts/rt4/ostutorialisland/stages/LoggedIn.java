@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import org.logicail.rsbot.scripts.framework.GraphScript;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 
@@ -11,8 +11,8 @@ import org.powerbot.script.Random;
  * Date: 11/07/2014
  * Time: 15:09
  */
-public class LoggedIn extends GraphScript.Action<IClientContext> {
-	public LoggedIn(IClientContext ctx) {
+public class LoggedIn extends GraphScript.Action<RT4ClientContext> {
+	public LoggedIn(RT4ClientContext ctx) {
 		super(ctx);
 	}
 
@@ -36,7 +36,7 @@ public class LoggedIn extends GraphScript.Action<IClientContext> {
 		}
 	}
 
-	public void add(GraphScript.Action<IClientContext> action) {
+	public void add(GraphScript.Action<RT4ClientContext> action) {
 		chain.add(action);
 	}
 }

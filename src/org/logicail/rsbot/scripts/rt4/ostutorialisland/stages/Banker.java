@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt4.RT4ClientContext;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
  * Time: 21:03
  */
 public class Banker extends Talker {
-	public Banker(final IClientContext ctx) {
+	public Banker(final RT4ClientContext ctx) {
 		super(ctx, "Banker");
 	}
 
@@ -122,7 +122,7 @@ public class Banker extends Talker {
 		}
 	}
 
-	public static BasicQuery<GameObject> doorsInYByX(IClientContext ctx, final GameObject bank) {
+	public static BasicQuery<GameObject> doorsInYByX(RT4ClientContext ctx, final GameObject bank) {
 		return ctx.objects.select().select(ObjectDefinition.name(ctx, "Door")).select(new Filter<GameObject>() {
 			@Override
 			public boolean accept(GameObject gameObject) {
