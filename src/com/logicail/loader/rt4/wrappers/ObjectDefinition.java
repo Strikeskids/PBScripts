@@ -1,11 +1,9 @@
 package com.logicail.loader.rt4.wrappers;
 
 import com.logicail.loader.rt4.wrappers.loaders.ObjectDefinitionLoader;
-import com.logicail.protocol.ChildrenReader;
-import com.sk.cache.wrappers.ProtocolWrapper;
+import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
-import com.sk.cache.wrappers.protocol.StaticLocReader;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
@@ -18,7 +16,7 @@ import org.powerbot.script.rt4.GameObject;
  * Date: 07/07/2014
  * Time: 13:49
  */
-public class ObjectDefinition extends ProtocolWrapper {
+public class ObjectDefinition extends StreamedWrapper {
 	private static final ProtocolGroup protocol = new ProtocolGroup();
 	public String name = "null";
 	public int type = 0;
@@ -49,71 +47,17 @@ public class ObjectDefinition extends ProtocolWrapper {
 	}
 
 	static {
-		new StaticLocReader(1) {
-			@Override
-			public void read(Object destination, int type, Stream s) {
-				int count = s.getUByte();
-				if (count > 0) {
-					if (FieldExtractor.getValue(destination, "modelIds") == null /* || static boolean */) {
-						int[] modelIds = new int[count];
-						int[] modelTypes = new int[count];
-						for (int i = 0; i < count; i++) {
-							modelIds[i] = s.getUShort();
-							modelTypes[i] = s.getUByte();
-						}
-						FieldExtractor.setValue(destination, type, type, "modelIds", modelIds);
-						FieldExtractor.setValue(destination, type, type, "modelTypes", modelTypes);
-					} else {
-						s.skip(count * 3);
-					}
-				}
-			}
-		}.addSelfToGroup(protocol);
-
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "name")}, 2).addSelfToGroup(protocol);
-
-		new StaticLocReader(5) {
-			@Override
-			public void read(Object destination, int type, Stream s) {
-				int count = s.getUByte();
-				if (count > 0) {
-					if (FieldExtractor.getValue(destination, "modelIds") == null /* || static boolean*/) {
-						int[] modelIds = new int[count];
-						for (int i = 0; i < count; i++) {
-							modelIds[i] = s.getUShort();
-						}
-						FieldExtractor.setValue(destination, type, type, "modelIds", modelIds);
-						FieldExtractor.setValue(destination, type, type, "modelTypes", null);
-					} else {
-						s.skip(count * 2);
-					}
-				}
-			}
-		}.addSelfToGroup(protocol);
-
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(null))}, 21, 22, 23, 62, 64, 73).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE)}, 29, 39).addSelfToGroup(protocol);
-		new ChildrenReader(77).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true), "solid")}, 74).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BIG_SMART, "animationId")}, 24).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT, ParseType.USHORT}, new String[]{"originalColors", "modifiedColors"})}, 40).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(1), "blockType")}, 27).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 28, 69, 75, 81).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT)}, 60, 65, 66, 67, 68, 70, 71, 72).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.UBYTE), new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT}, null)}, 79).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(false), "unwalkable")}, 18).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "width")}, 14).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "height")}, 15).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(false), "unwalkable"), new FieldExtractor(new StaticExtractor(0), "blockType")}, 17).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT), new FieldExtractor(ParseType.UBYTE)}, 78).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "actions")}, 30, 31, 32, 33, 34).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE, "type")}, 19).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT, ParseType.USHORT}, null)}, 41).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.STRING, "name")}, 2).addSelfToGroup(protocol);
 	}
 
 	public ObjectDefinition(ObjectDefinitionLoader loader, int id) {
-		super(loader, id, protocol);
+		super(loader, id);
 	}
 
 	public ObjectDefinition child(IClientContext ctx) {
@@ -134,5 +78,81 @@ public class ObjectDefinition extends ProtocolWrapper {
 
 	public boolean hasChildren() {
 		return childrenIds != null;
+	}
+
+	@Override
+	public void decode(Stream s) {
+		int opcode;
+		while ((opcode = s.getUByte()) != 0) {
+			if (opcode == 1) {
+				int count = s.getUByte();
+				if (modelIds == null) {
+					modelIds = new int[count];
+					modelTypes = new int[count];
+					for (int i = 0; i < count; i++) {
+						modelIds[i] = s.getUShort();
+						modelTypes[i] = s.getUByte();
+					}
+				} else {
+					s.skip(count * 3);
+				}
+			} else if (opcode == 2) {
+				name = s.getString();
+			} else if (opcode == 5) {
+				int count = s.getUByte();
+				if (count > 0) {
+					if (modelIds == null) {
+						modelIds = new int[count];
+						for (int i = 0; i < count; i++) {
+							modelIds[i] = s.getUShort();
+						}
+						modelTypes = null;
+					} else {
+						s.skip(count * 2);
+					}
+				}
+			} else if (opcode == 14) {
+				width = s.getUByte();
+			} else if (opcode == 15) {
+				height = s.getUByte();
+			} else if (opcode == 17) {
+				unwalkable = false;
+				blockType = 0;
+			} else if (opcode == 18) {
+				unwalkable = false;
+			} else if (opcode == 19) {
+				type = s.getUByte();
+			} else if (opcode == 24) {
+				animationId = s.getBigSmart();
+			} else if (opcode == 27) {
+				blockType = 1;
+			} else if (opcode >= 30 && opcode <= 34) {
+				actions[opcode - 30] = s.getString();
+			} else if (opcode == 40) {
+				int count = s.getUByte();
+				for (int i = 0; i < count; i++) {
+					originalColors[i] = s.getUShort();
+					modifiedColors[i] = s.getUShort();
+				}
+			} else if (opcode == 74) {
+				solid = true;
+			} else if (opcode == 77) {
+				int script = s.getUShort();
+				int config = s.getUShort();
+				int count = s.getUByte();
+				int[] children = new int[count + 1];
+				for (int i = 0; i < children.length; i++) {
+					children[i] = s.getUShort();
+					if (children[i] == 0xffff) {
+						children[i] = -1;
+					}
+				}
+				scriptId = script == 0xFFFF ? -1 : script;
+				configId = config == 0xFFFF ? -1 : config;
+				childrenIds = children;
+			} else {
+				protocol.read(this, opcode, s);
+			}
+		}
 	}
 }

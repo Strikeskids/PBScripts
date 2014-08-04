@@ -1,11 +1,8 @@
 package com.logicail.loader.rt4.wrappers;
 
 import com.logicail.loader.rt4.wrappers.loaders.ScriptDefinitionLoader;
-import com.sk.cache.wrappers.ProtocolWrapper;
-import com.sk.cache.wrappers.protocol.BasicProtocol;
-import com.sk.cache.wrappers.protocol.ProtocolGroup;
-import com.sk.cache.wrappers.protocol.extractor.FieldExtractor;
-import com.sk.cache.wrappers.protocol.extractor.ParseType;
+import com.sk.cache.wrappers.StreamedWrapper;
+import com.sk.datastream.Stream;
 import org.powerbot.script.rt4.ClientContext;
 
 /**
@@ -14,8 +11,7 @@ import org.powerbot.script.rt4.ClientContext;
  * Date: 07/07/2014
  * Time: 13:31
  */
-public class Script extends ProtocolWrapper {
-	private static final ProtocolGroup protocol = new ProtocolGroup();
+public class Script extends StreamedWrapper {
 	public static final int[] MASKS;
 
 	static {
@@ -32,12 +28,7 @@ public class Script extends ProtocolWrapper {
 	public int upperBitIndex = -1;
 
 	public Script(ScriptDefinitionLoader loader, int id) {
-		super(loader, id, protocol);
-	}
-
-	static {
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT, "configId"), new FieldExtractor(ParseType.UBYTE, "lowerBitIndex"), new FieldExtractor(ParseType.UBYTE, "upperBitIndex")}, 1).addSelfToGroup(protocol);
-
+		super(loader, id);
 	}
 
 	@Override
@@ -51,5 +42,17 @@ public class Script extends ProtocolWrapper {
 
 	public int execute(ClientContext ctx) {
 		return ctx.varpbits.varpbit(configId) >> lowerBitIndex & MASKS[upperBitIndex - lowerBitIndex];
+	}
+
+	@Override
+	public void decode(Stream s) {
+		int opcode;
+		while ((opcode = s.getUByte()) != 0) {
+			if (opcode == 1) {
+				configId = s.getUShort();
+				lowerBitIndex = s.getUByte();
+				upperBitIndex = s.getUByte();
+			}
+		}
 	}
 }

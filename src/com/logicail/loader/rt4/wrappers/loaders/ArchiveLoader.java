@@ -6,8 +6,8 @@ import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
 import com.sk.cache.meta.ArchiveMeta;
 import com.sk.cache.meta.ReferenceTable;
-import com.sk.cache.wrappers.ProtocolWrapper;
-import com.sk.cache.wrappers.loaders.ProtocolWrapperLoader;
+import com.sk.cache.wrappers.StreamedWrapper;
+import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,18 +15,27 @@ import com.sk.cache.wrappers.loaders.ProtocolWrapperLoader;
  * Date: 15/07/2014
  * Time: 20:18
  */
-public abstract class ArchiveLoader<T extends ProtocolWrapper> extends ProtocolWrapperLoader<T> {
+public abstract class ArchiveLoader<T extends StreamedWrapper> extends WrapperLoader<T> {
 	protected final int archiveId;
 	public final int size;
 	public final int version;
+	protected final CacheType cache;
 
 	public ArchiveLoader(CacheSystem cacheSystem, CacheType cache, int archiveId) {
-		super(cacheSystem, cache);
+		super(cacheSystem);
+		this.cache = cache;
 		this.archiveId = archiveId;
 		final ReferenceTable table = cache.getTable();
 		final ArchiveMeta entry = table.getEntry(archiveId);
 		version = entry.getVersion();
 		size = entry.getChildCount();
+	}
+
+	protected FileData getValidFile(int id) {
+		FileData ret = getFile(id);
+		if (ret == null)
+			throw new IllegalArgumentException("Bad id");
+		return ret;
 	}
 
 
