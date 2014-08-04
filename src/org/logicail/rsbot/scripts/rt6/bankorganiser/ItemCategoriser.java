@@ -6,7 +6,6 @@ import com.logicail.loader.rt6.wrapper.Parameter;
 import com.logicail.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
 import com.logicail.loader.rt6.wrapper.requirements.CombatSkillRequirement;
 import com.logicail.loader.rt6.wrapper.requirements.ItemRequirement;
-import org.apache.commons.lang.ArrayUtils;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.rt6.bankorganiser.tasks.ItemSorter;
@@ -210,7 +209,7 @@ public class ItemCategoriser extends IClientAccessor {
 					add(Category.POTIONS, definition);
 					return;
 				}
-				if (ArrayUtils.contains(definition.actions, "Add-to-toolbelt")) {
+				if (contains(definition.actions, "Add-to-toolbelt")) {
 					add(Category.TOOLS_AND_CONTAINERS, definition);
 					return;
 				}
@@ -232,7 +231,7 @@ public class ItemCategoriser extends IClientAccessor {
 							if (definition.name.startsWith("Burnt ")) {
 								return;
 							}
-							if (ArrayUtils.contains(definition.actions, "Eat") || ArrayUtils.contains(definition.actions, "Drink")) {
+							if (contains(definition.actions, "Eat") || contains(definition.actions, "Drink")) {
 								add(Category.FOOD_AND_DRINK, definition);
 								return;
 							}
@@ -287,7 +286,7 @@ public class ItemCategoriser extends IClientAccessor {
 							return;
 					}
 				}
-				if (ArrayUtils.contains(definition.actions, "Read") || ArrayUtils.contains(definition.actions, "Copy to log")) {
+				if (contains(definition.actions, "Read") || contains(definition.actions, "Copy to log")) {
 					add("READABLE", definition);
 					return;
 				}
@@ -325,7 +324,7 @@ public class ItemCategoriser extends IClientAccessor {
 					return;
 				}
 				if (definition.name.endsWith(" pouch")) {
-					if (ArrayUtils.contains(definition.actions, "Fill") && ArrayUtils.contains(definition.actions, "Empty")) {
+					if (contains(definition.actions, "Fill") && contains(definition.actions, "Empty")) {
 						add("RUNECRAFTING_POUCHES", definition);
 						return;
 					}
@@ -464,5 +463,14 @@ public class ItemCategoriser extends IClientAccessor {
 
 	public String category(int id) {
 		return itemToCategory.get(id(id));
+	}
+
+	public static boolean contains(String[] values, String needle) {
+		for (String value : values) {
+			if (value.equals(needle)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
