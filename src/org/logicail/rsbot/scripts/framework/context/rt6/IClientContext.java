@@ -12,6 +12,8 @@ import org.powerbot.script.rt6.ClientContext;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -123,7 +125,19 @@ public class IClientContext extends ClientContext {
 
 		try {
 			manger = new RT6DefinitionManager(this);
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						StringWriter errors = new StringWriter();
+						e.printStackTrace(new PrintWriter(errors));
+						new ErrorDialog("Error", "Post on script thread about this tell me your Operating System\r\n\r\nFailed to load cache from " + RT6DefinitionManager.directory() + "\r\n\r\n" + errors.toString());
+					} catch (Exception exception) {
+						exception.printStackTrace();
+					}
+				}
+			});
 			e.printStackTrace();
 			this.controller.stop();
 		}
