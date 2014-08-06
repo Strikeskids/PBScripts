@@ -1,9 +1,11 @@
 package com.logicail.loader.rt6.wrapper.loaders;
 
 import com.logicail.loader.rt6.wrapper.ObjectDefinition;
+import com.sk.cache.fs.Archive;
 import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
-import com.sk.cache.wrappers.loaders.ProtocolWrapperLoader;
+import com.sk.cache.wrappers.loaders.WrapperLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,9 +13,26 @@ import com.sk.cache.wrappers.loaders.ProtocolWrapperLoader;
  * Date: 25/07/2014
  * Time: 17:30
  */
-public class ObjectDefinitionLoader extends ProtocolWrapperLoader<ObjectDefinition> {
+public class ObjectDefinitionLoader extends WrapperLoader<ObjectDefinition> {
+	protected final CacheType cache;
+
 	public ObjectDefinitionLoader(CacheSystem cacheSystem) {
-		super(cacheSystem, cacheSystem.getCacheSource().getCacheType(16));
+		super(cacheSystem);
+		cache = cacheSystem.getCacheSource().getCacheType(16);
+	}
+
+	protected FileData getValidFile(int id) {
+		FileData ret = getFile(id);
+		if (ret == null)
+			throw new IllegalArgumentException("Bad id");
+		return ret;
+	}
+
+	protected FileData getFile(int id) {
+		Archive archive = cache.getArchive(id >>> 8);
+		if (archive == null)
+			return null;
+		return archive.getFile(id & 0xff);
 	}
 
 	@Override
@@ -23,6 +42,11 @@ public class ObjectDefinitionLoader extends ProtocolWrapperLoader<ObjectDefiniti
 		ret.decode(data.getDataAsStream());
 		//fixObject(ret);
 		return ret;
+	}
+
+	@Override
+	public boolean canLoad(int id) {
+		return false;
 	}
 
 //	private void fixObject(ObjectDefinition ret) {

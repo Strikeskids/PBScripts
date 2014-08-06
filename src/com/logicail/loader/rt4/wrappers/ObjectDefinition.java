@@ -130,6 +130,8 @@ public class ObjectDefinition extends StreamedWrapper {
 				actions[opcode - 30] = s.getString();
 			} else if (opcode == 40) {
 				int count = s.getUByte();
+				originalColors = new int[count];
+				modifiedColors = new int[count];
 				for (int i = 0; i < count; i++) {
 					originalColors[i] = s.getUShort();
 					modifiedColors[i] = s.getUShort();
