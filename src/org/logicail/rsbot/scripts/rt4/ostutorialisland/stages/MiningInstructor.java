@@ -39,6 +39,16 @@ public class MiningInstructor extends Talker {
 
 		if (!npc().valid()) {
 			enter();
+			if (!npc().valid()) {
+				GameObject rock = ctx.objects.select().select(ObjectDefinition.name(ctx, "Rocks")).nearest().limit(6).shuffle().poll();
+				ctx.movement.step(rock.tile().derive(Random.nextInt(-2, 3), Random.nextInt(-2, 3)));
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return npc().valid();
+					}
+				}, 300, 12);
+			}
 			return;
 		}
 

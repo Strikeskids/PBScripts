@@ -1,8 +1,8 @@
 package org.logicail.rsbot.scripts.framework.context.rt4.providers;
 
+import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
-import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.Inventory;
 import org.powerbot.script.rt4.Item;
@@ -16,8 +16,11 @@ import java.util.concurrent.Callable;
  * Time: 17:35
  */
 public class IInventory extends Inventory {
-	public IInventory(ClientContext ctx) {
+	protected final IClientContext ctx;
+
+	public IInventory(IClientContext ctx) {
 		super(ctx);
+		this.ctx = ctx;
 	}
 
 	public boolean selected() {
@@ -86,15 +89,16 @@ public class IInventory extends Inventory {
 				return itemB.click("Use", selectedItem().name() + " -> " + itemB.name()) && Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						return !selectedItem().valid();
+						return !selected();
 					}
 				}, 200, 4);
 			}
 
-			return select(b) && itemB.click("Use", selectedItem().name() + " -> " + itemA.name()) && Condition.wait(new Callable<Boolean>() {
+
+			return select(b) && itemA.click("Use", selectedItem().name() + " -> " + itemA.name()) && Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return !selectedItem().valid();
+					return !selected();
 				}
 			}, 200, 4);
 		}
