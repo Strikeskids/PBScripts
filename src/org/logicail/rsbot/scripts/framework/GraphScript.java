@@ -20,11 +20,11 @@ import java.util.logging.Logger;
  */
 public abstract class GraphScript<C extends ClientContext> extends PollingScript<C> {
 	private final Deque<AtomicInteger> i;
-	//public C ctx;
+	public C ctx;
 
-//	protected org.powerbot.script.rt4.ClientContext original() {
-//		return (org.powerbot.script.rt4.ClientContext) super.ctx;
-//	}
+	protected org.powerbot.script.rt4.ClientContext original() {
+		return (org.powerbot.script.rt4.ClientContext) super.ctx;
+	}
 
 	/**
 	 * The root chain where the node cursor will start.
