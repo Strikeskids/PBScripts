@@ -56,40 +56,44 @@ public class ItemCategoriser extends IClientAccessor {
 		ItemDefinitionLoader loader = ctx.definitions.system().itemLoader;
 
 		// Load resources first
-		for (int id = 0; id < 0xfffff; id++) {
-			if (loader.canLoad(id)) {
-				final ItemDefinition definition = loader.load(id);
-				if (definition.hasParameter(Parameter.DUNGEONEERING)) {
-					skipResources.add(id);
-					continue;
-				}
-				if (definition.category() == Category.POTIONS) {
-					final Matcher matcher = potionPattern.matcher(definition.name);
-					if (matcher.find()) {
-						potions.add(matcher.group(1).trim());
-					}
+		int id = 0;
+		while (loader.canLoad(id)) {
+			final ItemDefinition definition = loader.load(id);
+			if (definition.hasParameter(Parameter.DUNGEONEERING)) {
+				skipResources.add(id);
+				id++;
+				continue;
+			}
+			if (definition.category() == Category.POTIONS) {
+				final Matcher matcher = potionPattern.matcher(definition.name);
+				if (matcher.find()) {
+					potions.add(matcher.group(1).trim());
 				}
 			}
+			id++;
 		}
 
 		LinkedHashSet<Integer> all = new LinkedHashSet<Integer>();
 
-		for (int id = 0; id < 0xfffff; id++) {
-			if (loader.canLoad(id)) {
-				final ItemDefinition definition = loader.load(id);
+		id = 0;
+		while (loader.canLoad(id)) {
+			final ItemDefinition definition = loader.load(id);
 
-				if (definition.noted || definition.lent || definition.name == null || definition.name.equals("null") || definition.name.length() == 0 || definition.cosmetic) {
-					continue;
-				}
-
-				if (definition.hasAnyParameter(Parameter.DUNGEONEERING, Parameter.DEFEATED_MOBILISING_ARMIES, Parameter.MOBILISING_ARMIES)) {
-					continue;
-				}
-
-				all.add(id);
-
-				categorise(definition);
+			if (definition.noted || definition.lent || definition.name == null || definition.name.equals("null") || definition.name.length() == 0 || definition.cosmetic) {
+				id++;
+				continue;
 			}
+
+			if (definition.hasAnyParameter(Parameter.DUNGEONEERING, Parameter.DEFEATED_MOBILISING_ARMIES, Parameter.MOBILISING_ARMIES)) {
+				id++;
+				continue;
+			}
+
+			all.add(id);
+
+			categorise(definition);
+
+			id++;
 		}
 
 		sorter = new ItemSorter(this, new ArrayList<Integer>(all));
