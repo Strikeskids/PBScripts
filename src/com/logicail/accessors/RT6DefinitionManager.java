@@ -9,7 +9,6 @@ import org.powerbot.script.rt6.ClientAccessor;
 import org.powerbot.script.rt6.ClientContext;
 import org.powerbot.script.rt6.GroundItem;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
@@ -45,9 +44,5 @@ public class RT6DefinitionManager extends ClientAccessor {
 
 	public ItemDefinition item(int id) {
 		return item.get(id);
-	}
-
-	public static String directory() {
-		return System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "runescape" + File.separator + "LIVE" + File.separator;
 	}
 }
