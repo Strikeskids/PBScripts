@@ -134,7 +134,7 @@ public class ArtisanGUI extends JFrame {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
-					script.ctx().controller.stop();
+					script.ctx.controller.stop();
 				}
 			}
 		});
@@ -343,7 +343,7 @@ public class ArtisanGUI extends JFrame {
 		} else if (s.equals("Track room")) {
 			options.mode = Mode.REPAIR_TRACK;
 			options.ingotType = (IngotType) trackIngotType.getSelectedItem();
-			script.ctx().controller.offer(new Task<LogArtisanWorkshop>(script) {
+			script.ctx.controller.offer(new Task<LogArtisanWorkshop>(script) {
 				@Override
 				public void run() {
 					if (!ctx.backpack.select().isEmpty()) {
@@ -360,7 +360,7 @@ public class ArtisanGUI extends JFrame {
 				}
 			});
 		} else {
-			script.ctx().controller.stop();
+			script.ctx.controller.stop();
 		}
 
 		script.createTree();

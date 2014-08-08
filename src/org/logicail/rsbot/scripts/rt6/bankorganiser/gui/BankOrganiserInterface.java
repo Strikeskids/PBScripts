@@ -165,7 +165,7 @@ public class BankOrganiserInterface extends JFrame {
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
 					if (script != null) {
-						script.ctx().controller.stop();
+						script.ctx.controller.stop();
 					}
 				}
 			}

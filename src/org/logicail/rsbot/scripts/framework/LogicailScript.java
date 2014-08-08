@@ -18,13 +18,13 @@ import java.util.LinkedHashMap;
  * Time: 21:07
  */
 public abstract class LogicailScript<T extends LogicailScript> extends PollingScript<IClientContext> implements PaintListener, ILogicailScript {
-	//public final IClientContext ctx;
+	public final IClientContext ctx;
 	public final Tree<T> tree;
 	protected final Painter paint;
 	protected JFrame gui;
 
 	protected LogicailScript() {
-		//this.ctx = new IClientContext(super.ctx);
+		this.ctx = new IClientContext(super.ctx);
 
 		tree = new Tree<T>((T) this);
 		paint = new Painter(ctx, getName(), version());
@@ -90,7 +90,4 @@ public abstract class LogicailScript<T extends LogicailScript> extends PollingSc
 		return manifestExtra = map;
 	}
 
-	public IClientContext ctx() {
-		return ctx;
-	}
 }

@@ -34,7 +34,7 @@ public class HousePath extends IClientAccessor implements Comparable<HousePath> 
 	}
 
 	public HousePath(LogGildedAltar script, Room last, HousePath previous, double cost) {
-		super(script.ctx());
+		super(script.ctx);
 		this.script = script;
 		this.last = last;
 		this.previous = previous;

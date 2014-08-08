@@ -57,7 +57,7 @@ public class HouseHandler extends IClientAccessor implements MessageListener {
 	private long nextCheckForhouses = 0;
 
 	public HouseHandler(LogGildedAltar script) {
-		super(script.ctx());
+		super(script.ctx);
 		this.script = script;
 		ignoreHouses.add("lit g altar");
 		ignoreHouses.add("altar");

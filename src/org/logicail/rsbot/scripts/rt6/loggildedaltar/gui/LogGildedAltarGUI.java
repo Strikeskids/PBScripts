@@ -342,7 +342,7 @@ public class LogGildedAltarGUI extends JFrame {
 			public void windowClosed(WindowEvent e) {
 				if (!startPressed) {
 					if (script != null) {
-						script.ctx().controller.stop();
+						script.ctx.controller.stop();
 					}
 				}
 			}
@@ -1062,13 +1062,13 @@ public class LogGildedAltarGUI extends JFrame {
 		options.onlySummoningPotions.set(summoningPotionCheckbox.isSelected());
 		options.beastOfBurden = familiars[comboBoxBOB.getSelectedIndex()];
 
-		final Script.Controller executor = script.ctx().controller;
+		final Script.Controller executor = script.ctx.controller;
 		executor.offer(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					if (options.detectHouses.get()) {
-						script.ctx().properties.put("login.world", Integer.toString(31));
+						script.ctx.properties.put("login.world", Integer.toString(31));
 					}
 
 				/*if (options.useBOB) {
@@ -1082,7 +1082,7 @@ public class LogGildedAltarGUI extends JFrame {
 
 					script.altarTask = new AltarTask(script);
 
-					script.ctx().submit(new AnimationMonitor<LogGildedAltar>(script));
+					script.ctx.submit(new AnimationMonitor<LogGildedAltar>(script));
 					script.tree.add(new AntiBan<LogGildedAltar>(script));
 
 					// v4
@@ -1119,8 +1119,8 @@ public class LogGildedAltarGUI extends JFrame {
 					script.tree.add(script.leaveHouse = new LeaveHouse(script));
 					script.bankingTask = new BankingTask(script, modelToPathList(bankEnabledModel));
 
-					if (script.ctx().game.loggedIn() && script.ctx().players.local() != null) {
-						if (options.lightBurners.get() && !(script.ctx().backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx().backpack.select().id(options.offering.getId()).count() > 0)) {
+					if (script.ctx.game.loggedIn() && script.ctx.players.local() != null) {
+						if (options.lightBurners.get() && !(script.ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2) || !(script.ctx.backpack.select().id(options.offering.getId()).count() > 0)) {
 							script.bankingTask.setBanking();
 						}
 					} else {

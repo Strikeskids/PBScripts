@@ -18,7 +18,7 @@ public class Astar extends IClientAccessor {
 	private final LogGildedAltar script;
 
 	public Astar(LogGildedAltar script) {
-		super(script.ctx());
+		super(script.ctx);
 		this.script = script;
 	}
 

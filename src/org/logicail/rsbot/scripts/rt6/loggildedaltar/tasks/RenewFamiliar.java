@@ -71,14 +71,14 @@ public class RenewFamiliar extends LogGildedAltarTask {
 	public static void renew(final LogGildedAltar script) {
 		script.options.status = "Renewing familiar";
 
-		if (script.ctx().summoning.summoned()) {
-			script.ctx().summoning.renew();
+		if (script.ctx.summoning.summoned()) {
+			script.ctx.summoning.renew();
 		} else {
-			script.ctx().summoning.summon(script.options.beastOfBurden);
+			script.ctx.summoning.summon(script.options.beastOfBurden);
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return script.familiarFailed.get() || !(script.ctx().summoning.canSummon(script.options.beastOfBurden) && (script.ctx().summoning.timeLeft() <= 150 || !script.ctx().summoning.summoned()));
+					return script.familiarFailed.get() || !(script.ctx.summoning.canSummon(script.options.beastOfBurden) && (script.ctx.summoning.timeLeft() <= 150 || !script.ctx.summoning.summoned()));
 				}
 			});
 		}
