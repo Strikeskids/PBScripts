@@ -17,10 +17,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Script.Manifest(name = "OS Tutorial Island", description = "Completes tutorial island", properties = "topic=1198289;client=4")
 public class OSTutorialIsland extends GraphScript<IClientContext> implements PaintListener {
-	public OSTutorialIsland() {
-		ctx = new IClientContext(original());
-	}
-
 	private final BasicStroke mouseStroke = new BasicStroke(2f);
 
 	public static int[] BOUNDS_DOOR_EW = {96, 128, -240, 0, 0, 120};
