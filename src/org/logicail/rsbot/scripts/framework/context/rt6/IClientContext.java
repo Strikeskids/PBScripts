@@ -1,6 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.rt6;
 
 import com.logicail.accessors.RT6DefinitionManager;
+import com.sk.cache.DataSource;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.*;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.IFarming;
 import org.logicail.rsbot.scripts.framework.util.Timer;
@@ -117,7 +118,7 @@ public class IClientContext extends ClientContext {
 		controller.script().getExecQueue(Script.State.START).add(new Runnable() {
 			@Override
 			public void run() {
-				controller.script().log.info("Loading cache from " + RT6DefinitionManager.directory());
+				controller.script().log.info("Loading cache from " + DataSource.getDefaultCacheDirectory("runescape"));
 			}
 		});
 
@@ -132,7 +133,7 @@ public class IClientContext extends ClientContext {
 					try {
 						StringWriter errors = new StringWriter();
 						e.printStackTrace(new PrintWriter(errors));
-						new ErrorDialog("Error", "Post on script thread about this tell me your Operating System\r\n\r\nFailed to load cache from " + RT6DefinitionManager.directory() + "\r\n\r\n" + errors.toString());
+						new ErrorDialog("Error", "Post on script thread about this tell me your Operating System\n\nFailed to load cache from " + DataSource.getDefaultCacheDirectory("runescape") + "\n\n" + errors.toString());
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}

@@ -16,7 +16,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		super((JFrame) null, title, true);
 		setLocationRelativeTo(null);
 		JPanel messagePane = new JPanel();
-		messagePane.add(new JLabel(message));
+		messagePane.add(new JLabel("<html>" + message.replace("\n", "<br>") + "</html>"));
 		getContentPane().add(messagePane);
 		JPanel buttonPane = new JPanel();
 		JButton button = new JButton("OK");
