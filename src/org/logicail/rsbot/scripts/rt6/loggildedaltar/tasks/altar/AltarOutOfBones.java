@@ -50,7 +50,7 @@ public class AltarOutOfBones extends LogGildedAltarTask {
 						return options.usedBOB.get() || ctx.backpack.select().count() > inventoryCount;
 					}
 				}, Random.nextInt(300, 600), 5);
-				sleep(333);
+				Condition.sleep(333);
 			}
 		} else if (getBackpackOffering().isEmpty()) {
 			options.status = ("Out of bones banking");

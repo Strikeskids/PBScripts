@@ -49,7 +49,7 @@ public class Track40 extends AbstractTrack {
 					if (!ctx.backpack.select().id(SmithTrack.PARTS).isEmpty()) {
 						script.log.info("Deposit partial tracks/parts");
 						ctx.skillingInterface.close();
-						sleep(400);
+						Condition.sleep(400);
 						for (GameObject minecart : ctx.objects.select().id(LogArtisanWorkshop.ID_MINE_CART).nearest().limit(3).shuffle().first()) {
 							if (ctx.camera.prepare(minecart) && minecart.interact("Deposit-components", "Mine cart")) {
 								Condition.wait(new Callable<Boolean>() {
@@ -60,10 +60,10 @@ public class Track40 extends AbstractTrack {
 								});
 							} else {
 								ctx.movement.step(minecart);
-								sleep(1000);
+								Condition.sleep(1000);
 							}
 						}
-						sleep(300);
+						Condition.sleep(300);
 					} else {
 						script.log.info("Make Rails");
 						smithTrack.smith(smithTrack.getRails());

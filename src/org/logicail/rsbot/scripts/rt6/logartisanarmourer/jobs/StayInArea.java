@@ -46,7 +46,7 @@ public class StayInArea extends ArtisanArmourerTask {
 
 		if (ctx.movement.findPath(ITile.randomize(options.getAreaSmall().getCentralTile(), 3, 3)).traverse()
 				|| ctx.movement.step(ITile.randomize(options.getAreaSmall().getCentralTile(), 3, 3))) {
-			sleep(600);
+			Condition.sleep(600);
 		}
 
 		/*if (LogArtisanWorkshop.getAreaSmall().getCentralTile().distanceTo(ctx.players.local()) > 100) {

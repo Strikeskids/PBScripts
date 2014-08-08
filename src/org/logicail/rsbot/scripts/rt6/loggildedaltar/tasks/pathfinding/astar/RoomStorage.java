@@ -24,7 +24,7 @@ public class RoomStorage extends IClientAccessor {
 	private CollisionMap collisionMap = null;
 
 	public RoomStorage(LogGildedAltar script) {
-		super(script.ctx);
+		super(script.ctx());
 		this.script = script;
 
 		// Create the rooms

@@ -113,7 +113,7 @@ public class DepositOre extends ArtisanArmourerTask {
 					return ctx.backpack.selectedItem().id() == oreId;
 				}
 			})) {
-				sleep(250);
+				Condition.sleep(250);
 				if (smelter.interact("Use", item.name() + " -> Smelter")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override
@@ -121,7 +121,7 @@ public class DepositOre extends ArtisanArmourerTask {
 							return item.stackSize() < count;
 						}
 					});
-					sleep(250);
+					Condition.sleep(250);
 				}
 			}
 		}

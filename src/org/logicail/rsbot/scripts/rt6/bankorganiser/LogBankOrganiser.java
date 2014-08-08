@@ -28,10 +28,6 @@ public class LogBankOrganiser extends LogicailScript<LogBankOrganiser> {
 	public String status = "";
 	public ItemCategoriser itemCategoriser;
 
-	public LogBankOrganiser() {
-		super();
-	}
-
 	@Override
 	public LinkedHashMap<Object, Object> getPaintInfo() {
 		final LinkedHashMap<Object, Object> map = new LinkedHashMap<Object, Object>();

@@ -49,7 +49,7 @@ public class MakeSword extends ArtisanArmourerTask {
 		if (!isOpen()) {
 			ctx.skillingInterface.close();
 			smithAnvil.clickAnvil();
-			sleep(333);
+			Condition.sleep(333);
 			return;
 		}
 
@@ -84,7 +84,7 @@ public class MakeSword extends ArtisanArmourerTask {
 		if (HitType.setHitType(ctx, hitPart.getRequiredHitType(ctx, this))) {
 			//script.log.info("Hit [" + hitPart + "] require=" + hitPart.getHitsNeeded(ctx) + " hittype=" + hitPart.getRequiredHitType(ctx, this));
 			hitPart.clickButton(ctx, this);
-			sleep(300);
+			Condition.sleep(300);
 		}
 	}
 

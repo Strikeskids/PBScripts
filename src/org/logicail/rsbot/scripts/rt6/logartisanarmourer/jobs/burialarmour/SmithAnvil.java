@@ -116,7 +116,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 							}
 						}, 600, options.mode == Mode.BURIAL_ARMOUR ? 420 : 100);
 						// 250 sec for burial
-						sleep(300);
+						Condition.sleep(300);
 					}
 
 					options.isSmithing = false;
@@ -181,10 +181,10 @@ public class SmithAnvil extends ArtisanArmourerTask {
 							return anvil.tile().distanceTo(ctx.players.local()) < 2;
 						}
 					}, 300, 8);
-					sleep(350);
+					Condition.sleep(350);
 					if (ctx.players.local().animation() != -1 && !ctx.skillingInterface.opened()) {
 						if (anvil.interact("Smith", "Anvil")) {
-							sleep(250);
+							Condition.sleep(250);
 						}
 					}
 
@@ -205,7 +205,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 							return false;
 						}
 					}, Random.nextInt(300, 600), Random.nextInt(8, 13))) {
-						sleep(100);
+						Condition.sleep(100);
 						if (options.mode == Mode.CEREMONIAL_SWORDS && !options.gotPlan.get()) {
 							return;
 						}
@@ -213,7 +213,7 @@ public class SmithAnvil extends ArtisanArmourerTask {
 							anvil.interact("Smith", "Anvil");
 						}
 					}
-					sleep(200);
+					Condition.sleep(200);
 				}
 			}
 		}

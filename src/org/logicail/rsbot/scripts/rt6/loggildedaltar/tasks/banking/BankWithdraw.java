@@ -46,10 +46,10 @@ public class BankWithdraw extends BankingAbstract {
 	private void createSpaceInInventory(int min, int max) {
 		if (isNotSpace(min)) {
 			if (!ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max))) {
-				sleep(333);
+				Condition.sleep(333);
 				ctx.bank.deposit(options.offering.getId(), Random.nextInt(min, max));
 			}
-			sleep(100);
+			Condition.sleep(100);
 		}
 	}
 
@@ -192,12 +192,12 @@ public class BankWithdraw extends BankingAbstract {
 				options.status = "Withdraw clean marrentil";
 				if (ctx.backpack.isFull()) {
 					ctx.bank.deposit(options.offering.getId(), 1);
-					sleep(200);
+					Condition.sleep(200);
 				}
 				int tries = 5;
 				while (ctx.backpack.select().id(Banking.ID_MARRENTIL).count() < 2 && !ctx.bank.select().id(Banking.ID_MARRENTIL).isEmpty()) {
 					if (ctx.bank.withdraw(Banking.ID_MARRENTIL, 1)) {
-						sleep(100);
+						Condition.sleep(100);
 					}
 					if (--tries <= 0) {
 						break;
@@ -260,13 +260,13 @@ public class BankWithdraw extends BankingAbstract {
 							int quantity = Math.min(item.stackSize(), bankRequiredItem.getQuantity());
 							if (ctx.bank.withdraw(id, quantity)) {// Possible bug, if quantity > 1
 								success = true;
-								sleep(200);
+								Condition.sleep(200);
 								if (bankRequiredItem.equip()) {
 									if (ctx.equipment.equip(id)) {
 										if (!ctx.bank.opened()) {
-											sleep(200);
+											Condition.sleep(200);
 											ctx.bank.open();
-											sleep(400);
+											Condition.sleep(400);
 										}
 										if (!ctx.bank.opened()) {
 											return;
@@ -276,7 +276,7 @@ public class BankWithdraw extends BankingAbstract {
 								break;
 							} else {
 								if (!ctx.bank.select().id(id).isEmpty()) {
-									sleep(200);
+									Condition.sleep(200);
 									script.log.info("ctx.bank.withdraw(" + id + ", " + quantity + ") reports fail");
 								}
 							}
@@ -285,7 +285,7 @@ public class BankWithdraw extends BankingAbstract {
 					if (!success) {
 						script.log.info("Ran out of required item for: " + nodePath.getPath().getLocation().name());
 					} else {
-						sleep(150);
+						Condition.sleep(150);
 					}
 				}
 			}

@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.astar.Hou
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.astar.Room;
 import org.logicail.rsbot.util.DoorBetweenRoomsFilter;
 import org.logicail.rsbot.util.DoorOpener;
+import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt6.GameObject;
@@ -80,7 +81,7 @@ public class AltarObelisk extends LogGildedAltarTask {
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, endRoom)).shuffle().first()) {
 							door.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
 							if (DoorOpener.open(ctx, door)) {
-								sleep(250);
+								Condition.sleep(250);
 							}
 						}
 					}
@@ -110,11 +111,11 @@ public class AltarObelisk extends LogGildedAltarTask {
 								script.log.info(options.status);
 								script.summoningTask.nextPoints = Random.nextInt((int) (options.beastOfBurden.requiredPoints() * 1.5), (int) (options.beastOfBurden.requiredPoints() * 2.33));
 								resetNextPoints();
-								sleep(750);
+								Condition.sleep(750);
 								break;
 							}
 
-							sleep(333);
+							Condition.sleep(333);
 						}
 					}
 				} else {

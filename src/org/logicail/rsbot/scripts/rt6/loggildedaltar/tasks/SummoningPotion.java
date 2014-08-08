@@ -73,6 +73,6 @@ public class SummoningPotion extends NodePath {
 			}
 		}
 
-		sleep(500);
+		Condition.sleep(500);
 	}
 }

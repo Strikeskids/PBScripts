@@ -66,7 +66,7 @@ public class ExchangeTask extends Node<GOPWaterTalisman> {
 		} else {
 			if (ctx.depositBox.opened()) {
 				ctx.depositBox.close();
-				sleep(333);
+				Condition.sleep(333);
 				return;
 			}
 

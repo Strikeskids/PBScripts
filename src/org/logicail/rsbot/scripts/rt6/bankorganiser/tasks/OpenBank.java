@@ -2,6 +2,7 @@ package org.logicail.rsbot.scripts.rt6.bankorganiser.tasks;
 
 import org.logicail.rsbot.scripts.rt6.bankorganiser.LogBankOrganiser;
 import org.logicail.rsbot.scripts.framework.tasks.Node;
+import org.powerbot.script.Condition;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +28,6 @@ public class OpenBank extends Node<LogBankOrganiser> {
 	@Override
 	public void run() {
 		ctx.bank.open();
-		sleep(500);
+		Condition.sleep(500);
 	}
 }

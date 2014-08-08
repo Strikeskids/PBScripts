@@ -61,14 +61,14 @@ public class KharyrllPortalRoom extends NodePath {
 						for (GameObject door : ctx.objects.select().id(Room.DOOR_CLOSED).select(new DoorBetweenRoomsFilter(startRoom, portalRoom)).shuffle().first()) {
 							door.bounds(script.roomStorage.getRoom(door).getEastWestDoorArea().contains(door) ? DoorOpener.DOOR_BOUNDS_EW : DoorOpener.DOOR_BOUNDS_NS);
 							if (DoorOpener.open(ctx, door)) {
-								sleep(200);
+								Condition.sleep(200);
 							}
 						}
 					}
 				}
 
 				if (ctx.movement.findPath(destination).traverse()) {
-					sleep(250);
+					Condition.sleep(250);
 				}
 
 				Condition.wait(new Callable<Boolean>() {
@@ -89,7 +89,7 @@ public class KharyrllPortalRoom extends NodePath {
 							return ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.players.local().animation() == -1 && CANIFIS_PUB.contains(ctx.players.local());
 						}
 					}, 600, 17);
-					sleep(300);
+					Condition.sleep(300);
 				}
 			}
 		}
@@ -103,7 +103,7 @@ public class KharyrllPortalRoom extends NodePath {
 			for (GameObject door : ctx.objects.select().id(CLOSED_DOOR).nearest().first()) {
 				door.bounds(DoorOpener.DOOR_BOUNDS_EW);
 				if (DoorOpener.open(ctx, door)) {
-					sleep(300);
+					Condition.sleep(300);
 				}
 			}
 		}

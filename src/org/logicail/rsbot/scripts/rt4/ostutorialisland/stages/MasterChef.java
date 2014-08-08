@@ -89,7 +89,7 @@ public class MasterChef extends Talker {
 						return ctx.players.local().inMotion();
 					}
 				}), 200, 10);
-				Condition.sleep(500);
+				Condition.sleep(200);
 			}
 		} else {
 			Condition.sleep(400);

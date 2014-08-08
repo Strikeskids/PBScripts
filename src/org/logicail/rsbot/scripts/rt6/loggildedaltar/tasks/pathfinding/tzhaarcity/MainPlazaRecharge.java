@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.ItemTelep
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.RechargeSummoning;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.wrapper.BankRequiredItem;
+import org.powerbot.script.Condition;
 import org.powerbot.script.rt6.Equipment;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class MainPlazaRecharge extends RechargeSummoning {
 			renewPoints();
 		}
 
-		sleep(300);
+		Condition.sleep(300);
 	}
 
 	@Override

@@ -102,7 +102,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 							//System.out.println("Remove from tab");
 							script.status = "Remove '" + item.name() + "' from tab";
 							move(item, IBank.BankTab.ONE);
-							sleep(100);
+							Condition.sleep(100);
 							return;
 						}
 					}
@@ -116,7 +116,7 @@ public class MoveToTabTask extends Node<LogBankOrganiser> {
 				}
 			}).sort(script.itemCategoriser.getSorter())) {
 				move(item, sortingTab);
-				sleep(66);
+				Condition.sleep(66);
 				return;
 			}
 		}

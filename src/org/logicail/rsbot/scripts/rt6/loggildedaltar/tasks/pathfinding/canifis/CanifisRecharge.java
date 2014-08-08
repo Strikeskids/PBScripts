@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.rt6.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.RechargeSummoning;
 import org.logicail.rsbot.util.DoorOpener;
+import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt6.GameObject;
 
@@ -31,7 +32,7 @@ public class CanifisRecharge extends RechargeSummoning {
 			for (GameObject door : ctx.objects.select().id(KharyrllPortalRoom.CLOSED_DOOR).nearest().first()) {
 				door.bounds(DoorOpener.DOOR_BOUNDS_EW);
 				if (DoorOpener.open(ctx, door)) {
-					sleep(250);
+					Condition.sleep(250);
 				}
 			}
 		}

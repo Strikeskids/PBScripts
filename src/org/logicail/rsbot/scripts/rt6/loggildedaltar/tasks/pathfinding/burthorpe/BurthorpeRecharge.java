@@ -4,6 +4,7 @@ import org.logicail.rsbot.scripts.framework.context.rt6.providers.ILodestone;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.RechargeSummoning;
+import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
 
 /**
@@ -37,7 +38,7 @@ public class BurthorpeRecharge extends RechargeSummoning {
 		} else {
 			if (!locationAttribute.isInObeliskArea(ctx)) {
 				if (doSmall()) {
-					sleep(600);
+					Condition.sleep(600);
 				}
 			} else {
 				renewPoints();

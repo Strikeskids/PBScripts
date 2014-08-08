@@ -68,7 +68,7 @@ public class HouseTablet extends MagicTablet {
 			}*/
 		if (ctx.hud.open(Hud.Window.BACKPACK)) {
 			if (tablet.valid()) {
-				sleep(100);
+				Condition.sleep(100);
 				if (!script.houseTask.isInHouse() && ctx.game.clientState() == Game.INDEX_MAP_LOADED && tablet.interact("Break")) {
 					Condition.wait(new Callable<Boolean>() {
 						@Override

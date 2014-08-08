@@ -82,7 +82,7 @@ public class HouseTeleportStaff extends NodePath {
 					@Override
 					public Boolean call() throws Exception {
 						final Player local = ctx.players.local();
-						return (script.ctx.controller.isSuspended() || script.ctx.controller.isStopping()) || (local != null && local.animation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null));
+						return (script.ctx().controller.isSuspended() || script.ctx().controller.isStopping()) || (local != null && local.animation() == -1 && (script.houseTask.isInHouse() || script.housePortal.getPortalLocation() != null));
 					}
 				}, Random.nextInt(550, 650), Random.nextInt(20, 60));
 			}

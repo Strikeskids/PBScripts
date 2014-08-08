@@ -225,7 +225,7 @@ public class SmithTrack extends Branch<LogArtisanWorkshop> {
 									|| AnimationMonitor.timeSinceAnimation(LogArtisanWorkshop.ANIMATION_SMITHING) > 4000;
 						}
 					}, 600, 100);
-					sleep(500);
+					Condition.sleep(500);
 				}
 				script.options.isSmithing = false;
 

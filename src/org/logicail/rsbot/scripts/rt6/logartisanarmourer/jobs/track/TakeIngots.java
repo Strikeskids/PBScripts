@@ -93,9 +93,9 @@ public class TakeIngots extends ArtisanArmourerTask {
 						return ctx.skillingInterface.opened();
 					}
 				});
-				sleep(333);
+				Condition.sleep(333);
 			} else if (ctx.movement.step(trough)) {
-				sleep(888);
+				Condition.sleep(888);
 			}
 		}
 	}

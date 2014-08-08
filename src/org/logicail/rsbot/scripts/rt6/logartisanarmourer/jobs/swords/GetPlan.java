@@ -75,7 +75,7 @@ public class GetPlan extends ArtisanArmourerTask {
 				}
 			}
 			ctx.chat.clickContinue(Random.nextBoolean());
-			sleep(250);
+			Condition.sleep(250);
 			return;
 		}
 

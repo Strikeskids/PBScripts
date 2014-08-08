@@ -140,7 +140,12 @@ public class IClientContext extends ClientContext {
 				}
 			});
 			e.printStackTrace();
-			this.controller.stop();
+			this.controller.script().getExecQueue(Script.State.START).add(new Runnable() {
+				@Override
+				public void run() {
+					controller.stop();
+				}
+			});
 		}
 
 		this.definitions = manger;

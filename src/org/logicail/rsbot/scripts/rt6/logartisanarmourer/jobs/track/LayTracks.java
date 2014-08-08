@@ -43,7 +43,7 @@ public class LayTracks extends ArtisanArmourerTask {
 						return ctx.backpack.select().id(SmithTrack.TRACK_100).isEmpty();
 					}
 				})) {
-					sleep(1700);
+					Condition.sleep(1700);
 				}
 			} else {
 				options.status = "Laying tracks [interact failed]";

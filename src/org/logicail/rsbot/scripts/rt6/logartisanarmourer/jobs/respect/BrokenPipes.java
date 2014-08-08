@@ -60,14 +60,14 @@ public class BrokenPipes extends RespectTask {
 			if (ctx.camera.prepare(object) && object.interact("Mend")) {
 				options.status = "Repairing pipe";
 				options.isSmithing = false;
-				sleep(1000);
+				Condition.sleep(1000);
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
 						return !pipe.needsFixing();
 					}
 				}, Random.nextInt(600, 800), Random.nextInt(8, 13));
-				sleep(150);
+				Condition.sleep(150);
 			}
 		}
 	}

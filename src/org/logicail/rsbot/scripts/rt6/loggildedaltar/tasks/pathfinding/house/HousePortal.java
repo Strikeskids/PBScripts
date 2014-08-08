@@ -96,7 +96,7 @@ public class HousePortal extends NodePath {
 			final OpenHouse openHouse = script.houseHandler.getOpenHouse();
 			if (options.useOtherHouse.get() && openHouse == null) {
 				options.status = "Waiting for a house";
-				sleep(500);
+				Condition.sleep(500);
 				return;
 			}
 
@@ -113,7 +113,7 @@ public class HousePortal extends NodePath {
 							return;
 						}
 					} else {
-						sleep(500);
+						Condition.sleep(500);
 						enteringHouse.set(ctx.chat.sendInput(openHouse.getPlayerNameClean()));
 					}
 				} else {
@@ -134,7 +134,7 @@ public class HousePortal extends NodePath {
 					for (final ChatOption option : ctx.chat.first()) {
 						if (option.select(Random.nextBoolean())) {
 							ctx.chat.waitForInputWidget();
-							sleep(200);
+							Condition.sleep(200);
 							return;
 						}
 					}

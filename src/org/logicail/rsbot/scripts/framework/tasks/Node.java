@@ -15,8 +15,4 @@ public abstract class Node<T extends LogicailScript> extends Task<T> implements 
 	}
 
 	public abstract boolean valid();
-
-	protected void sleep(int millis) {
-		ctx.sleep(millis);
-	}
 }
