@@ -6,9 +6,9 @@ import com.logicail.loader.rt4.wrappers.ItemDefinition;
 import com.logicail.loader.rt4.wrappers.NpcDefinition;
 import com.logicail.loader.rt4.wrappers.ObjectDefinition;
 import com.logicail.loader.rt4.wrappers.Script;
+import com.sk.cache.DataSource;
 import org.powerbot.script.rt4.*;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
@@ -31,8 +31,7 @@ public class RT4DefinitionManager extends ClientAccessor {
 	public RT4DefinitionManager(ClientContext ctx) throws FileNotFoundException {
 		super(ctx);
 
-		String directory = System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "oldschool" + File.separator + "LIVE" + File.separator;
-		system = new RT4CacheSystem(new File(directory));
+		system = new RT4CacheSystem(DataSource.getDefaultCacheDirectory("oldschool"));
 
 		npc = new DefinitionCache<ClientContext, NpcDefinition>(this.ctx, system.npcLoader);
 		varp = new DefinitionCache<ClientContext, Script>(this.ctx, system.varpLoader);

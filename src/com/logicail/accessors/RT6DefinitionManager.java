@@ -3,6 +3,7 @@ package com.logicail.accessors;
 import com.logicail.DefinitionCache;
 import com.logicail.loader.rt6.RT6CacheSystem;
 import com.logicail.loader.rt6.wrapper.ItemDefinition;
+import com.sk.cache.DataSource;
 import org.powerbot.script.rt4.Item;
 import org.powerbot.script.rt6.ClientAccessor;
 import org.powerbot.script.rt6.ClientContext;
@@ -36,8 +37,7 @@ public class RT6DefinitionManager extends ClientAccessor {
 	public RT6DefinitionManager(ClientContext ctx) throws FileNotFoundException {
 		super(ctx);
 
-		String directory = directory();
-		system = new RT6CacheSystem(new File(directory));
+		system = new RT6CacheSystem(DataSource.getDefaultCacheDirectory("runescape"));
 
 		item = new DefinitionCache<ClientContext, ItemDefinition>(this.ctx, system.itemLoader);
 

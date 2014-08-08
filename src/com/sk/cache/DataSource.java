@@ -47,10 +47,16 @@ public class DataSource {
 		this.indexChannels = new FileChannel[META_INDEX_FILE_NUM + 1];
 	}
 
-	public static File getDefaultCacheDirectory() {
+	/**
+	 * Version is runescape or oldschool
+	 *
+	 * @param version
+	 * @return
+	 */
+	public static File getDefaultCacheDirectory(String version) {
 		String rootDirectory = System.getProperty("user.home");
 		if (rootDirectory != null) {
-			rootDirectory = rootDirectory + "/";
+			rootDirectory = rootDirectory + File.separatorChar;
 		}
 		if (rootDirectory == null) {
 			if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
@@ -60,12 +66,12 @@ public class DataSource {
 			}
 		}
 		if (rootDirectory != null) {
-			rootDirectory = rootDirectory + "/";
+			rootDirectory = rootDirectory + File.separatorChar;
 		}
 		if (rootDirectory == null) {
-			rootDirectory = "~/";
+			rootDirectory = "~" + File.separatorChar;
 		}
-		return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + "runescape" + File.separatorChar + "LIVE" + File.separatorChar);
+		return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + version + File.separatorChar + "LIVE" + File.separatorChar);
 	}
 
 	public FileChannel getCacheChannel() {
