@@ -81,7 +81,7 @@ public class ItemDefinition extends StreamedWrapper {
 			} else if (opcode >= 30 && opcode <= 34) {
 				groundActions[opcode - 30] = s.getString();
 			} else if (opcode >= 35 && opcode <= 39) {
-				actions[opcode - 30] = s.getString();
+				actions[opcode - 35] = s.getString();
 			} else if (opcode == 115) {
 				team = s.getUByte();
 			} else {
