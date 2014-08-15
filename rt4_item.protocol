@@ -1,0 +1,34 @@
+001 ushort modelId # check bigsmart like rt6
+002 string name
+004 ushort # rotationLength
+005 ushort # rotationX
+006 ushort # rotationY
+007 ushort # translateX # if > 7FFF, subtract 0x10000
+008 ushort # tranlateY # if > 7FFF, subtract 0x10000
+011 set true stackable
+012 int value
+016 set true members
+023 uint24 # maleEquip1 ushort, ubyte, id => translationY?
+024 ushort # femaleEquip1
+025 uint24 # maleEquip2
+026 ushort # femaleEquip2
+030-34 string groundActions
+035-39 string actions
+040 array ubyte ushort - ushort # origColors , modColors
+041 array ubyte ushort - ushort
+078 ushort # more equip and dialog to 93
+079 ushort
+090 ushort
+091 ushort
+092 ushort
+093 ushort
+095 ushort # rotationZ
+097 ushort noteId
+098 ushort noteTemplateId
+100-109 ushort - ushort # stackId , stackAmount
+110 ushort # modelScaleX
+111 ushort # modelScaleY
+112 ushort # modelScaleZ
+113 byte # lightIntensity
+114 byte # lightMag
+115 ubyte team
