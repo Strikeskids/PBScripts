@@ -1,0 +1,37 @@
+# 001 array # if modelIds != null skip(count * 3) else ushort modelIds ubyte modelTypes
+002 string name
+# 005 array ubyte ushort # if modelIds == null skip count * 2  return
+014 ubyte width
+015 ubyte height
+017 set false walkable set 0 blockType
+018 set false walkable
+019 ubyte type
+021 set # 0 adjustToTerrain
+022 set # true nonFlatShading
+023 set
+024 big_smart animationSequence
+027 set 1 blockType
+028 ubyte
+029 byte # brightness
+030-34 String actions
+039 byte # contrast
+040 array ubyte ushort originalColors ushort modifiedColors
+041 array ubyte ushort - ushort
+060 ushort # minimapIcon
+062 set
+064 set
+065 ushort # modelSizeX
+066 ushort # modelSizeH
+067 ushort # modelSizeY
+068 ushort # mapSceneId
+069 ubyte
+070 ushort # offsetX
+071 ushort # offestH
+072 ushort # offsetY
+073 set
+074 set true solid
+075 ubyte
+077 children
+078 ushort - ubyte
+079 ushort - ushort - ubyte - array ubyte ushort - # check
+081 ubyte # adjustToTerrain

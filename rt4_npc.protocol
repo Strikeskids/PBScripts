@@ -1,0 +1,25 @@
+1 array ubyte ushort modelIds
+2 string name
+12 ubyte # boundDim
+13 ushort # idleAnimation
+14 ushort # walkAnimation
+15 ushort
+16 ushort
+17 ushort - ushort - ushort - ushort # walkAnimation, turn180Animation, turn90CWAnimation, turn90CCWAnimation
+30-34 string actions
+40 array ubyte ushort - ushort - # orig, target color
+41 array ubyte ushort - ushort -
+60 array ubyte ushort # headModels
+93 set false drawMiniMapDot
+95 ushort combatLevel
+97 ushort # scaleXZ
+98 ushort # scaleY
+99 set true visible
+100 byte # lightModifier
+101 byte # shadowModifier
+102 ushort # headIcon
+103 ushort # degreesToTurn
+106 children
+107 set false clickable
+109 set false
+111 set false
