@@ -18,7 +18,6 @@ import com.sk.datastream.Stream;
  */
 public class ItemDefinition extends StreamedWrapper {
 	private static final ProtocolGroup protocol = new ProtocolGroup();
-	public int team = 0;
 	public String name = null;
 	public boolean noted;
 	public boolean members;
@@ -29,6 +28,7 @@ public class ItemDefinition extends StreamedWrapper {
 	public int modelId = -1;
 	public boolean stackable;
 	public int value = 1;
+	public int team = 0;
 	private ItemDefinitionLoader loader;
 
 	static {
