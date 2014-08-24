@@ -53,7 +53,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 	@Override
 	public LinkedHashMap<Object, Object> getPaintInfo() {
 		final LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
-		properties.put("Not everything tested", "Report errors on forum");
 
 		if (ctx.game.loggedIn()) {
 			final int current = ctx.skills.realLevel(Skills.PRAYER);
