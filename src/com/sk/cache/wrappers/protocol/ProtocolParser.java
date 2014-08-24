@@ -1,22 +1,27 @@
 package com.sk.cache.wrappers.protocol;
 
-import com.sk.cache.wrappers.protocol.extractor.ParseType;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
+import java.util.Scanner;
+
+import com.sk.cache.wrappers.protocol.extractor.ParseType;
 
 public class ProtocolParser {
 
 	public static void main(String[] args) throws IOException {
-//		Scanner sc = new Scanner(System.in);
-//		String filename = sc.nextLine();
-//		sc.close();
-//		BufferedReader r = new BufferedReader(new FileReader(filename));
-//		parseProtocol(r);
-		BufferedReader r = new BufferedReader(new FileReader("rt6_object.protocol"));
+		Scanner sc = new Scanner(System.in);
+		String filename = sc.nextLine();
+		sc.close();
+		BufferedReader r = new BufferedReader(new FileReader(filename));
 		parseProtocol(r);
 	}
 
@@ -42,9 +47,6 @@ public class ProtocolParser {
 
 			if (next.equals("ea")) {
 				out = "new ExtraAttributeReader(";
-				locs.clear();
-			} else if (next.equals("children")) {
-				out = "new ChildrenReader(" + locs.get(0);
 				locs.clear();
 			} else {
 				parts.addFirst(next);

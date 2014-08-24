@@ -12,7 +12,7 @@ import com.sk.cache.fs.FileData;
  */
 public class NpcDefinitionLoader extends ArchiveLoader<NpcDefinition> {
 	public NpcDefinitionLoader(CacheSystem cacheSystem) {
-		super(cacheSystem, cacheSystem.getCacheSource().getCacheTypeOS(2), 9);
+		super(cacheSystem, cacheSystem.getCacheSource().getCacheType(2), 9);
 	}
 
 	@Override

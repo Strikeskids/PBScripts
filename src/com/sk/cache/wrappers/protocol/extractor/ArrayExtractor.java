@@ -1,5 +1,8 @@
 package com.sk.cache.wrappers.protocol.extractor;
 
+import java.util.Arrays;
+
+import com.sk.Debug;
 import com.sk.datastream.Stream;
 
 public class ArrayExtractor extends FieldExtractor {
@@ -35,6 +38,8 @@ public class ArrayExtractor extends FieldExtractor {
 		for (int j = 0; j < repeats.length; ++j) {
 			if (j < fields.length && fields[j] != null) {
 				setValue(destination, minLoc, type, fields[j], ret[j]);
+			} else if (Debug.on) {
+				System.out.println(type + " " + Arrays.toString(ret[j]));
 			}
 		}
 	}

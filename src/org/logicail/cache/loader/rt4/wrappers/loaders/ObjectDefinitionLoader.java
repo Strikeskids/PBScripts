@@ -12,7 +12,7 @@ import org.logicail.cache.loader.rt4.wrappers.ObjectDefinition;
  */
 public class ObjectDefinitionLoader extends ArchiveLoader<ObjectDefinition> {
 	public ObjectDefinitionLoader(CacheSystem cacheSystem) {
-		super(cacheSystem, cacheSystem.getCacheSource().getCacheTypeOS(2), 6);
+		super(cacheSystem, cacheSystem.getCacheSource().getCacheType(2), 6);
 	}
 
 	@Override

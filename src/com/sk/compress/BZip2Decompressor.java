@@ -1,6 +1,10 @@
 package com.sk.compress;
+// Decompiled by Jad v1.5.8e. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.geocities.com/kpdus/jad.html
+// Decompiler options: packimports(3) braces fieldsfirst nonlb 
 
-public class BZip2Decompressor {
+
+public final class BZip2Decompressor {
 
 	private static BZip2BlockEntry entry = new BZip2BlockEntry();
 	private static int[] arr;
@@ -377,7 +381,7 @@ public class BZip2Decompressor {
 				byte9 = method1788(entry);
 			}
 
-			for (int k5 = ai2[k7 - ai1[l6]]; k5 != l4; ) {
+			for (int k5 = ai2[k7 - ai1[l6]]; k5 != l4;) {
 				if (k5 == 0 || k5 == 1) {
 					int i6 = -1;
 					int j6 = 1;

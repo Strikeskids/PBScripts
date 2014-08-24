@@ -14,7 +14,6 @@ public class ReferenceTable {
 	private static final int FLAG_IDENTIFIERS = 0x1, FLAG_WHIRLPOOL = 0x2, FLAG_UNKNOWN_1 = 0x4, FLAG_UNKNOWN_2 = 0x8;
 	private final CacheSource cache;
 	private final int id;
-	private final boolean rs3;
 
 	private int flags;
 	private int version;
@@ -26,10 +25,9 @@ public class ReferenceTable {
 	private int[] ids;
 	private int[][] children;
 
-	public ReferenceTable(CacheSource cache, int id, boolean rs3) {
+	public ReferenceTable(CacheSource cache, int id) {
 		this.cache = cache;
 		this.id = id;
-		this.rs3 = rs3;
 	}
 
 	public int getId() {
@@ -112,11 +110,11 @@ public class ReferenceTable {
 		if (hasIdentifiers())
 			decodeEntryIdentifiers();
 		decodeCrcs();
-		if (rs3 && hasUnknown2())
+		if (hasUnknown2())
 			decodeUnknown2();
 		if (hasWhirlpool())
 			decodeWhirlpools();
-		if (rs3 && hasUnknown1())
+		if (hasUnknown1())
 			decodeUnknown1();
 		decodeVersions();
 		decodeChildCounts();

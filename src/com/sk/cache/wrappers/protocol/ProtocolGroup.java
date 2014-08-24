@@ -1,9 +1,9 @@
 package com.sk.cache.wrappers.protocol;
 
-import com.sk.datastream.Stream;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sk.datastream.Stream;
 
 public class ProtocolGroup extends ProtocolReader {
 
@@ -21,7 +21,6 @@ public class ProtocolGroup extends ProtocolReader {
 
 	@Override
 	public void read(Object destination, int type, Stream data) {
-		final byte[] bytes = data.getAllBytes();
 		if (!validateType(type))
 			throw new IllegalArgumentException("Bad type " + type);
 		ProtocolReader reader = readers.get(type);
