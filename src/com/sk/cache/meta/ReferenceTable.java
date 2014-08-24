@@ -104,7 +104,7 @@ public class ReferenceTable {
 	}
 
 	private void decodeEntries() {
-		int entryCount = data.getUShort();
+		int entryCount = data.getReferenceTableSmart();
 		ids = getIds(entryCount);
 		addEntries();
 		if (hasIdentifiers())
@@ -122,7 +122,7 @@ public class ReferenceTable {
 		int[] ids = new int[size];
 		int accumulator = 0;
 		for (int i = 0; i < ids.length; ++i) {
-			int delta = data.getUShort();
+			int delta = data.getReferenceTableSmart();
 			accumulator += delta;
 			ids[i] = accumulator;
 		}
@@ -170,7 +170,7 @@ public class ReferenceTable {
 
 	private void decodeChildCounts() {
 		for (int id : ids) {
-			entries.get(id).setChildCount(data.getUShort());
+			entries.get(id).setChildCount(data.getReferenceTableSmart());
 		}
 	}
 
