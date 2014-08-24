@@ -7,14 +7,16 @@ public class Sector {
 	private final int id, next;
 	private final int type, fileId, fileChunk;
 	private final byte[] data;
+	private final int dataOffset;
 
-	public Sector(int id, int type, int fileId, int fileChunk, int next, byte[] data) {
+	public Sector(int id, int type, int fileId, int fileChunk, int next, byte[] data, int dataOffset) {
 		this.id = id;
 		this.next = next;
 		this.type = type;
 		this.fileId = fileId;
 		this.fileChunk = fileChunk;
 		this.data = data;
+		this.dataOffset = dataOffset;
 	}
 
 	public int getId() {
@@ -41,4 +43,7 @@ public class Sector {
 		return data;
 	}
 
+	public int getDataOffset() {
+		return dataOffset;
+	}
 }
