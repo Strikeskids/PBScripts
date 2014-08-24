@@ -1,11 +1,11 @@
 package org.logicail.rsbot.scripts.rt6.bankorganiser;
 
-import com.logicail.loader.rt6.wrapper.Category;
-import com.logicail.loader.rt6.wrapper.ItemDefinition;
-import com.logicail.loader.rt6.wrapper.Parameter;
-import com.logicail.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
-import com.logicail.loader.rt6.wrapper.requirements.CombatSkillRequirement;
-import com.logicail.loader.rt6.wrapper.requirements.ItemRequirement;
+import org.logicail.cache.loader.rt6.wrapper.Category;
+import org.logicail.cache.loader.rt6.wrapper.ItemDefinition;
+import org.logicail.cache.loader.rt6.wrapper.Parameter;
+import org.logicail.cache.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
+import org.logicail.cache.loader.rt6.wrapper.requirements.CombatSkillRequirement;
+import org.logicail.cache.loader.rt6.wrapper.requirements.ItemRequirement;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.rt6.bankorganiser.tasks.ItemSorter;

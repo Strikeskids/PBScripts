@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.rt4.ostutorialisland.stages;
 
-import com.logicail.loader.rt4.wrappers.ObjectDefinition;
+import org.logicail.cache.loader.rt4.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.framework.util.LoopCondition;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;

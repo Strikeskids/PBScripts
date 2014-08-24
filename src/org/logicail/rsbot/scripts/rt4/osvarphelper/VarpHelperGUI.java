@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.rt4.osvarphelper;
 
-import com.logicail.loader.rt4.wrappers.Script;
-import com.logicail.loader.rt4.wrappers.loaders.ScriptDefinitionLoader;
+import org.logicail.cache.loader.rt4.wrappers.Script;
+import org.logicail.cache.loader.rt4.wrappers.loaders.ScriptDefinitionLoader;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 
 import javax.swing.*;

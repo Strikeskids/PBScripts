@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.rt4;
 
-import com.logicail.accessors.RT4DefinitionManager;
+import org.logicail.cache.accessors.RT4DefinitionManager;
 import org.logicail.rsbot.scripts.framework.context.rt4.providers.*;
 import org.powerbot.script.rt4.ClientContext;
 

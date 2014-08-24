@@ -13,6 +13,7 @@ import java.util.concurrent.Callable;
  * Date: 05/01/14
  * Time: 16:13
  */
+@Deprecated
 public class WaitForAnimationToFinish extends IClientAccessor implements Callable<Boolean> {
 	private final int animationId;
 	private boolean done = false;
