@@ -118,7 +118,7 @@ public class DataSource {
 		while (nextSectorId != 0) {
 			Sector sector;
 			try {
-				sector = readSector(nextSectorId);
+				sector = readSector(query.getFileId(), nextSectorId);
 			} catch (IOException ex) {
 				ex.printStackTrace();
 				return null;
@@ -135,11 +135,11 @@ public class DataSource {
 		return outputBuffer.array();
 	}
 
-	public Sector readSector(int sectorId) throws IOException {
+	public Sector readSector(int prevFileId, int sectorId) throws IOException {
 		byte[] fullData = readSectorData(sectorId);
 		Stream infoStream = new ByteStream(fullData);
 
-		int fileId = infoStream.getUShort();
+		int fileId = prevFileId < Stream.SHORT_MASK ? infoStream.getUShort() : infoStream.getInt();
 		int fileChunk = infoStream.getUShort();
 		int nextSector = infoStream.getUInt24();
 		int cacheType = infoStream.getUByte();
