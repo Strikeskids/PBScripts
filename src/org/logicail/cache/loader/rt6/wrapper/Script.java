@@ -32,7 +32,11 @@ public class Script extends StreamedWrapper {
 	}
 
 	public String code() {
-		return "ctx.varpbits.varpbit(" + configId + ", " + lowerBitIndex + ", 0x" + Integer.toHexString(MASKS[upperBitIndex - lowerBitIndex]) + ")";
+		return "ctx.varpbits.varpbit(" + configId + ", " + lowerBitIndex + ", 0x" + Integer.toHexString(mask()) + ")";
+	}
+
+	public int mask() {
+		return MASKS[upperBitIndex - lowerBitIndex];
 	}
 
 	@Override
@@ -50,6 +54,6 @@ public class Script extends StreamedWrapper {
 	}
 
 	public int execute(ClientContext ctx) {
-		return ctx.varpbits.varpbit(configId) >> lowerBitIndex & MASKS[upperBitIndex - lowerBitIndex];
+		return ctx.varpbits.varpbit(configId) >> lowerBitIndex & mask();
 	}
 }

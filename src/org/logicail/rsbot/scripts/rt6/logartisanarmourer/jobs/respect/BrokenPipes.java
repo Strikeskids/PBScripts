@@ -1,7 +1,9 @@
 package org.logicail.rsbot.scripts.rt6.logartisanarmourer.jobs.respect;
 
+import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
 import org.logicail.rsbot.scripts.rt6.logartisanarmourer.LogArtisanWorkshop;
 import org.powerbot.script.Condition;
+import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt6.GameObject;
 import org.powerbot.script.rt6.Skills;
@@ -15,16 +17,7 @@ import java.util.concurrent.Callable;
  * Time: 17:36
  */
 public class BrokenPipes extends RespectTask {
-	//public static final int[] BROKEN_PIPE = {29410, 29411, 29413, 29414, 29761, 29762};
-	public static final int SETTING_BROKEN_PIPES = 129;
-	private final Pipe[] pipes = {
-			new Pipe(29410, 11),
-			new Pipe(29411, 12),
-			new Pipe(29413, 13),
-			new Pipe(29414, 14),
-			new Pipe(29761, 15),
-			new Pipe(29762, 16),
-	};
+	public static final int[] BROKEN_PIPE = {29410, 29411, 29413, 29414, 29761, 29762};
 
 	public BrokenPipes(LogArtisanWorkshop script) {
 		super(script);
@@ -39,57 +32,43 @@ public class BrokenPipes extends RespectTask {
 	public boolean valid() {
 		return super.valid()
 				&& ctx.skills.realLevel(Skills.SMITHING) >= 50
-				&& getPipe() != null;
+				&& getPipe() > -1;
 	}
 
-	private Pipe getPipe() {
-		for (Pipe pipe : pipes) {
-			final GameObject object = pipe.get();
-			if (object.valid()) {
-				return pipe;
+	private int getPipe() {
+		return ctx.objects.select().id(BROKEN_PIPE).select(new Filter<GameObject>() {
+			@Override
+			public boolean accept(GameObject gameObject) {
+				return isBroken(gameObject.id());
+			}
+		}).nearest().peek().id();
+	}
+
+	private boolean isBroken(int id) {
+		ObjectDefinition definition = ctx.definitions.object(id);
+		if (definition != null) {
+			ObjectDefinition child = definition.child(ctx);
+			if (child != null && child.name.equals("Burst pipe")) {
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	@Override
 	public void run() {
-		final Pipe pipe = getPipe();
-		if (pipe != null) {
-			final GameObject object = pipe.get();
-			if (ctx.camera.prepare(object) && object.interact("Mend")) {
-				options.status = "Repairing pipe";
-				options.isSmithing = false;
-				Condition.sleep(1000);
-				Condition.wait(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						return !pipe.needsFixing();
-					}
-				}, Random.nextInt(600, 800), Random.nextInt(8, 13));
-				Condition.sleep(150);
-			}
-		}
-	}
-
-	class Pipe {
-		private final int pipeId;
-		private final int shift;
-
-		Pipe(int pipeId, int shift) {
-			this.pipeId = pipeId;
-			this.shift = shift;
-		}
-
-		public boolean needsFixing() {
-			return ctx.varpbits.varpbit(SETTING_BROKEN_PIPES, shift, 1) == 1;
-		}
-
-		public GameObject get() {
-			if (needsFixing()) {
-				return ctx.objects.select().id(pipeId).poll();
-			}
-			return ctx.objects.nil();
+		final GameObject pipe = ctx.objects.poll();
+		if (pipe.valid() && ctx.camera.prepare(pipe) && pipe.interact("Mend")) {
+			options.status = "Repairing pipe";
+			options.isSmithing = false;
+			Condition.sleep(1000);
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !isBroken(pipe.id());
+				}
+			}, 700, Random.nextInt(8, 13));
+			Condition.sleep(150);
 		}
 	}
 }

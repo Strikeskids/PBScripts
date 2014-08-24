@@ -8,10 +8,7 @@ import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
 import org.logicail.cache.loader.rt6.wrapper.QuestDefinition;
 import org.logicail.cache.loader.rt6.wrapper.Script;
 import org.logicail.cache.loader.rt6.wrapper.loaders.QuestDefinitionLoader;
-import org.powerbot.script.rt6.ClientAccessor;
-import org.powerbot.script.rt6.ClientContext;
-import org.powerbot.script.rt6.GroundItem;
-import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.*;
 
 import java.io.FileNotFoundException;
 
@@ -28,18 +25,6 @@ public class RT6DefinitionManager extends ClientAccessor {
 	private final QuestDefinitionLoader questLoader;
 	private final RT6CacheSystem system;
 
-	public RT6CacheSystem system() {
-		return system;
-	}
-
-	public ItemDefinition get(Item item) {
-		return this.item.get(item.id());
-	}
-
-	public ItemDefinition get(GroundItem item) {
-		return this.item.get(item.id());
-	}
-
 	public RT6DefinitionManager(ClientContext ctx) throws FileNotFoundException {
 		super(ctx);
 
@@ -49,11 +34,22 @@ public class RT6DefinitionManager extends ClientAccessor {
 		object = new DefinitionCache<ClientContext, ObjectDefinition>(this.ctx, system.objectLoader);
 		script = new DefinitionCache<ClientContext, Script>(this.ctx, system.scriptLoader);
 		questLoader = new QuestDefinitionLoader(system);
+	}
 
+	public ItemDefinition get(Item item) {
+		return item(item.id());
 	}
 
 	public ItemDefinition item(int id) {
 		return item.get(id);
+	}
+
+	public ItemDefinition get(GroundItem item) {
+		return item(item.id());
+	}
+
+	public ObjectDefinition get(GameObject gameObject) {
+		return object(gameObject.id());
 	}
 
 	public ObjectDefinition object(int id) {
@@ -66,5 +62,9 @@ public class RT6DefinitionManager extends ClientAccessor {
 
 	public Script script(int id) {
 		return script.get(id);
+	}
+
+	public RT6CacheSystem system() {
+		return system;
 	}
 }
