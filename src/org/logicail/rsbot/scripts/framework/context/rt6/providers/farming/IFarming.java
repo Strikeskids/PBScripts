@@ -1,15 +1,10 @@
 package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
+import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.HerbEnum;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject.Herb;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.QuestDefinition;
-import org.powerbot.script.Condition;
-import org.powerbot.script.Tile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,11 +40,6 @@ public class IFarming extends IClientAccessor {
 	private static final String FAIRY_TALE_III = "Fairy Tale III - Battle at Orks Rift";
 
 	private final Map<Integer, FarmingDefinition> cache = new HashMap<Integer, FarmingDefinition>();
-	private final Map<Integer, FarmingDynamicDefinition> dynamicObjects = new HashMap<Integer, FarmingDynamicDefinition>();
-	private final Map<String, QuestDefinition> quests = new HashMap<String, QuestDefinition>();
-
-	private volatile boolean initialised = false;
-	private final Object lock = new Object();
 
 	public static String pretty(String string) {
 		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
@@ -64,64 +54,11 @@ public class IFarming extends IClientAccessor {
 	}
 
 	public boolean canUseMagicSecateurs() {
-		ensureInitialised();
-		return quests.get(FAIRY_TALE_I).complete(ctx);
-	}
-
-	private void ensureInitialised() {
-		if (!initialised) {
-			synchronized (lock) {
-				if (!initialised) {
-					initialise();
-					initialised = true;
-				}
-			}
-		}
-	}
-
-	private void initialise() {
-		try {
-			final String json = ctx.controller.script().downloadString("");
-			JsonObject map = JsonObject.readFrom(json);
-
-			for (JsonObject.Member member : map.get("quests").asObject()) {
-				final JsonObject object = member.getValue().asObject();
-				final Config config = new Config(object.get("config").asObject());
-				QuestDefinition questDefinition = new QuestDefinition(member.getName(), config, object.get("start").asInt(), object.get("end").asInt());
-				quests.put(questDefinition.name, questDefinition);
-			}
-
-			for (JsonObject.Member member : map.get("definitions").asObject()) {
-				final FarmingDefinition definition = new FarmingDefinition(member);
-				cache.put(definition.id(), definition);
-			}
-
-			for (JsonObject.Member member : map.get("objects").asObject()) {
-				final JsonObject object = member.getValue().asObject();
-				final JsonArray ids = object.get("ids").asArray();
-				int[] definitions = new int[ids.size()];
-				int i = 0;
-				for (JsonValue value : ids) {
-					definitions[i] = value.asInt();
-					i++;
-				}
-
-				final Config config = new Config(object.get("config").asObject());
-				final JsonObject tile = object.get("tile").asObject();
-				Tile t = new Tile(tile.get("x").asInt(), tile.get("y").asInt(), tile.get("z") != null ? tile.get("z").asInt() : 0);
-				dynamicObjects.put(Integer.parseInt(member.getName()), new FarmingDynamicDefinition(Integer.parseInt(member.getName()), config, t, definitions));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			ctx.controller.script().log.info("Failed to download/load json data");
-			Condition.sleep(2000); // I add a log handler so that the log shows on the screen, so give the user chance to read it
-			ctx.controller.stop();
-		}
+		return ctx.definitions.quest(FAIRY_TALE_I).complete(ctx);
 	}
 
 	public boolean canUseMagicWateringCan() {
-		ensureInitialised();
-		return quests.get(FAIRY_TALE_III).complete(ctx);
+		return ctx.definitions.quest(FAIRY_TALE_III).complete(ctx);
 	}
 
 	public int compost() {
@@ -129,18 +66,12 @@ public class IFarming extends IClientAccessor {
 	}
 
 	public FarmingDefinition definition(int id) {
-		ensureInitialised();
-		final FarmingDefinition definition = cache.get(id);
-		return definition != null ? definition : FarmingDefinition.NIL;
-	}
-
-	public FarmingDynamicDefinition dynamic(int id) {
-		ensureInitialised();
-		final FarmingDynamicDefinition object = dynamicObjects.get(id);
-		if (object == null) {
-			throw new IllegalArgumentException("Don't have id " + id);
+		ObjectDefinition def = ctx.definitions.object(id);
+		if (def == null) {
+			return FarmingDefinition.NIL;
 		}
-		return object;
+
+		return new FarmingDefinition(def);
 	}
 
 	public FarmingQuery<Herb> herbs() {

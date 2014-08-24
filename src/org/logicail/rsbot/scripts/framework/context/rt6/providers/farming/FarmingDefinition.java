@@ -1,11 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,58 +10,65 @@ import java.util.Set;
  * Time: 23:47
  */
 public class FarmingDefinition {
-	public static final FarmingDefinition NIL = new FarmingDefinition(-1, "", null);
+	public static final FarmingDefinition NIL = new FarmingDefinition(null);
 
-	protected final int id;
-	protected final String name;
-	protected final Set<String> actions = new LinkedHashSet<String>();
-	protected final Set<Integer> models = new LinkedHashSet<Integer>();
+	private ObjectDefinition definition;
 
-	FarmingDefinition(JsonObject.Member member) {
-		this.id = Integer.parseInt(member.getName());
-
-		final JsonObject value = member.getValue().asObject();
-
-		this.name = value.get("name").isNull() ? "null" : value.get("name").asString();
-
-		final JsonArray modelArray = value.get("models") != null ? value.get("models").asArray() : new JsonArray();
-		for (JsonValue v : modelArray) {
-			models.add(v.asInt());
-		}
-
-		final JsonArray actionArray = value.get("actions") != null ? value.get("actions").asArray() : new JsonArray();
-		for (JsonValue v : actionArray) {
-			actions.add(v.asString());
-		}
-	}
-
-	public FarmingDefinition(int id, String name, Iterable<Integer> models) {
-		this.id = id;
-		this.name = name;
-		if (models != null) {
-			for (int model : models) {
-				this.models.add(model);
-			}
-		}
-	}
-
-	public Set<String> actions() {
-		return actions;
+	public FarmingDefinition(ObjectDefinition definition) {
+		this.definition = definition;
 	}
 
 	public boolean containsAction(String action) {
-		return actions.contains(action);
+		if (definition == null) {
+			return false;
+		}
+
+		String[] actions = definition.actions;
+		if (action != null) {
+			for (String s : actions) {
+				if (s != null && s.equalsIgnoreCase(action)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public boolean containsModel(int id) {
-		return models.contains(id);
+		if (definition == null) {
+			return false;
+		}
+
+		int[][] models = definition.modelIds;
+		if (models != null) {
+			int[] ints = models[0];
+			for (int i : ints) {
+				if (i == id) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public int id() {
-		return id;
+		return definition == null ? -1 : definition.id;
 	}
 
 	public String name() {
-		return name;
+		return definition == null ? "" : definition.name;
+	}
+
+	public int childId(IClientContext ctx) {
+		return definition == null ? -1 : definition.childId(ctx);
+	}
+
+	public FarmingDefinition child(IClientContext ctx) {
+		ObjectDefinition def = definition == null ? null : definition.child(ctx);
+		if (def == null) {
+			return FarmingDefinition.NIL;
+		}
+
+		return new FarmingDefinition(def);
 	}
 }

@@ -7,6 +7,7 @@ import com.sk.cache.wrappers.protocol.ExtraAttributeReader;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 public class ObjectDefinition extends StreamedWrapper {
 	private static final ProtocolGroup protocol = new ProtocolGroup();
@@ -29,6 +30,38 @@ public class ObjectDefinition extends StreamedWrapper {
 
 	public ObjectDefinition(WrapperLoader<?> loader, int id) {
 		super(loader, id);
+	}
+
+	public int childId(IClientContext ctx) {
+		int index = -1;
+		if (scriptId == -1) {
+			index = configId != -1 ? ctx.varpbits.varpbit(configId) : -1;
+		} else {
+			final Script script = ctx.definitions.script(scriptId);
+			if (script != null) {
+				index = ctx.varpbits.varpbit(script.configId) >> script.lowerBitIndex & org.logicail.cache.loader.rt4.wrappers.Script.MASKS[script.upperBitIndex - script.lowerBitIndex];
+			}
+		}
+
+		return index;
+	}
+
+	public ObjectDefinition child(IClientContext ctx) {
+		if (childrenIds == null) {
+			return this;
+		}
+
+		int index = childId(ctx);
+
+		if (index >= 0 && index < childrenIds.length) {
+			if (childrenIds[index] == -1) {
+				return new ObjectDefinition(loader, -1);
+			}
+
+			return ctx.definitions.object(childrenIds[index]);
+		}
+
+		return this;
 	}
 
 	@Override
