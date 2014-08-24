@@ -37,7 +37,6 @@ public class IFarming extends IClientAccessor {
 	public static final int[] SPIRIT_TREE = {8338, 8382, 8383};
 	public static final int[] TREE = {8388, 8389, 8390, 8391};
 	public static final int[] ALLOTMENT = {8550, 8551, 8552, 8553, 8554, 8555, 8556, 8557};
-	private static final String URL_FARMING_JSON = "http://logicail.co.uk/resources/farming.json";
 
 	private static final int SETTING_SUPPLIES_EXTRA = 1611;
 	private static final int SETTING_SUPPLIES = 29;
@@ -82,7 +81,7 @@ public class IFarming extends IClientAccessor {
 
 	private void initialise() {
 		try {
-			final String json = ctx.controller.script().downloadString(URL_FARMING_JSON);
+			final String json = ctx.controller.script().downloadString("");
 			JsonObject map = JsonObject.readFrom(json);
 
 			for (JsonObject.Member member : map.get("quests").asObject()) {

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.rt6.lootdisplayer;
 
-import com.logicail.loader.rt6.wrapper.ItemDefinition;
+import org.logicail.cache.loader.rt6.wrapper.ItemDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.*;
 import org.powerbot.script.rt6.GeItem;

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.rt6.bankorganiser;
 
-import com.logicail.loader.rt6.wrapper.ItemDefinition;
+import org.logicail.cache.loader.rt6.wrapper.ItemDefinition;
 import com.sk.cache.wrappers.loaders.WrapperLoader;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;

@@ -1,6 +1,6 @@
 package org.logicail.rsbot.scripts.framework.context.rt6;
 
-import com.logicail.accessors.RT6DefinitionManager;
+import org.logicail.cache.accessors.RT6DefinitionManager;
 import com.sk.cache.DataSource;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.*;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.IFarming;
