@@ -27,6 +27,8 @@ public class DefinitionCache<C extends org.powerbot.script.ClientContext, T exte
 		this.loader = loader;
 	}
 
+	private final Object lock = new Object();
+
 	public T get(int id) {
 		if (id < 0) {
 			return null;
@@ -35,11 +37,16 @@ public class DefinitionCache<C extends org.powerbot.script.ClientContext, T exte
 		if (cache.containsKey(id)) {
 			return cache.get(id);
 		} else {
-			try {
-				T definition = loader.load(id);
-				cache.put(id, definition);
-				return definition;
-			} catch (Exception ignored) {
+			synchronized (lock) {
+				if (cache.containsKey(id)) {
+					return cache.get(id);
+				}
+				try {
+					T definition = loader.load(id);
+					cache.put(id, definition);
+					return definition;
+				} catch (Exception ignored) {
+				}
 			}
 		}
 
