@@ -18,10 +18,10 @@ public class CacheType {
 	private final DataSource source;
 	private final int id;
 
-	public CacheType(CacheSource source, int id) {
+	public CacheType(CacheSource source, int id, boolean rs3) {
 		this.source = source.getSourceSystem();
 		this.id = id;
-		this.table = new ReferenceTable(source, id);
+		this.table = new ReferenceTable(source, id, rs3);
 		this.index = new IndexFile(this.source, id);
 	}
 
@@ -68,5 +68,4 @@ public class CacheType {
 			return false;
 		}
 	}
-
 }

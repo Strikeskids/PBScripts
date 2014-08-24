@@ -1,12 +1,12 @@
 package org.logicail.cache.loader.rt6.wrapper;
 
-import org.logicail.cache.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
-import org.logicail.cache.loader.rt6.wrapper.requirements.*;
 import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
+import org.logicail.cache.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
+import org.logicail.cache.loader.rt6.wrapper.requirements.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -264,11 +264,7 @@ public class ItemDefinition extends StreamedWrapper {
 	public boolean hasParameter(Parameter parameter) {
 		if (parameters != null && parameters.containsKey(parameter)) {
 			final Object v = parameters.get(parameter);
-			if (v instanceof Integer) {
-				return (Integer) v > 0;
-			} else {
-				return true;
-			}
+			return !(v instanceof Integer) || (Integer) v > 0;
 		}
 		return false;
 	}
@@ -283,7 +279,7 @@ public class ItemDefinition extends StreamedWrapper {
 		new BasicProtocol(new FieldExtractor[]{new ArrayExtractor(ParseType.UBYTE, 0, new StreamExtractor[]{ParseType.USHORT}, null)}, 132).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 96).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.UBYTE)}, 27, 134).addSelfToGroup(protocol);
-		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT)}, 4, 5, 6, 7, 8, 18, 44, 45, 95, 110, 111, 112, /*139, 140,*/ 142, 143, 144, 145, 146, 150, 151, 152, 153, 154, 161, 162, 163).addSelfToGroup(protocol);
+		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.USHORT)}, 4, 5, 6, 7, 8, 18, 44, 45, 95, 110, 111, 112, 142, 143, 144, 145, 146, 150, 151, 152, 153, 154, 161, 162, 163).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE), new FieldExtractor(ParseType.BYTE)}, 125, 126).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(ParseType.INT)}, 43).addSelfToGroup(protocol);
 		new BasicProtocol(new FieldExtractor[]{new FieldExtractor(new StaticExtractor(true))}, 157).addSelfToGroup(protocol);
@@ -295,12 +291,46 @@ public class ItemDefinition extends StreamedWrapper {
 	public void decode(Stream s) {
 		int opcode;
 		while ((opcode = s.getUByte()) != 0) {
-			if (opcode == 13) {
+			if (opcode == 1) {
+				modelId = s.getBigSmart();
+			} else if (opcode == 2) {
+				name = s.getString();
+			} else if (opcode == 11) {
+				stackOffset = 1;
+			} else if (opcode == 12) {
+				value = s.getInt();
+			} else if (opcode == 13) {
 				slot = s.getUByte();
 				slotEnum = Slot.get(slot);
-				continue;
-			}
-			if (opcode == 249) {
+			} else if (opcode == 14) {
+				equipmentType = s.getUByte();
+			} else if (opcode == 16) {
+				members = true;
+			} else if (opcode == 97) {
+				noteId = s.getUShort();
+			} else if (opcode >= 30 && opcode <= 34) {
+				groundActions[opcode - 30] = s.getString();
+			} else if (opcode == 122) {
+				lentTemplateId = s.getUShort();
+			} else if (opcode == 164) {
+				shardname = s.getString();
+			} else if (opcode == 121) {
+				lentId = s.getUShort();
+			} else if (opcode >= 35 && opcode <= 39) {
+				actions[opcode - 35] = s.getString();
+			} else if (opcode == 65) {
+				tradable = true;
+			} else if (opcode == 94) {
+				categoryId = s.getUShort();
+			} else if (opcode == 98) {
+				noteTemplateId = s.getUShort();
+			} else if (opcode == 115) {
+				team = s.getUByte();
+			} else if (opcode == 139) {
+				cosmeticId = s.getUShort();
+			} else if (opcode == 140) {
+				cosmeticTemplateId = s.getUShort();
+			} else if (opcode == 249) {
 				int length = s.getUByte();
 				clientScriptData = new LinkedHashMap<Integer, Object>(length);
 				for (int index = 0; index < length; index++) {
@@ -309,82 +339,9 @@ public class ItemDefinition extends StreamedWrapper {
 					Object value = stringInstance ? s.getString() : s.getInt();
 					clientScriptData.put(key, value);
 				}
-				continue;
+			} else {
+				protocol.read(this, opcode, s);
 			}
-			if (opcode == 98) {
-				noteTemplateId = s.getUShort();
-				continue;
-			}
-			if (opcode == 1) {
-				modelId = s.getBigSmart();
-				continue;
-			}
-			if (opcode == 16) {
-				members = true;
-				continue;
-			}
-			if (opcode == 97) {
-				noteId = s.getUShort();
-				continue;
-			}
-			if (opcode == 11) {
-				stackOffset = 1;
-				continue;
-			}
-			if (opcode >= 30 && opcode <= 34) {
-				groundActions[opcode - 30] = s.getString();
-				continue;
-			}
-			if (opcode == 122) {
-				lentTemplateId = s.getUShort();
-				continue;
-			}
-			if (opcode == 164) {
-				shardname = s.getString();
-				continue;
-			}
-			if (opcode == 121) {
-				lentId = s.getUShort();
-				continue;
-			}
-			if (opcode == 14) {
-				equipmentType = s.getUByte();
-				continue;
-			}
-			if (opcode >= 35 && opcode <= 39) {
-				actions[opcode - 35] = s.getString();
-				continue;
-			}
-			if (opcode == 94) {
-				categoryId = s.getUShort();
-				continue;
-			}
-			if (opcode == 139) {
-				cosmeticId = s.getUShort();
-				continue;
-			}
-			if (opcode == 140) {
-				cosmeticTemplateId = s.getUShort();
-				continue;
-			}
-			if (opcode == 2) {
-				name = s.getString();
-				continue;
-			}
-			if (opcode == 65) {
-				tradable = true;
-				continue;
-			}
-			if (opcode == 12) {
-				value = s.getInt();
-				continue;
-			}
-			if (opcode == 115) {
-				team = s.getUByte();
-				continue;
-			}
-
-			protocol.read(this, opcode, s);
 		}
 	}
 }

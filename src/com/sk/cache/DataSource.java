@@ -144,10 +144,7 @@ public class DataSource {
 		int nextSector = infoStream.getUInt24();
 		int cacheType = infoStream.getUByte();
 
-		byte[] data = new byte[infoStream.getLeft()];
-		infoStream.getBytes(data);
-
-		return new Sector(sectorId, cacheType, fileId, fileChunk, nextSector, data);
+		return new Sector(sectorId, cacheType, fileId, fileChunk, nextSector, infoStream.getAllBytes(), infoStream.getLocation());
 	}
 
 	private byte[] readSectorData(int sector) throws IOException {

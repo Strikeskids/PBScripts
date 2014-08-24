@@ -1,7 +1,6 @@
 package com.sk.cache.fs;
 
 import com.sk.cache.DataSource;
-import com.sk.cache.meta.ReferenceTable;
 
 import java.io.IOException;
 
@@ -25,19 +24,27 @@ public class CacheSource {
 		return metaIndex;
 	}
 
-	public IndexFile getIndex(int cacheType) {
-		return getCacheType(cacheType).getIndex();
+//	public IndexFile getIndex(int cacheType) {
+//		return getCacheType(cacheType).getIndex();
+//	}
+
+//	public ReferenceTable getReferenceTable(int cacheType) {
+//		return getCacheType(cacheType).getTable();
+//	}
+
+	public CacheType getCacheTypeRS3(int cacheType) {
+		return getCacheType(cacheType, true);
 	}
 
-	public ReferenceTable getReferenceTable(int cacheType) {
-		return getCacheType(cacheType).getTable();
+	public CacheType getCacheTypeOS(int cacheType) {
+		return getCacheType(cacheType, false);
 	}
 
-	public CacheType getCacheType(int cacheType) {
+	private CacheType getCacheType(int cacheType, boolean rs3) {
 		if (!source.validateType(cacheType))
 			throw new IndexOutOfBoundsException();
 		if (types[cacheType] == null) {
-			types[cacheType] = new CacheType(this, cacheType);
+			types[cacheType] = new CacheType(this, cacheType, rs3);
 			if (!types[cacheType].init())
 				throw new RuntimeException("Failed to initialize table and index");
 		}

@@ -12,7 +12,7 @@ import com.sk.cache.fs.FileData;
  */
 public class ItemDefinitionLoader extends ArchiveLoader<ItemDefinition> {
 	public ItemDefinitionLoader(CacheSystem cacheSystem) {
-		super(cacheSystem, cacheSystem.getCacheSource().getCacheType(2), 10);
+		super(cacheSystem, cacheSystem.getCacheSource().getCacheTypeOS(2), 10);
 	}
 
 	@Override
