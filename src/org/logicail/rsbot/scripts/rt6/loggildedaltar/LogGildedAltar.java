@@ -22,6 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * FYI this script is a mess it was my first script written for RSBot 4 but I cba rewriting it since it is so big
+ * <p/>
  * Created with IntelliJ IDEA.
  * User: Logicail
  * Date: 07/12/13
