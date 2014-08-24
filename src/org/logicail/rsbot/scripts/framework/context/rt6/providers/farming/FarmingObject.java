@@ -19,34 +19,14 @@ import java.awt.*;
  */
 public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifiable> extends IClientAccessor implements Locatable, Identifiable, IClearable, Nameable, Validatable {
 	public final E parent;
-	protected final int setting;
-	protected final int shift;
-	protected final int mask;
-	protected final int object;
+	protected final int id;
 	protected final Tile tile;
-	protected final int[] children;
 
 	public FarmingObject(IClientContext ctx, E enumType) {
 		super(ctx);
 		parent = enumType;
-
-		if (enumType != null) {
-			final FarmingDynamicDefinition dynamic = ctx.farming.dynamic(enumType.id());
-			this.setting = dynamic.setting;
-			this.shift = dynamic.shift;
-			this.mask = dynamic.mask;
-			this.object = dynamic.object;
-			this.tile = dynamic.tile;
-			this.children = dynamic.children;
-		} else {
-			// NIL
-			setting = 0;
-			shift = 0;
-			mask = 0;
-			object = -1;
-			tile = Tile.NIL;
-			children = new int[0];
-		}
+		id = enumType.id();
+		tile = Tile.NIL; // Not implemented yet - need to search regions
 	}
 
 	@Override
@@ -56,7 +36,7 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 
 	@Override
 	public int id() {
-		return object;
+		return id;
 	}
 
 	@Override
@@ -135,16 +115,11 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 	}
 
 	public FarmingDefinition definition() {
-		final int bits = bits();
-		if (children.length == 0 || bits > children.length) {
-			return FarmingDefinition.NIL;
-		}
-
-		return ctx.farming.definition(children[bits]);
+		return ctx.farming.definition(id());
 	}
 
 	public int bits() {
-		return ctx.varpbits.varpbit(setting, shift, mask);
+		return definition().childId(ctx);
 	}
 
 	public abstract T type();
