@@ -7,9 +7,7 @@ import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject.Herb;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,8 +36,6 @@ public class IFarming extends IClientAccessor {
 
 	private static final String FAIRY_TALE_I = "Fairy Tale I - Growing Pains";
 	private static final String FAIRY_TALE_III = "Fairy Tale III - Battle at Orks Rift";
-
-	private final Map<Integer, FarmingDefinition> cache = new HashMap<Integer, FarmingDefinition>();
 
 	public static String pretty(String string) {
 		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
