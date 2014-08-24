@@ -18,7 +18,7 @@ public class ObjectDefinitionLoader extends WrapperLoader<ObjectDefinition> {
 
 	public ObjectDefinitionLoader(CacheSystem cacheSystem) {
 		super(cacheSystem);
-		cache = cacheSystem.getCacheSource().getCacheType(16);
+		cache = cacheSystem.getCacheSource().getCacheTypeRS3(16);
 	}
 
 	protected FileData getValidFile(int id) {

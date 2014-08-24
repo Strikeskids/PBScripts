@@ -11,9 +11,10 @@ import java.util.Map;
 public class ReferenceTable {
 
 	private static final int MINIMUM_FORMAT_FOR_VERSION = 6;
-	private static final int FLAG_IDENTIFIERS = 0x1, FLAG_WHIRLPOOL = 0x2;
+	private static final int FLAG_IDENTIFIERS = 0x1, FLAG_WHIRLPOOL = 0x2, FLAG_UNKNOWN_1 = 0x4, FLAG_UNKNOWN_2 = 0x8;
 	private final CacheSource cache;
 	private final int id;
+	private final boolean rs3;
 
 	private int flags;
 	private int version;
@@ -25,9 +26,10 @@ public class ReferenceTable {
 	private int[] ids;
 	private int[][] children;
 
-	public ReferenceTable(CacheSource cache, int id) {
+	public ReferenceTable(CacheSource cache, int id, boolean rs3) {
 		this.cache = cache;
 		this.id = id;
+		this.rs3 = rs3;
 	}
 
 	public int getId() {
@@ -110,8 +112,12 @@ public class ReferenceTable {
 		if (hasIdentifiers())
 			decodeEntryIdentifiers();
 		decodeCrcs();
+		if (rs3 && hasUnknown2())
+			decodeUnknown2();
 		if (hasWhirlpool())
 			decodeWhirlpools();
+		if (rs3 && hasUnknown1())
+			decodeUnknown1();
 		decodeVersions();
 		decodeChildCounts();
 		decodeChildren();
@@ -162,6 +168,29 @@ public class ReferenceTable {
 		}
 	}
 
+	@SuppressWarnings("unused")
+	private void decodeUnknown1() {
+		for (int id : ids) {
+			int value1 = data.getInt();
+			int value2 = data.getInt();
+		}
+	}
+
+	private boolean hasUnknown1() {
+		return (flags & FLAG_UNKNOWN_1) == FLAG_UNKNOWN_1;
+	}
+
+	@SuppressWarnings("unused")
+	private void decodeUnknown2() {
+		for (int id : ids) {
+			int value = data.getInt();
+		}
+	}
+
+	private boolean hasUnknown2() {
+		return (flags & FLAG_UNKNOWN_2) == FLAG_UNKNOWN_2;
+	}
+
 	private void decodeVersions() {
 		for (int id : ids) {
 			entries.get(id).setVersion(data.getInt());
@@ -170,7 +199,8 @@ public class ReferenceTable {
 
 	private void decodeChildCounts() {
 		for (int id : ids) {
-			entries.get(id).setChildCount(data.getReferenceTableSmart());
+			int childCount = data.getReferenceTableSmart();
+			entries.get(id).setChildCount(childCount);
 		}
 	}
 
@@ -178,7 +208,8 @@ public class ReferenceTable {
 		children = new int[ids.length][];
 		for (int i = 0; i < ids.length; ++i) {
 			ArchiveMeta currentEntry = getEntry(ids[i]);
-			children[i] = getIds(currentEntry.getChildCount());
+			int childCount = currentEntry.getChildCount();
+			children[i] = getIds(childCount);
 			addEntryChildren(currentEntry, children[i]);
 		}
 		if (hasIdentifiers())

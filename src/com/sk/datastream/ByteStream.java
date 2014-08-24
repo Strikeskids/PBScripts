@@ -1,5 +1,6 @@
 package com.sk.datastream;
 
+
 public class ByteStream extends Stream {
 
 	private final byte[] payload;

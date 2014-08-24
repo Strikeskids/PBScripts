@@ -1,7 +1,8 @@
 package org.logicail.cache;
 
-import org.logicail.cache.loader.rt6.RT6CacheSystem;
+import com.sk.cache.DataSource;
 import com.sk.cache.wrappers.loaders.WrapperLoader;
+import org.logicail.cache.loader.rt6.RT6CacheSystem;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 public class Main {
 	public static void main(String[] args) throws FileNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		final RT6CacheSystem system = new RT6CacheSystem(new File(System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "runescape" + File.separator + "LIVE" + File.separator));
+		final RT6CacheSystem system = new RT6CacheSystem(DataSource.getDefaultCacheDirectory("runescape"));
 //		print(system.itemLoader);
 		print(system.objectLoader);
 //		print(system.npcLoader);

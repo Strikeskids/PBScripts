@@ -12,7 +12,7 @@ import com.sk.cache.fs.FileData;
  */
 public class ScriptDefinitionLoader extends ArchiveLoader<Script> {
 	public ScriptDefinitionLoader(CacheSystem cacheSystem) {
-		super(cacheSystem, cacheSystem.getCacheSource().getCacheType(2), 14);
+		super(cacheSystem, cacheSystem.getCacheSource().getCacheTypeOS(2), 14);
 	}
 
 	@Override
