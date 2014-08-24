@@ -1,10 +1,10 @@
 package com.sk.datastream;
 
-import com.sk.compress.BZip2Decompressor;
-
 import java.nio.BufferUnderflowException;
 import java.util.Arrays;
 import java.util.zip.Inflater;
+
+import com.sk.compress.BZip2Decompressor;
 
 public abstract class Stream {
 
@@ -15,14 +15,12 @@ public abstract class Stream {
 	public static final int NUM_SHORT_BYTES = SHORT_SIZE / BYTE_SIZE;
 
 	public static final int[] MASKS = new int[INT_SIZE];
-
 	static {
 		for (int i = 1, currentMask = 0; i < MASKS.length; ++i) {
 			currentMask = currentMask << 1 | 1;
 			MASKS[i] = currentMask;
 		}
 	}
-
 	public static final int BYTE_SIGN_BIT = 1 << (BYTE_SIZE - 1);
 	public static final int BYTE_MASK = MASKS[BYTE_SIZE];
 	public static final int SKIP_SIGN_BYTE_MASK = MASKS[BYTE_SIZE - 1];
@@ -171,10 +169,10 @@ public abstract class Stream {
 		}
 	}
 
-	private static final char charSubs[] = {'\u20AC', '\0', '\u201A', '\u0192', '\u201E', '\u2026', '\u2020',
+	private static final char charSubs[] = { '\u20AC', '\0', '\u201A', '\u0192', '\u201E', '\u2026', '\u2020',
 			'\u2021', '\u02C6', '\u2030', '\u0160', '\u2039', '\u0152', '\0', '\u017D', '\0', '\0', '\u2018',
 			'\u2019', '\u201C', '\u201D', '\u2022', '\u2013', '\u2014', '\u02DC', '\u2122', '\u0161', '\u203A',
-			'\u0153', '\0', '\u017E', '\u0178'};
+			'\u0153', '\0', '\u017E', '\u0178' };
 
 	public final String getString() {
 		StringBuilder ret = new StringBuilder();

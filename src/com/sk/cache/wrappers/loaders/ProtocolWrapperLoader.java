@@ -33,4 +33,5 @@ public abstract class ProtocolWrapperLoader<T extends ProtocolWrapper> extends W
 	public boolean canLoad(int id) {
 		return getFile(id) != null;
 	}
+
 }

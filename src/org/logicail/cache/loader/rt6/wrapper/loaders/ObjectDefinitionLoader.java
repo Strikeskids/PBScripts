@@ -1,11 +1,11 @@
 package org.logicail.cache.loader.rt6.wrapper.loaders;
 
-import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
 import com.sk.cache.fs.Archive;
 import com.sk.cache.fs.CacheSystem;
 import com.sk.cache.fs.CacheType;
 import com.sk.cache.fs.FileData;
 import com.sk.cache.wrappers.loaders.WrapperLoader;
+import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +18,7 @@ public class ObjectDefinitionLoader extends WrapperLoader<ObjectDefinition> {
 
 	public ObjectDefinitionLoader(CacheSystem cacheSystem) {
 		super(cacheSystem);
-		cache = cacheSystem.getCacheSource().getCacheTypeRS3(16);
+		cache = cacheSystem.getCacheSource().getCacheType(16);
 	}
 
 	protected FileData getValidFile(int id) {
@@ -46,7 +46,7 @@ public class ObjectDefinitionLoader extends WrapperLoader<ObjectDefinition> {
 
 	@Override
 	public boolean canLoad(int id) {
-		return false;
+		return getFile(id) != null;
 	}
 
 //	private void fixObject(ObjectDefinition ret) {

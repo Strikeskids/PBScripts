@@ -1,11 +1,10 @@
 package com.sk.cache.fs;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.sk.cache.meta.ArchiveMeta;
 import com.sk.datastream.ByteStream;
 import com.sk.datastream.Stream;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Archive {
 	private final int id;
@@ -62,22 +61,22 @@ public class Archive {
 		if (children != null)
 			return;
 		children = new HashMap<Integer, FileData>();
-
+		
 		createDecompressedStream();
-
+		
 		if (metaData.getChildCount() > 1) {
 			unpackMultipleChildren();
 		} else {
 			unpackSingleChild();
 		}
-
+		
 		data = null;
 	}
-
+	
 	private void unpackSingleChild() {
 		addFile(data.getAllBytes(), 0);
 	}
-
+	
 	private void unpackMultipleChildren() {
 		getPartitions();
 		byte[][] childBuffers = initializeTemporaryChildBuffers();
@@ -132,13 +131,13 @@ public class Archive {
 			}
 		}
 	}
-
+	
 	private void createFiles(byte[][] buffers) {
 		for (int i = 0; i < buffers.length; ++i) {
 			addFile(buffers[i], i);
 		}
 	}
-
+	
 	private void addFile(byte[] data, int i) {
 		int index = metaData.getChildIndex(i);
 		addFile(new FileData(this, index, metaData.getChild(index).getIdentifier(), data));

@@ -18,7 +18,7 @@ public class ItemDefinitionLoader extends WrapperLoader<ItemDefinition> {
 
 	public ItemDefinitionLoader(CacheSystem cacheSystem) {
 		super(cacheSystem);
-		this.cache = cacheSystem.getCacheSource().getCacheTypeRS3(19);
+		this.cache = cacheSystem.getCacheSource().getCacheType(19);
 	}
 
 	protected FileData getValidFile(int id) {

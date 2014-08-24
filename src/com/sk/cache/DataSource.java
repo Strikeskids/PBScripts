@@ -47,16 +47,14 @@ public class DataSource {
 		this.indexChannels = new FileChannel[META_INDEX_FILE_NUM + 1];
 	}
 
-	/**
-	 * Version is runescape or oldschool
-	 *
-	 * @param version
-	 * @return
-	 */
+	public static File getDefaultCacheDirectory() {
+		return getDefaultCacheDirectory("runescape");
+	}
+
 	public static File getDefaultCacheDirectory(String version) {
 		String rootDirectory = System.getProperty("user.home");
 		if (rootDirectory != null) {
-			rootDirectory = rootDirectory + File.separatorChar;
+			rootDirectory = rootDirectory + "/";
 		}
 		if (rootDirectory == null) {
 			if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
@@ -66,12 +64,13 @@ public class DataSource {
 			}
 		}
 		if (rootDirectory != null) {
-			rootDirectory = rootDirectory + File.separatorChar;
+			rootDirectory = rootDirectory + "/";
 		}
 		if (rootDirectory == null) {
-			rootDirectory = "~" + File.separatorChar;
+			rootDirectory = "~/";
 		}
-		return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + version + File.separatorChar + "LIVE" + File.separatorChar);
+		return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + version
+				+ File.separatorChar + "LIVE" + File.separatorChar);
 	}
 
 	public FileChannel getCacheChannel() {
@@ -127,7 +126,8 @@ public class DataSource {
 				throw new RuntimeException();
 			if (!query.checkSector(sector))
 				throw new RuntimeException();
-			outputBuffer.put(sector.getData(), 0, Math.min(sector.getData().length, outputBuffer.remaining()));
+			outputBuffer.put(sector.getData(), sector.getDataOffset(),
+					Math.min(sector.getData().length - sector.getDataOffset(), outputBuffer.remaining()));
 			nextSectorId = sector.getNextSector();
 		}
 		if (outputBuffer.remaining() != 0)
@@ -144,7 +144,8 @@ public class DataSource {
 		int nextSector = infoStream.getUInt24();
 		int cacheType = infoStream.getUByte();
 
-		return new Sector(sectorId, cacheType, fileId, fileChunk, nextSector, infoStream.getAllBytes(), infoStream.getLocation());
+		return new Sector(sectorId, cacheType, fileId, fileChunk, nextSector, infoStream.getAllBytes(),
+				infoStream.getLocation());
 	}
 
 	private byte[] readSectorData(int sector) throws IOException {

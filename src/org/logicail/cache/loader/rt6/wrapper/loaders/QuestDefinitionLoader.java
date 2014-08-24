@@ -15,7 +15,7 @@ public class QuestDefinitionLoader extends WrapperLoader<QuestDefinition> {
 
 	public QuestDefinitionLoader(CacheSystem cacheSystem) {
 		super(cacheSystem);
-		source = cacheSystem.getCacheSource().getCacheTypeRS3(2).getArchive(35);
+		source = cacheSystem.getCacheSource().getCacheType(2).getArchive(35);
 	}
 
 	@Override

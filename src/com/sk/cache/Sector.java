@@ -46,4 +46,5 @@ public class Sector {
 	public int getDataOffset() {
 		return dataOffset;
 	}
+
 }

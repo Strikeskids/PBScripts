@@ -2,6 +2,7 @@ package org.logicail.cache;
 
 import com.sk.cache.DataSource;
 import com.sk.cache.wrappers.loaders.WrapperLoader;
+import org.logicail.cache.loader.rt4.RT4CacheSystem;
 import org.logicail.cache.loader.rt6.RT6CacheSystem;
 
 import java.io.File;
@@ -19,16 +20,16 @@ import java.util.Date;
 public class Main {
 	public static void main(String[] args) throws FileNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		final RT6CacheSystem system = new RT6CacheSystem(DataSource.getDefaultCacheDirectory("runescape"));
-//		print(system.itemLoader);
-		print(system.objectLoader);
-//		print(system.npcLoader);
-//		print(system.varpLoader);
+		print("rt6-", system.itemLoader);
+		print("rt6-", system.objectLoader);
+		//print("rt6-", system.npcLoader);
+		print("rt6-", system.questLoader);
 
-//		final RT4CacheSystem rt4 = new RT4CacheSystem(new File(System.getProperty("user.home") + File.separator + "jagexcache" + File.separator + "oldschool" + File.separator + "LIVE" + File.separator));
-//		print(rt4.itemLoader);
-//		print(rt4.objectLoader);
-//		print(rt4.npcLoader);
-//		print(rt4.varpLoader);
+		final RT4CacheSystem rt4 = new RT4CacheSystem(DataSource.getDefaultCacheDirectory("oldschool"));
+		print("rt4-", rt4.itemLoader);
+		print("rt4-", rt4.objectLoader);
+		print("rt4-", rt4.npcLoader);
+		print("rt4-", rt4.varpLoader);
 	}
 
 	//	private static void print(ScriptDefinitionLoader loader) throws FileNotFoundException, NoSuchMethodException {
@@ -79,10 +80,10 @@ public class Main {
 //		}
 //	}
 //
-	private static void print(WrapperLoader<?> loader) throws FileNotFoundException, NoSuchMethodException {
+	private static void print(String prefix, WrapperLoader<?> loader) throws FileNotFoundException, NoSuchMethodException {
 		PrintWriter writer = null;
 		try {
-			final File output = new File("output" + File.separator + loader.getClass().getDeclaredMethod("load", int.class).getReturnType().getSimpleName().toLowerCase() + "-" + /*loader.version +*/ ".txt");
+			final File output = new File("output" + File.separator + prefix + loader.getClass().getDeclaredMethod("load", int.class).getReturnType().getSimpleName().toLowerCase() + "-" + /*loader.version +*/ ".txt");
 			writer = new PrintWriter(output);
 			//writer.println("Version: " + loader.version);
 			writer.println("Generated: " + new Date().toString());

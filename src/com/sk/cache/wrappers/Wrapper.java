@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class Wrapper {
+
 	protected final WrapperLoader<?> loader;
 	public final int id;
 
@@ -31,9 +32,7 @@ public abstract class Wrapper {
 			Object o;
 			try {
 				o = f.get(this);
-			} catch (IllegalArgumentException e) {
-				o = null;
-			} catch (IllegalAccessException e) {
+			} catch (Exception e) {
 				o = null;
 			}
 			ret.put(f.getName(), o);
@@ -49,47 +48,39 @@ public abstract class Wrapper {
 		output.append(getId());
 		output.append(" {");
 		for (Field f : getClass().getDeclaredFields()) {
-			if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) != 0) {
+			if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) != 0)
 				continue;
-			}
 			Object o;
 			try {
 				o = f.get(this);
-			} catch (IllegalArgumentException e) {
-				continue;
-			} catch (IllegalAccessException e) {
+			} catch (Exception e) {
 				continue;
 			}
 			if (o == null)
 				continue;
 			output.append(f.getName());
 			output.append(": ");
-			if (f.getType().isArray()) {
-				output.append("[");
-				for (int i = 0, len = Array.getLength(o); i < len; ++i) {
-					if (i != 0) {
-						output.append(", ");
-					}
-					final Object o1 = Array.get(o, i);
-					if (o1 != null && o1.getClass().isArray()) {
-						for (int j = 0, len2 = Array.getLength(o1); j < len2; ++j) {
-							if (j != 0) {
-								output.append(", ");
-							}
-							output.append(Array.get(o1, j));
-						}
-					} else {
-						output.append(o1);
-					}
-				}
-				output.append("]");
-			} else {
-				output.append(o);
-			}
+			appendObject(output, o);
 			output.append(", ");
 		}
 		output.delete(output.length() - 2, output.length());
 		output.append("}");
 		return output.toString();
+	}
+
+	private void appendObject(StringBuilder output, Object o) {
+		if (o == null)
+			return;
+		if (o.getClass().isArray()) {
+			output.append("[");
+			for (int i = 0, len = Array.getLength(o); i < len; ++i) {
+				if (i != 0)
+					output.append(", ");
+				appendObject(output, Array.get(o, i));
+			}
+			output.append("]");
+		} else {
+			output.append(o);
+		}
 	}
 }

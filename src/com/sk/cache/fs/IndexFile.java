@@ -1,15 +1,15 @@
 package com.sk.cache.fs;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 import com.sk.cache.DataSource;
 import com.sk.cache.meta.ArchiveRequest;
 import com.sk.datastream.ByteStream;
 import com.sk.datastream.Stream;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-
 public class IndexFile {
+
 	private static final int ENTRY_SIZE = 6;
 
 	protected final DataSource source;
@@ -62,4 +62,5 @@ public class IndexFile {
 	private ArchiveRequest getMeta(Stream dataStream, int index) {
 		return new ArchiveRequest(cacheType, index, dataStream.getUInt24(), dataStream.getUInt24());
 	}
+
 }

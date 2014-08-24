@@ -1,16 +1,16 @@
 package com.sk.cache.fs;
-
 import com.sk.datastream.ByteStream;
 import com.sk.datastream.Stream;
 
+
 public class FileData {
-	private final int id;
+	private final int id;	
 	private final Archive archive;
-
+	
 	private final int identifier;
-
+	
 	private final byte[] data;
-
+		
 	public FileData(Archive archive, int id, int identifier, byte[] data) {
 		this.archive = archive;
 		this.id = id;
@@ -29,7 +29,7 @@ public class FileData {
 	public byte[] getData() {
 		return data;
 	}
-
+	
 	public Stream getDataAsStream() {
 		return new ByteStream(data);
 	}
