@@ -8,8 +8,8 @@ import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.HerbEnum;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject.Herb;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.queries.FarmingQuery;
 import org.powerbot.script.Tile;
+import org.powerbot.script.rt6.MobileIdNameQuery;
 
 import java.util.*;
 
@@ -116,20 +116,20 @@ public class IFarming extends IClientAccessor {
 		return new FarmingDefinition(def);
 	}
 
-	public FarmingQuery<Herb> herbs() {
-		return new FarmingQuery<Herb>(ctx) {
+	public MobileIdNameQuery<Herb> herbs() {
+		return new MobileIdNameQuery<Herb>(IFarming.this.ctx) {
 			@Override
 			protected List<Herb> get() {
 				ArrayList<Herb> list = new ArrayList<Herb>();
 				for (HerbEnum herbEnum : HerbEnum.values()) {
-					list.add(herbEnum.object(ctx));
+					list.add(herbEnum.object(IFarming.this.ctx));
 				}
 				return list;
 			}
 
 			@Override
 			public Herb nil() {
-				return new Herb(ctx, null);
+				return new Herb(IFarming.this.ctx, null);
 			}
 		};
 	}
