@@ -170,7 +170,9 @@ public class IFarming extends IClientAccessor {
 
 							if (localObjectLoader.canLoad(hash)) {
 								LocalObjects localObjects = localObjectLoader.load(hash);
-								for (LocalObject object : localObjects.getObjects()) {
+								List<LocalObject> objects = localObjects.getObjects();
+								Collections.shuffle(objects); // Shuffle because I don't want the same tile each time
+								for (LocalObject object : objects) {
 									if (searchingFor.contains(object.id)) {
 										objectToTile.put(object.id, new Tile(offsetX + object.x, offsetY + object.y, object.plane));
 										searchingFor.remove(object.id);
