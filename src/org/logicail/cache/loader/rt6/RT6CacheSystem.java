@@ -1,6 +1,8 @@
 package org.logicail.cache.loader.rt6;
 
 import com.sk.cache.fs.CacheSystem;
+import com.sk.cache.wrappers.loaders.LocalObjectLoader;
+import com.sk.cache.wrappers.loaders.RegionLoader;
 import org.logicail.cache.loader.rt6.wrapper.loaders.ItemDefinitionLoader;
 import org.logicail.cache.loader.rt6.wrapper.loaders.ObjectDefinitionLoader;
 import org.logicail.cache.loader.rt6.wrapper.loaders.QuestDefinitionLoader;
@@ -20,6 +22,8 @@ public class RT6CacheSystem extends CacheSystem {
 	public final ObjectDefinitionLoader objectLoader;
 	public final QuestDefinitionLoader questLoader;
 	public final ScriptLoader scriptLoader;
+	public final RegionLoader regionLoader;
+	public final LocalObjectLoader localObjectLoader;
 
 	public RT6CacheSystem(File cacheFolder) throws FileNotFoundException {
 		super(cacheFolder);
@@ -28,5 +32,7 @@ public class RT6CacheSystem extends CacheSystem {
 		objectLoader = new ObjectDefinitionLoader(this);
 		questLoader = new QuestDefinitionLoader(this);
 		scriptLoader = new ScriptLoader(this);
+		regionLoader = new RegionLoader(this);
+		localObjectLoader = new LocalObjectLoader(this);
 	}
 }

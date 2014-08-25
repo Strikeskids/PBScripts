@@ -7,7 +7,6 @@ import org.logicail.cache.loader.rt6.wrapper.ItemDefinition;
 import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
 import org.logicail.cache.loader.rt6.wrapper.QuestDefinition;
 import org.logicail.cache.loader.rt6.wrapper.Script;
-import org.logicail.cache.loader.rt6.wrapper.loaders.QuestDefinitionLoader;
 import org.powerbot.script.rt6.*;
 
 import java.io.FileNotFoundException;
@@ -22,7 +21,6 @@ public class RT6DefinitionManager extends ClientAccessor {
 	private final DefinitionCache<ClientContext, ItemDefinition> item;
 	private final DefinitionCache<ClientContext, ObjectDefinition> object;
 	private final DefinitionCache<ClientContext, Script> script;
-	private final QuestDefinitionLoader questLoader;
 	private final RT6CacheSystem system;
 
 	public RT6DefinitionManager(ClientContext ctx) throws FileNotFoundException {
@@ -33,7 +31,6 @@ public class RT6DefinitionManager extends ClientAccessor {
 		item = new DefinitionCache<ClientContext, ItemDefinition>(this.ctx, system.itemLoader);
 		object = new DefinitionCache<ClientContext, ObjectDefinition>(this.ctx, system.objectLoader);
 		script = new DefinitionCache<ClientContext, Script>(this.ctx, system.scriptLoader);
-		questLoader = new QuestDefinitionLoader(system);
 	}
 
 	public ItemDefinition get(Item item) {
@@ -57,7 +54,7 @@ public class RT6DefinitionManager extends ClientAccessor {
 	}
 
 	public QuestDefinition quest(String name) {
-		return questLoader.find(name);
+		return system.questLoader.find(name);
 	}
 
 	public Script script(int id) {
