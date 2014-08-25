@@ -143,6 +143,7 @@ public class IFarming extends IClientAccessor {
 	 * @return
 	 */
 	public Tile locate(int id) {
+		// TODO: fire this off on a separate thread
 		if (!objectToTile.containsKey(id)) {
 			synchronized (locateLock) {
 				if (!objectToTile.containsKey(id)) {
