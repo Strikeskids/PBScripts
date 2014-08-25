@@ -8,6 +8,7 @@ import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.HerbEnum;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject.Herb;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.queries.FarmingQuery;
 import org.powerbot.script.Tile;
 
 import java.util.*;

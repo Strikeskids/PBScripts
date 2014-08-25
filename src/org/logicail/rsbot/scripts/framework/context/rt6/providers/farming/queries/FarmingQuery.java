@@ -1,4 +1,4 @@
-package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming;
+package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.queries;
 
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.Identifiable;

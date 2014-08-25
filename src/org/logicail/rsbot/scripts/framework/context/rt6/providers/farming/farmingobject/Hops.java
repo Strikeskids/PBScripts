@@ -2,8 +2,7 @@ package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmi
 
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingHelper;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingObject;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.util.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.HopsEnum;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.ICanWater;

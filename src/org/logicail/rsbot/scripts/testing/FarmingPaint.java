@@ -2,7 +2,7 @@ package org.logicail.rsbot.scripts.testing;
 
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.CropState;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.CropState;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.*;
 import org.powerbot.script.PaintListener;
 

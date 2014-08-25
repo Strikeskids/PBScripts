@@ -1,7 +1,9 @@
-package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming;
+package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject;
 
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingDefinition;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.CropState;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.ICanWater;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.IClearable;
@@ -18,7 +20,6 @@ import java.awt.*;
  * Time: 16:41
  */
 public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifiable> extends IClientAccessor implements Locatable, Identifiable, IClearable, Nameable, Validatable {
-	private static final Object lock = new Object();
 	public final E parent;
 	protected final int id;
 

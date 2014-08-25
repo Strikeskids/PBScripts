@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.testing;
 
 import org.logicail.rsbot.scripts.framework.LogicailScript;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.CropState;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.CropState;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject.Herb;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Script;

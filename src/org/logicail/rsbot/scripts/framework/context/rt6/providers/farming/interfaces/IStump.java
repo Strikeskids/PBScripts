@@ -1,7 +1,7 @@
 package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces;
 
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingHelper;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingObject;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.util.FarmingHelper;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject.FarmingObject;
 
 /**
  * Created with IntelliJ IDEA.

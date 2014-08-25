@@ -1,9 +1,8 @@
 package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject;
 
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.CropState;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.CropState;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingObject;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.CompostEnum;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.IGrowthStage;
 
