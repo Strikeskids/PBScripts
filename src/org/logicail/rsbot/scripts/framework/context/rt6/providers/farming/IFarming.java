@@ -186,6 +186,8 @@ public class IFarming extends IClientAccessor {
 							}
 						}
 					}
+
+					return Tile.NIL;
 				}
 			}
 		}
