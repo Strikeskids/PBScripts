@@ -35,6 +35,19 @@ public class FarmingTest extends LogicailScript<FarmingTest> {
 	}
 
 	@Override
+	public void start() {
+		for (Herb herb : ctx.farming.herbs().select().select(new Filter<Herb>() {
+			@Override
+			public boolean accept(Herb herb) {
+				return herb.state() != CropState.GROWING;
+			}
+		}).nearest()) {
+			// This can take a little while the first time
+			log.info(herb.parent + " tile: " + herb.tile());
+		}
+	}
+
+	@Override
 	public LinkedHashMap<Object, Object> getPaintInfo() {
 		LinkedHashMap<Object, Object> properties = new LinkedHashMap<Object, Object>();
 
