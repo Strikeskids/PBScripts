@@ -18,15 +18,14 @@ import java.awt.*;
  * Time: 16:41
  */
 public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifiable> extends IClientAccessor implements Locatable, Identifiable, IClearable, Nameable, Validatable {
+	private static final Object lock = new Object();
 	public final E parent;
 	protected final int id;
-	protected final Tile tile;
 
 	public FarmingObject(IClientContext ctx, E enumType) {
 		super(ctx);
 		parent = enumType;
 		id = enumType.id();
-		tile = Tile.NIL; // Not implemented yet - need to search regions
 	}
 
 	@Override
@@ -96,17 +95,22 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 		return bits() <= 3;
 	}
 
+	public int bits() {
+		return definition().childId(ctx);
+	}
+
 	protected abstract boolean grown();
 
 	@Override
 	public Tile tile() {
 		if (valid()) {
-			final GameObject nearest = ctx.objects.select().id(id()).nearest().poll();
+			final GameObject nearest = ctx.objects.select().id(id).nearest().poll();
 			if (nearest.valid()) {
 				return nearest.tile();
 			}
 		}
-		return tile;
+
+		return ctx.farming.locate(id);
 	}
 
 	@Override
@@ -115,11 +119,7 @@ public abstract class FarmingObject<T extends Enum, E extends Enum<E> & Identifi
 	}
 
 	public FarmingDefinition definition() {
-		return ctx.farming.definition(id());
-	}
-
-	public int bits() {
-		return definition().childId(ctx);
+		return ctx.farming.definition(id);
 	}
 
 	public abstract T type();

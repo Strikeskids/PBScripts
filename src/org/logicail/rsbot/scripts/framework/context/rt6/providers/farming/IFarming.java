@@ -1,13 +1,16 @@
 package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming;
 
+import com.sk.cache.wrappers.loaders.LocalObjectLoader;
+import com.sk.cache.wrappers.region.LocalObject;
+import com.sk.cache.wrappers.region.LocalObjects;
 import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.HerbEnum;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmingobject.Herb;
+import org.powerbot.script.Tile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,11 +34,53 @@ public class IFarming extends IClientAccessor {
 	public static final int[] TREE = {8388, 8389, 8390, 8391};
 	public static final int[] ALLOTMENT = {8550, 8551, 8552, 8553, 8554, 8555, 8556, 8557};
 
+	private static final int[] ALL_OBJECT_IDS;
+
 	private static final int SETTING_SUPPLIES_EXTRA = 1611;
 	private static final int SETTING_SUPPLIES = 29;
 
 	private static final String FAIRY_TALE_I = "Fairy Tale I - Growing Pains";
 	private static final String FAIRY_TALE_III = "Fairy Tale III - Battle at Orks Rift";
+
+	private static final int REGION_MIN_X = 32;
+	private static final int REGION_MAX_X = 61;
+	private static final int REGION_MIN_Y = 39;
+	private static final int REGION_MAX_Y = 64;
+
+	private final HashMap<Integer, Tile> objectToTile = new HashMap<Integer, Tile>();
+	private final Set<Integer> searched = new HashSet<Integer>();
+
+	private static Integer[] toInteger(int... ints) {
+		Integer[] result = new Integer[ints.length];
+		for (int i = 0; i < ints.length; i++) {
+			result[i] = ints[i];
+		}
+		return result;
+	}
+
+	static {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		Collections.addAll(list, toInteger(HERB));
+		Collections.addAll(list, toInteger(BELLADONNA));
+		Collections.addAll(list, toInteger(BUSH));
+		Collections.addAll(list, toInteger(CACTUS));
+		Collections.addAll(list, toInteger(CALQUAT));
+		Collections.addAll(list, toInteger(COMPOST));
+		Collections.addAll(list, toInteger(FLOWER));
+		Collections.addAll(list, toInteger(FRUIT_TREE));
+		Collections.addAll(list, toInteger(HOPS));
+		Collections.addAll(list, toInteger(MUSHROOM));
+		Collections.addAll(list, toInteger(SPIRIT_TREE));
+		Collections.addAll(list, toInteger(TREE));
+		Collections.addAll(list, toInteger(ALLOTMENT));
+		Collections.addAll(list, toInteger(HERB));
+		Collections.addAll(list, toInteger(HERB));
+
+		ALL_OBJECT_IDS = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			ALL_OBJECT_IDS[i] = list.get(i);
+		}
+	}
 
 	public static String pretty(String string) {
 		return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase().replace('_', ' ');
@@ -86,6 +131,65 @@ public class IFarming extends IClientAccessor {
 				return new Herb(ctx, null);
 			}
 		};
+	}
+
+	private final Object locateLock = new Object();
+
+	/**
+	 * Search RS surface for location of object
+	 *
+	 * @param id
+	 * @return
+	 */
+	public Tile locate(int id) {
+		if (!objectToTile.containsKey(id)) {
+			synchronized (locateLock) {
+				if (!objectToTile.containsKey(id)) {
+					HashSet<Integer> searchingFor = new HashSet<Integer>();
+					Collections.addAll(searchingFor, toInteger(ALL_OBJECT_IDS));
+					for (Integer integer : objectToTile.keySet()) {
+						searchingFor.remove(integer);
+					}
+
+					LocalObjectLoader localObjectLoader = ctx.definitions.system().localObjectLoader;
+
+
+					boolean found = false;
+					for (int x = REGION_MIN_X; x <= REGION_MAX_X; x++) {
+						for (int y = REGION_MIN_Y; y <= REGION_MAX_Y; y++) {
+							int hash = x | y << 7;
+							if (searched.contains(hash)) {
+								continue;
+							}
+							searched.add(hash);
+
+							int offsetX = x * 64;
+							int offsetY = y * 64;
+
+							if (localObjectLoader.canLoad(hash)) {
+								LocalObjects localObjects = localObjectLoader.load(hash);
+								for (LocalObject object : localObjects.getObjects()) {
+									if (searchingFor.contains(object.id)) {
+										objectToTile.put(object.id, new Tile(offsetX + object.x, offsetY + object.y, object.plane));
+										searchingFor.remove(object.id);
+
+										if (object.id == id) {
+											found = true;
+										}
+									}
+								}
+
+								if (found) {
+									return objectToTile.get(id);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return objectToTile.get(id);
 	}
 
 	public int plantCure() {
