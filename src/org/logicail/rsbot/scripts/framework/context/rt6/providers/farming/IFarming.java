@@ -74,8 +74,6 @@ public class IFarming extends IClientAccessor {
 		Collections.addAll(list, toInteger(SPIRIT_TREE));
 		Collections.addAll(list, toInteger(TREE));
 		Collections.addAll(list, toInteger(ALLOTMENT));
-		Collections.addAll(list, toInteger(HERB));
-		Collections.addAll(list, toInteger(HERB));
 
 		ALL_OBJECT_IDS = new int[list.size()];
 		for (int i = 0; i < list.size(); i++) {
