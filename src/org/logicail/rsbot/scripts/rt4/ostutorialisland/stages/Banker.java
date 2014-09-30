@@ -80,12 +80,40 @@ public class Banker extends Talker {
 			return;
 		}
 
-		if (stage() > 14 || ctx.chat.visible("window and move on through the door indicated")) {
+		final Component closePoll = pollCloseButton();
+		if (closePoll.valid() && closePoll.click("Close")) {
+			Condition.wait(new Callable<Boolean>() {
+				@Override
+				public Boolean call() throws Exception {
+					return !closePoll.valid();
+				}
+			}, 200, 5);
+			return;
+		}
+
+		if (ctx.chat.visible("visit the poll booth indicated.")) {
+			GameObject poll = ctx.objects.select().select(ObjectDefinition.name(ctx, "Poll booth")).nearest().poll();
+			if (ctx.camera.prepare(poll) && poll.interact("Use", "Poll booth")) {
+				Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						return pollCloseButton().valid();
+					}
+				}, 200, 5);
+			}
+			return;
+		}
+
+		if (stage() > 14 || ctx.chat.visible("ready, move on through the door indicated")) {
 			leave();
 			return;
 		}
 
 		super.run();
+	}
+
+	private Component pollCloseButton() {
+		return ctx.widgets.widget(345).component(1).component(11);
 	}
 
 	@Override
