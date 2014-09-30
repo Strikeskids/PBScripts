@@ -79,7 +79,8 @@ public class QuestGuide extends Talker {
 
 	public static void leave(final IClientContext ctx) {
 		final GameObject ladder = ctx.objects.select().select(ObjectDefinition.name(ctx, "Ladder")).nearest().poll();
-		if (ctx.camera.prepare(ladder)) {
+		ObjectDefinition definition = ctx.definitions.object(ladder.id());
+		if (definition != null && definition.hasAction("Climb-down") && ctx.camera.prepare(ladder)) {
 			if (ladder.interact("Climb-down")) {
 				Condition.wait(new Callable<Boolean>() {
 					@Override
