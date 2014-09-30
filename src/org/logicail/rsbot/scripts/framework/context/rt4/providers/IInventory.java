@@ -80,11 +80,11 @@ public class IInventory extends Inventory {
 		final Item itemA = select().id(a).shuffle().poll();
 		final Item itemB = select().id(b).shuffle().poll();
 
-		if (!itemA.valid() || !itemB.valid()) {
-			return false;
-		}
-
 		if (ctx.game.tab() == Game.Tab.INVENTORY || ctx.game.tab(Game.Tab.INVENTORY)) {
+			if (!itemA.valid() || !itemB.valid()) {
+				return false;
+			}
+
 			if (selectedItem().id() == a || Random.nextBoolean() && select(a)) {
 				return itemB.click("Use", selectedItem().name() + " -> " + itemB.name()) && Condition.wait(new Callable<Boolean>() {
 					@Override
