@@ -1,11 +1,11 @@
 package org.logicail.cache.loader.rt4.wrappers;
 
-import org.logicail.cache.loader.rt4.wrappers.loaders.ObjectDefinitionLoader;
 import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.cache.wrappers.protocol.BasicProtocol;
 import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
+import org.logicail.cache.loader.rt4.wrappers.loaders.ObjectDefinitionLoader;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.powerbot.script.Filter;
 import org.powerbot.script.rt4.GameObject;
@@ -156,5 +156,15 @@ public class ObjectDefinition extends StreamedWrapper {
 				protocol.read(this, opcode, s);
 			}
 		}
+	}
+
+	public boolean hasAction(String str) {
+		for (String s : actions) {
+			if (s != null && s.startsWith(str)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
