@@ -2,12 +2,14 @@ package org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.farmi
 
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.FarmingDefinition;
-import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.util.FarmingHelper;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.HerbEnum;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.ICanDie;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.IGrowthStage;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.interfaces.IWeeds;
+import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.util.FarmingHelper;
 import org.powerbot.script.Filter;
+import org.powerbot.script.Viewable;
+import org.powerbot.script.rt6.Interactive;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +17,7 @@ import org.powerbot.script.Filter;
  * Date: 14/04/2014
  * Time: 17:18
  */
-public class Herb extends FarmingObject<Herb.HerbType, HerbEnum> implements IGrowthStage, IWeeds, ICanDie {
+public class Herb extends FarmingObject<Herb.HerbType, HerbEnum> implements IGrowthStage, IWeeds, ICanDie, Viewable {
 	public static final int[] MODEL_IDS_GROWTH_STAGE = {7871, 7872, 7873, 7874, 7875};
 	public static final int[] MODEL_IDS_GROWTH_STAGE_TROLLHEIM = {19144, 19150, 19143, 19149, 19140};
 
@@ -94,6 +96,11 @@ public class Herb extends FarmingObject<Herb.HerbType, HerbEnum> implements IGro
 	@Override
 	public int weeds() {
 		return FarmingHelper.weeds(this);
+	}
+
+	@Override
+	public boolean inViewport() {
+		return !ctx.objects.select().id(id()).select(Interactive.areInViewport()).isEmpty();
 	}
 
 	public enum HerbType {
