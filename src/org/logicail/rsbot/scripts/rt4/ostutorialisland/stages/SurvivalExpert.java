@@ -56,6 +56,8 @@ public class SurvivalExpert extends Talker {
 					return;
 				}
 
+				super.run();
+
 				break;
 			case 3:
 				ctx.inventory.select().id(BURNT_SHRIMP).each(new Filter<Item>() {
