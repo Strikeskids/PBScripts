@@ -264,7 +264,7 @@ public class CombatExpert extends Talker {
 			Condition.wait(new Callable<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
-					return ctx.chat.visible("Banking.");
+					return !ladder.valid() || ctx.chat.visible("Banking.");
 				}
 			}, 200, 40);
 		}
