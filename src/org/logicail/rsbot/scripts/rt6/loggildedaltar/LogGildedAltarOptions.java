@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class LogGildedAltarOptions {
 	private static final String FILENAME = "settings.ini";
 	public final AtomicLong TimeLastOffering = new AtomicLong();
-	public final AtomicInteger timesBob = new AtomicInteger();
 
 	/* Settings */
 	public final AtomicBoolean lightBurners = new AtomicBoolean(true);

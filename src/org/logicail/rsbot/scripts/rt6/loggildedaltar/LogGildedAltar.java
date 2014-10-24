@@ -184,7 +184,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				break;
 			case 109:
 				if (message.equals("Note: anything your familiar is carrying when it disappears will be placed on the floor.")) {
-					options.timesBob.incrementAndGet();
 					options.usedBOB.set(false);
 				} else if (message.contains("your offering.")) {
 					options.TimeLastOffering.set(System.currentTimeMillis());
