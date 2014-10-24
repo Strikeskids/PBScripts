@@ -30,8 +30,6 @@ public class Banking extends Branch<LogGildedAltar> {
 	public Banking(LogGildedAltar script) {
 		super(script);
 		options = script.options;
-
-		add(new BankBob(this));
 		add(new BankOpen(this));
 		add(new BankWithdraw(this));
 	}

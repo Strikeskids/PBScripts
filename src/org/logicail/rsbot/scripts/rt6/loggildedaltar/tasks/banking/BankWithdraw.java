@@ -174,17 +174,6 @@ public class BankWithdraw extends BankingAbstract {
 			}
 		}*/
 
-		// Fill bob as much as possible before withdrawing marrentil
-		if (options.bobonce.get() && options.timesBob.get() == 0) {
-			if (!ctx.backpack.isFull()) {
-				if (!ctx.bank.withdraw(options.offering.getId(), Bank.Amount.ALL)) {
-					script.log.info("Could not withdraw bones");
-				} else {
-					return;
-				}
-			}
-		}
-
 		if (options.lightBurners.get()) {
 			int marrentilCount = ctx.backpack.select().id(Banking.ID_MARRENTIL).count();
 			if (marrentilCount < 2) {
@@ -223,6 +212,17 @@ public class BankWithdraw extends BankingAbstract {
 				script.log.info(options.status);
 			} else {
 				return;
+			}
+		}
+
+		// Fill BOB
+		if (options.useBOB.get() && ctx.summoning.summoned() && ctx.summoning.timeLeft() >= 180 && !getBackpackOffering().isEmpty()) {
+			if (bankingBranch.beastOfBurdenCount.get() != options.beastOfBurden.bobSpace()) {
+				// Withdraw-X to BoB
+				if (ctx.bank.withdrawBoB(options.offering.getId(), Random.nextInt(options.beastOfBurden.bobSpace(), options.beastOfBurden.bobSpace() * 4))) {
+					bankingBranch.beastOfBurdenCount.set(options.beastOfBurden.bobSpace());
+					return;
+				}
 			}
 		}
 

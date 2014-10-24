@@ -1,11 +1,13 @@
 package org.logicail.rsbot.scripts.framework.context.rt6.providers;
 
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
+import org.powerbot.script.Condition;
 import org.powerbot.script.rt6.Bank;
 import org.powerbot.script.rt6.Component;
 import org.powerbot.script.rt6.Item;
 import org.powerbot.script.rt6.ItemQuery;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -119,6 +121,48 @@ public class IBank extends Bank {
 		}
 
 		return count;
+	}
+
+	public boolean withdrawBoB(int id, int amount) {
+		Component container = ctx.widgets.component(WIDGET, COMPONENT_CONTAINER_ITEMS);
+		final Item item = select().id(id).poll();
+		if (!container.valid() || !item.valid() || !ctx.summoning.summoned()) {
+			return false;
+		}
+
+		final Component component = item.component();
+		if (component.relativePoint().y == 0 && !this.currentTab(0) && Condition.wait(new Condition.Check() {
+			@Override
+			public boolean poll() {
+				return component.relativePoint().y != 0;
+			}
+		}, 100, 10)) {
+			return false;
+		}
+		Rectangle rectangle = container.viewportRect();
+		if (!(rectangle.contains(component.viewportRect()) || ctx.widgets.scroll(component, ctx.widgets.component(WIDGET, COMPONENT_SCROLL_BAR), rectangle.contains(ctx.input.getLocation())))) {
+			return false;
+		}
+		final int count = item.stackSize();
+		if (component.interact("Withdraw-X to BoB") && Condition.wait(new Condition.Check() {
+			@Override
+			public boolean poll() {
+				return isInputOpen();
+			}
+		})) {
+			Condition.sleep();
+			ctx.input.sendln("" + amount + "");
+		}
+		return Condition.wait(new Condition.Check() {
+			@Override
+			public boolean poll() {
+				return item.stackSize() != count;
+			}
+		});
+	}
+
+	private boolean isInputOpen() {
+		return ctx.widgets.component(1469, 2).visible();
 	}
 
 	public enum BankTab {
