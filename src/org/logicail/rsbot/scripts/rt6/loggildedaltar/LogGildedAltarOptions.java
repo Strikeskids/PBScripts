@@ -37,7 +37,6 @@ public class LogGildedAltarOptions {
 	//public static MyAuras.Aura aura = MyAuras.Aura.CORRUPTION;
 	/* Move to bank delegation */
 	public final AtomicBoolean banking = new AtomicBoolean();
-	public final AtomicBoolean bobonce = new AtomicBoolean();
 	public final AtomicBoolean onlySummoningPotions = new AtomicBoolean();
 	public final AtomicBoolean stopLevelEnabled = new AtomicBoolean();
 	public final AtomicInteger stopLevel = new AtomicInteger(99);
@@ -97,7 +96,6 @@ public class LogGildedAltarOptions {
 		if (useBOB.get()) {
 			json.add("useBOB", useOtherHouse.get());
 			json.add("usedBOB", usedBOB.get());
-			json.add("bobonce", bobonce.get());
 			json.add("beastOfBurden", beastOfBurden.name());
 			json.add("onlyHouseObelisk", onlyHouseObelisk.get());
 		}

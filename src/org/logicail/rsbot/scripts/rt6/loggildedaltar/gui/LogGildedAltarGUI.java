@@ -72,7 +72,6 @@ public class LogGildedAltarGUI extends JFrame {
 	private JComboBox comboBoxBOB;
 	private JCheckBox houseRechargeCheckbox;
 	private JCheckBox summoningPotionCheckbox;
-	private JCheckBox bobOnceCheckbox;
 	//private JSlider mouseSpeedSlider;
 	//private JCheckBox mouseSpeedCheckBox;
 	//private JCheckBox enableAura;
@@ -310,8 +309,6 @@ public class LogGildedAltarGUI extends JFrame {
 			panelConstraints.gridy++;
 			panel.add(summoningPotionCheckbox, panelConstraints);
 			panelConstraints.gridy++;
-			panel.add(bobOnceCheckbox, panelConstraints);
-			panelConstraints.gridy++;
 
 			panelConstraints.gridwidth = 1;
 			panel.add(new JLabel("Familiar:"), panelConstraints);
@@ -424,7 +421,6 @@ public class LogGildedAltarGUI extends JFrame {
 				final boolean enable = e.getStateChange() == ItemEvent.SELECTED;
 				houseRechargeCheckbox.setEnabled(enable);
 				summoningPotionCheckbox.setEnabled(enable);
-				bobOnceCheckbox.setEnabled(enable);
 				comboBoxBOB.setEnabled(enable);
 			}
 		});
@@ -446,12 +442,10 @@ public class LogGildedAltarGUI extends JFrame {
 				}
 			}
 		});
-		bobOnceCheckbox = new JCheckBox("Only fill beast of burden once (fast banking for yak)");
 		comboBoxBOB = new JComboBox(familiarMap.keySet().toArray(new String[familiarMap.size()]));
 
 		houseRechargeCheckbox.setEnabled(false);
 		summoningPotionCheckbox.setEnabled(false);
-		bobOnceCheckbox.setEnabled(false);
 		comboBoxBOB.setEnabled(false);
 
 		/*
@@ -900,8 +894,6 @@ public class LogGildedAltarGUI extends JFrame {
 		settings.setProperty("onlyhouseobelisk", String.valueOf(houseRechargeCheckbox.isSelected()));
 		settings.setProperty("summoningPotion", String.valueOf(summoningPotionCheckbox.isSelected()));
 
-		settings.setProperty("bobonce", String.valueOf(bobOnceCheckbox.isSelected()));
-
 		//settings.setProperty("enableaura", String.valueOf(enableAura.isSelected()));
 		//settings.setProperty("aura", String.valueOf(comboBoxAura.getSelectedItem()));
 
@@ -1043,7 +1035,6 @@ public class LogGildedAltarGUI extends JFrame {
 
 		options.offering = (Offering) comboBoxOffering.getSelectedItem();
 		options.lightBurners.set(lightBurners.isSelected());
-		options.bobonce.set(bobOnceCheckbox.isSelected());
 
 		//other
 		//options.screenshots = screenshotCheckbox.isSelected();
@@ -1196,8 +1187,6 @@ public class LogGildedAltarGUI extends JFrame {
 
 				houseRechargeCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("onlyhouseobelisk", "false")));
 				summoningPotionCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("summoningPotion", "false")));
-
-				bobOnceCheckbox.setSelected(Boolean.parseBoolean(settings.getProperty("bobonce", "false")));
 
 				/*enableAura.setSelected(Boolean.parseBoolean(settings.getProperty("enableaura", "false")));
 				MyAuras.Aura aura = MyAuras.getAura(settings.getProperty("aura", "Corruption"));
