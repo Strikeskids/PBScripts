@@ -221,6 +221,7 @@ public class BankWithdraw extends BankingAbstract {
 				// Withdraw-X to BoB
 				if (ctx.bank.withdrawBoB(options.offering.getId(), Random.nextInt(options.beastOfBurden.bobSpace(), options.beastOfBurden.bobSpace() * 4))) {
 					bankingBranch.beastOfBurdenCount.set(options.beastOfBurden.bobSpace());
+					options.usedBOB.set(false);
 					return;
 				}
 			}

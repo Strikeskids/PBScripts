@@ -142,21 +142,6 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 							}
 						});
 					}*/
-				} else if (options.useBOB.get()) {
-					if (message.startsWith("Your familiar is too big to fit here.")
-							|| message.equals("The spirit in this pouch is too big to summon here. You will need to move to a larger area.")
-							|| message.contains(" too far away ")) {
-						familiarFailed.set(true);
-					}/* else if (options.useAura && message.startsWith("Currently recharging.")) {
-						try {
-							int start = message.indexOf("<col=ff0000>") + 12;
-							String timeString = message.substring(start, message.indexOf(" ", start));
-							String[] hms = timeString.split(":");
-							int seconds = Integer.parseInt(hms[0]) * 3600 + Integer.parseInt(hms[1]) * 60 + Integer.parseInt(hms[2]);
-							//ActivateAura.setTimeNextAura(System.currentTimeMillis() + Random.nextInt(seconds * 1000, seconds * 1020)); // TODO
-						} catch (Exception ignored) {
-						}
-					}*/
 				}
 				break;
 			case 2:
