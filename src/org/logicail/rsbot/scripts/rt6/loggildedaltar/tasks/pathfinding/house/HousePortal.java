@@ -8,8 +8,6 @@ import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.NodePath;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.Path;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.wrapper.BankRequiredItem;
 import org.powerbot.script.Condition;
-import org.powerbot.script.Random;
-import org.powerbot.script.rt6.ChatOption;
 import org.powerbot.script.rt6.Component;
 import org.powerbot.script.rt6.GameObject;
 
@@ -102,48 +100,28 @@ public class HousePortal extends NodePath {
 
 			options.status = "Enter the portal";
 
-			if (ctx.chat.select().text("Go to a friend's house.").isEmpty()) {
-				if (options.useOtherHouse.get() && ctx.chat.isInputWidgetOpen()) {
-					script.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
-					Component previous = ctx.widgets.component(IChat.WIDGET_INPUT, 1).component(0);
-					if (previous.valid() && previous.visible() && previous.text().toLowerCase().equals("last name entered: " + openHouse.getPlayerNameClean())) {
-						if (previous.interact("Use:")) {
-							enteringHouse.set(true);
-						} else {
-							return;
-						}
+			if (options.useOtherHouse.get() && ctx.chat.isInputWidgetOpen()) {
+				script.log.info("Try to enter house at \"" + openHouse.getPlayerName() + "\"");
+				Component previous = ctx.widgets.component(IChat.WIDGET_INPUT, 1).component(0);
+				if (previous.valid() && previous.visible() && previous.text().toLowerCase().equals("last name entered: " + openHouse.getPlayerNameClean())) {
+					if (previous.interact("Use:")) {
+						enteringHouse.set(true);
 					} else {
-						Condition.sleep(500);
-						enteringHouse.set(ctx.chat.sendInput(openHouse.getPlayerNameClean()));
+						return;
 					}
 				} else {
-					if (ctx.camera.prepare(portal) && portal.interact("Enter", "Portal")) {
-						if (Condition.wait(new Callable<Boolean>() {
-							@Override
-							public Boolean call() throws Exception {
-								return !ctx.chat.select().text("Go to a friend's house.").isEmpty();
-							}
-						}, 200, 20)) {
-							return; // recall enterPortal
-						}
-					}
+					Condition.sleep(500);
+					enteringHouse.set(ctx.chat.sendInput(openHouse.getPlayerNameClean()));
 				}
-			} else {
-				// Chat open
+			} else if (ctx.camera.prepare(portal) && portal.interact(options.useOtherHouse.get() ? "Enter friend's house" : "Enter house", "Portal")) {
 				if (options.useOtherHouse.get()) {
-					for (final ChatOption option : ctx.chat.first()) {
-						if (option.select(Random.nextBoolean())) {
-							ctx.chat.waitForInputWidget();
-							Condition.sleep(200);
-							return;
-						}
-					}
+					enteringHouse.set(true);
 				} else {
-					for (ChatOption option : ctx.chat.select().text("Go to your house.").first()) {
-						enteringHouse.set(option.select(Random.nextBoolean()));
-					}
+					ctx.chat.waitForInputWidget();
+					return;
 				}
 			}
+			
 
 			if (enteringHouse.get()) {
 				options.status = "Waiting for house to load";
