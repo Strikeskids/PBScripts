@@ -123,7 +123,7 @@ public class IBank extends Bank {
 		return count;
 	}
 
-	public boolean withdrawBoB(int id, int amount) {
+	public boolean withdrawBoB(final int id, int amount) {
 		Component container = ctx.widgets.component(WIDGET, COMPONENT_CONTAINER_ITEMS);
 		final Item item = select().id(id).poll();
 		if (!container.valid() || !item.valid() || !ctx.summoning.summoned()) {
@@ -143,7 +143,7 @@ public class IBank extends Bank {
 		if (!(rectangle.contains(component.viewportRect()) || ctx.widgets.scroll(component, ctx.widgets.component(WIDGET, COMPONENT_SCROLL_BAR), rectangle.contains(ctx.input.getLocation())))) {
 			return false;
 		}
-		final int count = item.stackSize();
+		final int count = select().id(id).count(true);
 		if (component.interact("Withdraw-X to BoB") && Condition.wait(new Condition.Check() {
 			@Override
 			public boolean poll() {
@@ -156,7 +156,7 @@ public class IBank extends Bank {
 		return Condition.wait(new Condition.Check() {
 			@Override
 			public boolean poll() {
-				return item.stackSize() != count;
+				return ctx.bank.select().id(id).count(true) != count;
 			}
 		});
 	}

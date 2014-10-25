@@ -197,6 +197,7 @@ public class BankWithdraw extends BankingAbstract {
 					options.status = "Could not withdraw clean marrentil";
 					script.log.info(options.status);
 				}
+				return;
 			}
 			marrentilCount = ctx.backpack.select().id(Banking.ID_MARRENTIL).count();
 			if (marrentilCount > 2) {
@@ -218,9 +219,10 @@ public class BankWithdraw extends BankingAbstract {
 		// Fill BOB
 		if (options.useBOB.get() && ctx.summoning.summoned() && ctx.summoning.timeLeft() >= 180 && !getBackpackOffering().isEmpty()) {
 			if (bankingBranch.beastOfBurdenCount.get() != options.beastOfBurden.bobSpace()) {
-				// Withdraw-X to BoB
+				int count = ctx.bank.select().id(options.offering.getId()).count(true);
 				if (ctx.bank.withdrawBoB(options.offering.getId(), Random.nextInt(options.beastOfBurden.bobSpace(), options.beastOfBurden.bobSpace() * 4))) {
-					bankingBranch.beastOfBurdenCount.set(options.beastOfBurden.bobSpace());
+					int withdrawn = count - ctx.bank.select().id(options.offering.getId()).poll().stackSize();
+					bankingBranch.beastOfBurdenCount.set(withdrawn);
 					options.usedBOB.set(false);
 					return;
 				}
@@ -229,6 +231,12 @@ public class BankWithdraw extends BankingAbstract {
 
 		if (!getBackpackOffering().isEmpty()
 				&& (!options.lightBurners.get() || (options.lightBurners.get() && ctx.backpack.select().id(Banking.ID_MARRENTIL).count() >= 2))) {
+			if (ctx.backpack.select().id(Banking.ID_MARRENTIL).count() > 2) {
+				options.status = "Depositing marrentil";
+				ctx.bank.deposit(Banking.ID_MARRENTIL, 1);
+				return;
+			}
+			options.bonesTakenFromBank.set(ctx.bank.backpack.select().id(options.offering.getId()).count() + bankingBranch.beastOfBurdenCount.get());
 			ctx.bank.close();
 			options.status = "Finished banking";
 			bankingBranch.setBanking(false);

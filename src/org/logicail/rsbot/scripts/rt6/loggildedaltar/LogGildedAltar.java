@@ -88,8 +88,10 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 		properties.put("Bones Offered", String.format("%,d (%,d/h)", options.bonesOffered.get(), (int) (options.bonesOffered.get() / time)));
 
 		if (options.useBOB.get()) {
-			properties.put("BoB Count", bankingTask.banking.beastOfBurdenCount.get() + " / " + options.beastOfBurden.bobSpace());
+			properties.put("Finished using BoB", options.usedBOB.get());
 		}
+
+		properties.put("Offered this trip", options.bonesOfferedThisTrip.get() + " / " + options.bonesTakenFromBank.get());
 
 //		for (ElderTree tree : ElderTree.values()) {
 //			properties.put(tree.name(), tree.hasBranches(ctx) + " " + tree.getTime(ctx));
@@ -173,6 +175,9 @@ public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements Me
 				} else if (message.contains("your offering.")) {
 					options.TimeLastOffering.set(System.currentTimeMillis());
 					options.bonesOffered.incrementAndGet();
+					if (options.bonesOfferedThisTrip.incrementAndGet() >= options.bonesTakenFromBank.get()) {
+						options.usedBOB.set(true);
+					}
 				}
 		}
 	}

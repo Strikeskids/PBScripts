@@ -21,6 +21,9 @@ public class LogGildedAltarOptions {
 	private static final String FILENAME = "settings.ini";
 	public final AtomicLong TimeLastOffering = new AtomicLong();
 
+	public final AtomicInteger bonesTakenFromBank = new AtomicInteger();
+	public final AtomicInteger bonesOfferedThisTrip = new AtomicInteger();
+
 	/* Settings */
 	public final AtomicBoolean lightBurners = new AtomicBoolean(true);
 	public final AtomicBoolean useBOB = new AtomicBoolean();

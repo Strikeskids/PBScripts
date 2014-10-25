@@ -81,6 +81,7 @@ public class Banking extends Branch<LogGildedAltar> {
 		if (state) {
 			withdrawnDelegation.set(false);
 			beastOfBurdenCount.set(0);
+			options.bonesOfferedThisTrip.set(0);
 		}
 	}
 }
