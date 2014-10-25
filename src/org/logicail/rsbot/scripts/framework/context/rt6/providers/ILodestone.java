@@ -86,7 +86,7 @@ public class ILodestone extends IClientAccessor {
 						if (!isHovered(lodestone)) {
 							lodestoneComponent.hover();
 							if (!isHovered(lodestone)) {
-								ctx.controller.script().log.info("Failed to hover " + lodestone);
+								ctx.controller.script().log.info("Failed to hover " + lodestone + " trying key");
 								return false;
 							}
 						}
@@ -97,6 +97,9 @@ public class ILodestone extends IClientAccessor {
 					if (ctx.menu.click(org.powerbot.script.rt6.Menu.filter("Teleport"))) {
 						interacted = true;
 					}
+				} else {
+					// Try key
+					interacted = ctx.input.send(lodestone.key);
 				}
 			}
 		}
