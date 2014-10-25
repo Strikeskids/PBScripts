@@ -5,6 +5,7 @@ import org.logicail.rsbot.scripts.rt6.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.LodestoneTeleport;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.Path;
 import org.powerbot.script.Condition;
+import org.powerbot.script.Random;
 
 import java.util.concurrent.Callable;
 
@@ -22,7 +23,7 @@ public class TaverleyLodestone extends LodestoneTeleport {
 	@Override
 	public boolean doLarge() {
 		if (!script.houseTask.isInHouse() && !locationAttribute.isInLargeArea(ctx))
-			if (ctx.lodestones.teleport(lodestone, true)) {
+			if (ctx.lodestones.teleport(lodestone, true, Random.nextBoolean())) {
 				timeLastTeleport = System.currentTimeMillis();
 
 				if (Condition.wait(new Callable<Boolean>() {

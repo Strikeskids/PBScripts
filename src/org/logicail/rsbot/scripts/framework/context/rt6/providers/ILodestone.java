@@ -4,12 +4,8 @@ import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Tile;
-import org.powerbot.script.rt6.ClientAccessor;
-import org.powerbot.script.rt6.ClientContext;
-import org.powerbot.script.rt6.Game;
-import org.powerbot.script.rt6.Player;
+import org.powerbot.script.rt6.*;
 
-import java.awt.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -19,6 +15,7 @@ import java.util.concurrent.Callable;
  * Time: 19:29
  */
 public class ILodestone extends IClientAccessor {
+	private final static int HOVER_TELEPORT = 1486;
 	private final static int TELEPORT_INTERFACE = 1092;
 	private final static int TELEPORT_INTERFACE_HOVERED = 42;
 	private final static int TELEPORT_INTERFACE_CHILD = 38;
@@ -31,11 +28,16 @@ public class ILodestone extends IClientAccessor {
 		super(context);
 	}
 
+
 	public boolean teleport(Lodestone lodestone) {
 		return teleport(lodestone, false);
 	}
 
-	public boolean teleport(final Lodestone lodestone, boolean interruptible) {
+	public boolean teleport(Lodestone lodestone, boolean key) {
+		return teleport(lodestone, false, key);
+	}
+
+	public boolean teleport(final Lodestone lodestone, boolean interruptible, boolean key) {
 		if (lodestone == null) {
 			return false;
 		}
@@ -53,7 +55,7 @@ public class ILodestone extends IClientAccessor {
 		boolean interacted = false;
 
 		if (!isOpen()) {
-			final org.powerbot.script.rt6.Component mapButton = getMapButton();
+			final Component mapButton = getMapButton();
 			if (!mapButton.valid()) {
 				return false;
 			}
@@ -73,21 +75,28 @@ public class ILodestone extends IClientAccessor {
 		}
 
 		if (isOpen()) {
-			final org.powerbot.script.rt6.Component lodestoneComponent = lodestone.getComponent(ctx);
-			if (Condition.wait(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					// Avoid overlapping components
-					if (getHighlightedLodestone() != lodestone) {
-						lodestoneComponent.hover();
-						return getHighlightedLodestone() == lodestone;
+			if (key) {
+				interacted = ctx.input.send(lodestone.key);
+			} else {
+				final Component lodestoneComponent = lodestone.getComponent(ctx);
+				if (Condition.wait(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						// Avoid overlapping components
+						if (!isHovered(lodestone)) {
+							lodestoneComponent.hover();
+							if (!isHovered(lodestone)) {
+								ctx.controller.script().log.info("Failed to hover " + lodestone);
+								return false;
+							}
+						}
+						return ctx.menu.indexOf(org.powerbot.script.rt6.Menu.filter("Teleport")) > -1;
 					}
-					return ctx.menu.indexOf(org.powerbot.script.rt6.Menu.filter("Teleport")) > -1;
-				}
-			}, 150, 7)) {
-				ctx.sleep(300);
-				if (ctx.menu.click(org.powerbot.script.rt6.Menu.filter("Teleport"))) {
-					interacted = true;
+				}, 150, 7)) {
+					ctx.sleep(300);
+					if (ctx.menu.click(org.powerbot.script.rt6.Menu.filter("Teleport"))) {
+						interacted = true;
+					}
 				}
 			}
 		}
@@ -95,28 +104,21 @@ public class ILodestone extends IClientAccessor {
 		return interacted && (interruptible || Condition.wait(new TeleportCondition(ctx, lodestone), 250, 75));
 	}
 
-	private Lodestone getHighlightedLodestone() {
-		final org.powerbot.script.rt6.Component component = ctx.widgets.component(TELEPORT_INTERFACE, TELEPORT_INTERFACE_HOVERED);
-		if (isOpen() && component.valid() && component.visible()) {
-			// Find nearest lodestone
-			final Point point = component.screenPoint();
-			final int x = point.x + 5;
-			final int y = point.y + 5;
-			for (Lodestone lodestone : Lodestone.values()) {
-				final Point absoluteLocation = lodestone.getComponent(ctx).screenPoint();
-				//if (lodestone == Lodestone.EDGEVILLE) {
-				//	System.out.println("x == absoluteLocation.x && y == absoluteLocation.y");
-				//	System.out.println(x + " == " + absoluteLocation.x + " && " + y + " == " + absoluteLocation.y);
-				//}
-				if (x == absoluteLocation.x && y == absoluteLocation.y) {
-					return lodestone;
+	private boolean isHovered(Lodestone lodestone) {
+		for (Component component : ctx.widgets.widget(HOVER_TELEPORT).components()) {
+			if (component.childrenCount() > 0) {
+				for (Component child : component.components()) {
+					if (child.text().toLowerCase().startsWith(lodestone.name().toLowerCase().replace('_', ' '))) {
+						return true;
+					}
 				}
 			}
 		}
-		return null;
+
+		return false;
 	}
 
-	private org.powerbot.script.rt6.Component getMapButton() {
+	private Component getMapButton() {
 		return ctx.widgets.component(OPEN_TELEPORT_INTERFACE, OPEN_TELEPORT_INTERFACE_CHILD);
 	}
 
@@ -127,47 +129,49 @@ public class ILodestone extends IClientAccessor {
 	// Note order important for ordinal usage
 	public static enum Lodestone {
 		// Quest settings
-		BANDIT_CAMP(new Tile(3214, 2954, 0)),
-		LUNAR_ISLE(new Tile(2085, 3914, 0)),
+		BANDIT_CAMP(new Tile(3214, 2954, 0), "{VK_ALT down}{VK_B}{VK_ALT up}"),
+		LUNAR_ISLE(new Tile(2085, 3914, 0), "{VK_ALT down}{VK_L}{VK_ALT up}"),
 
 		// Setting 3
-		AL_KHARID(new Tile(3297, 3184, 0)),
-		ARDOUGNE(new Tile(2634, 3348, 0)),
-		BURTHORPE(new Tile(2899, 3544, 0)),
-		CATHERBY(new Tile(2831, 3451, 0)),
-		DRAYNOR(new Tile(3105, 3298, 0)),
-		EDGEVILLE(new Tile(3067, 3505, 0)),
-		FALADOR(new Tile(2967, 3403, 0)),
-		LUMBRIDGE(new Tile(3233, 3221, 0)),
-		PORT_SARIM(new Tile(3011, 3215, 0)),
-		SEERS_VILLAGE(new Tile(2689, 3482, 0)),
-		TAVERLEY(new Tile(2689, 3482, 0)),
-		VARROCK(new Tile(3214, 3376, 0)),
-		YANILlE(new Tile(2529, 3094, 0)),
-		CANIFIS(new Tile(3518, 3517, 0)),
-		EAGLES_PEEK(new Tile(2366, 3479, 0)),
-		FREMENIK_PROVINCE(new Tile(2711, 3678, 0)),
-		KARAMJA(new Tile(2761, 3148, 0)),
-		OOGLOG(new Tile(2533, 2871, 0)),
-		TIRANNWN(new Tile(2254, 3150, 0)),
-		WILDERNESS_VOLCANO(new Tile(3142, 3636, 0));
+		AL_KHARID(new Tile(3297, 3184, 0), "{VK_A}"),
+		ARDOUGNE(new Tile(2634, 3348, 0), "{VK_ALT down}{VK_A}{VK_ALT up}"),
+		BURTHORPE(new Tile(2899, 3544, 0), "{VK_B}"),
+		CATHERBY(new Tile(2831, 3451, 0), "{VK_C}"),
+		DRAYNOR(new Tile(3105, 3298, 0), "{VK_D}"),
+		EDGEVILLE(new Tile(3067, 3505, 0), "{VK_E}"),
+		FALADOR(new Tile(2967, 3403, 0), "{VK_F}"),
+		LUMBRIDGE(new Tile(3233, 3221, 0), "{VK_L}"),
+		PORT_SARIM(new Tile(3011, 3215, 0), "{VK_P}"),
+		SEERS_VILLAGE(new Tile(2689, 3482, 0), "{VK_S}"),
+		TAVERLEY(new Tile(2689, 3482, 0), "{VK_T}"),
+		VARROCK(new Tile(3214, 3376, 0), "{VK_V}"),
+		YANILlE(new Tile(2529, 3094, 0), "{VK_Y}"),
+		CANIFIS(new Tile(3518, 3517, 0), "{VK_ALT down}{VK_C}{VK_ALT up}"),
+		EAGLES_PEEK(new Tile(2366, 3479, 0), "{VK_ALT down}{VK_E}{VK_ALT up}"),
+		FREMENIK_PROVINCE(new Tile(2711, 3678, 0), "{VK_ALT down}{VK_F}{VK_ALT up}"),
+		KARAMJA(new Tile(2761, 3148, 0), "{VK_K}"),
+		OOGLOG(new Tile(2533, 2871, 0), "{VK_O}"),
+		TIRANNWN(new Tile(2254, 3150, 0), "{VK_ALT down}{VK_T}{VK_ALT up}"),
+		WILDERNESS_VOLCANO(new Tile(3142, 3636, 0), "{VK_W}");
 
 		private final Tile location;
+		private final String key;
 		private final int shift;
 
-		Lodestone(Tile location) {
+		Lodestone(final Tile location, final String key) {
 			this.location = location;
+			this.key = key;
 			this.shift = ordinal() - 2;
-		}
+		}// 1486 popup 25, 0 text
 
-		org.powerbot.script.rt6.Component getComponent(ClientContext ctx) {
+		Component getComponent(ClientContext ctx) {
 			switch (this) {
 				case BANDIT_CAMP:
 					return ctx.widgets.component(TELEPORT_INTERFACE, 9);
 				case LUNAR_ISLE:
-					return ctx.widgets.component(TELEPORT_INTERFACE, 20);
+					return ctx.widgets.component(TELEPORT_INTERFACE, 15);
 				default:
-					return ctx.widgets.component(TELEPORT_INTERFACE, 19 + ordinal());
+					return ctx.widgets.component(TELEPORT_INTERFACE, 14 + ordinal());
 			}
 		}
 

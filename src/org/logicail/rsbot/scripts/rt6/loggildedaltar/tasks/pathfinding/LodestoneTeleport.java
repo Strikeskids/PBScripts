@@ -3,6 +3,7 @@ package org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.ILodestone;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.LogGildedAltar;
 import org.logicail.rsbot.scripts.rt6.loggildedaltar.wrapper.BankRequiredItem;
+import org.powerbot.script.Random;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class LodestoneTeleport extends NodePath {
 
 	@Override
 	protected boolean doLarge() {
-		if (ctx.lodestones.teleport(lodestone)) {
+		if (ctx.lodestones.teleport(lodestone, Random.nextBoolean())) {
 			timeLastTeleport = System.currentTimeMillis();
 			return true;
 		}
@@ -38,6 +39,7 @@ public class LodestoneTeleport extends NodePath {
 
 	@Override
 	public boolean valid() {
-		return !locationAttribute.isInSmallArea(ctx) && (locationAttribute.isInLargeArea(ctx) || (lodestone.isUnlocked(ctx) && System.currentTimeMillis() - timeLastTeleport > 15000));
+		return !locationAttribute.isInSmallArea(ctx)
+				&& (locationAttribute.isInLargeArea(ctx) || (lodestone.isUnlocked(ctx) && System.currentTimeMillis() - timeLastTeleport > 15000));
 	}
 }
