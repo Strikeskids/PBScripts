@@ -84,7 +84,7 @@ public class Postback extends LogGildedAltarTask {
 
 			//Send request
 			OutputStream wr = connection.getOutputStream();
-			wr.write(("data=" + json.toString()).getBytes("UTF-8"));
+			wr.write(json.toString().getBytes("UTF-8"));
 			wr.flush();
 			wr.close();
 
