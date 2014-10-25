@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Script.Manifest(
 		name = "Log Gilded Altar",
 		description = "Train prayer at your own or someone else's gilded altar",
-		properties = "topic=1141536;client=6;version=7.01"
+		properties = "topic=1141536;client=6;version=7.1"
 )
 public class LogGildedAltar extends LogicailScript<LogGildedAltar> implements MessageListener {
 	private static final String NEW_VERSION_STRING = "A new version is available (restart script)";
