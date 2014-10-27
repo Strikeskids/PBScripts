@@ -15,7 +15,7 @@ public class FightCavesBank extends ItemTeleport {
 	private static final int TOKKUL_ZO = 23643;
 
 	public FightCavesBank(LogGildedAltar script) {
-		super(script, Path.FIGHT_CAVES, "Fight Caves", Equipment.Slot.RING, TOKKUL_ZO);
+		super(script, Path.FIGHT_CAVES, "Fight Cave", Equipment.Slot.RING, TOKKUL_ZO);
 	}
 
 	@Override
