@@ -19,7 +19,7 @@ import java.net.URL;
  */
 public class Postback extends LogGildedAltarTask {
 	private static final int INTERVAL = 20 * 60 * 1000; // 20 mins
-	private static final String POSTBACK_URL = "https://www.logicail.co.uk/data.php";
+	private static final String POSTBACK_URL = "http://www.logicail.co.uk/data.php";
 	private long previousTimeRunning;
 	private int previousXPGained;
 	private int previousBonesBuried;
