@@ -30,7 +30,7 @@ public class Emotes extends GraphScript.Action<IClientContext> {
 		Condition.sleep(500);
 		ctx.inventory.deselect();
 		if (ctx.game.tab() == Game.Tab.EMOTES || ctx.game.tab(Game.Tab.EMOTES)) {
-			final Component emote = ctx.widgets.widget(464).component(Random.nextInt(38, 58));
+			final Component emote = ctx.widgets.widget(216).component(1).component(Random.nextInt(0, 20));
 			if (emote.valid() && emote.click()) {
 				if (Condition.wait(new Callable<Boolean>() {
 					@Override

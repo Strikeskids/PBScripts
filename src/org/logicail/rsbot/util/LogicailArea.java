@@ -47,6 +47,20 @@ public class LogicailArea extends Area {
 		return ITile.randomize(centralTile, 2, 2);
 	}
 
+	public Tile getRandomReachable(org.logicail.rsbot.scripts.framework.context.rt4.IClientContext ctx, double distanceFromCenter) {
+		final Tile centralTile = getCentralTile();
+		java.util.List<Tile> reachable = new ArrayList<Tile>(getReachable(ctx));
+		Collections.shuffle(reachable);
+
+		for (Tile tile : reachable) {
+			if (IMovement.Euclidean(centralTile, tile) <= distanceFromCenter) {
+				return tile;
+			}
+		}
+
+		return ITile.randomize(centralTile, 2, 2);
+	}
+
 	public Set<Tile> getReachable(ClientContext ctx) {
 		HashSet<Tile> reachable = new HashSet<Tile>();
 

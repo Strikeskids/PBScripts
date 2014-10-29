@@ -118,9 +118,16 @@ public class MagicInstructor extends Talker {
 	@Override
 	protected void enter() {
 		final GameObject table = table();
-		if (table.valid()) {
+		if (table != ctx.objects.nil() && table.valid()) {
 			ctx.movement.myWalk(table.tile().derive(-3, 0).derive(Random.nextInt(-3, 3), Random.nextInt(-3, 3)));
 			Condition.sleep(200);
+		} else {
+			// Failsafe for region not loaded
+			GameObject altar = ctx.objects.select().select(ObjectDefinition.name(ctx, "Altar")).nearest().poll();
+			if (altar.valid()) {
+				ctx.movement.myWalk(altar.tile().derive(Random.nextInt(8, 12), Random.nextInt(-22, -18)));
+				Condition.sleep(200);
+			}
 		}
 	}
 
@@ -140,7 +147,7 @@ public class MagicInstructor extends Talker {
 
 	private Tile spellLocation() {
 		final GameObject table = table();
-		if (table.valid()) {
+		if (table != ctx.objects.nil() && table.valid()) {
 			return table.tile().derive(-3, 4);
 		}
 		return Tile.NIL;

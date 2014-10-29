@@ -4,11 +4,14 @@ import org.logicail.cache.loader.rt4.wrappers.ObjectDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt4.IClientContext;
 import org.logicail.rsbot.scripts.rt4.Rocks;
 import org.logicail.rsbot.scripts.rt4.ostutorialisland.OSTutorialIsland;
+import org.logicail.rsbot.util.LogicailArea;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
+import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.*;
 
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -41,7 +44,7 @@ public class MiningInstructor extends Talker {
 			enter();
 			if (!npc().valid()) {
 				GameObject rock = ctx.objects.select().select(ObjectDefinition.name(ctx, "Rocks")).nearest().limit(6).shuffle().poll();
-				ctx.movement.step(rock.tile().derive(Random.nextInt(-2, 3), Random.nextInt(-2, 3)));
+				ctx.movement.step(rock.tile().derive(Random.nextInt(-2, 2), Random.nextInt(-2, 2)));
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
@@ -203,5 +206,22 @@ public class MiningInstructor extends Talker {
 				}
 			}, 250, 16);
 		}
+	}
+
+	@Override
+	public boolean valid() {
+		if (ctx.players.local().animation() == -1 && (!ctx.players.local().inMotion() || ctx.movement.distance(ctx.players.local(), ctx.movement.destination()) < 4)) {
+			if (npc().valid()) {
+				return true;
+			}
+
+			final GameObject rock = rock(TIN_FILTER);
+			if (rock.valid()) {
+				LogicailArea area = new LogicailArea(rock.tile().derive(-1, -1), rock.tile().derive(1, 1));
+				Set<Tile> tiles = area.getReachable(ctx);
+				return !tiles.isEmpty();
+			}
+		}
+		return false;
 	}
 }

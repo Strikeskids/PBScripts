@@ -80,7 +80,7 @@ public class CombatExpert extends Talker {
 					}
 				}
 
-				final Component close = ctx.widgets.widget(84).component(3);
+				final Component close = ctx.widgets.widget(84).component(4);
 				if (close.valid()) {
 					close.click("Close");
 					Condition.wait(new Callable<Boolean>() {
