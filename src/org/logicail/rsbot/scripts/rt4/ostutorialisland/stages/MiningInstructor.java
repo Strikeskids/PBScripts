@@ -44,7 +44,7 @@ public class MiningInstructor extends Talker {
 			enter();
 			if (!npc().valid()) {
 				GameObject rock = ctx.objects.select().select(ObjectDefinition.name(ctx, "Rocks")).nearest().limit(6).shuffle().poll();
-				ctx.movement.step(rock.tile().derive(Random.nextInt(-2, 2), Random.nextInt(-2, 2)));
+				ctx.movement.step(rock.tile().derive(Random.nextInt(-2, 2), Random.nextInt(-2, 4)));
 				Condition.wait(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
