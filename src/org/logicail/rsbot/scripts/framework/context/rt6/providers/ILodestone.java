@@ -20,7 +20,7 @@ public class ILodestone extends IClientAccessor {
 	private final static int TELEPORT_INTERFACE_HOVERED = 42;
 	private final static int TELEPORT_INTERFACE_CHILD = 38;
 	private final static int OPEN_TELEPORT_INTERFACE = 1465;
-	private final static int OPEN_TELEPORT_INTERFACE_CHILD = 10;
+	private final static int OPEN_TELEPORT_INTERFACE_CHILD = 51;
 	private static final int SETTING_LODESTONES = 3;
 	//private final static int[] TELEPORT_ANIMATIONS = {16385, 16386, 16393};
 
@@ -165,7 +165,7 @@ public class ILodestone extends IClientAccessor {
 			this.location = location;
 			this.key = key;
 			this.shift = ordinal() - 2;
-		}// 1486 popup 25, 0 text
+		}
 
 		Component getComponent(ClientContext ctx) {
 			switch (this) {
