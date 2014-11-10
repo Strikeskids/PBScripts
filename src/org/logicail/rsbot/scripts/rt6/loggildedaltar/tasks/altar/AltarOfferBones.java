@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
  * Time: 19:17
  */
 public class AltarOfferBones extends LogGildedAltarTask {
-	private static final int ANIMATION_OFFERING = 3705;
+	private static final int ANIMATION_OFFERING = 24897;
 
 	public AltarOfferBones(LogGildedAltar script) {
 		super(script);
