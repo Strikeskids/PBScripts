@@ -11,7 +11,10 @@ import org.logicail.rsbot.scripts.rt6.loggildedaltar.tasks.pathfinding.astar.Roo
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
-import org.powerbot.script.rt6.*;
+import org.powerbot.script.rt6.Game;
+import org.powerbot.script.rt6.GameObject;
+import org.powerbot.script.rt6.Interactive;
+import org.powerbot.script.rt6.Player;
 
 import java.util.Comparator;
 import java.util.List;
@@ -82,7 +85,7 @@ public class HouseGlory extends NodePath {
 
 			//LogHandler.print("Can I reach glory?: " + (destination.canReach() ? "yes" : "no"));
 
-			if (gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || (destination.matrix(ctx).reachable() && pathToGlory.getNextDoor().valid())) {
+			if (gloryRoom.equals(script.roomStorage.getRoom(ctx.players.local())) || (destination.matrix(ctx).reachable() && !pathToGlory.getNextDoor().valid())) {
 				options.status = "Trying to click amulet of glory";
 				if (!mountedGlory.inViewport()) {
 					ctx.camera.turnTo(mountedGlory);
@@ -114,26 +117,20 @@ public class HouseGlory extends NodePath {
 					}
 				}
 
-				if (mountedGlory.inViewport() && mountedGlory.interact("Rub", "Amulet of Glory")) {
-					if (Condition.wait(new Callable<Boolean>() {
+				if (mountedGlory.inViewport() && mountedGlory.interact("Teleport: Edgeville", "Amulet of Glory")) {
+					Condition.wait(new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return !ctx.chat.select().text("Edgeville").isEmpty();
+							return mountedGlory.tile().distanceTo(ctx.players.local()) < 3;
 						}
-					})) {
-						for (ChatOption option : ctx.chat.first()) {
-							ctx.sleep(333);
-							if (option.select(Random.nextBoolean())) {
-								Condition.wait(new Callable<Boolean>() {
-									@Override
-									public Boolean call() throws Exception {
-										return locationAttribute.isInLargeArea(ctx) && ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.players.local().animation() == -1;
-									}
-								}, Random.nextInt(120, 160), 100);
-								ctx.sleep(400);
-							}
+					}, 200, 10);
+					Condition.wait(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+							return locationAttribute.isInLargeArea(ctx) && ctx.game.clientState() == Game.INDEX_MAP_LOADED && ctx.players.local().animation() == -1;
 						}
-					}
+					}, 150, 100);
+					ctx.sleep(200);
 				} else {
 					ctx.camera.prepare(destination.matrix(ctx));
 				}
