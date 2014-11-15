@@ -13,7 +13,6 @@ import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt6.Game;
 import org.powerbot.script.rt6.GameObject;
-import org.powerbot.script.rt6.Interactive;
 import org.powerbot.script.rt6.Player;
 
 import java.util.Comparator;
@@ -28,7 +27,8 @@ import java.util.concurrent.Callable;
  */
 public class HouseGlory extends NodePath {
 	private static final int MOUNTED_GLORY = 13523;
-	private static final int[] MOUNTED_GLORY_BOUNDS_RIGHT = {-100, 100, -840, -584, 128, 256};
+	private static final int[] MOUNTED_GLORY_BOUNDS_NORTH = {-100, 100, -840, -584, 128, 256};
+	private static final int[] MOUNTED_GLORY_BOUNDS_EAST = {110, 220, -840, -584, -64, 128};
 
 	public HouseGlory(LogGildedAltar script) {
 		super(script, Path.EDGEVILLE_MOUNTED_AMULET_OF_GLORY);
@@ -58,10 +58,24 @@ public class HouseGlory extends NodePath {
 					}
 					return Double.compare(IMovement.Euclidean(o1, local), IMovement.Euclidean(o2, local));
 				}
-			}).each(Interactive.doSetBounds(MOUNTED_GLORY_BOUNDS_RIGHT)).poll();
+			}).poll();
 
 			if (!mountedGlory.valid()) return;
+
 			final Room gloryRoom = script.roomStorage.getRoom(mountedGlory);
+			final Tile gloryTile = mountedGlory.tile();
+			final Tile gloryRoomLocation = gloryRoom.getLocation();
+			final Tile derive = gloryRoomLocation.derive(-gloryTile.x(), -gloryTile.y());
+
+			if (derive.x() == -6 && derive.y() == 0) {
+				mountedGlory.bounds(MOUNTED_GLORY_BOUNDS_NORTH);
+			} else if (derive.x() == -7 && derive.y() == 6) {
+				mountedGlory.bounds(MOUNTED_GLORY_BOUNDS_EAST);
+			} else {
+				script.log.info("Unknown glory location " + derive);
+				mountedGlory.bounds(Random.nextBoolean() ? MOUNTED_GLORY_BOUNDS_NORTH : MOUNTED_GLORY_BOUNDS_EAST);
+			}
+
 			final List<Tile> tiles = ctx.movement.getTilesNear(gloryRoom.getArea(), mountedGlory, 3);
 			final Tile destination = tiles.isEmpty() ? mountedGlory.tile() : tiles.get(0);
 
