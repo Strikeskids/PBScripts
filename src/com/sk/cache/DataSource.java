@@ -48,7 +48,7 @@ public class DataSource {
 		return getDefaultCacheDirectory("runescape");
 	}
 
-	public static File getDefaultCacheDirectory(String version) {
+	public static File getDefaultCacheDirectory(final String version) {
 		String rootDirectory = System.getProperty("user.home");
 		if (rootDirectory != null) {
 			rootDirectory = rootDirectory + "/";
@@ -72,16 +72,18 @@ public class DataSource {
 			String[] directories = file.list(new FilenameFilter() {
 				@Override
 				public boolean accept(File current, String name) {
-					return new File(current, name).isDirectory() && name.startsWith("jagexcache");
+					File dir = new File(current, name);
+					return dir.isDirectory() && name.startsWith("jagexcache") && new File(dir, File.separatorChar + version
+							+ File.separatorChar + "LIVE" + File.separatorChar + "main_file_cache.dat2").exists();
 				}
 			});
 			if (directories.length > 0) {
-				// TODO: Find which can be loaded
 				return new File(rootDirectory + File.separatorChar + directories[0] + File.separatorChar + version
 						+ File.separatorChar + "LIVE" + File.separatorChar);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 
 		return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + version
