@@ -75,12 +75,12 @@ public class DataSource {
 					return new File(current, name).isDirectory() && name.startsWith("jagexcache");
 				}
 			});
-			if(directories.length > 0) {
+			if (directories.length > 0) {
 				// TODO: Find which can be loaded
-				new File(rootDirectory + File.separatorChar + directories[0] + File.separatorChar + version
+				return new File(rootDirectory + File.separatorChar + directories[0] + File.separatorChar + version
 						+ File.separatorChar + "LIVE" + File.separatorChar);
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
