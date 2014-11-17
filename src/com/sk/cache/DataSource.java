@@ -4,10 +4,7 @@ import com.sk.cache.meta.ArchiveRequest;
 import com.sk.datastream.ByteStream;
 import com.sk.datastream.Stream;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -69,6 +66,24 @@ public class DataSource {
 		if (rootDirectory == null) {
 			rootDirectory = "~/";
 		}
+
+		try {
+			File file = new File(rootDirectory);
+			String[] directories = file.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File current, String name) {
+					return new File(current, name).isDirectory() && name.startsWith("jagexcache");
+				}
+			});
+			if(directories.length > 0) {
+				// TODO: Find which can be loaded
+				new File(rootDirectory + File.separatorChar + directories[0] + File.separatorChar + version
+						+ File.separatorChar + "LIVE" + File.separatorChar);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
 		return new File(rootDirectory + File.separatorChar + "jagexcache" + File.separatorChar + version
 				+ File.separatorChar + "LIVE" + File.separatorChar);
 	}
