@@ -7,7 +7,7 @@ import com.sk.cache.wrappers.protocol.ProtocolGroup;
 import com.sk.cache.wrappers.protocol.extractor.*;
 import com.sk.datastream.Stream;
 import org.logicail.cache.loader.rt6.wrapper.loaders.QuestDefinitionLoader;
-import org.powerbot.script.rt6.ClientContext;
+import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,23 +25,33 @@ public class QuestDefinition extends StreamedWrapper {
 		super(loader, id);
 	}
 
-	/**
-	 * Has the current user complated this quest?
-	 *
-	 * @param ctx
-	 * @return <code>true</code> if the user has completed the quest, otherwise <code>false</code>
-	 */
-	public boolean complete(ClientContext ctx) {
-		if (scriptId != null) {
-			for (int i = 0; i < scriptId.length; i++) {
-				int scripts = scriptId[i];
-
+	public QuestStatus status(IClientContext ctx) {
+		QuestStatus status = QuestStatus.NOT_STARTED;
+		if (configId != null) {
+			//System.out.println(configId.length);
+			for (int i = 0; i < configId.length; i++) {
+				int id = configId[i];
+				int value = ctx.varpbits.varpbit(id);
+				if (value == configEndValue[i]) {
+					status = QuestStatus.COMPLETED;
+				} else if (value > configStartValue[i]) {
+					status = QuestStatus.IN_PROGRESS;
+				}
 			}
-		} else if (configId != null) {
-
+		} else if (scriptId != null) {
+			//System.out.println(scriptId.length);
+			for (int i = 0; i < scriptId.length; i++) {
+				Script script = ctx.definitions.script(scriptId[i]);
+				int value = script.execute(ctx);
+				if (value == scriptEndValue[i]) {
+					status = QuestStatus.COMPLETED;
+				} else if (value > scriptStartValue[i]) {
+					status = QuestStatus.IN_PROGRESS;
+				}
+			}
 		}
 
-		return false;
+		return status;
 	}
 
 	static {
@@ -89,5 +99,11 @@ public class QuestDefinition extends StreamedWrapper {
 				protocol.read(this, opcode, s);
 			}
 		}
+	}
+
+	public static enum QuestStatus {
+		NOT_STARTED,
+		IN_PROGRESS,
+		COMPLETED
 	}
 }

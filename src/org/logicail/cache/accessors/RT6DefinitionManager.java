@@ -10,6 +10,8 @@ import org.logicail.cache.loader.rt6.wrapper.Script;
 import org.powerbot.script.rt6.*;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,6 +57,24 @@ public class RT6DefinitionManager extends ClientAccessor {
 
 	public QuestDefinition quest(String name) {
 		return system.questLoader.find(name);
+	}
+
+	/**
+	 * Get quest status
+	 *
+	 * @return
+	 */
+	public Map<String, QuestDefinition> quests() {
+		final Map<String, QuestDefinition> quests = new HashMap<String, QuestDefinition>();
+
+		int id = 0;
+		while (system.questLoader.canLoad(id)) {
+			final QuestDefinition definition = system.questLoader.load(id);
+			quests.put(definition.name, definition);
+			id++;
+		}
+
+		return quests;
 	}
 
 	public Script script(int id) {

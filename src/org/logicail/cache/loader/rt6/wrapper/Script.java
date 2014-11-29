@@ -3,7 +3,7 @@ package org.logicail.cache.loader.rt6.wrapper;
 import com.sk.cache.wrappers.StreamedWrapper;
 import com.sk.datastream.Stream;
 import org.logicail.cache.loader.rt6.wrapper.loaders.ScriptLoader;
-import org.powerbot.script.rt4.ClientContext;
+import org.powerbot.script.rt6.ClientContext;
 
 public class Script extends StreamedWrapper {
 	public static final int[] MASKS;

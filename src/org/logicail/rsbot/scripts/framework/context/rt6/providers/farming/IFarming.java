@@ -4,6 +4,7 @@ import com.sk.cache.wrappers.loaders.LocalObjectLoader;
 import com.sk.cache.wrappers.region.LocalObject;
 import com.sk.cache.wrappers.region.LocalObjects;
 import org.logicail.cache.loader.rt6.wrapper.ObjectDefinition;
+import org.logicail.cache.loader.rt6.wrapper.QuestDefinition;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientAccessor;
 import org.logicail.rsbot.scripts.framework.context.rt6.IClientContext;
 import org.logicail.rsbot.scripts.framework.context.rt6.providers.farming.enums.HerbEnum;
@@ -94,11 +95,11 @@ public class IFarming extends IClientAccessor {
 	}
 
 	public boolean canUseMagicSecateurs() {
-		return ctx.definitions.quest(FAIRY_TALE_I).complete(ctx);
+		return ctx.definitions.quest(FAIRY_TALE_I).status(ctx) == QuestDefinition.QuestStatus.COMPLETED;
 	}
 
 	public boolean canUseMagicWateringCan() {
-		return ctx.definitions.quest(FAIRY_TALE_III).complete(ctx);
+		return ctx.definitions.quest(FAIRY_TALE_III).status(ctx) == QuestDefinition.QuestStatus.COMPLETED;
 	}
 
 	public int compost() {
