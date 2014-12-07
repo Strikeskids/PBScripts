@@ -34,24 +34,19 @@ public class DefinitionCache<C extends org.powerbot.script.ClientContext, T exte
 			return null;
 		}
 
-		if (cache.containsKey(id)) {
-			return cache.get(id);
-		} else {
+		T definition = cache.get(id);
+		if (definition == null) {
 			synchronized (lock) {
-				if (cache.containsKey(id)) {
-					return cache.get(id);
+				definition = cache.get(id);
+				if (definition == null) {
+					try {
+						definition = loader.load(id);
+						cache.put(id, definition);
+					} catch (Exception ignored) {
+					}
 				}
-				try {
-					T definition = loader.load(id);
-					cache.put(id, definition);
-					return definition;
-				} catch (Exception ignored) {
-				}
-			}
+			}	
 		}
-
-		// TODO: Consider placing child() here
-
-		return null;
+		return definition;
 	}
 }
